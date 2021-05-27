@@ -1,0 +1,161 @@
+
+.ui-control.dialog.has-one-row-footer > .content
+{
+    bottom: 6.0rem;
+}
+
+.ui-control.dialog.has-two-rows-footer > .content
+{
+    bottom: 10.0rem;
+}
+
+.ui-control.dialog.has-three-rows-footer > .content
+{
+    bottom: 14.0rem;
+}
+
+.ui-control.dialog.has-four-rows-footer > .content
+{
+    bottom: 18.0rem;
+}
+
+.ui-control.dialog.has-five-rows-footer > .content
+{
+    bottom: 22.0rem;
+}
+
+.ui-control.dialog.has-six-rows-footer > .content
+{
+    bottom: 26.0rem;
+}
+.ui-control.dialog.has-seven-rows-footer > .content
+{
+    bottom: 30.0rem;
+}
+.ui-control.dialog.has-eight-rows-footer > .content
+{
+    bottom: 34.0rem;
+}
+.ui-control.dialog.has-nine-rows-footer > .content
+{
+    bottom: 38.0rem;
+}
+.ui-control.dialog.has-ten-rows-footer > .content
+{
+    bottom: 42.0rem;
+}
+
+.ui-control.dialog.has-eleven-rows-footer > .content
+{
+    bottom: 46.0rem;
+}
+
+.ui-control.dialog.has-twelve-rows-footer > .content
+{
+    bottom: 50.0rem;
+}
+
+
+.ui-control.dialog.dialog.has-one-row-footer > .footer
+{
+    height: 6.0rem;
+}
+
+.ui-control.dialog.dialog.has-two-rows-footer > .footer
+{
+    height: 10.0rem;
+}
+
+.ui-control.dialog.dialog.has-three-rows-footer > .footer
+{
+    height: 14.0rem;
+}
+
+.ui-control.dialog.dialog.has-four-rows-footer > .footer
+{
+    height: 18.0rem;
+}
+
+.ui-control.dialog.dialog.has-five-rows-footer > .footer
+{
+    height: 22.0rem;
+}
+
+.ui-control.dialog.dialog.has-six-rows-footer > .footer
+{
+    height: 26.0rem;
+}
+
+.ui-control.dialog.has-seven-rows-footer > .footer
+{
+    height: 30.0rem;
+}
+.ui-control.dialog.has-eight-rows-footer > .footer
+{
+    height: 34.0rem;
+}
+.ui-control.dialog.has-nine-rows-footer > .footer
+{
+    height: 38.0rem;
+}
+.ui-control.dialog.has-ten-rows-footer > .footer
+{
+    height: 42.0rem;
+}
+
+.ui-control.dialog.has-eleven-rows-footer > .footer
+{
+    height: 46.0rem;
+}
+
+.ui-control.dialog.has-twelve-rows-footer > .footer
+{
+    height: 50.0rem;
+}
+.rename-town-popup
+{
+    width: 44.9rem;
+    height: 25.0rem;
+
+    background-image: url("coui://gfx/ui/skin/popup_background_449x250.png");
+    background-size: 44.9rem 25.0rem;
+    background-repeat: no-repeat;
+}
+.rename-town-container
+{
+    width: 100%;
+    padding: 0.6rem;
+    position: relative;
+    float: left;
+}
+
+
+.rename-town-container > .row
+{
+    width: 100%;
+    height: 5.9rem;
+    position: relative;
+    float: left;
+}
+
+.rename-town-container > .row >.label
+{
+    width: 9.0rem;
+    height: 5.9rem;
+    margin-right: 1.0rem;
+    position: relative;
+    float: left;
+
+    line-height: 5.9rem;
+    text-align: right;
+}
+
+.rename-town-container >.row >.l-input
+{
+    width: 30.0rem;
+    height: 4.0rem;
+    margin-top: 1.0rem;
+    margin-bottom: 1.0rem;
+    position: relative;
+    float: left;
+}
