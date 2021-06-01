@@ -250,7 +250,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 		this.m.Screens.push({
 			ID = "EnteringTheCamp",
 			Title = "As you approach...",
-			Text = "[img]gfx/ui/events/event_167.png[/img]{From a distance, you can already hear the sounds of banging metal and rancious laughter. You approach a great clearing in the woods, where great numbers of barbarian warriors are fighting each other in practice. The smell of blood and mead fills the air. The wary northmen step aside as you make your way to the middle. At the center, you find a great tent, guarded by a plethora of fierce warriors. Your men wait outside as you enter. A great king of the barbarians, who calls himself the Lord of War, greets you. He is accompanied by a surprising sight: an old swordmaster. This must be the legendary trainer of the Chosen.\n You ask him to accompany you, but he refuses: 'These people know the true meaning of life: to master the martial arts, and become a fabled warrior. Show me that you have what it takes to deserve my skills!'. A contest of champions it is.}" ,
+			Text = "[img]gfx/ui/events/event_08.png[/img]{From a distance, you can already hear the sounds of banging metal and rancious laughter. You approach a great clearing in the woods, where great numbers of barbarian warriors are fighting each other in practice. The smell of blood and mead fills the air. The wary northmen step aside as you make your way to the middle. At the center, you find a great tent, guarded by a plethora of fierce warriors. Your men wait outside as you enter.\n A great king of the barbarians, who calls himself the Lord of War, greets you. He is accompanied by a surprising sight: an old swordmaster. This must be the legendary trainer of the Chosen. You ask him to accompany you, but he refuses. %SPEECH_ON%These people know the true meaning of life: to master the martial arts, and become a fabled warrior. Show me that you have what it takes to deserve my skills!%SPEECH_OFF%. A contest of champions it is.}" ,
 			Image = "",
 			List = [],
 			Options = [
@@ -262,7 +262,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 						this.Contract.m.Screens.push({
 							ID = "ChooseChampions",
 							Title = "Prepare yourself.",
-							Text = "{Choose your champions.}",
+							Text = "[img]gfx/ui/events/event_07.png[/img]{Choose your champions.}",
 							Image = "",
 							List = [],
 							Options = this.Contract.champtionOptions()
@@ -288,7 +288,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 		this.m.Screens.push({
 			ID = "StartFight",
 			Title = "Prepare yourself.",
-			Text = "[img]gfx/ui/events/event_144.png[/img]{The northmen form a circle, and your champions step inside. The king emerges from the tent, and two other Chosen join him.}",
+			Text = "[img]gfx/ui/events/event_139.png[/img]{The northmen form a circle, and your champions step inside. The king emerges from the tent, and two other Chosen join him.}",
 			Image = "",
 			List = [],
 			Characters = [],
@@ -347,7 +347,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 		this.m.Screens.push({
 			ID = "IsVictory",
 			Title = "After the battle...",
-			Text = "[img]gfx/ui/events/event_53.png[/img]Your champions cut down the Lord of War and their Chosen. The once rowdy crowd fail to object as you gather up their gear. The old swordmaster is impressed by the performance of your group. 'So there are some true warriors left among the men of the south — Very well, I will accompany you.' You leave the Fields of War with the swordmaster among you.",
+			Text = "[img]gfx/ui/events/event_50.png[/img]Your champions cut down the Lord of War and their Chosen. The once rowdy crowd fail to object as you gather up their gear. The old swordmaster is impressed by the performance of your group.%SPEECH_ON%So there are some true warriors left among the men of the south. Very well, I will accompany you.%SPEECH_OFF%",
 			Image = "",
 			List = [],
 			Options = [
@@ -369,7 +369,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 		this.m.Screens.push({
 			ID = "IsFailure",
 			Title = "After the battle...",
-			Text = "[img]gfx/ui/events/event_53.png[/img]{Under thunderous cheers by the northmen, your champions are cut down by the Lord of War and his chosen. The old swordmaster sneers: he knew this would happen. You leave the Fields of War, having achieved nothing — aside from losing some of your best men.}",
+			Text = "[img]gfx/ui/events/event_135.png[/img]{Under thunderous cheers by the northmen, your champions are cut down by the Lord of War and his chosen. The old swordmaster sneers: he knew this would happen. You leave the Fields of War, having achieved nothing — aside from losing some of your best men.}",
 			Image = "",
 			List = [],
 			Options = [

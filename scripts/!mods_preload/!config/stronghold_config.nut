@@ -1,7 +1,12 @@
 local gt = this.getroottable();
 gt.Const.World.Stronghold <- {};
 gt.Const.World.Stronghold.PriceMult <- 1000; //fastest way to change prices, everything gets mult by this
-gt.Const.World.Stronghold.BuyPrices <- [20, 20, 20]; //base prices for build/upgrade
+gt.Const.World.Stronghold.BuyPrices <- [10, 20, 20]; //base prices for build/upgrade
+gt.Const.World.Stronghold.UnlockAdvantages <-[
+	"You can leave items and brothers behind, to retrieve them later as you need them.\n You can construct up to three buildings.\nYou can construct up to three locations.",
+	"Bands of mercenaries will join your base and guard it against aggressors.\nYou can construct an additional building and three additional locations.\nYou can construct roads to other settlements, connecting your base to the world.",
+	"You can construct an additional building, including an arena, and three additional locations.\nA number of unique contracts will be made available.\nYou can now construct an additional Hamlet, connected to your Stronghold."
+]
 gt.Const.World.Stronghold.RoadCost <- 0.5; // per segment
 gt.Const.World.Stronghold.BuildingPrices <- 
 {
@@ -130,4 +135,36 @@ gt.Stronghold.getPlayerFaction <- function()
 {
 	if ("FactionManager" in this.World) return this.World.FactionManager.getFactionOfType(this.Const.FactionType.Player)
 	return false
+}
+
+gt.Stronghold.getClosestDistance <- function(_destination, _list, _tiles = false)
+{
+	local chosen = null;
+	local closestDist = 9999;
+	if(!_tiles)
+	{
+		foreach (obj in _list)
+		{
+			if (obj == null) continue
+			local dist = obj.getTile().getDistanceTo(_destination.getTile())
+			if (chosen == null || dist < closestDist)
+			{
+				chosen = obj;
+				closestDist = dist;
+			}
+		}
+	}
+	else {
+	    foreach (obj in _list)
+		{
+			if (obj == null) continue
+			local dist = obj.getDistanceTo(_destination)
+			if (chosen == null || dist < closestDist)
+			{
+				chosen = obj;
+				closestDist = dist;
+			}
+		}
+	}
+	return chosen
 }

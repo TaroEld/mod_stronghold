@@ -1,10 +1,10 @@
-::mods_registerMod("mod_stronghold", 0.995);
+::mods_registerMod("mod_stronghold", 0.996);
 ::mods_registerJS("mod_stronghold.js");
 ::mods_registerCSS("mod_stronghold.css");
 ::mods_queue("mod_stronghold", null, function()
 {	
 
-	
+
 	::mods_hookNewObjectOnce("states/world/asset_manager", function (o)
 	{
 		
@@ -142,7 +142,7 @@
 			}
 		}
 	});
-
+	
 	::mods_hookNewObject("ui/screens/world/modules/world_campfire_screen/campfire_main_dialog_module", function ( o )
 	{
 		//function to build/upgrade stronghold via retinue menu. Checks for a few things (quest active, already built, already fully upgraded, tile occupied)
@@ -150,53 +150,36 @@
 		local onCartClicked = o.onCartClicked;
 		o.onCartClicked = function()
 		{
-			local priceMult = this.Const.World.Stronghold.PriceMult
-			local build_cost = this.Const.World.Stronghold.BuyPrices[0] * priceMult
+			onCartClicked();
+			if (this.Stronghold.getPlayerBase()) return
+			local priceMult = this.Const.World.Stronghold.PriceMult;
+			local build_cost = this.Const.World.Stronghold.BuyPrices[0] * priceMult;
+			local unlockedFeatures = this.Const.World.Stronghold.UnlockAdvantages[0];
 			if (this.Stronghold.getPlayerBase() && this.Stronghold.getPlayerBase().getSize() != 3){
 				build_cost = priceMult * this.Const.World.Stronghold.BuyPrices[this.Stronghold.getPlayerBase().getSize()]
+				unlockedFeatures = this.Const.World.Stronghold.UnlockAdvantages[this.Stronghold.getPlayerBase().getSize()]
 			}
-			onCartClicked();
+			
 			if (this.World.Retinue.getInventoryUpgrades() >= this.Const.World.InventoryUpgradeCosts.len())
 			{
 				local tile = this.World.State.getPlayer().getTile();
-
-				if(this.Stronghold.getPlayerBase())
-				{
-					if(this.Stronghold.getPlayerBase().getSize() == 3){
-							this.showDialogPopup("Stronghold", "You already have a fully upgraded stronghold!", null, null, true);
-						}
+				if (this.World.Assets.getMoney() >= build_cost){
+					if (tile.IsOccupied)
+					{
+						this.showDialogPopup("Build a stronghold", "Tile is occupied, cannot build a stronghold here!", null, null, true);
+					}
 					else if(this.World.Contracts.getActiveContract() != null)
-						{
-							this.showDialogPopup("Upgrade your stronghold", "You can't have an active contract when upgrading a stronghold!", null, null, true);
-						}
+					{
+						this.showDialogPopup("Build a stronghold", "You can't have an active contract when building a stronghold!", null, null, true);
+					}
 					else{
-						if(this.World.Assets.getMoney() < build_cost){
-							this.showDialogPopup("Upgrade your stronghold", "You need " + build_cost + " crowns to upgrade your stronghold!", null, null, true);
-						}
-						else{
-							this.showDialogPopup("Upgrade your stronghold", "You can pay " + build_cost + " crowns to upgrade your stronghold. \n This will add a building slot and increase the value of your trades. \n CAREFUL: You can only remove a stronghold that's not been upgraded. \n CAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!", this.onUpgradePlayerBase.bindenv(this), null);
-						}
+						this.showDialogPopup("Build a stronghold", "You can pay " + build_cost + " crowns to build a stronghold at this location. \n" + unlockedFeatures + "\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!", this.onPurchasePlayerBase.bindenv(this), null);
 					}
 				}
 				else{
-					if (this.World.Assets.getMoney() >= build_cost){
-						if (tile.IsOccupied)
-						{
-							this.showDialogPopup("Build a stronghold", "Tile is occupied, cannot build a stronghold here!", null, null, true);
-						}
-						else if(this.World.Contracts.getActiveContract() != null)
-						{
-							this.showDialogPopup("Build a stronghold", "You can't have an active contract when building a stronghold!", null, null, true);
-						}
-						else{
-							this.showDialogPopup("Build a stronghold", "You can pay " + build_cost + " crowns to build a stronghold at this location. \n CAREFUL: You can only have one stronghold. You can remove this stronghold as long as you don't upgrade it. \n CAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!", this.onPurchasePlayerBase.bindenv(this), null);
-						}
-					}
-					else{
-						this.showDialogPopup("Build a stronghold", "Gather " + build_cost + " crowns to build a stronghold!", null, null, true);
-					}
-				}		
-			}
+					this.showDialogPopup("Build a stronghold", "Gather " + build_cost + " crowns to build a stronghold!", null, null, true);
+				}
+			}		
 		};
 		
 		o.onPurchasePlayerBase <- function()
@@ -235,40 +218,6 @@
 			
 			tile.IsOccupied = true;
 			tile.TacticalType = this.Const.World.TerrainTacticalType.Urban;
-			//spawn assailant quest
-			local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
-			contract.setEmployerID(player_faction.getRandomCharacter().getID());
-			contract.setFaction(player_faction.getID());
-			contract.setHome(player_base);
-			contract.setOrigin(player_base);
-			this.World.Contracts.addContract(contract);
-			contract.start();
-		};
-		
-		o.onUpgradePlayerBase <- function()
-		{
-			local priceMult = this.Const.World.Stronghold.PriceMult
-			local build_cost = this.Const.World.Stronghold.BuyPrices[0] * priceMult
-			if (this.Stronghold.getPlayerBase() && this.Stronghold.getPlayerBase().getSize() != 3){
-				build_cost = priceMult * this.Const.World.Stronghold.BuyPrices[this.Stronghold.getPlayerBase().getSize()]
-			}
-			this.World.Assets.addMoney(-build_cost);
-			local player_faction = this.Stronghold.getPlayerFaction()
-			local player_base = this.Stronghold.getPlayerBase()
-			//upgrade looks and situation
-			player_base.m.Size = player_base.m.Size +1;
-			player_base.buildHouses()
-			player_base.updateTown();
-			
-			if (player_faction.m.Deck.len() < 2)
-			{
-				local order = ["scripts/factions/actions/stronghold_guard_base_action", "scripts/factions/actions/stronghold_send_caravan_action"];
-				player_faction.addTrait(order);
-			}
-			//spawn new guards to reflect the change in size
-			local actionToFire = player_faction.m.Deck[0]
-			actionToFire.execute(player_faction);
-			
 			//spawn assailant quest
 			local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
 			contract.setEmployerID(player_faction.getRandomCharacter().getID());
@@ -652,7 +601,7 @@
 		{
 			if(!keyHandler(key) && key.getState() == 0)
 			{
-				if (key.getKey() == 41)
+				if (key.getKey() == 41) // esc
 				{
 					foreach (contract in this.World.Contracts.m.Open)
 					{
@@ -723,7 +672,7 @@
 						{
 							id = 2,
 							type = "description",
-							text = "Rename your stronghold"
+							text = "Rename your settlement"
 						}
 					];
 
@@ -737,7 +686,7 @@
 						{
 							id = 2,
 							type = "description",
-							text = "Store and retrieve items"
+							text = "Your companies storage building. Here, you can store items to retrieve them at a later date."
 						}
 					];
 
@@ -746,12 +695,12 @@
 						{
 							id = 1,
 							type = "title",
-							text = "Management"
+							text = "The Keep"
 						},
 						{
 							id = 2,
 							type = "description",
-							text = "Manage your town"
+							text = "Manage your settlement"
 						}
 					];
 

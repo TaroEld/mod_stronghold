@@ -311,7 +311,7 @@ this.stronghold_special_actions_contract_hamlet <- this.inherit("scripts/contrac
 		local player_base = this.m.Home
 		local current_buildings = 0;
 		local current_locations = 0;
-		local free_building_slots = 6
+		local free_building_slots = 7
 		
 		foreach (building in player_base.m.Buildings){
 			if (building != null){

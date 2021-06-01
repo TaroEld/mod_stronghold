@@ -160,6 +160,7 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 	function onClicked( _townScreen )
 	{
 		this.getStash().sort()
+		this.Stronghold.time <- this.Time.getExactTime()
 		_townScreen.getShopDialogModule().setShop(this);
 		_townScreen.showShopDialog();
 		this.pushUIMenuStack();

@@ -110,25 +110,24 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		//adds/removes quests when entering town. Takes care of conflicing quests.		
 		local fac = this.Stronghold.getPlayerFaction();
 		local contracts = fac.getContracts();
-		local find_waterskin = null;
-		local free_mercenaries = null;
-		local special_actions = null;
-		local find_trainer = null;
+		local find_waterskin = false;
+		local free_mercenaries = false;
+		local find_trainer = false;
 		//vars for every quest, allows to plug it in later to remove it
 		foreach(contract in contracts)
 		{
 			
 			if (contract.m.Type == "contract.stronghold_find_waterskin_recipe_contract")
 			{
-				find_waterskin = contract;
+				find_waterskin = true;
 			}
 			if (contract.m.Type == "contract.stronghold_free_mercenaries_contract")
 			{
-				free_mercenaries = contract;
+				free_mercenaries = true;
 			}
 			if (contract.m.Type == "contract.stronghold_free_trainer_contract")
 			{
-				find_trainer = contract;
+				find_trainer = true;
 			}
 		}	
 				
@@ -154,8 +153,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			contract.setFaction(fac.getID())
 			this.World.Contracts.addContract(contract);
 		}
-		
-
 	}
 	
 	function clearContracts()
@@ -282,7 +279,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 		}
 		else if (this.getSize() == 2){
-			this.m.AttachedLocationsMax = 5
+			this.m.AttachedLocationsMax = 6
 			this.m.Sprite = sprites[1]
 			this.m.UIDescription = "Your castle";
 			this.m.Description = "Your castle";
