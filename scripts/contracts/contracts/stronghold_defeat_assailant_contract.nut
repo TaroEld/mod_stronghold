@@ -39,8 +39,14 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Goblins).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Orcs).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Barbarians).getSettlements())
-		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse)) allSettlements.extend(noble.getSettlements())
-		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.OrientalCityState)) allSettlements.extend(noble.getSettlements())
+		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse)){
+			if(noble.getPlayerRelation() < 70 ) allSettlements.extend(noble.getSettlements())
+			
+		}
+		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.OrientalCityState)){
+			if(noble.getPlayerRelation() < 70 ) allSettlements.extend(noble.getSettlements())
+			
+		}
 		
 		local closest = 9999
 		local closest_settlement;
@@ -83,8 +89,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		}
 		else if (closest_faction.m.Type == this.Const.FactionType.OrientalCityState)
 		{
-			party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), "Oriental noble Army", false, this.Const.World.Spawn.Southern, party_difficulty);
-			party.setDescription("An army of oriental noble soldiers.");
+			party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), "City State Army", false, this.Const.World.Spawn.Southern, party_difficulty);
+			party.setDescription("An army of city state soldiers.");
 			party.setFootprintType(this.Const.World.FootprintsType.Nobles);
 			this.m.Flags.set("EnemyNobleHouse", closest_faction.getID())
 		}

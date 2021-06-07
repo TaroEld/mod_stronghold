@@ -26,10 +26,6 @@ this.stronghold_management_building_village <- this.inherit("scripts/entity/worl
 		this.m.SoundsAtNight = [];
 	}
 
-	function isHidden()
-	{
-		return true;
-	}
 
 	function onClicked( _townScreen )
 	{

@@ -55,6 +55,10 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Culture = _town.m.Culture 
 		this.updateTown()
 	}
+	function getFactionOfType(_type)
+	{
+		return this.Stronghold.getPlayerFaction()
+	}
 	
 	function defineName()
 	{

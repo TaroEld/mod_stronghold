@@ -7,183 +7,8 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		Title = "Manage your settlement",
 		Cost = 0,
 		Text = "",
-		Building_options =
-		[
-			{
-				Name = "Tavern",
-				NameSmall = "tavern",
-				ID = "building.tavern",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Tavern"],
-				Path = "tavern_building",
-				SouthPath = false,
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-				}
-			},
-			{
-				Name = "Kennel",
-				ID = "building.kennel",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Kennel"],
-				Path = "kennel_building",
-				SouthPath = false,
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-				}
-			},
-			{
-				Name = "Taxidermist",
-				ID = "building.taxidermist",
-				SouthID = "building.taxidermist_oriental",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Taxidermist"],
-				Path = "taxidermist_building",
-				SouthPath = "taxidermist_oriental_building",
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
-				}
-			},
-			{
-				Name = "Temple",
-				ID = "building.temple",
-				SouthID = "building.temple",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Temple"],
-				Path = "temple_building",
-				SouthPath = "temple_oriental_building",
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
-				}
-			},
-			{
-				Name = "Training Hall",
-				ID = "building.training_hall",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Training"],
-				Path = "training_hall_building",
-				SouthPath = false,
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-				}
-			},
-			{
-				Name = "Alchemist",
-				ID = "building.alchemist",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Alchemist"],
-				Path = "alchemist_building",
-				SouthPath = false,
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-				}
-			},
-			{
-				Name = "Weaponsmith",
-				ID = "building.weaponsmith",
-				SouthID = "building.weaponsmith_oriental",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Weaponsmith"],
-				Path = "weaponsmith_building",
-				SouthPath = "weaponsmith_oriental_building",
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
-				}
-			},
-			{
-				Name = "Armorsmith",
-				ID = "building.armorsmith",
-				SouthID = "building.armorsmith_oriental",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Armorsmith"],
-				Path = "armorsmith_building",
-				SouthPath = "armorsmith_oriental_building",
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
-				}
-			},
-			{
-				Name = "Fletcher",
-				ID = "building.fletcher",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Fletcher"],
-				Path = "fletcher_building",
-				SouthPath = false,
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-				}
-			},
-			{
-				Name = "Port",
-				ID = "building.port",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Port"],
-				Path = "port_building",
-				SouthPath = false,
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && this.Stronghold.getPlayerBase().isCoastal())
-				}
-			},
-			{
-				Name = "Arena",
-				ID = "building.arena",
-				Cost = this.Const.World.Stronghold.BuildingPrices["Arena"],
-				Path = "arena_building",
-				SouthPath = false,
-				isValid = function(){
-					return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && this.Stronghold.getPlayerBase().m.Size == 3)
-				}
-			}
-		],
-		Location_options =
-		[
-			{
-				Name = "Workshop",
-				ID = "attached_location.workshop",
-				Cost = this.Const.World.Stronghold.LocationPrices["Workshop"],
-				Path = "workshop_location",
-				Text= "Build a workshop. Generates tools."
-			},
-			{
-				Name = "Ore Smelter",
-				ID = "attached_location.ore_smelters",
-				Cost = this.Const.World.Stronghold.LocationPrices["Ore"],
-				Path = "ore_smelters_location",
-				Text= "Build an ore smelter. Weaponsmiths carry more items."
-			},
-			{
-				Name = "Blast Furnace",
-				ID = "attached_location.blast_furnace",
-				Cost = this.Const.World.Stronghold.LocationPrices["Blast"],
-				Path = "blast_furnace_location",
-				Text= "Build a blast furnace. Armourers carry more items."
-			},
-			{
-				Name = "Stone Watchtower",
-				ID = "attached_location.stone_watchtower",
-				Cost = this.Const.World.Stronghold.LocationPrices["Stone"],
-				Path = "stone_watchtower_location",
-				Text= "Build a watchtower. Increases speed and sight range around the stronghold."
-			},
-			{
-				Name = "Militia Trainingcamp",
-				ID = "attached_location.militia_trainingcamp",
-				Cost = this.Const.World.Stronghold.LocationPrices["Militia"],
-				Path = "militia_trainingcamp_location",
-				Text= "Build a militia camp. Increases strength of mercenaries."
-			},
-			{
-				Name = "Wheat Fields",
-				ID = "attached_location.wheat_fields",
-				Cost = this.Const.World.Stronghold.LocationPrices["Wheat"],
-				Path = "wheat_fields_location",
-				Text= "Build Wheat Fields. You don't consume food around the stronghold."
-			},
-			{
-				Name = "Herbalists Grove",
-				ID = "attached_location.herbalists_grove",
-				Cost = this.Const.World.Stronghold.LocationPrices["Herbalists"],
-				Path = "herbalists_grove_location",
-				Text= "Build a Herbalists Grove. Hitpoints regenerate faster when around the stronghold."
-			},
-			{
-				Name = "Gold Mine",
-				ID = "attached_location.gold_mine",
-				Cost = this.Const.World.Stronghold.LocationPrices["Gold"],
-				Path = "gold_mine_location",
-				Text= "Build a gold mine. Gold will be generated over time."
-			}
-		],
+		Building_options = this.Const.World.Stronghold.Building_options,
+		Location_options = this.Const.World.Stronghold.Location_options,
 		//for valid locations for attachments
 		LocationTerrain = 
 		[
@@ -216,7 +41,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		this.createStates();
 		this.createScreens();
 		this.m.Type = "contract.stronghold_special_actions_contract";
-		this.m.Name = "Perform special actions";
+		this.m.Name = "Manage your base";
 		this.m.TimeOut = this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 1500.0;
 		this.m.IsSouthern <- this.Stronghold.getPlayerBase().getFlags().get("isSouthern")
 	}
@@ -731,7 +556,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			local player_base = this.Stronghold.getPlayerBase()
 			local advantages = this.Const.World.Stronghold.UnlockAdvantages[player_base.m.Size]
 			this.m.Cost =  this.Const.World.Stronghold.PriceMult * this.Const.World.Stronghold.BuyPrices[player_base.getSize()]
-			this.m.Text = "You can upgrade your base to a greater size. This would add these options: \n" + advantages +"\n This costs " + this.m.Cost + "."
+			this.m.Text = "You can upgrade your base to a greater size. This would add these options: \n" + advantages +"\n This costs " + this.m.Cost + " crowns. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
 			this.m.Title = "Upgrade your base"
 			this.addOverviewScreen()
 			
@@ -1244,46 +1069,23 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	}
 
 	
-	
-
-	function removeBase()
+	function yieldNext(_list)
 	{
-		local player_faction = this.Stronghold.getPlayerFaction()
-		local player_base = this.Stronghold.getPlayerBase()
-		local contracts = player_faction.getContracts()
-		foreach (contract in contracts)
-		{
-			this.World.Contracts.removeContract(contract)
-		}
-		foreach (unit in player_faction.m.Units)
-		{
-			unit.fadeOutAndDie()
-		}
-		
-		foreach( h in player_base.m.HousesTiles )
-		{
-			local tile = this.World.getTileSquare(h.X, h.Y);
-			tile.clear(this.Const.World.DetailType.Houses | this.Const.World.DetailType.Lighting);
-			local d = tile.spawnDetail("world_houses_0" + player_base.m.HousesType + "_0" + h.V + "_ruins", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
-			d.Scale = 0.85;
-			player_base.spawnFireAndSmoke(tile.Pos);
-		}
-		player_base.spawnFireAndSmoke(player_base.getTile().Pos)
-		foreach (location in player_base.m.AttachedLocations)
-		{
-			player_base.spawnFireAndSmoke(location.getTile().Pos)
-			location.die()
-		}
-		foreach (settlement in player_faction.getSettlements())
-		{
-			settlement.fadeOutAndDie(true)
+		local i = 0
+		if (i < _list.len()-1) yield _list[i]
+		else{
+			i = 0
+			yield _list[i]
 		}
 	}
+
+
 	
 	function getBuildingOptions()
 	{
 		local contract_options = [];
 		this.m.Temp_Options = []
+		#local nextBuilding = yieldNext(this.m.Building_options)
 
 		foreach (building in this.m.Building_options)
 		{
@@ -1775,7 +1577,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	}
 	function getStoreBrotherOptions()
 	{
-		local max_brother_options = 9 //options len of 11 minus 2 for generics
+		local max_brother_options = this.Const.World.Stronghold.MaxMenuOptionsLen //options len of 11 minus 2 for generics
 		local options = []
 		local playerRoster = this.World.getPlayerRoster().getAll()
 		local idx = 0
@@ -1840,7 +1642,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	}
 	function getRetrieveBrotherOptions()
 	{
-		local max_brother_options = 9
+		local max_brother_options = this.Const.World.Stronghold.MaxMenuOptionsLen
 		local options = []
 		local playerRoster = this.World.getRoster(9999).getAll()
 		local idx = 0
@@ -1991,6 +1793,40 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		contract.setOrigin(player_base);
 		this.World.Contracts.addContract(contract);
 		contract.start();
+	}
+
+	function removeBase()
+	{
+		local player_faction = this.Stronghold.getPlayerFaction()
+		local player_base = this.Stronghold.getPlayerBase()
+		local contracts = player_faction.getContracts()
+		foreach (contract in contracts)
+		{
+			this.World.Contracts.removeContract(contract)
+		}
+		foreach (unit in player_faction.m.Units)
+		{
+			unit.fadeOutAndDie()
+		}
+		
+		foreach( h in player_base.m.HousesTiles )
+		{
+			local tile = this.World.getTileSquare(h.X, h.Y);
+			tile.clear(this.Const.World.DetailType.Houses | this.Const.World.DetailType.Lighting);
+			local d = tile.spawnDetail("world_houses_0" + player_base.m.HousesType + "_0" + h.V + "_ruins", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
+			d.Scale = 0.85;
+			player_base.spawnFireAndSmoke(tile.Pos);
+		}
+		player_base.spawnFireAndSmoke(player_base.getTile().Pos)
+		foreach (location in player_base.m.AttachedLocations)
+		{
+			player_base.spawnFireAndSmoke(location.getTile().Pos)
+			location.die()
+		}
+		foreach (settlement in player_faction.getSettlements())
+		{
+			settlement.fadeOutAndDie(true)
+		}
 	}
 
 	function getTerrainInRegion( _tile )

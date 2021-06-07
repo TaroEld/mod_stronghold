@@ -37,7 +37,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		local closest_dist = 9999;
 		foreach (settlement in settlements)
 		{
-			if (settlement.getOwner() != player_faction &&  player_base.isConnectedToByRoads(settlement) && (settlement.getOwner() == null || settlement.getOwner().isAlliedWith(player_faction.getID())))
+			if (settlement.getOwner().m.Type != this.Const.FactionType.Player &&  player_base.isConnectedToByRoads(settlement) && (settlement.getOwner() == null || settlement.getOwner().isAlliedWith(player_faction.getID())))
 			{
 				if (!closest)
 				{

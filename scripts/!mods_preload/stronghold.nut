@@ -1,4 +1,4 @@
-::mods_registerMod("mod_stronghold", 0.996);
+::mods_registerMod("mod_stronghold", 0.9961);
 ::mods_registerJS("mod_stronghold.js");
 ::mods_registerCSS("mod_stronghold.css");
 ::mods_queue("mod_stronghold", null, function()

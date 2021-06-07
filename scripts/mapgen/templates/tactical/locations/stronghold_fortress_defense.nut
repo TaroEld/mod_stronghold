@@ -21,13 +21,28 @@ this.stronghold_fortress_defense <- this.inherit("scripts/mapgen/tactical_templa
 			{
 				local tile = this.Tactical.getTileSquare(x, y);
 				local d = centerTile.getDistanceTo(tile);
-				if (d > radius+1)
+				if (d == radius+1 && this.Math.rand(0, 100) < 25)
 				{
+				}
+				else if  (d == radius+2 && this.Math.rand(0, 100) < 50)
+				{
+
+				}
+				else if  (d == radius+3 && this.Math.rand(0, 100) < 75)
+				{
+
+				}
+				else if  (d > radius+3)
+				{
+
 				}
 				else
 				{
 					tile.removeObject();
 					tile.clear()
+					tile.Type = this.Const.Tactical.TerrainType.PavedGround;
+					tile.BlendPriority = this.Const.Tactical.TileBlendPriority.Road;
+					tile.setBrush("tile_road");
 				}
 			}
 		}
@@ -60,7 +75,7 @@ this.stronghold_fortress_defense <- this.inherit("scripts/mapgen/tactical_templa
 					{
 						tile.removeObject();
 						local o;
-						o = tile.spawnObject("entity/tactical/objects/human_camp_wall");
+						o = tile.spawnObject("entity/tactical/objects/graveyard_wall");
 						o.setDirBasedOnCenter(centerTile, radius);
 					}
 				}		
