@@ -37,6 +37,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.IsShowingLabel = true;
 		this.m.VisibilityMult = 2.0;
 		this.m.IsVisited = true;
+		this.m.IsUpgrading <- false;
 		this.m.Banner = this.World.Assets.getBannerID();
 		this.m.IsShowingBanner = true;
 		this.m.Buildings.resize(7, null)
@@ -52,15 +53,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		if (this.getFlags().get("CustomName")) return;
 		//dynamic name to add distinction for size, also adds the company name
-		local name_by_size = ["fort", "castle", "stronghold"]
 		local company_name = this.World.Assets.getName();
-		local final_name = "";
-		if (company_name.slice(company_name.len()-1, company_name.len()) == "s")
-		{
-			company_name = company_name.slice(0, company_name.len()-1);
-		}
-		final_name += company_name + "'s " + name_by_size[this.m.Size -1];
-		this.logDebug("Name is now: " +final_name);
+		local final_name = company_name;
+		if (company_name.slice(company_name.len()-1, company_name.len()) == "s") final_name +="' "
+		else final_name += "'s "
+		final_name += this.getSizeName();
 		this.m.Name = final_name;
 	}
 	
@@ -104,7 +101,21 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.IsAlive = false;
 		this.fadeAndDie();
 	}
-	
+
+	function getTooltip()
+	{
+		local ret = this.settlement.getTooltip()
+		if (this.isUpgrading()){ 
+			ret.push
+			({
+				id = 99,
+				type = "description",
+				text = "\n Currently upgrading to a " + this.getSizeName(true);
+			})
+		}
+		return ret
+	}
+
 	function updateQuests()
 	{
 		//adds/removes quests when entering town. Takes care of conflicing quests.		
@@ -210,6 +221,19 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 		this.updateImportedProduce();
 	}
+
+	function setUpgrading(_bool){
+		this.m.IsUpgrading = _bool;
+	}
+
+	function isUpgrading(){
+		return this.m.IsUpgrading
+	}
+
+	function getSizeName(_nextLevel = false){
+		if (_nextLevel) return this.Const.World.Stronghold.BaseNames[this.getSize()]
+		return this.Const.World.Stronghold.BaseNames[this.getSize()-1]
+	}
 	
 	
 	function updateTown(){
@@ -218,36 +242,37 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		//different looks
 		this.defineName()
 		local normalSprites = ["world_stronghold_01", "world_stronghold_02", "world_stronghold_03"]
+		local upgradingSprites = ["stronghold_01_upgrading", "stronghold_02_upgrading", "stronghold_03_upgrading"]
 		local barbarianSprites = ["world_wildmen_01", "world_wildmen_02", "world_wildmen_03"]
 		local barbarianSpritesSnow = ["world_wildmen_01_snow", "world_wildmen_02_snow", "world_wildmen_03_snow"]
 		local nomadSprites = ["world_nomad_camp_02", "world_nomad_camp_03", "world_nomad_camp_04"]
 		local backgroundSprites =
-		{
-			lvl1 = {
+		[
+			{
 				UIBackgroundCenter = "ui/settlements/stronghold_01",
 				UIBackgroundLeft = "ui/settlements/bg_houses_01_left",
 				UIBackgroundRight = "ui/settlements/bg_houses_01_right",
 				UIRampPathway = "ui/settlements/ramp_01_planks",
 				Lighting = "world_stronghold_01_light"
 			},
-			lvl2 = {
+			{
 				UIBackgroundCenter = "ui/settlements/stronghold_02",
 				UIBackgroundLeft = "ui/settlements/bg_houses_02_left",
 				UIBackgroundRight = "ui/settlements/bg_houses_02_right",
 				UIRampPathway = "ui/settlements/ramp_01_planks",
 				Lighting = "world_stronghold_02_light"
 			},
-			lvl3 = {
+			{
 				UIBackgroundCenter = "ui/settlements/stronghold_03",
 				UIBackgroundLeft = "ui/settlements/bg_houses_03_left",
 				UIBackgroundRight = "ui/settlements/bg_houses_03_right",
 				UIRampPathway = "ui/settlements/ramp_01_cobblestone",
 				Lighting = "world_stronghold_03_light"
 			}
-		}
-		local selectedBackgroundSprites;
+		]
+		local selectedBackgroundSprites =  backgroundSprites[this.getSize()-1]
 		local sprites;
-		sprites = normalSprites
+		sprites = this.isUpgrading() ? upgradingSprites : normalSprites;
 		this.m.troopSprites <- "figure_mercenary_01";
 		local isOnSnow = this.getTile().Type == this.Const.World.TerrainType.Snow;
 		for( local i = 0; i != 6; i = ++i )
@@ -270,30 +295,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		
 		//update size etc after deserialisation
-		if (this.getSize() == 1){
-			this.m.AttachedLocationsMax = 3
-			this.m.Sprite = sprites[0]
-			this.m.UIDescription = "Your fort";
-			this.m.Description = "Your fort";
-			selectedBackgroundSprites = backgroundSprites.lvl1
+		this.m.AttachedLocationsMax = this.Const.World.Stronghold.MaxAttachments[this.getSize()-1]
+		this.m.Sprite = sprites[this.getSize()-1]
+		this.m.UIDescription = format("Your %s", this.getSizeName());
+		this.m.Description = format("Your %s", this.getSizeName());
 
-		}
-		else if (this.getSize() == 2){
-			this.m.AttachedLocationsMax = 6
-			this.m.Sprite = sprites[1]
-			this.m.UIDescription = "Your castle";
-			this.m.Description = "Your castle";
-			selectedBackgroundSprites = backgroundSprites.lvl2
-
-		}
-		else{
-			this.m.AttachedLocationsMax = 9
-			this.m.Sprite = sprites[2]
-			this.m.UIDescription = "Your stronghold";
-			this.m.Description = "Your stronghold";
-			selectedBackgroundSprites = backgroundSprites.lvl3
-
-		}
 		this.m.UIBackgroundCenter = selectedBackgroundSprites.UIBackgroundCenter + (isOnSnow ? "_snow" : "")
 		this.m.UIBackgroundLeft = selectedBackgroundSprites.UIBackgroundLeft + (isOnSnow ? "_snow" : "")
 		this.m.UIBackgroundRight = selectedBackgroundSprites.UIBackgroundRight + (isOnSnow ? "_snow" : "")
@@ -835,7 +841,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			}
 		}
 
-		this.m.IsCoastal = this.checkForCoastal()
+		this.m.IsCoastal = this.Stronghold.checkForCoastal(this.getTile())
 
 		if (this.m.IsCoastal)
 		{
@@ -861,7 +867,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 	}
 	
-	function checkForCoastal()
+	function checkForCoastal(_tile)
 	{
 		//modded from vanilla to allow for longer range
 		local isCoastal = false;
@@ -889,7 +895,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				}
 			}
 		}
-		recursiveCheck(this.Stronghold.getPlayerBase().getTile())
+		recursiveCheck(_tile)
 		return isCoastal
 	}
 	

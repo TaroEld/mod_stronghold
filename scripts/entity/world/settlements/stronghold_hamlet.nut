@@ -211,6 +211,11 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
 
 		local rosterMin = 6
 		local rosterMax = 10
+		
+		if (this.Stronghold.getPlayerBase().hasAttachedLocation("attached_location.militia_trainingcamp")){
+			rosterMin += 2;
+			rosterMax += 2;
+		}
 
 		if (iterations < 7)
 		{

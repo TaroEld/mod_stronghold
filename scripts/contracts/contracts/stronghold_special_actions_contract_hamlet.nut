@@ -653,6 +653,7 @@ this.stronghold_special_actions_contract_hamlet <- this.inherit("scripts/contrac
 							{
 								this.World.Contracts.setActiveContract(this.Contract);
 								this.Contract.m.Flags.set("Remove_Base", true)
+								this.getPlayerFaction().getFlags().set("BuildHamlet", false)
 								this.Contract.setState("Running")
 								return 0
 							}

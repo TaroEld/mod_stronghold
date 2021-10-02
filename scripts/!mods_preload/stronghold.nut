@@ -1,4 +1,4 @@
-::mods_registerMod("mod_stronghold", 0.9961);
+::mods_registerMod("mod_stronghold", 1.0);
 ::mods_registerJS("mod_stronghold.js");
 ::mods_registerCSS("mod_stronghold.css");
 ::mods_queue("mod_stronghold", null, function()
@@ -151,81 +151,16 @@
 		o.onCartClicked = function()
 		{
 			onCartClicked();
-			if (this.Stronghold.getPlayerBase()) return
-			local priceMult = this.Const.World.Stronghold.PriceMult;
-			local build_cost = this.Const.World.Stronghold.BuyPrices[0] * priceMult;
-			local unlockedFeatures = this.Const.World.Stronghold.UnlockAdvantages[0];
-			if (this.Stronghold.getPlayerBase() && this.Stronghold.getPlayerBase().getSize() != 3){
-				build_cost = priceMult * this.Const.World.Stronghold.BuyPrices[this.Stronghold.getPlayerBase().getSize()]
-				unlockedFeatures = this.Const.World.Stronghold.UnlockAdvantages[this.Stronghold.getPlayerBase().getSize()]
-			}
-			
-			if (this.World.Retinue.getInventoryUpgrades() >= this.Const.World.InventoryUpgradeCosts.len())
-			{
-				local tile = this.World.State.getPlayer().getTile();
-				if (this.World.Assets.getMoney() >= build_cost){
-					if (tile.IsOccupied)
-					{
-						this.showDialogPopup("Build a stronghold", "Tile is occupied, cannot build a stronghold here!", null, null, true);
-					}
-					else if(this.World.Contracts.getActiveContract() != null)
-					{
-						this.showDialogPopup("Build a stronghold", "You can't have an active contract when building a stronghold!", null, null, true);
-					}
-					else{
-						this.showDialogPopup("Build a stronghold", "You can pay " + build_cost + " crowns to build a stronghold at this location. \n" + unlockedFeatures + "\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!", this.onPurchasePlayerBase.bindenv(this), null);
-					}
-				}
-				else{
-					this.showDialogPopup("Build a stronghold", "Gather " + build_cost + " crowns to build a stronghold!", null, null, true);
-				}
-			}		
+			if (this.Stronghold.getPlayerBase() || this.World.Retinue.getInventoryUpgrades() < this.Const.World.InventoryUpgradeCosts.len()) return			
+			this.showDialogPopup("Welcome to Stronghold!", "Click Yes to learn more, click No to return", this.onYesClicked.bindenv(this), null);	
 		};
-		
-		o.onPurchasePlayerBase <- function()
+
+		o.onYesClicked <- function()
 		{
-			local priceMult = this.Const.World.Stronghold.PriceMult
-			local build_cost = this.Const.World.Stronghold.BuyPrices[0] * priceMult
-			if (this.Stronghold.getPlayerBase() && this.Stronghold.getPlayerBase().getSize() != 3){
-				build_cost = priceMult * this.Const.World.Stronghold.BuyPrices[this.Stronghold.getPlayerBase().getSize()]
-			}
-			//called from retinue menu
-			this.World.Assets.addMoney(-build_cost);
-			local tile = this.World.State.getPlayer().getTile();
-			local player_faction = this.Stronghold.getPlayerFaction()
-			//create new faction if it doesn't exist already
-			if (!player_faction)
-			{
-				player_faction = this.new("scripts/factions/stronghold_player_faction");
-				player_faction.setID(this.World.FactionManager.m.Factions.len());
-				player_faction.setName("The " + this.World.Assets.getName());
-				player_faction.setMotto("\"" + "Soldiers Live" + "\"");
-				player_faction.setDescription("The only way to leave the company is feet first.");
-				player_faction.m.Banner = this.World.Assets.getBannerID()
-				player_faction.setDiscovered(true);
-				player_faction.m.PlayerRelation = 100;		
-				player_faction.updatePlayerRelation()
-				this.World.FactionManager.m.Factions.push(player_faction);
-				player_faction.onUpdateRoster();
-				this.World.createRoster(9999)
-			}
-			
-			local player_base = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_player_base", tile.Coords);
-			player_base.getFlags().set("isPlayerBase", true);
-			player_base.updateProperties()
-			player_faction.addSettlement(player_base);
-			player_base.updateTown();
-			
-			tile.IsOccupied = true;
-			tile.TacticalType = this.Const.World.TerrainTacticalType.Urban;
-			//spawn assailant quest
-			local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
-			contract.setEmployerID(player_faction.getRandomCharacter().getID());
-			contract.setFaction(player_faction.getID());
-			contract.setHome(player_base);
-			contract.setOrigin(player_base);
-			this.World.Contracts.addContract(contract);
-			contract.start();
+			this.World.State.getMenuStack().popAll(true)
+			local event = this.new("scripts/events/mod_stronghold/stronghold_intro_event")
+			this.World.Events.m.Events.push(event)
+			this.World.Events.fire(event.getID())
 		};
 	});
 	
@@ -396,7 +331,8 @@
 		return selected_party;
 		
 	}
-		
+	
+	//function to spawn units above pop cap
 	::mods_hookChildren("factions/faction", function ( o )
 	{
 		o.stronghold_spawnEntity <- function( _tile, _name, _uniqueName, _template, _resources )
@@ -437,11 +373,11 @@
 		
 		
 	})
-	
+	//sends caravans to player base if relation is above 70, gives higher chance to be chosen
 	::mods_hookNewObject("factions/actions/send_caravan_action", function ( o )
 	{
 		
-		//sends caravans to player base if relation is above 70, gives higher chance to be chosen
+		
 		while (!("onUpdate" in o)) o = o[o.SuperName];
 		local onUpdate = o.onUpdate;
 		o.onUpdate = function(_faction)
@@ -801,7 +737,7 @@
 		items.extend(this.Stronghold.getPlayerBase().getBuilding("building.storage_building").getStash().getItems())
 		return items
 	}
-	::mods_hookBaseClass("crafting/blueprint", function ( o )
+	::mods_hookBaseClass("crafting/blueprint", function ( o ) 
 	{
 		//adds items in storage building to crafting UI
 		while("SuperName" in o) o=o[o.SuperName]

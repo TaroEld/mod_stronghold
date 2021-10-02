@@ -16,6 +16,7 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 		this.m.CombatMusic = this.Const.Music.NobleTracks;
 		this.m.RelationDecayPerDay = 0;
 		this.m.BannerPrefix = "banner_"
+		this.addTrait(this.Const.World.Stronghold.PlayerFactionActions)
 	}
 	function getName()
 	{
@@ -55,13 +56,7 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 		{
 			this.updateAlliancesPlayerFaction();
 		}
-		//same for orders
-		if (this.m.Deck.len() < 3)
-		{
-			local order = ["scripts/factions/actions/stronghold_guard_base_action", "scripts/factions/actions/stronghold_send_caravan_action", "scripts/factions/actions/stronghold_patrol_roads_action"];
-			this.addTrait(order);
-		}		
-		
+
 		if (!this.m.IsActive)
 		{
 			return;

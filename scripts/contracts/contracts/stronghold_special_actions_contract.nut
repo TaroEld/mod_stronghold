@@ -4,7 +4,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	//Completing or aborting an action returns the user to the "Task" screen
 	m = {
 		Reward = 0,
-		Title = "Manage your settlement",
+		Title = "",
 		Cost = 0,
 		Text = "",
 		Building_options = this.Const.World.Stronghold.Building_options,
@@ -31,6 +31,8 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		],
 		Temp_Var = null, //used as a generic variable to record the choice of the player
 		Temp_Options = [] //used as a generic container to record options, used to index in and get the right choice.
+		Temp_Generator = null // variable generator function that gets initialised when an option is chosen
+							//allows us to easily remember the current options to choose 'more options
 		
 	},
 	function create()
@@ -41,7 +43,8 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		this.createStates();
 		this.createScreens();
 		this.m.Type = "contract.stronghold_special_actions_contract";
-		this.m.Name = "Manage your base";
+		this.m.Name = format("Manage your %s", this.Stronghold.getPlayerBase().getSizeName());
+		this.m.Title = format("Manage your %s", this.Stronghold.getPlayerBase().getSizeName());
 		this.m.TimeOut = this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 1500.0;
 		this.m.IsSouthern <- this.Stronghold.getPlayerBase().getFlags().get("isSouthern")
 	}
@@ -136,14 +139,14 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		local contract_options = [];
 		local possibilities = [
 			{
-				Text = "Upgrade your stronghold",
+				Text = format("Upgrade your %s", player_base.getSizeName()),
 				ID = "Upgrade",
 				isValid = function(){
-					return player_base.m.Size < 3
+					return player_base.m.Size < 3 && !player_base.isUpgrading()
 				}
 			},
 			{
-				Text = "Add a building to your town",
+				Text = format("Add a building to your %s", player_base.getSizeName()),
 				ID = "Building",
 				isValid = function(){
 					local current_buildings = 0;
@@ -153,11 +156,12 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 							current_buildings++
 						}
 					}
-					return current_buildings < free_building_slots
+					return current_buildings < free_building_slots && !player_base.isUpgrading()
 				}
 			},
 			{
-				Text = "Remove a building from your town",
+
+				Text = format("Remove a building from your %s", player_base.getSizeName()),
 				ID = "Building_Remove",
 				isValid = function(){
 					local current_buildings = 0;
@@ -167,11 +171,11 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 							current_buildings++
 						}	
 					}
-					return current_buildings >= free_building_slots
+					return current_buildings >= free_building_slots && !player_base.isUpgrading()
 				}
 			},
 			{
-				Text = "Add a location to your town.",
+				Text = format("Add a location to your %s", player_base.getSizeName()),
 				ID = "Location",
 				isValid = function(){
 					local current_locations = 0;
@@ -180,21 +184,21 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 							current_locations++
 						}
 					}
-					return current_locations < player_base.m.AttachedLocationsMax && !player_base.m.Flags.get("AllLocationsBuilt")
+					return current_locations < player_base.m.AttachedLocationsMax && !player_base.m.Flags.get("AllLocationsBuilt") && !player_base.isUpgrading()
 				}
 			},
 			{
 				Text = "Build a road to another settlement.",
 				ID = "Road",
 				isValid = function(){
-					return player_base.m.Size > 1
+					return player_base.m.Size > 1 && !player_base.isUpgrading()
 				}
 			},
 			{
 				Text = "Buy a Water Skin.",
 				ID = "Waterskin",
 				isValid = function(){
-					return player_base.m.Size == 3
+					return player_base.m.Size == 3 && !player_base.isUpgrading()
 				}
 			},
 			{
@@ -205,17 +209,17 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				}
 			},
 			{
-				Text = "Provide special training to one of your recruits",
+				Text = "Provide focused training to one of your recruits",
 				ID = "Teacher",
 				isValid = function(){
-					return player_base.m.Size == 3
+					return player_base.m.Size == 3 && !player_base.isUpgrading()
 				}
 			},
 			{
 				Text = "Send gifts to a faction",
 				ID = "Gift",
 				isValid = function(){
-					return player_base.m.Size > 1
+					return player_base.m.Size > 1 && !player_base.isUpgrading()
 				}
 			},
 			{
@@ -238,14 +242,14 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				Text = "Build a Hamlet",
 				ID = "Hamlet",
 				isValid = function(){
-					return (player_base.m.Size == 3 && !this.Stronghold.getPlayerFaction().getFlags().get("BuildHamlet"))
+					return (player_base.m.Size == 3 && !this.Stronghold.getPlayerFaction().getFlags().get("BuildHamlet")) && !player_base.isUpgrading()
 				}
 			},
 			{
-				Text = "Remove your base",
+				Text = format("Remove your %s", player_base.getSizeName()),
 				ID = "Remove_Base",
 				isValid = function(){
-					return true
+					return !player_base.isUpgrading()
 				}
 			},
 		]
@@ -341,9 +345,10 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		}
 		else if (_text == "Mercenaries")
 		{
+			local has_mercs = false
 			foreach ( unit in this.Stronghold.getPlayerFaction().m.Units){
 				if (unit.getFlags().get("Stronghold_Mercenaries")){
-					this.m.Flags.set("has_mercs", true)
+					has_mercs = true
 				}
 			}
 			if (!this.Stronghold.getPlayerBase().m.Flags.get("Mercenaries"))
@@ -360,7 +365,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				})
 				return "Mercs_Not_Freed";
 			}
-			else if (this.m.Flags.get("has_mercs"))
+			else if (has_mercs)
 			{
 				this.m.Screens.push
 				({
@@ -434,7 +439,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		else if (_text == "Hamlet")
 		{
 			this.m.Cost = 20 * this.Const.World.Stronghold.PriceMult;
-			this.m.Text = "Your stronghold has grown large enough that many common people flock to it. It would be wise to construct a hamlet for these people to live at. This would cost " + this.m.Cost + " crowns."
+			this.m.Text = "Your Stronghold has grown large enough that many common people flock to it. It would be wise to construct a hamlet for these people to live at. This would cost " + this.m.Cost + " crowns."
 			this.m.Title = "Build a Hamlet"
 			this.addOverviewScreen()
 			
@@ -488,11 +493,14 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				return "Teacher_Not_Freed";
 			}
 			else {
+				local text = "The legendary swordmaster spends his days honing his skills. He can give one of your brothers an intensive lesson- for a considerable fee of " + this.m.Cost + " crowns. Choose a brother to receive focused training by the swordmaster."
+				text += "\n\n[b]1.5x combat experience for the next 10 fights.[/b]"
+				text += "\n[i]The chosen brother will lose any training hall buffs.[/i]"
 			    this.m.Screens.push
 				({
 					ID = "Teacher_Choice",
 					Title = "Train a brother",
-					Text = "The legendary swordmaster spends his days honing his skills. He can give one of your brothers an intensive lesson- for a considerable fee of " + this.m.Cost + " crowns. Choose a brother to receive special training by the swordmaster.",
+					Text = text,
 					Image = "",
 					List = [],
 					ShowEmployer = true,
@@ -506,11 +514,15 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			local isValid = this.isGiftValid(true)
 			if (isValid[0])
 			{
+				local text = "You can choose to send gifts to a faction. This will consume the treasures you have in your inventory, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods."
+				text += "\n\n [i]Gain relation equal to 5% of the value of the treasures with the target faction.[/i]"
+				text += "\n [i]Treasures are gained from camps and events, for example a Signet Ring.[/i]"
+				text += "\n [i]This will spawn a caravan that moves to the destination. If it is destroyed, you lose your investment.[/i]"
 				this.m.Screens.push
 				({
 					ID = "Send_Gift",
 					Title = "Send gifts to a faction",
-					Text = "You can choose to send gifts to a faction. This will consume the valuables you have in your inventory, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods.",
+					Text = text,
 					Image = "",
 					List = [],
 					ShowEmployer = true,
@@ -520,9 +532,9 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			}
 			else
 			{
-				local text = "You can choose to send gifts to a faction. This will consume the valuables you have in your inventory, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods.\n\n"
+				local text = "You can choose to send gifts to a faction. This will consume the treasures you have in your inventory, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods.\n\n"
 				if (!isValid[1]) text += "You need at least 5000 crowns to send a gift!\n"
-				if (!isValid[2]) text += "You need at least 2 trophies in your inventory or storage to send a gift!\n"
+				if (!isValid[2]) text += "You need at least 2 treasures in your inventory or storage to send a gift!\n"
 				if (!isValid[3]) text += "You can't reach anyone by road or you are already friends with all factions!\n"
 				this.m.Screens.push
 				({
@@ -556,14 +568,14 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			local player_base = this.Stronghold.getPlayerBase()
 			local advantages = this.Const.World.Stronghold.UnlockAdvantages[player_base.m.Size]
 			this.m.Cost =  this.Const.World.Stronghold.PriceMult * this.Const.World.Stronghold.BuyPrices[player_base.getSize()]
-			this.m.Text = "You can upgrade your base to a greater size. This would add these options: \n" + advantages +"\n This costs " + this.m.Cost + " crowns. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
-			this.m.Title = "Upgrade your base"
+			this.m.Text = format("You can upgrade your " + this.Const.World.Stronghold.BaseNames[player_base.getSize()-1] + " to a " + this.Const.World.Stronghold.BaseNames[player_base.getSize()] + ". This would add these options: \n" + advantages +"\n This costs " + this.m.Cost + " crowns.\nWhile upgrading, you won't be able to access most of the management options. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
+			this.m.Title = "Upgrade your " +  this.Const.World.Stronghold.BaseNames[player_base.getSize()-1]
 			this.addOverviewScreen()
 			
 			this.m.Screens.push({
 				ID = "Enough",
 				Title = this.m.Title,
-				Text = "You upgraded your base.",
+				Text = format("You upgraded your %s to a %s", player_base.getSizeName(), player_base.getSizeName(true)),
 				Image = "",
 				List = [],
 				ShowEmployer = true,
@@ -597,7 +609,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			({
 				ID = "Building_Choice",
 				Title = "Choose a building",
-				Text = "You can construct a new building for your town. These are your available options.",
+				Text = format("You can construct a new building for your %s. These are your available options.", this.Stronghold.getPlayerBase().getSizeName()),
 				Image = "",
 				List = [],
 				ShowEmployer = true,
@@ -608,6 +620,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 
 		else if (_text == "Building_Remove")
 		{
+
 			this.m.Screens.push
 			({
 				ID = "Building_Remove_Choice",
@@ -626,7 +639,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			({
 				ID = "Location_Choice",
 				Title = "Choose a location",
-				Text = "You can construct a new location close to your town. This can provide various benefits. Each costs 10000 crowns.",
+				Text = format("You can construct a new location close to your %s. This can provide various benefits. Each costs 10000 crowns.", this.Stronghold.getPlayerBase().getSizeName()),
 				Image = "",
 				List = [],
 				ShowEmployer = true,
@@ -685,7 +698,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			({
 				ID = "Remove_Base",
 				Title = "Confirm your choice",
-				Text = "Are you sure you want to remove your base? This is free, but can't be undone.",
+				Text = format("Are you sure you want to remove your %s? This is free, but can't be undone.", this.Stronghold.getPlayerBase().getSizeName()),
 				Image = "",
 				List = [],
 				ShowEmployer = true,
@@ -707,7 +720,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		{
 
 			this.m.Cost = 0 * this.Const.World.Stronghold.PriceMult;
-			this.m.Text = "FINAL WARNING! Are you really sure you want to remove your base?"
+			this.m.Text = format("FINAL WARNING! Are you really sure you want to remove your %s?", this.Stronghold.getPlayerBase().getSizeName());
 			this.m.Title = "Remove your base"
 			this.addOverviewScreen()
 			if(this.World.Contracts.getActiveContract() != null)
@@ -716,7 +729,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				({
 					ID = "Enough",
 					Title = this.m.Title,
-					Text = "You can't remove your base while having an active contract!",
+					Text = format("You can't remove your %s while having an active contract!", this.Stronghold.getPlayerBase().getSizeName()),
 					Image = "",
 					List = [],
 					ShowEmployer = true,
@@ -734,7 +747,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				({
 					ID = "Enough",
 					Title = this.m.Title,
-					Text = "You removed your base.",
+					Text = format("You removed your %s.", this.Stronghold.getPlayerBase().getSizeName()),
 					Image = "",
 					List = [],
 					ShowEmployer = true,
@@ -768,6 +781,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			Text = this.m.Text,
 			Image = "",
 			List = [],
+			ShowEmployer = true,
 			Options = [
 				{
 					Text = "Yes.",
@@ -787,10 +801,6 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				},
 				this.addGenericOption()
 			],
-			ShowObjectives = true,
-			ShowPayment = true,
-			ShowEmployer = true,
-			ShowDifficulty = false,
 		});
 	}
 	
@@ -810,7 +820,9 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 					{
 						// if only I learned this before
 						this.Contract.m.Temp_Var = this.Contract.m.Temp_Options[_option];
-						this.Contract.m.Text = "Go ahead and give " + this.Text + " a lesson.";
+						this.Contract.m.Text = "Go ahead and give " + this.Text + " a lesson.\n";
+						this.Contract.m.Text += "\n1.5x combat experience for the next 10 fights.";
+						this.Contract.m.Text += "\nThis brother will lose any training hall buffs.";
 						this.Contract.addOverviewScreen()
 						this.Contract.addTeacherEnoughScreen()
 						return "Overview_Building";
@@ -1069,44 +1081,40 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	}
 
 	
-	function yieldNext(_list)
-	{
-		local i = 0
-		if (i < _list.len()-1) yield _list[i]
-		else{
-			i = 0
-			yield _list[i]
-		}
-	}
-
-
 	
 	function getBuildingOptions()
 	{
+		this.m.Temp_Generator = yieldNext(this.m.Building_options.len())
 		local contract_options = [];
 		this.m.Temp_Options = []
-		#local nextBuilding = yieldNext(this.m.Building_options)
+		local optionsArray = this.m.Building_options
 
-		foreach (building in this.m.Building_options)
+		foreach (idx in this.m.Temp_Generator)
 		{
+			local building = optionsArray[idx]
 			if (building.isValid())
 			{
+				this.m.Temp_Options.push({Building = building, Index = idx});
 				contract_options.push
 				({
 					Text = "Build a" + (building.Name[0] == "A" ? "n ":" ") + building.Name + " (" +  (building.Cost * this.Const.World.Stronghold.PriceMult) + " crowns)",
 					function getResult(_option)
 					{
-						local building = this.Contract.m.Temp_Options[_option]
+						local building = this.Contract.m.Temp_Options[_option].Building
 						this.Contract.m.Temp_Var <- (this.Contract.m.IsSouthern &&  building.SouthPath) ? building.SouthPath : building.Path
 						this.Contract.m.Cost = building.Cost * this.Const.World.Stronghold.PriceMult		
 						this.Contract.addBuildingOverviewScreen(building.Name)
 						return "Overview_Building";
 					}
 				});
-				this.m.Temp_Options.push(building);
 			}
-		}		
-		
+			if(contract_options.len() >= this.Const.World.Stronghold.MaxMenuOptionsLen){
+				contract_options.push(this.addMoreOptions("Building_Choice", this.getBuildingOptions))
+				break;
+			}
+			if (contract_options.len() >= optionsArray.len()) break
+
+		}
 		contract_options.push(this.addGenericOption("Not right now."))
 		return contract_options;
 	}
@@ -1141,14 +1149,6 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				},
 				this.addGenericOption()
 			],
-			ShowObjectives = true,
-			ShowPayment = true,
-			ShowEmployer = true,
-			ShowDifficulty = false,
-			function start()
-			{
-				this.Contract.m.IsNegotiated = true;
-			}
 		});
 	}
 	
@@ -1219,6 +1219,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	
 	function getBuildingRemoveOptions()
 	{
+		this.m.Temp_Generator = yieldNext(this.m.Building_options.len())
 		local contract_options = [];
 		this.m.Temp_Options = []
 		foreach (building in this.m.Building_options)
@@ -1266,15 +1267,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 
 				},
 				this.addGenericOption()
-			],
-			ShowObjectives = true,
-			ShowPayment = true,
-			ShowEmployer = true,
-			ShowDifficulty = false,
-			function start()
-			{
-				this.Contract.m.IsNegotiated = true;
-			}
+			]
 		});
 	}
 	
@@ -1321,14 +1314,18 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	
 	
 	function getLocationOptions(){
+		this.m.Temp_Generator = yieldNext(this.m.Location_options.len())
 		local home = this.Stronghold.getPlayerBase();
-		local tile = home.getTile()
 		local contract_options = [];
-		this.m.Temp_Options = [];
-		foreach (building in this.m.Location_options)
+		this.m.Temp_Options = []
+		local optionsArray = this.m.Location_options
+
+		foreach (idx in this.m.Temp_Generator)
 		{
+			local building = optionsArray[idx]
 			if (!home.hasAttachedLocation(building.ID))
 			{
+				this.m.Temp_Options.push(building);
 				contract_options.push
 				({
 					Text = building.Text,
@@ -1341,10 +1338,14 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 						return "Overview_Building";
 					}
 				})
-				this.m.Temp_Options.push(building);
+				
 			}
+			if(contract_options.len() >= this.Const.World.Stronghold.MaxMenuOptionsLen){
+				contract_options.push(this.addMoreOptions("Location_Choice", this.getLocationOptions))
+				break;
+			}
+			if (contract_options.len() >= optionsArray.len()) break
 		}
-
 		contract_options.push(this.addGenericOption("Not right now."))
 		return contract_options;
 	}
@@ -1376,14 +1377,6 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				},
 				this.addGenericOption()
 			],
-			ShowObjectives = true,
-			ShowPayment = true,
-			ShowEmployer = false,
-			ShowDifficulty = false,
-			function start()
-			{
-				this.Contract.m.IsNegotiated = true;
-			}
 		});
 	}
 	function addLocationEnoughScreen()
@@ -1432,10 +1425,8 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		local home = this.Stronghold.getPlayerBase()
 		local tile = home.getTile()
 		local settlements = this.World.EntityManager.getSettlements();
-		local contract_options = []
-		local local_sorted_settlements = [];
+		local contract_options = [], local_sorted_settlements = [], dist_map = []
 		this.m.Temp_Options = [];
-		local dist_map = []
 		
 		foreach (settlement in settlements)
 		{
@@ -1511,6 +1502,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			Text = "You will try to build a road to " + this.m.Temp_Var.Name +". This will cost " + this.m.Cost + " crowns. Do you wish to do this?",
 			Image = "",
 			List = [],
+			ShowObjectives = true,
 			Options = [
 				{
 					Text = "Yes.",
@@ -1531,13 +1523,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				},
 				this.addGenericOption()
 			],
-			ShowObjectives = true,
-			ShowPayment = true,
-			ShowDifficulty = false,
-			function start()
-			{
-				this.Contract.m.IsNegotiated = true;
-			}
+			
 		});
 	}
 	
@@ -1575,27 +1561,49 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 
 		});
 	}
+	//generator to keep track of a list since we're limited in option slots
+	function yieldNext(_listLength, _iter = 0)
+	{
+		if(_iter < 0) _iter += _listLength
+		while(true)
+		{
+			if (_iter ==_listLength) _iter = 0
+			yield _iter
+			_iter++
+		}
+	}
+
+	function addMoreOptions(_id, _func)
+	{
+		return {
+			Text = "More options",
+			function getResult(_option)
+			{
+				foreach (screen in this.Contract.m.Screens)
+				{
+					if (screen.ID == _id) screen.Options = _func.call(this.Contract)
+				}
+				return _id
+			}
+		}
+	}
+
 	function getStoreBrotherOptions()
 	{
-		local max_brother_options = this.Const.World.Stronghold.MaxMenuOptionsLen //options len of 11 minus 2 for generics
-		local options = []
-		local playerRoster = this.World.getPlayerRoster().getAll()
-		local idx = 0
-		if (this.m.Temp_Var > 0)
+		this.m.Temp_Generator = yieldNext(this.World.getPlayerRoster().getAll().len())
+		this.m.Temp_Options = [] 
+		local contract_options = []
+		local roster = this.World.getPlayerRoster().getAll()
+
+		foreach (idx in this.m.Temp_Generator)
 		{
-			this.m.Temp_Var = this.Math.max(0,  playerRoster.len() - max_brother_options)
-		}
-		for (local i = this.m.Temp_Var; i < max_brother_options + this.m.Temp_Var && i < playerRoster.len(); i++)
-		{
-			local bro = playerRoster[i]
-			options.push(
+			this.m.Temp_Options.push({Bro = roster[idx], Index = idx})
+			contract_options.push(
 			{
-				Text = bro.getName(),
+				Text = roster[idx].getName(),
 				function getResult(_option)
 				{
-					local last = false;
-					last = this.Contract.storeBro(this.World.getPlayerRoster().getAll()[_option + this.Contract.m.Temp_Var])
-					if (last)
+					if (!this.Contract.storeBro(this.Contract.m.Temp_Options[_option].Bro))
 					{
 						this.Contract.m.Screens.push(
 						{
@@ -1609,8 +1617,8 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 						})
 						return "Last_Brother"
 					}
-					this.Contract.m.Temp_Var = this.Math.max(0, this.Contract.m.Temp_Var-1)
-
+					//start generator at previous idx
+					this.Contract.m.Temp_Generator = this.Contract.yieldNext(this.World.getPlayerRoster().getAll().len(), this.Contract.m.Temp_Options[_option].Index - _option)
 					foreach (screen in this.Contract.m.Screens)
 					{
 						if (screen.ID == "Store_Brother") screen.Options = this.Contract.getStoreBrotherOptions()
@@ -1619,89 +1627,68 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 					return "Store_Brother"
 				}
 			})
-			idx++
+			if(contract_options.len() >= this.Const.World.Stronghold.MaxMenuOptionsLen){
+				contract_options.push(this.addMoreOptions("Store_Brother", this.getStoreBrotherOptions))
+				break;
+			}
+			if (contract_options.len() >= roster.len()) break
 		}
-
-			options.push(
-			{
-				Text = "More options",
-				function getResult(_option)
-				{
-					this.Contract.m.Temp_Var += max_brother_options
-					if (this.Contract.m.Temp_Var >= this.World.getPlayerRoster().getAll().len()) this.Contract.m.Temp_Var = 0;
-					foreach (screen in this.Contract.m.Screens)
-					{
-						if (screen.ID == "Store_Brother") screen.Options = this.Contract.getStoreBrotherOptions()
-					}
-					return "Store_Brother"
-				}
-			})
 		
-		options.push(this.addGenericOption("Not right now."))
-		return options
+		contract_options.push(this.addGenericOption("Not right now."))
+		return contract_options
 	}
+
+	
 	function getRetrieveBrotherOptions()
 	{
-		local max_brother_options = this.Const.World.Stronghold.MaxMenuOptionsLen
-		local options = []
-		local playerRoster = this.World.getRoster(9999).getAll()
-		local idx = 0
-		if (this.m.Temp_Var > 0)
+		this.m.Temp_Generator = yieldNext(this.World.getRoster(9999).getAll().len())
+		this.m.Temp_Options = []
+
+		local roster = this.World.getRoster(9999).getAll()
+		local contract_options = []
+
+		foreach (idx in this.m.Temp_Generator)
 		{
-			this.m.Temp_Var = this.Math.max(0,  playerRoster.len()- max_brother_options)
-		}
-		for (local i = this.m.Temp_Var; i < max_brother_options + this.m.Temp_Var && i < playerRoster.len(); i++)
-		{
-			local bro = playerRoster[i]
-			options.push(
+
+			this.m.Temp_Options.push({Bro = roster[idx], Index = idx})
+			contract_options.push(
 			{
-				Text = bro.getName(),
+				Text = roster[idx].getName(),
 				function getResult(_option)
 				{
-					this.Contract.retrieveBro(this.World.getRoster(9999).getAll()[_option + this.Contract.m.Temp_Var])
-					this.Contract.m.Temp_Var = this.Math.max(0, this.Contract.m.Temp_Var-1)
-					foreach (screen in this.Contract.m.Screens)
-					{
-						if (screen.ID == "Retrieve_Brother") screen.Options = this.Contract.getRetrieveBrotherOptions()
-					}
-					
+					this.Contract.retrieveBro(this.Contract.m.Temp_Options[_option].Bro)
 					if (this.World.getRoster(9999).getAll().len() == 0){
 						this.Contract.clearScreens()
 						return "Task"
 					}
-					else return "Retrieve_Brother"
+					//start generator at previous idx
+					this.Contract.m.Temp_Generator = this.Contract.yieldNext(this.World.getRoster(9999).getAll().len(), this.Contract.m.Temp_Options[_option].Index - _option)
+					foreach (screen in this.Contract.m.Screens)
+					{
+						if (screen.ID == "Retrieve_Brother") screen.Options = this.Contract.getRetrieveBrotherOptions()
+					}
+					return "Retrieve_Brother"
 				}
 			})
-			idx++
-		}
-
-		options.push(
-		{
-			Text = "More options",
-			function getResult(_option)
-			{
-				this.Contract.m.Temp_Var += max_brother_options
-				if (this.Contract.m.Temp_Var >= this.World.getRoster(9999).getAll().len()) this.Contract.m.Temp_Var = 0;
-				foreach (screen in this.Contract.m.Screens)
-				{
-					if (screen.ID == "Retrieve_Brother") screen.Options = this.Contract.getRetrieveBrotherOptions()
-				}
-				return "Retrieve_Brother"
+			if(contract_options.len() >= this.Const.World.Stronghold.MaxMenuOptionsLen){
+				contract_options.push(this.addMoreOptions("Retrieve_Brother", this.getRetrieveBrotherOptions))
+				break;
 			}
-		})
-	
-		options.push(this.addGenericOption("Not right now."))
-		return options
+			if (contract_options.len() >= roster.len()) break
+			
+		}
+		contract_options.push(this.addGenericOption("Not right now."))
+		return contract_options
 	}
 
 	function storeBro(_bro)
 	{
 		local townRoster = this.World.getRoster(9999)
 	    local playerRoster = this.World.getPlayerRoster()
-	    if (playerRoster.getAll().len() == 1 || _bro.getFlags().get("IsPlayerCharacter")) return true;
+	    if (playerRoster.getAll().len() == 1 || _bro.getFlags().get("IsPlayerCharacter")) return false;
 		townRoster.add(_bro)
 		playerRoster.remove(_bro)
-		return false;
+		return true;
 	}
 	function retrieveBro(_bro)
 	{
@@ -1760,6 +1747,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			player_faction.addSettlement(hamlet);
 			local result = this.new(type.Script)
 			hamlet.assimilateCharacteristics(result)
+			hamlet.setDiscovered(true);
 			playerBase.buildRoad(hamlet)
 			player_faction.getFlags().set("BuildHamlet", true)
 
@@ -1768,23 +1756,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	}
 
 	function onUpgradePlayerBase()
-	{
-		local player_faction = this.Stronghold.getPlayerFaction()
-		local player_base = this.Stronghold.getPlayerBase()
-		//upgrade looks and situation
-		player_base.m.Size = player_base.m.Size +1;
-		player_base.buildHouses()
-		player_base.updateTown();
-		
-		if (player_faction.m.Deck.len() < 2)
-		{
-			local order = ["scripts/factions/actions/stronghold_guard_base_action", "scripts/factions/actions/stronghold_send_caravan_action"];
-			player_faction.addTrait(order);
-		}
-		//spawn new guards to reflect the change in size
-		local actionToFire = player_faction.m.Deck[0]
-		actionToFire.execute(player_faction);
-		
+	{		
 		//spawn assailant quest
 		local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
 		contract.setEmployerID(player_faction.getRandomCharacter().getID());
@@ -1863,8 +1835,9 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	{
 		this.m.Screens = [];
 		this.m.Temp_Var = null;
+		this.m.Temp_Generator = null;
 		this.m.Temp_Options = [];
-		this.m.Title = "Manage your settlement";
+		this.m.Title = format("Manage your %s", this.Stronghold.getPlayerBase().getSizeName());
 		this.m.Cost = 0;
 		this.createScreens()
 	}
@@ -1956,6 +1929,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 
 	function removeThisContract()
 	{
+		if ("LegendMod" in this.getroottable().Const) this.World.State.getPlayer().calculateModifiers();
 		this.World.Contracts.removeContract(this);
 		this.m.Home.updateQuests()
 		this.World.State.getTownScreen().updateContracts();
