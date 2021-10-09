@@ -640,6 +640,40 @@
 						}
 					];
 
+				case "world-campfire-screen.Cart":
+					local ret = [
+						{
+							id = 1,
+							type = "title",
+							text = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades()]
+						},
+						{
+							id = 2,
+							type = "description",
+							text = "A mercenary company has to carry a lot of equipment and supplies. By using carts and wagons, you can expand your available inventory space and carry even more."
+						}
+					];
+
+					if (this.World.Retinue.getInventoryUpgrades() < this.Const.Strings.InventoryUpgradeHeader.len())
+					{
+						ret.push({
+							id = 1,
+							type = "hint",
+							icon = "ui/icons/mouse_left_button.png",
+							text = this.Const.Strings.InventoryUpgradeHeader[this.World.Retinue.getInventoryUpgrades()] + " for [img]gfx/ui/tooltips/money.png[/img]" + this.Const.Strings.InventoryUpgradeCosts[this.World.Retinue.getInventoryUpgrades()]
+						});
+					}
+					else if (!this.Stronghold.getPlayerBase()){
+						ret.push({
+							id = 3,
+							type = "hint",
+							icon = "ui/icons/mouse_left_button.png",
+							text = "You can build a " + this.Const.World.Stronghold.BaseNames[0] + " for [img]gfx/ui/tooltips/money.png[/img]" + this.Const.World.Stronghold.PriceMult * this.Const.World.Stronghold.BuyPrices[0]
+						});
+					} 
+
+					return ret;
+
 
 					
 			}

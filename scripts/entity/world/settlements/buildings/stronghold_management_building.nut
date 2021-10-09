@@ -32,6 +32,8 @@ this.stronghold_management_building <- this.inherit("scripts/entity/world/settle
 		local contract = this.new("scripts/contracts/contracts/stronghold_special_actions_contract");
 		contract.setEmployerID(fac.getRandomCharacter().getID());
 		contract.setFaction(fac.getID())
+		contract.setBase(this.getSettlement());
+		contract.initScreensAndStates()
 		this.World.Contracts.addContract(contract);
 		this.World.Contracts.showContractByID(contract.getID());
 	}

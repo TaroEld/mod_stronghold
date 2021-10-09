@@ -30,10 +30,10 @@ this.stronghold_management_building_village <- this.inherit("scripts/entity/worl
 	function onClicked( _townScreen )
 	{
 		local fac = this.Stronghold.getPlayerFaction();
-		local contract = this.new("scripts/contracts/contracts/stronghold_special_actions_contract_hamlet");
+		local contract = this.new("scripts/contracts/contracts/stronghold_special_actions_contract");
 		contract.setEmployerID(fac.getRandomCharacter().getID());
 		contract.setFaction(fac.getID())
-		contract.setHome(this.World.State.getCurrentTown());
+		contract.setBase(this.getSettlement());
 		this.World.Contracts.addContract(contract);
 		this.World.Contracts.showContractByID(contract.getID());
 	}

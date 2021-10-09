@@ -106,11 +106,10 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		local ret = this.settlement.getTooltip()
 		if (this.isUpgrading()){ 
-			ret.push
-			({
+			ret.push({
 				id = 99,
 				type = "description",
-				text = "\n Currently upgrading to a " + this.getSizeName(true);
+				text = format("\n Currently upgrading to a %s", this.getSizeName(true))
 			})
 		}
 		return ret
@@ -297,6 +296,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		//update size etc after deserialisation
 		this.m.AttachedLocationsMax = this.Const.World.Stronghold.MaxAttachments[this.getSize()-1]
 		this.m.Sprite = sprites[this.getSize()-1]
+		if (!this.m.Flags.get("LevelOne")) this.m.Sprite = sprites[this.Math.min(2, this.getSize())] 
+		this.getSprite("body").setBrush(this.m.Sprite);
+		if (this.m.Flags.get("BarbarianSprites")||this.m.Flags.get("NomadSprites")){
+			this.getSprite("body").Scale = 1.25;
+		}
 		this.m.UIDescription = format("Your %s", this.getSizeName());
 		this.m.Description = format("Your %s", this.getSizeName());
 
@@ -316,10 +320,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Buildings[6].updateSprite()
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
 		//need to update building size since it's changed to 9 during serialisation
-		this.getSprite("body").setBrush(this.m.Sprite);
-		if (this.m.Flags.get("BarbarianSprites")||this.m.Flags.get("NomadSprites")){
-			this.getSprite("body").Scale = 1.25;
-		}
+
 		this.getLabel("name").Text = this.getName();
 		this.getLabel("name").Visible = true;
 		local light = this.getSprite("lighting");
@@ -971,6 +972,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		this.settlement.onSerialize(_out);
 		_out.writeU8(this.m.Size)
+		_out.writeBool(this.m.IsUpgrading)
 		
 	}
 	
@@ -978,6 +980,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		this.settlement.onDeserialize(_in);
 		this.m.Size  = _in.readU8();
+		this.m.IsUpgrading = _in.readBool()
 		this.updateTown()
 	}
 	

@@ -30,9 +30,12 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			this.Const.World.TerrainType.Shore
 		],
 		Temp_Var = null, //used as a generic variable to record the choice of the player
-		Temp_Options = [] //used as a generic container to record options, used to index in and get the right choice.
-		Temp_Generator = null // variable generator function that gets initialised when an option is chosen
+		Temp_Variable_List = [], //used as a generic container to record options, used to index in and get the right choice.
 							//allows us to easily remember the current options to choose 'more options
+		Temp_Options = [],
+		ActiveIdx = 0,
+
+
 		
 	},
 	function create()
@@ -40,13 +43,36 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		this.m.DifficultyMult = 130;
 		this.m.Flags = this.new("scripts/tools/tag_collection");
 		this.m.TempFlags = this.new("scripts/tools/tag_collection");
-		this.createStates();
-		this.createScreens();
+
 		this.m.Type = "contract.stronghold_special_actions_contract";
 		this.m.Name = format("Manage your %s", this.Stronghold.getPlayerBase().getSizeName());
 		this.m.Title = format("Manage your %s", this.Stronghold.getPlayerBase().getSizeName());
 		this.m.TimeOut = this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 1500.0;
 		this.m.IsSouthern <- this.Stronghold.getPlayerBase().getFlags().get("isSouthern")
+	}
+	//allows to use this for both main base and hamlet
+	function setBase(_base){
+		this.m.Base <- _base
+		this.m.Name = format("Manage your %s", this.getBase().getSizeName());
+		this.m.Title = format("Manage your %s", this.getBase().getSizeName());
+	}
+	//do these after variables are set
+	function initScreensAndStates(){
+		this.createStates();
+		this.createScreens();
+	}
+	function setCost(_cost){
+		this.m.Cost = _cost
+	}
+	function getCost(){
+		return this.m.Cost
+	}
+	function getBase(){
+		return this.m.Base
+	}
+	//disable some options for hamlet
+	function isMainBase(){
+		return this.getBase().getID() == this.Stronghold.getPlayerBase().getID()
 	}
 	
 	function onImportIntro()
@@ -66,6 +92,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 
 	function createStates()
 	{
+		//uses the default contract pattern, just sets to main screen right away
 		this.m.States.push({
 			ID = "Offer",
 			function start()
@@ -135,650 +162,42 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	function getOptions()
 	{
 		//adds all the possible options into a list
-		local player_base = this.Stronghold.getPlayerBase()
+		//each option has a isValid function to check the requirements
+		//text is the option text, ID used to create new screens
 		local contract_options = [];
-		local possibilities = [
-			{
-				Text = format("Upgrade your %s", player_base.getSizeName()),
-				ID = "Upgrade",
-				isValid = function(){
-					return player_base.m.Size < 3 && !player_base.isUpgrading()
-				}
-			},
-			{
-				Text = format("Add a building to your %s", player_base.getSizeName()),
-				ID = "Building",
-				isValid = function(){
-					local current_buildings = 0;
-					local free_building_slots = player_base.getSize() + 4
-					foreach (building in player_base.m.Buildings){
-						if (building != null){
-							current_buildings++
-						}
-					}
-					return current_buildings < free_building_slots && !player_base.isUpgrading()
-				}
-			},
-			{
-
-				Text = format("Remove a building from your %s", player_base.getSizeName()),
-				ID = "Building_Remove",
-				isValid = function(){
-					local current_buildings = 0;
-					local free_building_slots = player_base.getSize() + 4
-					foreach (building in player_base.m.Buildings){
-						if (building != null){
-							current_buildings++
-						}	
-					}
-					return current_buildings >= free_building_slots && !player_base.isUpgrading()
-				}
-			},
-			{
-				Text = format("Add a location to your %s", player_base.getSizeName()),
-				ID = "Location",
-				isValid = function(){
-					local current_locations = 0;
-					foreach (location in player_base.m.AttachedLocations){
-						if (location != null){
-							current_locations++
-						}
-					}
-					return current_locations < player_base.m.AttachedLocationsMax && !player_base.m.Flags.get("AllLocationsBuilt") && !player_base.isUpgrading()
-				}
-			},
-			{
-				Text = "Build a road to another settlement.",
-				ID = "Road",
-				isValid = function(){
-					return player_base.m.Size > 1 && !player_base.isUpgrading()
-				}
-			},
-			{
-				Text = "Buy a Water Skin.",
-				ID = "Waterskin",
-				isValid = function(){
-					return player_base.m.Size == 3 && !player_base.isUpgrading()
-				}
-			},
-			{
-				Text = "Hire mercenaries.",
-				ID = "Mercenaries",
-				isValid = function(){
-					return player_base.m.Size == 3
-				}
-			},
-			{
-				Text = "Provide focused training to one of your recruits",
-				ID = "Teacher",
-				isValid = function(){
-					return player_base.m.Size == 3 && !player_base.isUpgrading()
-				}
-			},
-			{
-				Text = "Send gifts to a faction",
-				ID = "Gift",
-				isValid = function(){
-					return player_base.m.Size > 1 && !player_base.isUpgrading()
-				}
-			},
-			{
-				Text = "Leave a brother behind",
-				ID = "Store_Brother",
-				isValid = function(){
-					local playerRoster = this.World.getPlayerRoster().getAll()
-					return (playerRoster != null && playerRoster.len() > 1)
-				}
-			},			
-			{
-				Text = "Retrieve a brother",
-				ID = "Retrieve_Brother",
-				isValid = function(){
-					local playerRoster = this.World.getRoster(9999).getAll()
-					return (playerRoster != null && playerRoster.len() > 0)
-				}
-			},			
-			{
-				Text = "Build a Hamlet",
-				ID = "Hamlet",
-				isValid = function(){
-					return (player_base.m.Size == 3 && !this.Stronghold.getPlayerFaction().getFlags().get("BuildHamlet")) && !player_base.isUpgrading()
-				}
-			},
-			{
-				Text = format("Remove your %s", player_base.getSizeName()),
-				ID = "Remove_Base",
-				isValid = function(){
-					return !player_base.isUpgrading()
-				}
-			},
-		]
+		local isMainBase = this.isMainBase()
+		local player_base = this.getBase()
 		local validOptions = []
-
-		foreach (option in possibilities) {
-		   if (option.isValid()){
-		   		validOptions.push(option.ID)
-			   	contract_options.push
-				({
-					Text = option.Text,
+		local idx = 0
+		this.m.Temp_Options <- []
+		foreach(option in this.Const.World.Stronghold.Main_Management_Options)
+		{
+			if (!("isValid" in option) || option.isValid.call(this))
+			{
+				local idx = this.m.Temp_Options.len()
+				this.m.Temp_Variable_List.push(option);
+				this.m.Temp_Options.push(
+				{
+					Text = option.Text.call(this),
 					function getResult(_option)
 					{
-						return this.Contract.addConditionalScreens(validOptions[_option])
-					}
-				})				
-		   }
-		}
-
-
-		contract_options.push
-		({
-			Text = "Not right now.",
-			function getResult(_option)
-			{
-				this.Contract.removeThisContract()
-				return 0;
+						return this.onChosen.call(this.Contract)
+					},
+					IDX = idx,
+					onChosen = option.onChosen
+				})
 			}
-		})
-		return contract_options;
+		}
+		return this.getActiveOptions(0, true);
 	}
 	
-	function addConditionalScreens(_text)
-	{
-		// adds the different screens and effects corresponding to an option
-		if (_text == "Waterskin")
-		{
-			if (!this.Stronghold.getPlayerBase().m.Flags.get("Waterskin"))
-			{
-				this.m.Screens.push
-				({
-					ID = "Waterskin",
-					Title = "Requirements not met",
-					Text = "You ask the learned men if they could craft you a mythical Water of Life. Unfortunately, the recipe has been lost to time. Perhaps you can recover it.",
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [this.addGenericOption("Alright.")]
-				})
-				return "Waterskin";
-			}
-			else
-			{
-				this.m.Cost = 40 * this.Const.World.Stronghold.PriceMult;
-				this.m.Text = "You choose to buy a Water Skin. This will cost " + this.m.Cost + " crowns."
-				this.m.Title = "Buy a Water Skin"
-				this.addOverviewScreen()
-				
-				this.m.Screens.push
-				({
-					ID = "Enough",
-					Title = this.m.Title,
-					Text = "You bought a Water Skin.",
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [
-						{
-							Text = "Good.",
-							function getResult(_option)
-							{
-								this.World.Assets.getStash().makeEmptySlots(1);
-								this.World.Assets.addMoney(-this.Contract.m.Cost);
-								local item = this.new("scripts/items/special/fountain_of_youth_item");
-								this.World.Assets.getStash().add(item);
-								this.Contract.removeThisContract()
-								return 0;
-							}
 
-						}
-					],
-					function start()
-					{
-						this.List.push({
-							id = 10,
-							icon = "ui/items/consumables/youth_01.png",
-							text = "You lose " +this.Contract.m.Cost + " crowns."
-						});
-					}
-				})
-				return "Overview_Building"
-			}
-		}
-		else if (_text == "Mercenaries")
-		{
-			local has_mercs = false
-			foreach ( unit in this.Stronghold.getPlayerFaction().m.Units){
-				if (unit.getFlags().get("Stronghold_Mercenaries")){
-					has_mercs = true
-				}
-			}
-			if (!this.Stronghold.getPlayerBase().m.Flags.get("Mercenaries"))
-			{
-				this.m.Screens.push
-				({
-					ID = "Mercs_Not_Freed",
-					Title = "Requirements not met",
-					Text = "There are no mercenary companies available for hire.",
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [this.addGenericOption("Alright.")]
-				})
-				return "Mercs_Not_Freed";
-			}
-			else if (has_mercs)
-			{
-				this.m.Screens.push
-				({
-					ID = "Mercs_Already_Hired",
-					Title = "Requirements not met",
-					Text = "You cannot employ two mercenary bands at the same time.",
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [this.addGenericOption("Alright.")]
-				})
-				return "Mercs_Already_Hired";
-			}
-			else
-			{
-				this.m.Cost = 20 * this.Const.World.Stronghold.PriceMult;
-				this.m.Text = "You can hire a group of local mercenaries to follow you on your travels. They demand " + this.m.Cost + " crowns for one week of their time."
-				this.m.Title = "Hire mercenaries"
-				this.addOverviewScreen()
-				
-				this.m.Screens.push({
-					ID = "Enough",
-					Title = this.m.Title,
-					Text = "You hired a group of mercenaries.",
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [
-						{
-							Text = "Good.", 
-							function getResult(_option)
-							{
-								this.World.Assets.addMoney(-this.Contract.m.Cost);
-								local player_faction = this.Stronghold.getPlayerFaction();
-								local player_base =  this.Stronghold.getPlayerBase()
-								local mercenary_size = 200
-								if (player_base.hasAttachedLocation("attached_location.militia_trainingcamp"))
-								{
-									mercenary_size += 100
-								}
-								local party = player_faction.spawnEntity(player_base.getTile(), "Mercenary band of " + player_base.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
-								party.getSprite("body").setBrush("figure_mercenary_01");
-								party.setDescription("A band of mercenaries following you around.");
-								party.getFlags().set("Stronghold_Mercenaries", true);
-								party.setFootprintType(this.Const.World.FootprintsType.CityState);
-								party.setMovementSpeed(150)
-								local c = party.getController();
-								c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
-								c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
-								local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
-								follow.setDuration(7);
-								c.addOrder(follow);
-								this.Contract.removeThisContract()
-								return 0;
-							}
-
-						}
-					],
-					function start()
-					{
-						this.List.push({
-							id = 10,
-							icon = "ui/events/event_134.png",
-							text = "You lose " +this.Contract.m.Cost + " crowns."
-						});
-					}
-				});
-				return "Overview_Building"
-			}
-		}
-		else if (_text == "Hamlet")
-		{
-			this.m.Cost = 20 * this.Const.World.Stronghold.PriceMult;
-			this.m.Text = "Your Stronghold has grown large enough that many common people flock to it. It would be wise to construct a hamlet for these people to live at. This would cost " + this.m.Cost + " crowns."
-			this.m.Title = "Build a Hamlet"
-			this.addOverviewScreen()
-			
-			this.m.Screens.push({
-				ID = "Enough",
-				Title = this.m.Title,
-				Text = "You built a Hamlet.",
-				Image = "",
-				List = [],
-				ShowEmployer = true,
-				Options = [
-					{
-						Text = "Good.", 
-						function getResult(_option)
-						{
-							this.World.Assets.addMoney(-this.Contract.m.Cost);
-							this.Contract.spawnHamlet()
-							this.Contract.removeThisContract()
-							return 0;
-						}
-
-					}
-				],
-				function start()
-				{
-					this.List.push({
-						id = 10,
-						icon = "ui/events/event_134.png",
-						text = "You lose " +this.Contract.m.Cost + " crowns."
-					});
-				}
-			});
-			return "Overview_Building"
-		}
-		//dynaimic options
-		else if (_text == "Teacher")
-		{
-			this.m.Cost = 10 * this.Const.World.Stronghold.PriceMult;
-			if (!this.Stronghold.getPlayerBase().m.Flags.get("Teacher"))
-			{
-				this.m.Screens.push
-				({
-					ID = "Teacher_Not_Freed",
-					Title = "Requirements not met",
-					Text = "Nobody here can provide training beyond the services of a Training Hall.",
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [this.addGenericOption("Alright.")]
-				})
-				return "Teacher_Not_Freed";
-			}
-			else {
-				local text = "The legendary swordmaster spends his days honing his skills. He can give one of your brothers an intensive lesson- for a considerable fee of " + this.m.Cost + " crowns. Choose a brother to receive focused training by the swordmaster."
-				text += "\n\n[b]1.5x combat experience for the next 10 fights.[/b]"
-				text += "\n[i]The chosen brother will lose any training hall buffs.[/i]"
-			    this.m.Screens.push
-				({
-					ID = "Teacher_Choice",
-					Title = "Train a brother",
-					Text = text,
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = this.getTeacherOptions()
-				})	
-				return "Teacher_Choice"
-			}	
-		}
-		else if (_text == "Gift")
-		{
-			local isValid = this.isGiftValid(true)
-			if (isValid[0])
-			{
-				local text = "You can choose to send gifts to a faction. This will consume the treasures you have in your inventory, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods."
-				text += "\n\n [i]Gain relation equal to 5% of the value of the treasures with the target faction.[/i]"
-				text += "\n [i]Treasures are gained from camps and events, for example a Signet Ring.[/i]"
-				text += "\n [i]This will spawn a caravan that moves to the destination. If it is destroyed, you lose your investment.[/i]"
-				this.m.Screens.push
-				({
-					ID = "Send_Gift",
-					Title = "Send gifts to a faction",
-					Text = text,
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = this.getGiftOptions()
-				})
-				return "Send_Gift"
-			}
-			else
-			{
-				local text = "You can choose to send gifts to a faction. This will consume the treasures you have in your inventory, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods.\n\n"
-				if (!isValid[1]) text += "You need at least 5000 crowns to send a gift!\n"
-				if (!isValid[2]) text += "You need at least 2 treasures in your inventory or storage to send a gift!\n"
-				if (!isValid[3]) text += "You can't reach anyone by road or you are already friends with all factions!\n"
-				this.m.Screens.push
-				({
-					ID = "Send_Gift_Failed",
-					Title = "Requirements not met",
-					Text = text,
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [this.addGenericOption("Alright.")]
-				})
-				return "Send_Gift_Failed";
-			}
-		}
-		else if (_text == "Upgrade")
-		{
-			if (this.World.Contracts.getActiveContract() != null)
-			{
-				this.m.Screens.push
-				({
-					ID = "Upgrade_Contract_Active",
-					Title = "Requirements not met",
-					Text = "You can't upgrade your base while having an active contract!",
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [this.addGenericOption("Alright.")]
-				})
-				return "Upgrade_Contract_Active";
-			}
-			local player_base = this.Stronghold.getPlayerBase()
-			local advantages = this.Const.World.Stronghold.UnlockAdvantages[player_base.m.Size]
-			this.m.Cost =  this.Const.World.Stronghold.PriceMult * this.Const.World.Stronghold.BuyPrices[player_base.getSize()]
-			this.m.Text = format("You can upgrade your " + this.Const.World.Stronghold.BaseNames[player_base.getSize()-1] + " to a " + this.Const.World.Stronghold.BaseNames[player_base.getSize()] + ". This would add these options: \n" + advantages +"\n This costs " + this.m.Cost + " crowns.\nWhile upgrading, you won't be able to access most of the management options. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
-			this.m.Title = "Upgrade your " +  this.Const.World.Stronghold.BaseNames[player_base.getSize()-1]
-			this.addOverviewScreen()
-			
-			this.m.Screens.push({
-				ID = "Enough",
-				Title = this.m.Title,
-				Text = format("You upgraded your %s to a %s", player_base.getSizeName(), player_base.getSizeName(true)),
-				Image = "",
-				List = [],
-				ShowEmployer = true,
-				Options = [
-					{
-						Text = "Good.", 
-						function getResult(_option)
-						{
-							this.World.Assets.addMoney(-this.Contract.m.Cost);
-							this.Contract.onUpgradePlayerBase()
-							this.Contract.removeThisContract()
-							return 0;
-						}
-
-					}
-				],
-				function start()
-				{
-					this.List.push({
-						id = 10,
-						icon = "ui/events/event_134.png",
-						text = "You lose " +this.Contract.m.Cost + " crowns."
-					});
-				}
-			});
-			return "Overview_Building"
-		}
-		else if (_text == "Building")
-		{
-			this.m.Screens.push
-			({
-				ID = "Building_Choice",
-				Title = "Choose a building",
-				Text = format("You can construct a new building for your %s. These are your available options.", this.Stronghold.getPlayerBase().getSizeName()),
-				Image = "",
-				List = [],
-				ShowEmployer = true,
-				Options = this.getBuildingOptions()
-			})
-			return "Building_Choice"
-		}
-
-		else if (_text == "Building_Remove")
-		{
-
-			this.m.Screens.push
-			({
-				ID = "Building_Remove_Choice",
-				Title = "Choose a building",
-				Text = "You can choose to demolish a building. This makes room to construct another in its place.",
-				Image = "",
-				List = [],
-				ShowEmployer = true,
-				Options = this.getBuildingRemoveOptions()
-			})
-			return "Building_Remove_Choice"	
-		}
-		else if (_text == "Location")
-		{
-			this.m.Screens.push
-			({
-				ID = "Location_Choice",
-				Title = "Choose a location",
-				Text = format("You can construct a new location close to your %s. This can provide various benefits. Each costs 10000 crowns.", this.Stronghold.getPlayerBase().getSizeName()),
-				Image = "",
-				List = [],
-				ShowEmployer = true,
-				Options = this.getLocationOptions()
-			})
-			return "Location_Choice"	
-		}
-		else if (_text == "Road")
-		{
-			this.m.Screens.push
-			({
-				ID = "Road_Choice",
-				Title = "Choose a destination",
-				Text = "You can build a road to another settlement. This allows wares and patrols to flow hither and thither, should the other factions like you. \nWhere to you want your road to lead to?",
-				Image = "",
-				List = [],
-				ShowEmployer = true,
-				Options = this.getRoadOptions()
-			})
-			return "Road_Choice"
-		}
-		else if (_text== "Store_Brother")
-		{
-			this.m.Temp_Var = 0
-			this.m.Screens.push
-			({
-				ID = "Store_Brother",
-				Title = "Leave a brother behind",
-				Text = "Which brother would you like to leave behind?\nStored brothers draw half their wage while they wait for your return.",
-				Image = "",
-				List = [],
-				ShowEmployer = true,
-				Options = this.getStoreBrotherOptions()
-			})
-			return "Store_Brother";
-		}
-		else if (_text == "Retrieve_Brother")
-		{
-			this.m.Temp_Var = 0
-			this.m.Screens.push
-			({
-				ID = "Retrieve_Brother",
-				Title = "Retrieve a brother",
-				Text = "Which brother would you like to retrieve?",
-				Image = "",
-				List = [],
-				ShowEmployer = true,
-				Options = this.getRetrieveBrotherOptions()
-			})
-			return "Retrieve_Brother";
-		}
-		//this one only kicks in after the player returned to the settlement
-		else if (_text == "Remove_Base")
-		{
-			this.m.Screens.push
-			({
-				ID = "Remove_Base",
-				Title = "Confirm your choice",
-				Text = format("Are you sure you want to remove your %s? This is free, but can't be undone.", this.Stronghold.getPlayerBase().getSizeName()),
-				Image = "",
-				List = [],
-				ShowEmployer = true,
-				Options = [
-					{
-						Text = "Yes.",
-						function getResult(_option)
-						{
-							return this.Contract.addConditionalScreens("Confirm_Remove")
-						}
-
-					},
-					this.addGenericOption("No.")
-				],
-			})
-			return "Remove_Base"
-		}
-		else if (_text == "Confirm_Remove")
-		{
-
-			this.m.Cost = 0 * this.Const.World.Stronghold.PriceMult;
-			this.m.Text = format("FINAL WARNING! Are you really sure you want to remove your %s?", this.Stronghold.getPlayerBase().getSizeName());
-			this.m.Title = "Remove your base"
-			this.addOverviewScreen()
-			if(this.World.Contracts.getActiveContract() != null)
-			{
-				this.m.Screens.push
-				({
-					ID = "Enough",
-					Title = this.m.Title,
-					Text = format("You can't remove your %s while having an active contract!", this.Stronghold.getPlayerBase().getSizeName()),
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [
-						this.addGenericOption("Alright.")
-					],
-					function start()
-					{
-					}
-				})
-			}
-			else 
-			{
-			    this.m.Screens.push
-				({
-					ID = "Enough",
-					Title = this.m.Title,
-					Text = format("You removed your %s.", this.Stronghold.getPlayerBase().getSizeName()),
-					Image = "",
-					List = [],
-					ShowEmployer = true,
-					Options = [
-						{
-							Text = "Good.",
-							function getResult(_option)
-							{
-								this.World.Contracts.setActiveContract(this.Contract);
-								this.Contract.m.Flags.set("Remove_Base", true)
-								this.Contract.setState("Running")
-								return 0
-							}
-
-						}
-					],
-					function start()
-					{
-					}
-				})// code
-			}
-			return "Overview_Building"
-		}
-	}
-	function addOverviewScreen()
-	{
-		this.m.Screens.push
-		({
+	function addOverviewScreen(_title = "", _text = "", _callBackFunction = null){
+		//dynamic to add the name
+		this.m.Screens.push({
 			ID = "Overview_Building",
-			Title = this.m.Title,
-			Text = this.m.Text,
+			Title = _title,
+			Text = _text,
 			Image = "",
 			List = [],
 			ShowEmployer = true,
@@ -787,8 +206,9 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 					Text = "Yes.",
 					function getResult(_option)
 					{
-						if (this.World.Assets.getMoney() >= this.Contract.m.Cost)
+						if (this.World.Assets.getMoney() >= this.Contract.getCost())
 						{
+							if (_callBackFunction != null) _callBackFunction()
 							return "Enough"
 
 						}
@@ -803,45 +223,13 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			],
 		});
 	}
-	
-		
-	function getTeacherOptions()
-	{
-		local roster = this.World.getPlayerRoster().getAll();
-		local options = []
-		foreach (bro in roster)
-		{
-			if (bro.getLevel() < 11 && !bro.getSkills().hasSkill("effects.trained") && options.len() < 11)
-			{
-				options.push(
-				{
-					Text = bro.getName(),
-					function getResult(_option)
-					{
-						// if only I learned this before
-						this.Contract.m.Temp_Var = this.Contract.m.Temp_Options[_option];
-						this.Contract.m.Text = "Go ahead and give " + this.Text + " a lesson.\n";
-						this.Contract.m.Text += "\n1.5x combat experience for the next 10 fights.";
-						this.Contract.m.Text += "\nThis brother will lose any training hall buffs.";
-						this.Contract.addOverviewScreen()
-						this.Contract.addTeacherEnoughScreen()
-						return "Overview_Building";
-					}
-				})
-				this.m.Temp_Options.push(bro);
-			}
-		}
-		options.push(this.addGenericOption("Not right now."))
-		
-		return options
-	}
-	
-	function addTeacherEnoughScreen()
-	{
+
+	function addEnoughScreen(_title = "", _text = "", _callBackFunction = null){
+		//dynamic to add the name
 		this.m.Screens.push({
 			ID = "Enough",
-			Title = this.m.Title,
-			Text = this.m.Text,
+			Title = _title,
+			Text = _text,
 			Image = "",
 			List = [],
 			ShowEmployer = true,
@@ -850,43 +238,498 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 					Text = "Good.",
 					function getResult(_option)
 					{
-						this.World.Assets.addMoney(-this.Contract.m.Cost);							
-						local effect = this.new("scripts/skills/effects_world/new_trained_effect");
-						effect.m.Duration = 10;
-						effect.m.XPGainMult = 1.5;
-						effect.m.Icon = "skills/status_effect_75.png";
-						local bro = this.Contract.m.Temp_Var;
-						bro.getSkills().add(effect);						
-						this.Contract.removeThisContract()
-						return 0;
+						if (this.Contract.getCost() > 0 ) this.World.Assets.addMoney(-this.getCost());
+						return _callBackFunction.call(this.Contract)
 					}
 
 				}
 			],
 			function start()
 			{
-				this.List.push({
-					id = 10,
-					icon = "ui/events/event_134.png",
-					text = "You lose " +this.Contract.m.Cost + " crowns."
-				});
+				if(this.Contract.getCost() > 0){
+					this.List.push({
+						id = 10,
+						icon = "ui/events/event_134.png",
+						text = format("You lose %i crowns.", this.Contract.m.Crowns)
+					});
+				}
 			}
 		});
 	}
 	
+	//creates screens for all the options in the passed list
+	function buildActiveOptions(_optionsArray, _addOptionFunction){
+		this.m.Temp_Options <- []
+		foreach(option in _optionsArray)
+		{
+			if ((!("isValid" in option)) || (("isValid") in option && option.isValid()))
+			{
+				local idx = this.m.Temp_Options.len()
+				this.m.Temp_Variable_List.push(option);
+				this.m.Temp_Options.push(_addOptionFunction(option, idx))
+			}
+		}
+	}
+
+	//grabs a number of options from the stored list, also fixes the index and adds the 'more options' and return screens
+	function getActiveOptions(_newIdx = null, genericOption = null){
+		if (_newIdx != null) this.m.ActiveIdx = _newIdx
+		if (this.m.ActiveIdx < 0) this.m.ActiveIdx += this.m.Temp_Options.len()
+		if (this.m.ActiveIdx == this.m.Temp_Options.len()) this.m.ActiveIdx = 0
+
+		local newOptions = [];
+		for (local x = 0; x < this.m.Temp_Options.len() && x < this.Const.World.Stronghold.MaxMenuOptionsLen; x++){
+			newOptions.push(clone this.m.Temp_Options[this.m.ActiveIdx])
+			this.m.ActiveIdx++
+			if (this.m.ActiveIdx == this.m.Temp_Options.len()){
+				this.m.ActiveIdx = 0;
+				break;
+			}
+
+		}
+		if (this.m.Temp_Options.len() > this.Const.World.Stronghold.MaxMenuOptionsLen){
+			newOptions.push(getMoreOptionsOption())
+		}
+		newOptions.push(this.addGenericOption("Not right now."))
+		/*
+		else newOptions.push({
+			Text = "Return to settlement",
+			function getResult(_option)
+			{
+				this.Contract.removeThisContract()
+				return 0;
+			}
+
+		}) */
+		return newOptions
+	}
+
+	//gets the next page of options
+	function getMoreOptionsOption(){
+
+		return {
+			Text = "More options",
+			function getResult(_option)
+			{
+				foreach (screen in this.Contract.m.Screens)
+				{
+					if (screen.ID == this.Contract.m.ActiveScreen.ID){
+						screen.Options = this.Contract.getActiveOptions()
+					}
+				}
+				return this.Contract.m.ActiveScreen.ID
+			}
+		}
+	}
+
+
+	function getBuildingOptions()
+	{
+		this.buildActiveOptions(this.m.Building_options, this.addBuildingScreen)
+		return getActiveOptions(0)
+	}
+
+	function getBuildingRemoveOptions()
+	{
+		local contract_options = this.m.Building_options.filter(function(building){
+			this.Stronghold.getPlayerBase().hasBuilding((this.m.IsSouthern && "SouthID" in building)? building.SouthID : building.ID)
+		});
+		this.buildActiveOptions(contract_options, this.addBuildingRemoveScreen)
+		return getActiveOptions()
+	}
+
+	function getLocationOptions()
+	{	
+		this.buildActiveOptions(this.m.Location_options, this.addLocationScreen)
+		return getActiveOptions()
+	}
+
+	function getRoadOptions()
+	{
+		local home = this.Stronghold.getPlayerBase()
+		local tile = home.getTile()
+		local settlements = this.World.EntityManager.getSettlements();
+		local contract_options = [], local_sorted_settlements = [], dist_map = []
+		this.m.Temp_Variable_List = [];
+		local validSettlements = []
+		
+		foreach (settlement in settlements)
+		{
+			if (settlement != null && settlement != home){
+				local dist = home.getTile().getDistanceTo(settlement.getTile());
+				if (home.m.ConnectedToByRoads.len() != 0 && (dist > 60 || (dist_map.len() > 10 && dist > dist_map[10])))  continue;
+				local results = home.getRoadCost(settlement);
+				local cost = results[0] 
+				local roadmult = results[1] 
+				if (cost && cost != 0)
+				{
+					local_sorted_settlements.push
+					({
+					Score = dist, 
+					Name = settlement.getName(),
+					Cost = cost,
+					Roadmult = roadmult,
+					Settlement = this.WeakTableRef(settlement)
+					
+					})
+					dist_map.push(dist)
+					dist_map.sort()
+				}
+
+			}
+		}
+		
+		if (local_sorted_settlements.len() == 0){
+			return[{
+				Text = "You have built all possible roads!",
+				function getResult(_option)
+				{
+					this.Contract.m.Home.m.Flags.set("AllRoadsBuilt", true)
+					this.Contract.clearScreens()
+					return "Task"
+				}
+			}]
+		}
+		local_sorted_settlements.sort(this.sortRoadByScore);
+		this.m.Temp_Variable_List = local_sorted_settlements;
+
+		this.buildActiveOptions(local_sorted_settlements, this.addRoadScreen)
+		return getActiveOptions()
+	}
+	function getTrainerOptions()
+	{
+		local roster = this.World.getPlayerRoster().getAll().filter(function(bro){bro.getLevel() < 11 && !bro.getSkills().hasSkill("effects.trained")});	
+		this.buildActiveOptions(roster, this.addTrainerScreen)
+		return getActiveOptions()
+	}
+	function getGiftOptions()
+	{
+		this.buildActiveOptions(this.m.Temp_Variable_List, this.addGiftScreen)
+		return getActiveOptions()
+	}
+
+	function getStoreBrotherOptions()
+	{
+		this.buildActiveOptions(this.World.getPlayerRoster().getAll(), this.addStoreBrotherScreen)
+		return getActiveOptions()
+	}
+
+	function getRetrieveBrotherOptions()
+	{
+		this.buildActiveOptions(this.World.getRoster(9999).getAll(), this.addRetrieveBrotherScreen)
+		return getActiveOptions()
+	}
+
+	function addStoreBrotherScreen(_screenVar, _idx){
+		return {
+			Text = _screenVar.getName(),
+			function getResult(_option)
+			{
+				if (!this.Contract.storeBro(this.Option))
+				{
+
+					this.Contract.m.Screens.push(
+					{
+						ID = "Last_Brother",
+						Title = "Last Brother",
+						Text = "You can't store your last brother or your avatar!",
+						Image = "",
+						List = [],
+						ShowEmployer = true,
+						Options = [this.Contract.addGenericOption("True.")]
+					})
+					return "Last_Brother"
+				}
+				this.Contract.m.Temp_Variable_List = []
+				this.Contract.buildActiveOptions(this.World.getPlayerRoster().getAll(), this.Contract.addStoreBrotherScreen)
+				local newIdx = this.IDX - _option
+				foreach (screen in this.Contract.m.Screens)
+				{
+					if (screen.ID == this.Contract.m.ActiveScreen.ID){
+						screen.Options = this.Contract.getActiveOptions(newIdx)
+					}
+				}
+				return "Store_Brother"
+			},
+			IDX = _idx,
+			Option = _screenVar
+		}
+	}
+	function addRetrieveBrotherScreen(_screenVar, _idx){
+		return {
+			Text = _screenVar.getName(),
+			function getResult(_option)
+			{
+				this.Contract.retrieveBro(this.Option)
+				if (this.World.getRoster(9999).getAll().len() == 0){
+					this.Contract.clearScreens()
+					return "Task"
+				}
+				this.Contract.m.Temp_Variable_List = []
+				this.Contract.buildActiveOptions(this.World.getRoster(9999).getAll(), this.Contract.addRetrieveBrotherScreen)
+				local newIdx = this.IDX - _option
+				foreach (screen in this.Contract.m.Screens)
+				{
+					if (screen.ID == this.Contract.m.ActiveScreen.ID){
+						screen.Options = this.Contract.getActiveOptions(newIdx)
+					}
+				}
+				return "Store_Brother"
+			},
+			IDX = _idx,
+			Option = _screenVar
+		}
+	}
+
+	function addBuildingScreen(_screenVar, _idx){
+		return {
+			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Const.World.Stronghold.PriceMult) + " crowns)",
+			function getResult(_option)
+			{
+				local building = this.Option
+				this.Contract.m.Temp_Var <- (this.Contract.m.IsSouthern &&  building.SouthPath) ? building.SouthPath : building.Path
+				this.Contract.setCost(building.Cost * this.Const.World.Stronghold.PriceMult)	
+				this.Contract.addOverviewScreen(
+					format("Build a %s", building.Name), 
+					format("You selected a %s. This will cost %s. Do you wish to build this?", building.Name),
+					this.Contract.addCrownSymbol(this.Contract.getCost())
+				)
+				this.Contract.addEnoughScreen(
+					"Purchase a new building",
+					format("Your %s is finished.", building.Name),
+					this.Contract.onBuildingAdded
+				)
+				return "Overview_Building";
+			},
+			IDX = _idx,
+			Option = _screenVar
+		}
+	}
+
+	function addBuildingRemoveScreen(_screenVar, _idx){
+		this.m.Temp_Options.push
+		({
+			Text = "Remove a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (this is free).",
+			function getResult(_option)
+			{
+				local building = this.Option
+				this.Contract.m.Temp_Var <- (this.Contract.m.IsSouthern &&  building.SouthPath) ? building.SouthID : building.ID
+				this.Contract.addOverviewScreen(
+					format("Remove a %s", building.Name), 
+					format("You selected to remove a %s. This will cost %s. Do you wish to proceed?", building.Name,
+					this.addCrownSymbol(this.getCost()))
+				)
+				this.Contract.addEnoughScreen(
+					"Remove a building",
+					format("Your %s has been removed finished.", building.Name),
+					this.Contract.onBuildingRemoved
+				)
+				return "Overview_Building";
+			},
+			IDX = _idx,
+			Option = _screenVar
+		});
+	}
+
+	function addLocationScreen(_screenVar, _idx){
+		this.m.Temp_Options.push
+		({
+			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Const.World.Stronghold.PriceMult) + " crowns)",
+			function getResult(_option)
+			{
+				local building = this.Option
+				this.Contract.m.Temp_Var <- building.Path
+				this.Contract.setCost(building.Cost * this.Const.World.Stronghold.PriceMult)	
+				this.Contract.addOverviewScreen(
+					format("Build a %s", building.Name), 
+					format("You selected a %s. This will cost %s. Do you wish to build this?", building.Name,
+					this.addCrownSymbol(this.getCost()))
+				)
+				this.Contract.addEnoughScreen(
+					"Purchase a new location",
+					format("Your %s is finished.", building.Name),
+					this.Contract.onLocationAdded
+				)
+				this.Contract.addLocationEnoughScreen()
+				return "Overview_Building";
+			},
+			IDX = _idx,
+			Option = _screenVar
+		});
+	}
+
+	function addRoadScreen(_screenVar, _idx){
+		local price = _screenVar.Cost * this.Const.World.Stronghold.RoadCost * this.Const.World.Stronghold.PriceMult
+		this.m.Temp_Options.push
+		({
+			Text = format("Road to %s (%i Crowns)", option.Name, price)
+			function getResult(_option)
+			{
+				this.Contract.m.Temp_Var <- this.Option;
+				this.Contract.setCost(this.Option.Cost * this.Const.World.Stronghold.RoadCost * this.Const.World.Stronghold.PriceMult)
+				this.Contract.addOverviewScreen(
+					format("Build a %s", this.Option.Name), 
+					format("You will try to build a road to %s. This will cost %i crowns. Do you wish to do this?", this.Option.Name, this.Contract.getCost())
+				)
+				this.Contract.addRoadEnoughScreen()
+				return "Overview_Building"
+			},
+			IDX = _idx,
+			Option = _screenVar
+		});
+	}
+
+	function addTrainerScreen(_screenVar, _idx){
+		this.m.Temp_Options.push
+		({
+			Text = _screenVar.getName(),
+			function getResult(_option)
+			{
+				this.Contract.m.Temp_Var = this.Option;
+				local name = this.Option.getName()
+				local text = format("Go ahead and give %s a lesson.\n", name);
+				text += "\n1.5x combat experience for the next 10 fights.";
+				text += "\nThis brother will lose any other training hall buffs.";
+				this.Contract.addOverviewScreen(
+					format("Train %s", name), 
+					text
+				)
+				this.Contract.addEnoughScreen(
+					"Training completed",
+					format("%s has received his training.", name),
+					this.Contract.onTrainerBought
+				)
+				return "Overview_Building";
+			},
+			IDX = _idx,
+			Option = _screenVar
+		})
+		
+	}
+	function addGiftScreen(_screenVar, _idx){
+		this.m.Temp_Options.push
+		({
+			Text = entry.Faction.getName(),
+			function getResult(_option)
+			{
+				this.Contract.m.Temp_Var = this.Option;
+				this.Contract.m.Text = "The faction you're sending a gift to is " + this.Text;
+				this.Contract.addOverviewScreen(
+					format("The faction you're sending a gift to is %s", this.Option.Name), 
+					format("You will try to build a road to %s. This will cost %i crowns. Do you wish to do this?", this.Option.Name, this.Contract.getCost())
+				)
+				this.Contract.addGiftEnoughScreen()
+				return "Overview_Building";
+			},
+			IDX = _idx,
+			Option = _screenVar
+		});
+	}
+
+
+	
+	function onBuildingAdded()
+	{
+		this.logInfo(this)
+		local home = this.m.Home;
+		local building_type = this.m.Temp_Var
+		local text = "scripts/entity/world/settlements/buildings/" + building_type
+		local building = this.new(text)
+		//make space at leftmost spot if port was added
+		if (building_type != "port_building")
+		{
+			home.addBuilding(building);
+		}
+		else
+		{
+			if (home.m.Buildings[3] == null)
+			{
+				home.addBuilding(building, 3);
+			}
+			else
+			{
+				local tempbuilding = home.m.Buildings[3];
+				home.m.Buildings[3] = null;
+				home.addBuilding(building, 3)
+				foreach (i, building in home.m.Buildings){
+					if (building == null)
+					{
+						home.addBuilding(tempbuilding, i)
+						break;
+					}
+				}
+						
+			}
+		}
+		building.onUpdateShopList();
+		this.removeThisContract()
+		this.World.State.m.WorldTownScreen.show()
+		return 0
+	}
+
+	function onBuildingRemoved()
+	{
+		local result = this.m.Temp_Var
+		local home = this.Stronghold.getPlayerBase()
+		foreach(i, building in home.m.Buildings){
+			if(home.m.Buildings[i] != null && home.m.Buildings[i].m.ID == result){
+				home.m.Buildings[i] = null;
+				break;
+			}
+		}
+		this.removeThisContract()
+		this.World.State.m.WorldTownScreen.show()
+		return 0
+	}	
+	
+	
+	function onLocationAdded()
+	{
+		local home = this.m.Home;
+		local location_type = this.m.Temp_Var
+		local text = "scripts/entity/world/attached_location/" + location_type
+		home.buildAttachedLocation(1, text, this.m.LocationTerrain, [], 1)
+		home.buildRoad(home.m.AttachedLocations[home.m.AttachedLocations.len()-1])
+		if (this.m.Location_options.len() == home.m.AttachedLocations.len())
+		{
+			home.getFlags().set("AllLocationsBuilt", true)
+		}
+		this.clearScreens()
+		return "Task"
+	}
+	
+	
+	function onRoadBuild()
+	{
+
+		local home = this.Stronghold.getPlayerBase();
+		home.buildRoad(this.m.Temp_Var.Settlement, this.m.Temp_Var.Roadmult)
+		this.clearScreens()
+		return "Task"
+	}
+	
+	function onTrainerBought()
+	{						
+		local effect = this.new("scripts/skills/effects_world/new_trained_effect");
+		effect.m.Duration = 10;
+		effect.m.XPGainMult = 1.5;
+		effect.m.Icon = "skills/status_effect_75.png";
+		local bro = this.m.Temp_Var;
+		bro.getSkills().add(effect);	
+		this.clearScreens()					
+		return "Task"
+	}
+	
 	function isGiftValid( _set = false)
 	{
-		local player_base = this.Stronghold.getPlayerBase()
-		local hasMoney = false;
+		local hasMoney = this.World.Assets.getMoney() >= 5000
 		local hasFriends = false;
 		local hasGifts = false;
-
-		hasMoney = this.World.Assets.getMoney() >= 5000
 
 		local numGifts = 0
 		local items = []
 		items.extend(this.World.Assets.getStash().m.Items);
-		items.extend(player_base.getBuilding("building.storage_building").getStash().getItems())
+		items.extend(this.getBase().getBuilding("building.storage_building").getStash().getItems())
 		foreach( i, item in items )
 		{
 			if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
@@ -910,14 +753,14 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			foreach (settlement in faction.getSettlements())
 			{
 				if ((faction.m.Type == this.Const.FactionType.OrientalCityState || settlement.isMilitary()) &&  
-					settlement.isConnectedToByRoads(player_base))
+					settlement.isConnectedToByRoads(this.getBase()))
 				{
 						militarySettlements.push(settlement);
 				}
 			}
 			if (militarySettlements.len() > 0)
 			{
-				local chosenSettlement = this.Stronghold.getClosestDistance(player_base, militarySettlements)
+				local chosenSettlement = this.Stronghold.getClosestDistance(this.getBase(), militarySettlements)
 
 				validFactions.push
 				({
@@ -929,7 +772,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		hasFriends = validFactions.len() >= 1
 		local all = [true, hasMoney, hasGifts, hasFriends, _set]
 		if(all.reduce(@(a, b) a&&b)){
-			this.setGiftFactions(validFactions)
+			this.m.Temp_Variable_List = validFactions
 			return all
 		}
 		else{
@@ -937,43 +780,14 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			return all
 		}
 	}
-	
-	function setGiftFactions(_factions)
-	{
-		this.m.Temp_Options <- _factions
-	}
-	
-	function getGiftOptions()
-	{
-		local options = []
-		foreach (entry in this.m.Temp_Options)
-		{
-			options.push(
-			{
-				Text = entry.Faction.getName(),
-				function getResult(_option)
-				{
-					this.Contract.m.Temp_Var = this.Contract.m.Temp_Options[_option];;
-					this.Contract.m.Text = " The faction you're sending a gift to is " + this.Text;
-					this.Contract.addGiftEnoughScreen()
-					this.Contract.addOverviewScreen()
-					return "Overview_Building";
-				}
-			})
-		}
-		options.push(this.addGenericOption("Not right now."))
-		if (options.len() > 0)
-		{
-			return options
-		}
-	}
+
 	function addGiftEnoughScreen()
 	{
 		this.m.Screens.push
 		({
 			ID = "Enough",
 			Title = this.m.Title,
-			Text = "Your caravan is on their way to " +  this.m.Temp_Var.Town.getName() + ". Protect it!",
+			Text = format("Your caravan is on their way to %s. Protect it!", this.m.Temp_Var.Town.getName()),
 			Image = "",
 			List = [],
 			ShowEmployer = true,
@@ -982,9 +796,8 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 				Text = "Good.", 
 				function getResult(_option)
 				{
-					this.World.Assets.addMoney(-5000);	
 					local player_faction = this.Stronghold.getPlayerFaction();
-					local player_base = this.Stronghold.getPlayerBase()
+					local player_base = this.Contract.getBase()
 					local destination = this.Contract.m.Temp_Var;
 					local destination_faction = destination.Faction;
 					local destination_town = destination.Town;
@@ -1080,606 +893,7 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		});
 	}
 
-	
-	
-	function getBuildingOptions()
-	{
-		this.m.Temp_Generator = yieldNext(this.m.Building_options.len())
-		local contract_options = [];
-		this.m.Temp_Options = []
-		local optionsArray = this.m.Building_options
 
-		foreach (idx in this.m.Temp_Generator)
-		{
-			local building = optionsArray[idx]
-			if (building.isValid())
-			{
-				this.m.Temp_Options.push({Building = building, Index = idx});
-				contract_options.push
-				({
-					Text = "Build a" + (building.Name[0] == "A" ? "n ":" ") + building.Name + " (" +  (building.Cost * this.Const.World.Stronghold.PriceMult) + " crowns)",
-					function getResult(_option)
-					{
-						local building = this.Contract.m.Temp_Options[_option].Building
-						this.Contract.m.Temp_Var <- (this.Contract.m.IsSouthern &&  building.SouthPath) ? building.SouthPath : building.Path
-						this.Contract.m.Cost = building.Cost * this.Const.World.Stronghold.PriceMult		
-						this.Contract.addBuildingOverviewScreen(building.Name)
-						return "Overview_Building";
-					}
-				});
-			}
-			if(contract_options.len() >= this.Const.World.Stronghold.MaxMenuOptionsLen){
-				contract_options.push(this.addMoreOptions("Building_Choice", this.getBuildingOptions))
-				break;
-			}
-			if (contract_options.len() >= optionsArray.len()) break
-
-		}
-		contract_options.push(this.addGenericOption("Not right now."))
-		return contract_options;
-	}
-		
-
-	function addBuildingOverviewScreen(_text){
-		//dynamic to add the name
-		this.m.Screens.push({
-			ID = "Overview_Building",
-			Title = "Confirm your choice",
-			Text = "You selected a " + _text +". This will cost " + this.m.Cost + " crowns. Do you wish to build this?",
-			Image = "",
-			List = [],
-			ShowEmployer = true,
-			Options = [
-				{
-					Text = "Yes.",
-					function getResult(_option)
-					{
-						if (this.World.Assets.getMoney() >= this.Contract.m.Cost)
-						{
-							this.Contract.addBuildingEnoughScreen()
-							return "Enough"
-
-						}
-						else
-						{
-							return "Not_Enough"
-						}
-					}
-
-				},
-				this.addGenericOption()
-			],
-		});
-	}
-	
-	function addBuildingEnoughScreen()
-	{
-		this.m.Screens.push({
-			ID = "Enough",
-			Title = "Purchase a new building",
-			Text = "Your building is finished.",
-			Image = "",
-			List = [],
-			ShowEmployer = true,
-			Options = [
-				{
-					Text = "Good.",	
-					function getResult(_option)
-					{
-						this.World.Assets.addMoney(-this.Contract.m.Cost);
-						local home = this.Contract.m.Home;
-						local building_type = this.Contract.m.Temp_Var
-						local text = "scripts/entity/world/settlements/buildings/" + building_type
-						local building = this.new(text)
-						//make space at leftmost spot if port was added
-						if (building_type != "port_building")
-						{
-							home.addBuilding(building);
-						}
-						else
-						{
-							if (home.m.Buildings[3] == null)
-							{
-								home.addBuilding(building, 3);
-							}
-							else
-							{
-								local tempbuilding = home.m.Buildings[3];
-								home.m.Buildings[3] = null;
-								home.addBuilding(building, 3)
-								foreach (i, building in home.m.Buildings){
-									if (building == null)
-									{
-										home.addBuilding(tempbuilding, i)
-										break;
-									}
-								}
-										
-							}
-						}
-						building.onUpdateShopList();
-						this.Contract.removeThisContract()
-						this.World.State.m.WorldTownScreen.show()
-						return 0
-					}
-
-				}
-			],
-			function start()
-			{
-				this.List.push({
-					id = 10,
-					icon = "ui/icons/asset_money.png",
-					text = "You lose " + this.Contract.m.Cost + " crowns."
-				});
-			}
-
-		});
-	}
-	
-	function getBuildingRemoveOptions()
-	{
-		this.m.Temp_Generator = yieldNext(this.m.Building_options.len())
-		local contract_options = [];
-		this.m.Temp_Options = []
-		foreach (building in this.m.Building_options)
-		{
-			if (this.Stronghold.getPlayerBase().hasBuilding((this.m.IsSouthern && "SouthID" in building)? building.SouthID : building.ID))
-			{
-				contract_options.push(
-				{
-					Text = "Remove a" + (building.Name[0] == "A" ? "n ":" ") + building.Name + " (this is free).",
-					function getResult(_option)
-					{
-						local building = this.Contract.m.Temp_Options[_option]
-						this.Contract.m.Temp_Var <- (this.Contract.m.IsSouthern &&  building.SouthPath) ? building.SouthID : building.ID
-						this.Contract.m.Cost = 0
-						this.Contract.addBuildingRemoveOverviewScreen(building.Name)
-						return "Overview_Building";
-					}
-				});
-				this.m.Temp_Options.push(building);
-			}
-		}
-		
-		contract_options.push(this.addGenericOption())
-		return contract_options;
-	}
-	
-	function addBuildingRemoveOverviewScreen(_text){
-		//dynamic to add the name
-		this.m.Screens.push({
-			ID = "Overview_Building",
-			Title = "Confirm your choice",
-			Text = "You selected a " + _text +". Do you wish to remove this?",
-			Image = "",
-			List = [],
-			ShowEmployer = true,
-			Options = [
-				{
-					Text = "Yes.",
-					function getResult(_option)
-					{
-						this.Contract.addBuildingRemoveEnoughScreen()
-						return "Enough"
-
-					}
-
-				},
-				this.addGenericOption()
-			]
-		});
-	}
-	
-	function addBuildingRemoveEnoughScreen()
-	{
-		this.m.Screens.push({
-			ID = "Enough",
-			Title = "Remove a building",
-			Text = "You removed the building.",
-			Image = "",
-			List = [],
-			ShowEmployer = true,
-			Options = [
-				{
-					Text = "Good.",
-					function getResult(_option)
-					{
-						local result = this.Contract.m.Temp_Var
-						local home = this.Stronghold.getPlayerBase()
-						foreach(i, building in home.m.Buildings){
-							if(home.m.Buildings[i] != null && home.m.Buildings[i].m.ID == result){
-								home.m.Buildings[i] = null;
-								break;
-							}
-						}
-						this.Contract.removeThisContract()
-						this.World.State.m.WorldTownScreen.show()
-						return 0
-					}
-
-				}
-			],
-			function start()
-			{
-				this.List.push({
-					id = 10,
-					icon = "ui/icons/asset_money.png",
-					text = "This was free."
-				});
-			}
-
-		});
-	}
-	
-	
-	function getLocationOptions(){
-		this.m.Temp_Generator = yieldNext(this.m.Location_options.len())
-		local home = this.Stronghold.getPlayerBase();
-		local contract_options = [];
-		this.m.Temp_Options = []
-		local optionsArray = this.m.Location_options
-
-		foreach (idx in this.m.Temp_Generator)
-		{
-			local building = optionsArray[idx]
-			if (!home.hasAttachedLocation(building.ID))
-			{
-				this.m.Temp_Options.push(building);
-				contract_options.push
-				({
-					Text = building.Text,
-					function getResult(_option)
-					{
-						local building = this.Contract.m.Temp_Options[_option]
-						this.Contract.m.Temp_Var <- building.Path
-						this.Contract.m.Cost = building.Cost * this.Const.World.Stronghold.PriceMult		
-						this.Contract.addLocationOverviewScreen(building.Name)
-						return "Overview_Building";
-					}
-				})
-				
-			}
-			if(contract_options.len() >= this.Const.World.Stronghold.MaxMenuOptionsLen){
-				contract_options.push(this.addMoreOptions("Location_Choice", this.getLocationOptions))
-				break;
-			}
-			if (contract_options.len() >= optionsArray.len()) break
-		}
-		contract_options.push(this.addGenericOption("Not right now."))
-		return contract_options;
-	}
-	
-	function addLocationOverviewScreen(_text){
-		this.m.Screens.push({
-			ID = "Overview_Building",
-			Title = "Confirm your choice",
-			Text = "You selected a " + _text +". Do you wish to build this?",
-			Image = "",
-			List = [],
-			Options = [
-				{
-					Text = "Yes.",
-					function getResult(_option)
-					{
-						if (this.World.Assets.getMoney() >= this.Contract.m.Cost)
-						{
-							this.Contract.addLocationEnoughScreen()
-							return "Enough"
-
-						}
-						else
-						{
-							return "Not_Enough"
-						}
-					}
-
-				},
-				this.addGenericOption()
-			],
-		});
-	}
-	function addLocationEnoughScreen()
-	{
-		this.m.Screens.push({
-			ID = "Enough",
-			Title = "Purchase a new location",
-			Text = "Your location is finished.",
-			Image = "",
-			List = [],
-			ShowEmployer = false,
-			Options = [
-				{
-					Text = "Good.",
-					function getResult(_option)
-					{
-						this.World.Assets.addMoney(-this.Contract.m.Cost);
-						local home = this.Contract.m.Home;
-						local location_type = this.Contract.m.Temp_Var
-						local text = "scripts/entity/world/attached_location/" + location_type
-						home.buildAttachedLocation(1, text, this.Contract.m.LocationTerrain, [], 1)
-						home.buildRoad(home.m.AttachedLocations[home.m.AttachedLocations.len()-1])
-						if (this.Contract.m.Location_options.len() == home.m.AttachedLocations.len())
-						{
-							home.getFlags().set("AllLocationsBuilt", true)
-						}
-						this.Contract.clearScreens()
-						return "Task"
-					}
-
-				}
-			],
-			function start()
-			{
-				this.List.push({
-					id = 10,
-					icon = "ui/icons/asset_money.png",
-					text = "You lose 10000 crowns."
-				});
-			}
-
-		});
-	}
-	function getRoadOptions()
-	{
-		local home = this.Stronghold.getPlayerBase()
-		local tile = home.getTile()
-		local settlements = this.World.EntityManager.getSettlements();
-		local contract_options = [], local_sorted_settlements = [], dist_map = []
-		this.m.Temp_Options = [];
-		
-		foreach (settlement in settlements)
-		{
-			if (settlement != null && settlement != home){
-				local dist = home.getTile().getDistanceTo(settlement.getTile());
-				if (home.m.ConnectedToByRoads.len() != 0 && (dist > 60 || (dist_map.len() > 10 && dist > dist_map[10])))  continue;
-				local results = home.getRoadCost(settlement);
-				local cost = results[0] 
-				local roadmult = results[1] 
-				if (cost && cost != 0)
-				{
-					local_sorted_settlements.push
-					({
-					Score = dist, 
-					Name = settlement.getName(),
-					Cost = cost,
-					Roadmult = roadmult,
-					Set = this.WeakTableRef(settlement)
-					
-					})
-					dist_map.push(dist)
-					dist_map.sort()
-				}
-
-			}
-		}
-		
-		if (local_sorted_settlements.len() == 0){
-			contract_options.push(
-			{
-				Text = "You have built all possible roads!",
-				function getResult(_option)
-				{
-					this.Contract.m.Home.m.Flags.set("AllRoadsBuilt", true)
-					this.Contract.clearScreens()
-					return "Task"
-				}
-			})
-		}
-		else
-		{
-			local_sorted_settlements.sort(this.sortRoadByScore);
-			this.m.Temp_Options = local_sorted_settlements;
-			local i_max = 11 < local_sorted_settlements.len() ? 11 : local_sorted_settlements.len();
-			local mult = this.Const.World.Stronghold.RoadCost * this.Const.World.Stronghold.PriceMult
-			
-			for (local i=0; i < i_max; i++)
-			{
-				contract_options.push(
-				{
-					Text = "Road to " + local_sorted_settlements[i].Name + " (" + local_sorted_settlements[i].Cost * mult + " Crowns)",
-					function getResult(_option)
-					{
-						local chosen = this.Contract.m.Temp_Options[_option];
-						this.Contract.m.Temp_Var <- chosen;
-						this.Contract.m.Cost = chosen.Cost * this.Const.World.Stronghold.RoadCost * this.Const.World.Stronghold.PriceMult
-						this.Contract.addRoadOverviewScreen(chosen.Name)
-						return "Overview_Building"
-					}
-				})
-			}
-			
-			contract_options.push(this.addGenericOption("Not right now."))
-		}
-		return contract_options;
-	}
-	
-	function addRoadOverviewScreen(_name){
-		this.m.Screens.push({	
-
-			ID = "Overview_Building",
-			Title = "Build a road",
-			Text = "You will try to build a road to " + this.m.Temp_Var.Name +". This will cost " + this.m.Cost + " crowns. Do you wish to do this?",
-			Image = "",
-			List = [],
-			ShowObjectives = true,
-			Options = [
-				{
-					Text = "Yes.",
-					function getResult(_option)
-					{
-						if (this.World.Assets.getMoney() >= this.Contract.m.Cost)
-						{
-							this.Contract.addRoadEnoughScreen()
-							return "Enough"
-
-						}
-						else
-						{
-							return "Not_Enough"
-						}
-					}
-
-				},
-				this.addGenericOption()
-			],
-			
-		});
-	}
-	
-	function addRoadEnoughScreen()
-	{
-		this.m.Screens.push({
-			ID = "Enough",
-			Title = "Build a new road",
-			Text = "Your road is finished.",
-			Image = "",
-			List = [],
-			ShowEmployer = true,
-			Options = [
-				{
-					Text = "Good.",
-					function getResult(_option)
-					{
-						local home = this.Stronghold.getPlayerBase();
-						home.buildRoad(this.Contract.m.Temp_Var.Set, this.Contract.m.Temp_Var.Roadmult)
-						this.World.Assets.addMoney(-this.Contract.m.Cost);
-						this.Contract.clearScreens()
-						return "Task"
-					}
-
-				}
-			],
-			function start()
-			{
-				this.List.push({
-					id = 10,
-					icon = "ui/icons/asset_money.png",
-					text = "You lose " + this.Contract.m.Cost + " crowns."
-				});
-			}
-
-		});
-	}
-	//generator to keep track of a list since we're limited in option slots
-	function yieldNext(_listLength, _iter = 0)
-	{
-		if(_iter < 0) _iter += _listLength
-		while(true)
-		{
-			if (_iter ==_listLength) _iter = 0
-			yield _iter
-			_iter++
-		}
-	}
-
-	function addMoreOptions(_id, _func)
-	{
-		return {
-			Text = "More options",
-			function getResult(_option)
-			{
-				foreach (screen in this.Contract.m.Screens)
-				{
-					if (screen.ID == _id) screen.Options = _func.call(this.Contract)
-				}
-				return _id
-			}
-		}
-	}
-
-	function getStoreBrotherOptions()
-	{
-		this.m.Temp_Generator = yieldNext(this.World.getPlayerRoster().getAll().len())
-		this.m.Temp_Options = [] 
-		local contract_options = []
-		local roster = this.World.getPlayerRoster().getAll()
-
-		foreach (idx in this.m.Temp_Generator)
-		{
-			this.m.Temp_Options.push({Bro = roster[idx], Index = idx})
-			contract_options.push(
-			{
-				Text = roster[idx].getName(),
-				function getResult(_option)
-				{
-					if (!this.Contract.storeBro(this.Contract.m.Temp_Options[_option].Bro))
-					{
-						this.Contract.m.Screens.push(
-						{
-							ID = "Last_Brother",
-							Title = "Last Brother",
-							Text = "You can't store your last brother or your avatar!",
-							Image = "",
-							List = [],
-							ShowEmployer = true,
-							Options = [this.Contract.addGenericOption("True.")]
-						})
-						return "Last_Brother"
-					}
-					//start generator at previous idx
-					this.Contract.m.Temp_Generator = this.Contract.yieldNext(this.World.getPlayerRoster().getAll().len(), this.Contract.m.Temp_Options[_option].Index - _option)
-					foreach (screen in this.Contract.m.Screens)
-					{
-						if (screen.ID == "Store_Brother") screen.Options = this.Contract.getStoreBrotherOptions()
-					}
-					
-					return "Store_Brother"
-				}
-			})
-			if(contract_options.len() >= this.Const.World.Stronghold.MaxMenuOptionsLen){
-				contract_options.push(this.addMoreOptions("Store_Brother", this.getStoreBrotherOptions))
-				break;
-			}
-			if (contract_options.len() >= roster.len()) break
-		}
-		
-		contract_options.push(this.addGenericOption("Not right now."))
-		return contract_options
-	}
-
-	
-	function getRetrieveBrotherOptions()
-	{
-		this.m.Temp_Generator = yieldNext(this.World.getRoster(9999).getAll().len())
-		this.m.Temp_Options = []
-
-		local roster = this.World.getRoster(9999).getAll()
-		local contract_options = []
-
-		foreach (idx in this.m.Temp_Generator)
-		{
-
-			this.m.Temp_Options.push({Bro = roster[idx], Index = idx})
-			contract_options.push(
-			{
-				Text = roster[idx].getName(),
-				function getResult(_option)
-				{
-					this.Contract.retrieveBro(this.Contract.m.Temp_Options[_option].Bro)
-					if (this.World.getRoster(9999).getAll().len() == 0){
-						this.Contract.clearScreens()
-						return "Task"
-					}
-					//start generator at previous idx
-					this.Contract.m.Temp_Generator = this.Contract.yieldNext(this.World.getRoster(9999).getAll().len(), this.Contract.m.Temp_Options[_option].Index - _option)
-					foreach (screen in this.Contract.m.Screens)
-					{
-						if (screen.ID == "Retrieve_Brother") screen.Options = this.Contract.getRetrieveBrotherOptions()
-					}
-					return "Retrieve_Brother"
-				}
-			})
-			if(contract_options.len() >= this.Const.World.Stronghold.MaxMenuOptionsLen){
-				contract_options.push(this.addMoreOptions("Retrieve_Brother", this.getRetrieveBrotherOptions))
-				break;
-			}
-			if (contract_options.len() >= roster.len()) break
-			
-		}
-		contract_options.push(this.addGenericOption("Not right now."))
-		return contract_options
-	}
 
 	function storeBro(_bro)
 	{
@@ -1696,6 +910,12 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	    local playerRoster = this.World.getPlayerRoster()
 		playerRoster.add(_bro)
 		townRoster.remove(_bro)
+	}
+
+	function onHamletBuild(){
+		this.spawnHamlet()
+		this.removeThisContract()
+		return 0;
 	}
 
 	function spawnHamlet()
@@ -1754,23 +974,63 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			return
 		}
 	}
-
-	function onUpgradePlayerBase()
-	{		
-		//spawn assailant quest
+	function onUpgradeBought(){
+		local player_faction = this.Stronghold.getPlayerFaction()
 		local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
 		contract.setEmployerID(player_faction.getRandomCharacter().getID());
 		contract.setFaction(player_faction.getID());
-		contract.setHome(player_base);
-		contract.setOrigin(player_base);
+		contract.setHome(this.getBase());
+		contract.setOrigin(this.getBase());
+		contract.m.TargetLevel = this.getBase().getSize() + 1
 		this.World.Contracts.addContract(contract);
 		contract.start();
+		this.removeThisContract()
+		return 0;
 	}
+
+	function onWaterSkinBought(){
+		this.World.Assets.getStash().makeEmptySlots(1);
+		local item = this.new("scripts/items/special/fountain_of_youth_item");
+		this.World.Assets.getStash().add(item);
+		this.Contract.clearScreens()
+		return "Task";
+	}
+
+	function onMercenariesHired(){
+		local player_base = this.getBase()
+		local player_faction = this.Stronghold.getPlayerFaction();
+		local mercenary_size = 200
+		if (player_base.hasAttachedLocation("attached_location.militia_trainingcamp"))
+		{
+			mercenary_size += 100
+		}
+		local party = player_faction.spawnEntity(player_base.getTile(), "Mercenary band of " + player_base.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
+		party.getSprite("body").setBrush("figure_mercenary_01");
+		party.setDescription("A band of mercenaries following you around.");
+		party.getFlags().set("Stronghold_Mercenaries", true);
+		party.setFootprintType(this.Const.World.FootprintsType.CityState);
+		party.setMovementSpeed(150)
+		local c = party.getController();
+		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
+		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
+		local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
+		follow.setDuration(7);
+		c.addOrder(follow);
+		this.clearScreens()
+		return "Task";
+	}
+
+	function onRemoveBase(){
+		this.World.Contracts.setActiveContract(this);
+		this.m.Flags.set("Remove_Base", true)
+		this.setState("Running")
+		return 0
+	}
+
 
 	function removeBase()
 	{
 		local player_faction = this.Stronghold.getPlayerFaction()
-		local player_base = this.Stronghold.getPlayerBase()
 		local contracts = player_faction.getContracts()
 		foreach (contract in contracts)
 		{
@@ -1781,18 +1041,18 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			unit.fadeOutAndDie()
 		}
 		
-		foreach( h in player_base.m.HousesTiles )
+		foreach( h in this.getBase().m.HousesTiles )
 		{
 			local tile = this.World.getTileSquare(h.X, h.Y);
 			tile.clear(this.Const.World.DetailType.Houses | this.Const.World.DetailType.Lighting);
-			local d = tile.spawnDetail("world_houses_0" + player_base.m.HousesType + "_0" + h.V + "_ruins", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
+			local d = tile.spawnDetail("world_houses_0" + this.getBase().m.HousesType + "_0" + h.V + "_ruins", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
 			d.Scale = 0.85;
-			player_base.spawnFireAndSmoke(tile.Pos);
+			this.getBase().spawnFireAndSmoke(tile.Pos);
 		}
-		player_base.spawnFireAndSmoke(player_base.getTile().Pos)
-		foreach (location in player_base.m.AttachedLocations)
+		this.getBase().spawnFireAndSmoke(this.getBase().getTile().Pos)
+		foreach (location in this.getBase().m.AttachedLocations)
 		{
-			player_base.spawnFireAndSmoke(location.getTile().Pos)
+			this.getBase().spawnFireAndSmoke(location.getTile().Pos)
 			location.die()
 		}
 		foreach (settlement in player_faction.getSettlements())
@@ -1829,16 +1089,18 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	{
 		++_region[_tile.Type];
 	}
+	function addCrownSymbol(_crowns){
+		return "[img]gfx/ui/tooltips/money.png[/img]" + _crowns
+	}
 
 	//makes sure there are no lingering screens or other variables after returning to the first window.
 	function clearScreens()
 	{
 		this.m.Screens = [];
 		this.m.Temp_Var = null;
-		this.m.Temp_Generator = null;
-		this.m.Temp_Options = [];
+		this.m.Temp_Variable_List = [];
 		this.m.Title = format("Manage your %s", this.Stronghold.getPlayerBase().getSizeName());
-		this.m.Cost = 0;
+		this.setCost(0)
 		this.createScreens()
 	}
 	
@@ -1867,8 +1129,8 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 		{
 			return true;
 		}
-
-		local result = this.m.ActiveScreen.Options[_option].getResult(_option);
+		local chosenOption =  this.m.ActiveScreen.Options[_option]
+		local result = chosenOption.getResult(_option);
 
 		if (typeof result != "string" && result <= 0)
 		{
@@ -1891,8 +1153,14 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 			Text = _text,
 			function getResult(_option)
 			{
-				this.Contract.clearScreens()
-				return "Task"
+				if (this.Contract.m.ActiveScreen == null || this.Contract.m.ActiveScreen.ID == "Task"){
+					this.Contract.removeThisContract()
+					return 0
+				}
+				else{
+					this.Contract.clearScreens()
+					return "Task"
+				}
 			}
 
 		})
@@ -1939,6 +1207,68 @@ this.stronghold_special_actions_contract <- this.inherit("scripts/contracts/cont
 	{
 		local idx = this.m.ActiveScreen.Options.len()-1
 		this.World.Contracts.processInput( idx )
+	}
+
+	//change the options to add all keys and values to the new screen
+	function setScreen( _screen, _restartIfAlreadyActive = true )
+	{
+		if (_screen == null)
+		{
+			this.m.ActiveScreen = null;
+			return;
+		}
+
+		if (typeof _screen == "string")
+		{
+			_screen = this.getScreen(_screen);
+		}
+
+		local oldID = "";
+
+		if (this.m.ActiveScreen != null)
+		{
+			oldID = this.m.ActiveScreen.ID;
+		}
+
+		this.m.ActiveScreen = clone _screen;
+		this.m.ActiveScreen.Contract <- this;
+		this.m.ActiveScreen.Flags <- this.m.Flags;
+		this.m.ActiveScreen.TempFlags <- this.m.TempFlags;
+		this.m.ActiveScreen.Options = [];
+		
+		//here
+		foreach( o in _screen.Options )
+		{
+			local option = {};
+			foreach(key, value in o) option[key] <- value; 
+			this.m.ActiveScreen.Options.push(option);
+		}
+
+		if ("List" in this.m.ActiveScreen)
+		{
+			this.m.ActiveScreen.List = [];
+		}
+
+		if ("Characters" in this.m.ActiveScreen)
+		{
+			this.m.ActiveScreen.Characters = [];
+		}
+
+		if (("start" in this.m.ActiveScreen) && (_restartIfAlreadyActive || this.m.ActiveScreen.ID != oldID))
+		{
+			this.m.ActiveScreen.start();
+		}
+
+		this.m.ActiveScreen.Title = this.buildText(this.m.ActiveScreen.Title);
+		this.m.ActiveScreen.Text = this.buildText(this.m.ActiveScreen.Text);
+
+		foreach( option in this.m.ActiveScreen.Options )
+		{
+			option.Contract <- this;
+			option.Flags <- this.m.Flags;
+			option.TempFlags <- this.m.TempFlags;
+			option.Text <- this.buildText(option.Text);
+		}
 	}
 
 	function onSerialize( _out )

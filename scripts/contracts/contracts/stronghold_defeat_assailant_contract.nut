@@ -13,8 +13,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	{
 		this.m.Flags = this.new("scripts/tools/tag_collection");
 		this.m.TempFlags = this.new("scripts/tools/tag_collection");
-		this.createStates();
-		this.createScreens();
 		this.m.Type = "contract.stronghold_defeat_assailant_contract";
 		this.m.Name = format("Defend your %s", this.Stronghold.getPlayerBase().getSizeName());
 		this.m.TimeOut = this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 1500.0;
@@ -34,8 +32,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.m.IsStarted = true;
 		this.setHome(player_base);
 		this.setOrigin(player_base);
-		this.m.AttacksRemaining = this.m.TargetLevel = player_base.getSize() == 1 ? 1 : player_base.getSize() + 1
+		this.m.AttacksRemaining = this.m.TargetLevel
 		this.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  this.Math.rand(4, 24) * this.World.getTime().SecondsPerHour
+		this.createStates();
+		this.createScreens();
 		this.World.Contracts.setActiveContract(this);
 		this.setState("Running")
 	}
@@ -56,7 +56,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			local entities = this.World.getAllEntitiesAtPos(this.World.State.getPlayer().getPos(), 3.0);
 			foreach(entity in entities)
 			{
-				if (entity.getDescription() == "A band of mercenaries defending the stronghold.")
+				if (entity.getFlags().get("Stronghold_Guards"))
 				{
 					local noble = this.World.FactionManager.getFaction(this.m.Flags.get("EnemyNobleHouse"))
 					local player_faction = this.Stronghold.getPlayerFaction()
@@ -90,6 +90,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 
 	function createStates()
 	{
+
+
 		this.m.States.push({
 			ID = "Running",
 			function start()
@@ -100,23 +102,28 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			}
 			function update()
 			{
-				//select sprites for the base
+				//have to do the intial screen this way, otherwise it doesnt show since the last event is still acti ve
+
 				if (this.Contract.m.Flags.get("Introduced") != true)
 				{
-					this.Contract.m.Flags.set("Introduced", true)
 					this.Contract.setScreen("Under_Construction")
-					this.World.Contracts.showActiveContract();
-				}
+					//circumvents log spam
+					this.World.Contracts.m.LastShown = this.Contract;
+					this.World.Contracts.m.IsEventVisible = true;
+					this.World.State.showEventScreen(this.Contract, true, true)
+				} 
 				if (!this.Contract.m.HasSpawnedUnit && this.Time.getVirtualTimeF() > this.Contract.m.TimeOfNextAttack && this.Contract.m.AttacksRemaining > 0)
 				{
 					this.Contract.setScreen("Enemies_Incoming")
 					this.World.Contracts.showActiveContract();
 				}
+				//different sprites, disabled for now
+				/*
 				if (!this.Contract.m.Flags.get("Sprite_Set") && this.Contract.m.Home.getSize() == 1)
 				{
 					this.Contract.setScreen("Select_Sprites")
 					this.World.Contracts.showActiveContract();
-				}
+				}*/
 				if (this.Contract.m.HasSpawnedUnit && (this.Contract.m.Target == null || this.Contract.m.Target.isNull()))
 				{
 					if (this.Contract.m.AttacksRemaining > 0){
@@ -163,13 +170,13 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					Text = "Let us prepare.",
 					function getResult()
 					{
-
+						this.Contract.m.Flags.set("Introduced", true)
 						this.Stronghold.getPlayerBase().setUpgrading(true);
 						this.Stronghold.getPlayerBase().updateTown();
+
 						local player_faction = this.Stronghold.getPlayerFaction();
 						local actionToFire = player_faction.m.Deck[0]
 						actionToFire.execute(player_faction);
-						this.Contract.m.Flags.set("Introduced", true)
 					}
 
 				}
@@ -180,7 +187,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			ShowDifficulty = false,
 			function start()
 			{
-				this.Text = format("Your %s is now under construction. This will take %i days. Enemies will attack it within the next day.", this.Stronghold.getPlayerBase().getSizeName(), this.Contract.m.TargetLevel) ;
+				
+				this.Text = format("Your %s is now under construction. This will take %i %s. Enemies will attack it within the next day.", this.Const.World.Stronghold.BaseNames[this.Contract.m.TargetLevel-1], this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
 			}
 		});
 		this.m.Screens.push({
@@ -270,6 +278,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					{
 
 						this.Contract.m.TimeOfNextAttack = this.Time.getVirtualTimeF() + (24 - this.World.getTime().Hours + this.Math.rand(0, 24)) * this.World.getTime().SecondsPerHour
+						this.Contract.m.BulletpointsObjectives.clear();
 						this.Contract.m.BulletpointsObjectives = [
 							format("%i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
 						];
@@ -290,7 +299,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		
 			ID = "Victory_None_Left",
 			Title = "Victory!",
-			Text = format("You have defeated the enemies. Your %s is now secure.", this.Stronghold.getPlayerBase().getSizeName()),
+			Text = format("You have defeated the enemies. Your %s is now secure.", this.Const.World.Stronghold.BaseNames[this.m.TargetLevel-1]),
 			Image = "",
 			List = [],
 			Options = [
@@ -301,12 +310,13 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						local player_faction = this.Stronghold.getPlayerFaction()
 						local player_base = this.Stronghold.getPlayerBase()
 						//upgrade looks and situation
-						if (player_base.getSize() > 1) player_base.m.Size++
-						player_base.buildHouses()
+						player_base.m.Size = this.Contract.m.TargetLevel;
+						player_base.buildHouses();
 						//spawn new guards to reflect the change in size
 						local actionToFire = player_faction.m.Deck[0]
 						actionToFire.execute(player_faction);
 						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
+						player_base.m.Flags.set("LevelOne", false)
 						this.Stronghold.getPlayerBase().setUpgrading(false);
 						this.Stronghold.getPlayerBase().updateTown()
 						this.World.Contracts.finishActiveContract();
@@ -354,7 +364,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		local player_faction = this.Stronghold.getPlayerFaction()
 		local player_base = this.Stronghold.getPlayerBase()
 		
-		local party_difficulty =  this.getScaledDifficultyMult() * (300  +  (200 * player_base.m.Size))
+		local party_difficulty =  (300 * this.getScaledDifficultyMult()) + (200 * player_base.m.Size)
 		this.m.Destination = this.WeakTableRef(player_base);
 		local tile = player_base.getTile();
 		local allSettlements = []

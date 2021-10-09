@@ -113,6 +113,7 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 						player_base.updateProperties()
 						player_faction.addSettlement(player_base);
 						player_base.setUpgrading(true);
+						player_base.m.Flags.set("LevelOne", true)
 						player_base.updateTown();
 						
 						tile.IsOccupied = true;
@@ -123,6 +124,7 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 						contract.setFaction(player_faction.getID());
 						contract.setHome(player_base);
 						contract.setOrigin(player_base);
+						contract.m.TargetLevel = 1
 						this.World.Contracts.addContract(contract);
 						contract.start();
 						_event.removeEvent()

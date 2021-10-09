@@ -532,7 +532,8 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			this.m.Target = this.WeakTableRef(this.World.getEntityByID(target));
 			this.m.Enemy_Faction = this.WeakTableRef(this.World.FactionManager.getFaction(this.m.Target.getFaction()))
 		}
-
+		this.logInfo("Deserialising merc contract, enemy faction: " + this.m.Enemy_Faction);
+		
 		this.contract.onDeserialize(_in);
 
 	}

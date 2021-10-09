@@ -75,6 +75,9 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
 		this.logDebug("Name is now: " +final_name);
 		this.m.Name = final_name;
 	}
+	function getSizeName(){
+		return this.Const.World.Stronghold.HamletName
+	}
 	
 	function isEnterable()
 	{

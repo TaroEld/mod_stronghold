@@ -29,6 +29,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 
 	function onExecute( _faction )
 	{
+		this.logInfo("executed")
 		local settlements = _faction.getSettlements();
 		local player_base = this.Stronghold.getPlayerBase()
 		local patrol_strength = 150 * (player_base.getSize()-1)
@@ -50,7 +51,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		local party = _faction.spawnEntity(player_base.getTile(), "Mercenary guards of " + player_base.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
 		party.m.OnCombatWithPlayerCallback = null;
 		party.getSprite("body").setBrush(player_base.m.troopSprites);
-		party.setDescription("A band of mercenaries defending the stronghold.");
+		party.setDescription(format("A band of mercenaries defending the %s.", player_base.getSizeName()));
 		party.setFootprintType(this.Const.World.FootprintsType.Mercenaries);
 		party.getFlags().set("Stronghold_Guards", true);
 		local c = party.getController();
