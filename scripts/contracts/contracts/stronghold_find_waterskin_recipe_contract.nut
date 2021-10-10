@@ -323,10 +323,6 @@ this.stronghold_find_waterskin_recipe_contract <- this.inherit("scripts/contract
 
 	}
 
-	function onIsValid()
-	{
-		return true;
-	}
 	function cancel()
 	{
 		this.onCancel();

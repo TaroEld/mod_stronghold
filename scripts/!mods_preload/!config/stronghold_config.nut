@@ -127,11 +127,11 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 [
 	{
 		Text = function(){
-			return format("Upgrade your %s", this.getBase().getSizeName())
+			return format("Upgrade your %s", this.getHome().getSizeName())
 		}
 		ID = "Upgrade",
 		isValid = function(){
-			return this.isMainBase() && this.getBase().getSize() < 3 && !this.getBase().isUpgrading()
+			return this.isMainBase() && this.getHome().getSize() < 3 && !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			if (this.World.Contracts.getActiveContract() != null)
@@ -148,16 +148,16 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 				})
 				return "Upgrade_Contract_Active";
 			}
-			local advantages = this.Const.World.Stronghold.UnlockAdvantages[this.getBase().m.Size]
-			this.setCost(this.Const.World.Stronghold.PriceMult * this.Const.World.Stronghold.BuyPrices[this.getBase().getSize()])
-			local text =  "You can upgrade your " + this.getBase().getSizeName() + " to a " + this.getBase().getSizeName(true) + ". This would add these options: \n" + advantages +"\n This costs " + this.addCrownSymbol(this.getCost()) + " crowns.\nWhile upgrading, you won't be able to access most of the management options. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
+			local advantages = this.Const.World.Stronghold.UnlockAdvantages[this.getHome().m.Size]
+			this.setCost(this.Const.World.Stronghold.PriceMult * this.Const.World.Stronghold.BuyPrices[this.getHome().getSize()])
+			local text =  "You can upgrade your " + this.getHome().getSizeName() + " to a " + this.getHome().getSizeName(true) + ". This would add these options: \n" + advantages +"\n This costs " + this.addCrownSymbol(this.getCost()) + " crowns.\nWhile upgrading, you won't be able to access most of the management options. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
 			this.addOverviewScreen(
 				title, 
-				format("Upgrade your %s", this.getBase().getSizeName())
+				format("Upgrade your %s", this.getHome().getSizeName())
 			)
 			this.addEnoughScreen(
 				"Upgrading in progress", 
-				format("You started upgrading your %s to a %s", this.getBase().getSizeName(), this.getBase().getSizeName(true)),
+				format("You started upgrading your %s to a %s", this.getHome().getSizeName(), this.getHome().getSizeName(true)),
 				this.onUpgradeBought
 			)
 			return "Overview_Building"
@@ -165,18 +165,18 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 	},
 	{
 		Text = function(){
-			return format("Add a building to your %s", this.getBase().getSizeName())
+			return format("Add a building to your %s", this.getHome().getSizeName())
 		},
 		ID = "Building",
 		isValid = function(){
 			local current_buildings = 0;
-			local free_building_slots = this.getBase().getSize() + 4
-			foreach (building in this.getBase().m.Buildings){
+			local free_building_slots = this.getHome().getSize() + 4
+			foreach (building in this.getHome().m.Buildings){
 				if (building != null){
 					current_buildings++
 				}
 			}
-			return current_buildings < free_building_slots && !this.getBase().isUpgrading()
+			return current_buildings < free_building_slots && !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -195,18 +195,18 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 	{
 
 		Text = function(){
-			return format("Remove a building from your %s", this.getBase().getSizeName())
+			return format("Remove a building from your %s", this.getHome().getSizeName())
 		}
 		ID = "Building_Remove",
 		isValid = function(){
 			local current_buildings = 0;
-			local free_building_slots = this.getBase().getSize() + 4
-			foreach (building in this.getBase().m.Buildings){
+			local free_building_slots = this.getHome().getSize() + 4
+			foreach (building in this.getHome().m.Buildings){
 				if (building != null){
 					current_buildings++
 				}	
 			}
-			return current_buildings >= free_building_slots && !this.getBase().isUpgrading()
+			return current_buildings >= free_building_slots && !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -224,17 +224,17 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 	},
 	{
 		Text = function(){
-			return format("Add a location to your %s", this.getBase().getSizeName())
+			return format("Add a location to your %s", this.getHome().getSizeName())
 		},
 		ID = "Location",
 		isValid = function(){
 			local current_locations = 0;
-			foreach (location in this.getBase().m.AttachedLocations){
+			foreach (location in this.getHome().m.AttachedLocations){
 				if (location != null){
 					current_locations++
 				}
 			}
-			return this.isMainBase() && current_locations < this.getBase().m.AttachedLocationsMax && !this.getBase().m.Flags.get("AllLocationsBuilt") && !this.getBase().isUpgrading()
+			return this.isMainBase() && current_locations < this.getHome().m.AttachedLocationsMax && !this.getHome().m.Flags.get("AllLocationsBuilt") && !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -256,7 +256,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 		},
 		ID = "Road",
 		isValid = function(){
-			return this.isMainBase() && this.getBase().m.Size > 1 && !this.getBase().isUpgrading()
+			return this.isMainBase() && this.getHome().m.Size > 1 && !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -278,10 +278,10 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			},
 		ID = "Waterskin",
 		isValid = function(){
-			return this.isMainBase() && this.getBase().m.Size == 3 && !this.getBase().isUpgrading()
+			return this.isMainBase() && this.getHome().m.Size == 3 && !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
-			if (!this.getBase().m.Flags.get("Waterskin"))
+			if (!this.getHome().m.Flags.get("Waterskin"))
 			{
 				this.m.Screens.push
 				({
@@ -350,7 +350,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			},
 		ID = "Mercenaries",
 		isValid = function(){
-			return this.isMainBase() && this.getBase().m.Size == 3
+			return this.isMainBase() && this.getHome().m.Size == 3
 		},
 		onChosen = function(){
 			local has_mercs = false
@@ -359,7 +359,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 					has_mercs = true
 				}
 			}
-			if (!this.getBase().m.Flags.get("Mercenaries"))
+			if (!this.getHome().m.Flags.get("Mercenaries"))
 			{
 				this.m.Screens.push
 				({
@@ -409,7 +409,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			},
 		ID = "Teacher",
 		isValid = function(){
-			return this.isMainBase() && this.getBase().m.Size == 3 && !this.getBase().isUpgrading()
+			return this.isMainBase() && this.getHome().m.Size == 3 && !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.setCost(10 * this.Const.World.Stronghold.PriceMult);
@@ -451,7 +451,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			},
 		ID = "Gift",
 		isValid = function(){
-			return this.isMainBase() && this.getBase().m.Size > 1 && !this.getBase().isUpgrading()
+			return this.isMainBase() && this.getHome().m.Size > 1 && !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			local isValid = this.isGiftValid(true)
@@ -506,7 +506,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			this.m.Screens.push
 			({
 				ID = "Store_Brother",
-				Title = format("Leave a brother at your %s", this.getBase().getSizeName()),
+				Title = format("Leave a brother at your %s", this.getHome().getSizeName()),
 				Text = "Which brother would you like to leave behind?\nStored brothers draw half their wage while they wait for your return.",
 				Image = "",
 				List = [],
@@ -545,7 +545,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			},
 		ID = "Hamlet",
 		isValid = function(){
-			return (this.isMainBase() && this.getBase().m.Size == 3 && !this.Stronghold.getPlayerFaction().getFlags().get("BuildHamlet")) && !this.getBase().isUpgrading()
+			return (this.isMainBase() && this.getHome().m.Size == 3 && !this.Stronghold.getPlayerFaction().getFlags().get("BuildHamlet")) && !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.setCost(20 * this.Const.World.Stronghold.PriceMult);
@@ -563,11 +563,11 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 	},
 	{
 		Text = function(){
-			return format("Remove your %s", this.getBase().getSizeName())
+			return format("Remove your %s", this.getHome().getSizeName())
 			},
 		ID = "Remove_Base",
 		isValid = function(){
-			return !this.getBase().isUpgrading()
+			return !this.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.addOverviewScreen(

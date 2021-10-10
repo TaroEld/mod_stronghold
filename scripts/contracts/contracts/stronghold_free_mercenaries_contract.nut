@@ -455,10 +455,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 
 	}
 	
-	function onIsValid()
-	{
-		return true;
-	}
 	function cancel()
 	{
 		this.onCancel();
