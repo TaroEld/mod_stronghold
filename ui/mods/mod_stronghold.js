@@ -129,3 +129,69 @@ WorldTownScreenMainDialogModule.prototype.notifyBackendPopupDialogIsVisible = fu
 };
 
 
+
+
+WorldCampfireScreenAssets.prototype.createStrongholdDIV = function (_parentDiv)
+{
+	var self = this;
+	var layout = $('<div class="l-button"/>');
+	_parentDiv.append(layout);
+	this.mStrongholdButton = layout.createImageButton(Path.GFX + 'ui/settlements/stronghold_01_retinue.png', function ()
+	{
+	    self.mParent.notifyBackendStrongholdButtonPressed();
+	});
+    return layout;
+};
+
+var retinue_createDIV = WorldCampfireScreenAssets.prototype.createDIV
+WorldCampfireScreenAssets.prototype.createDIV = function (_parentDiv)
+{
+	retinue_createDIV.call(this, _parentDiv)
+	this.createStrongholdDIV(_parentDiv);
+};
+
+var retinue_loadFromData = WorldCampfireScreenAssets.prototype.loadFromData
+WorldCampfireScreenAssets.prototype.loadFromData = function (_data){
+	if(this.mStrongholdButton != null && 'hasStronghold' in _data && _data['hasStronghold'] === true){
+		this.mStrongholdButton.remove();
+		this.mStrongholdButton = null;
+	}
+	retinue_loadFromData.call(this, _data)
+}
+
+WorldCampfireScreen.prototype.notifyBackendStrongholdButtonPressed = function ()
+{
+    if(this.mSQHandle !== null)
+    {
+        SQ.call(this.mSQHandle, 'onStrongholdClicked', null);
+    }
+};
+
+var retinue_bindTooltips = WorldCampfireScreenAssets.prototype.bindTooltips
+WorldCampfireScreenAssets.prototype.bindTooltips = function ()
+{
+    retinue_bindTooltips.call(this)
+    if (this.mStrongholdButton != null){
+        this.mStrongholdButton.bindTooltip({ contentType: 'ui-element', elementId: "stronghold-retinue-button" });
+    } 
+};
+
+var retinue_unbindTooltips = WorldCampfireScreenAssets.prototype.unbindTooltips
+WorldCampfireScreenAssets.prototype.unbindTooltips = function ()
+{
+    retinue_unbindTooltips.call(this)
+    if (this.mStrongholdButton != null){
+        this.mStrongholdButton.unbindTooltip();
+    }
+
+};
+
+var retinue_destroyDIV = WorldCampfireScreenAssets.prototype.destroyDIV
+WorldCampfireScreenAssets.prototype.destroyDIV = function ()
+{
+    retinue_destroyDIV.call(this)
+    if (this.mStrongholdButton != null){
+    	this.mStrongholdButton.remove();
+    	this.mStrongholdButton = null;
+    }
+};

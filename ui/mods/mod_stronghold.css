@@ -159,3 +159,28 @@
     position: relative;
     float: left;
 }
+
+.world-campfire-screen > .l-main-dialog-container .l-button
+{
+    top: -7rem;
+    bottom: 0;
+    width: ;
+    position: absolute;
+    left: 70.0rem;
+    z-index: 9999;
+    width: 25rem;
+    height: 10rem;
+}
+.world-campfire-screen > .l-main-dialog-container .button:hover,
+.world-campfire-screen > .l-main-dialog-container .button.is-selected,
+.world-campfire-screen > .l-main-dialog-container .button[disabled]
+{
+    background-color: rgba(1, 1, 1, 0);
+}
+
+.world-campfire-screen > .l-main-dialog-container .l-button img
+{
+    max-width:100%;
+    max-height:100%;
+}
+

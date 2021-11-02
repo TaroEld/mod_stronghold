@@ -25,15 +25,15 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		local hasContract = this.World.Contracts.getActiveContract() != null
 		local isCoastal = this.Stronghold.checkForCoastal(this.World.State.getPlayer().getTile())
 
-		local moneyText = coloredText("\n10000 crowns", hasMoney)
-		local tileText = coloredText("\nThe tile must be empty", !isTileOccupied)
-		local contractText = coloredText("\nYou must not have an active contract", !hasContract)
-		local coastalText = isCoastal ? coloredText("\n\nYou CAN build a port here.") : coloredText("\n\nYou CANNOT build a port here.", false);
+		local moneyText = coloredText("\n10000 crowns.", hasMoney)
+		local tileText = coloredText("\nThe tile must be empty.", !isTileOccupied)
+		local contractText = coloredText("\nYou must not have an active contract.", !hasContract)
+		local coastalText = isCoastal ? coloredText("\n\nYou will be able to build a port here.") : coloredText("\n\nYou won't be able to build a port here.", false);
 
 		local requirementsText = "Welcome to Stronghold. Here you can see what you need to build your base. You will start with a small " + levelOneName + ", which can later be upgraded to unlock more features."
 		requirementsText += format("\n\nBuilding a %s requires: ", levelOneName)
 		requirementsText += moneyText + tileText + contractText
-		requirementsText += (hasMoney && !isTileOccupied && !hasContract ) ? coloredText(format("\nYou CAN build a %s!", levelOneName)) : coloredText("\n\nYou CANNOT build a " + levelOneName + "!", false);
+		requirementsText += (hasMoney && !isTileOccupied && !hasContract ) ? coloredText(format("\n\nYou CAN build a %s!", levelOneName)) : coloredText("\n\nYou CANNOT build a " + levelOneName + "!", false);
 
 		requirementsText += coastalText
 		requirementsText += format("\n\n Building a %s will unlock these features: \n%s", levelOneName, this.Const.World.Stronghold.UnlockAdvantages[0])

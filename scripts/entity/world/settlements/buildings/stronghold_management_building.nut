@@ -29,7 +29,7 @@ this.stronghold_management_building <- this.inherit("scripts/entity/world/settle
 	function onClicked( _townScreen )
 	{
 		local fac = this.Stronghold.getPlayerFaction();
-		local contract = this.new("scripts/contracts/contracts/stronghold_special_actions_contract");
+		local contract = this.new("scripts/contracts/contracts/stronghold_management_contract");
 		contract.setEmployerID(fac.getRandomCharacter().getID());
 		contract.setFaction(fac.getID())
 		contract.setHome(this.getSettlement());
@@ -49,7 +49,7 @@ this.stronghold_management_building <- this.inherit("scripts/entity/world/settle
 
 	function updateSprite()
 	{
-		local playerBase = this.Stronghold.getPlayerBase()
+		local playerBase = this.m.Settlement
 		this.m.UIImage = playerBase.m.UIBackgroundCenter + "_management"
 		this.m.UIImageNight = playerBase.m.UIBackgroundCenter + "_night" + "_management"
 	}

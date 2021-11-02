@@ -145,24 +145,26 @@
 	
 	::mods_hookNewObject("ui/screens/world/modules/world_campfire_screen/campfire_main_dialog_module", function ( o )
 	{
-		//function to build/upgrade stronghold via retinue menu. Checks for a few things (quest active, already built, already fully upgraded, tile occupied)
-		while (!("onCartClicked" in o)) o = o[o.SuperName];
-		local onCartClicked = o.onCartClicked;
-		o.onCartClicked = function()
+		local queryData = o.queryData
+		o.queryData <- function()
 		{
-			onCartClicked();
-			if (this.Stronghold.getPlayerBase() || this.World.Retinue.getInventoryUpgrades() < this.Const.World.InventoryUpgradeCosts.len()) return			
-			this.showDialogPopup("Welcome to Stronghold!", "Click Yes to learn more, click No to return", this.onYesClicked.bindenv(this), null);	
-		};
+			local result = queryData()
+			result.Assets.hasStronghold <- this.Stronghold.getPlayerBase() != false;
+			return result;
+		}
+	});
 
-		o.onYesClicked <- function()
+	::mods_hookNewObject("ui/screens/world/world_campfire_screen", function ( o )
+	{
+		o.onStrongholdClicked <- function()
 		{
 			this.World.State.getMenuStack().popAll(true)
 			local event = this.new("scripts/events/mod_stronghold/stronghold_intro_event")
 			this.World.Events.m.Events.push(event)
 			this.World.Events.fire(event.getID())
 		};
-	});
+	})
+
 	
 
 	::mods_hookNewObject("entity/world/settlements/buildings/port_building", function ( o )
@@ -640,38 +642,19 @@
 						}
 					];
 
-				case "world-campfire-screen.Cart":
+				case "stronghold-retinue-button":
 					local ret = [
 						{
 							id = 1,
 							type = "title",
-							text = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades()]
+							text = "Stronghold"
 						},
 						{
 							id = 2,
 							type = "description",
-							text = "A mercenary company has to carry a lot of equipment and supplies. By using carts and wagons, you can expand your available inventory space and carry even more."
+							text = "Click here to learn more about Stronghold."
 						}
 					];
-
-					if (this.World.Retinue.getInventoryUpgrades() < this.Const.Strings.InventoryUpgradeHeader.len())
-					{
-						ret.push({
-							id = 1,
-							type = "hint",
-							icon = "ui/icons/mouse_left_button.png",
-							text = this.Const.Strings.InventoryUpgradeHeader[this.World.Retinue.getInventoryUpgrades()] + " for [img]gfx/ui/tooltips/money.png[/img]" + this.Const.Strings.InventoryUpgradeCosts[this.World.Retinue.getInventoryUpgrades()]
-						});
-					}
-					else if (!this.Stronghold.getPlayerBase()){
-						ret.push({
-							id = 3,
-							type = "hint",
-							icon = "ui/icons/mouse_left_button.png",
-							text = "You can build a " + this.Const.World.Stronghold.BaseNames[0] + " for [img]gfx/ui/tooltips/money.png[/img]" + this.Const.World.Stronghold.PriceMult * this.Const.World.Stronghold.BuyPrices[0]
-						});
-					} 
-
 					return ret;
 
 

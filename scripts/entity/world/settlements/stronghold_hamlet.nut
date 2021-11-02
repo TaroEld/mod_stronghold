@@ -1,4 +1,4 @@
-this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
+this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/stronghold_player_base", {
 	//custom player base settlement type. spawns custom storage building, modified marketplace that allows for both selling of trash and food and for storing items
 	//many of the stronghold features are handled here
 	m = {},
@@ -30,12 +30,13 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
 		this.m.RosterSeed = this.Time.getRealTime() + this.Math.rand();
 		this.m.VisibilityMult = 2.0;
 		this.m.IsVisited = true;
+		this.m.IsUpgrading <- false;
 		this.m.Banner = this.World.Assets.getBannerID();
 		this.m.IsShowingBanner = true;
 		this.m.Buildings.resize(7, null)
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/marketplace_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/crowd_building"), 5);
-		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building_village"), 6);
+		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 		this.getFlags().set("IsSecondaryBase", true)
 	}
 	
@@ -60,7 +61,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
 		return this.Stronghold.getPlayerFaction()
 	}
 	
-	function defineName()
+	/*function defineName()
 	{
 		if (this.getFlags().get("CustomName")) return;
 		//dynamic name to add distinction for size, also adds the company name
@@ -74,14 +75,10 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
 		final_name += company_name + "'s " + name_by_size[this.m.Size -1];
 		this.logDebug("Name is now: " +final_name);
 		this.m.Name = final_name;
-	}
+	}*/
+
 	function getSizeName(){
 		return this.Const.World.Stronghold.HamletName
-	}
-	
-	function isEnterable()
-	{
-		return true;
 	}
 	
 	function onEnter()
@@ -96,32 +93,10 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
 		return true;
 	}
 	
-	function onLeave()
-	{
-		this.World.State.getTownScreen().getMainDialogModule().deleteRename()
-	}
-
-	function fadeOutAndDie(_force = false)
-	{
-		if (!_force) return
-		this.m.IsAlive = false;
-		this.fadeAndDie();
-	}
-	
 	function updateQuests()
 	{
-
 	}
 	
-	function clearContracts()
-	{
-		//clears all contracts after some features
-		local contracts = this.Stronghold.getPlayerFaction().getContracts();
-		foreach (contract in contracts)
-		{
-			this.World.Contracts.removeContract(contract)
-		}
-	}
 
 	function getContracts()
 	{
@@ -146,42 +121,6 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
 		
 	}
 	
-	
-	
-	function addBuilding( _building, _slot = null )
-	{
-		//modded vanilla function
-		_building.setSettlement(this);
-
-		if (_slot != null)
-		{
-			this.m.Buildings[_slot] = _building;
-		}
-		else
-		{
-			local candidates = [];
-
-			for( local i = 0; i < this.m.Buildings.len(); i = ++i )
-			{
-				if (this.m.Buildings[i] == null)
-				{
-					this.m.Buildings[i] = _building;
-					break;
-				}
-			}
-		}
-
-	}
-	
-	function onBuild()
-	{
-
-	}
-
-	function hasContract( _id )
-	{
-		return true;
-	}
 	
 	function updateRoster( _force = false )
 	{
@@ -283,222 +222,9 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlement", {
 
 		this.World.Assets.getOrigin().onUpdateHiringRoster(roster);
 	}
-	function getRoadCost(_settlement)
-	{
-		//display cost before building
-		//road multiplier increases in a loop to avoid the game just instantly finding a road and no other options being available
-		local closest = _settlement.getTile();
-		if (closest == null) return [false, false]
 
-		local navSettings = this.World.getNavigator().createSettings();
-		navSettings.RoadMult = 0.15;
-		navSettings.StopAtRoad = false;
-		local 	roadCost =  clone this.Const.World.TerrainTypeNavCost
-		foreach (tile in roadCost) tile *= 1.5
-		navSettings.ActionPointCosts = roadCost
 
-		local chosen_road;
-		local least_dist = 9999
-		while (navSettings.RoadMult < 0.5)
-		{
 
-			local path = this.World.getNavigator().findPath(this.getTile(), closest, navSettings, 0);
-			if (!path.isEmpty())
-			{
-				local roadTiles = [];
-				roadTiles.push(this.getTile());
-
-				while (path.getSize() >= 1)
-				{
-					local tile = this.World.getTile(path.getCurrent());
-					roadTiles.push(tile);
-					path.pop();
-				}
-				
-				local countroads = 0;
-				foreach(tile in roadTiles){
-					if (tile.HasRoad){
-						countroads++
-					}
-				
-				}
-				if ((roadTiles.len() - countroads) > 0)
-				{
-					if (chosen_road == null || roadTiles.len() < least_dist)
-					{
-						chosen_road = [(roadTiles.len() - countroads), navSettings.RoadMult]
-					}
-				}
-			}
-			navSettings.RoadMult = navSettings.RoadMult+0.05
-		}
-		if (chosen_road != null) return chosen_road
-		else return [false, false]
-
-	}
-	
-	function buildRoad(_settlement, _roadmult = 0.15)
-	{
-		//actually build the road
-		local closest = _settlement.getTile();
-		if (closest == null) return false;
-
-		local navSettings = this.World.getNavigator().createSettings();
-		navSettings.RoadMult = _roadmult;
-		navSettings.StopAtRoad = false;
-		local roadCost =  clone this.Const.World.TerrainTypeNavCost
-		foreach (tile in roadCost) tile *= 1.5
-		navSettings.ActionPointCosts = roadCost
-
-		local path = this.World.getNavigator().findPath(this.getTile(), closest, navSettings, 0);
-
-		if (path.isEmpty())
-		{
-			return false;
-		}
-
-		local roadTiles = [];
-		roadTiles.push(this.getTile());
-
-		while (path.getSize() >= 1)
-		{
-			local tile = this.World.getTile(path.getCurrent());
-			roadTiles.push(tile);
-			path.pop();
-		}
-		
-		local prevTile;
-		foreach( i, tile in roadTiles )
-		{
-			local dirA = prevTile != null ? tile.getDirectionTo(prevTile) : 0;
-			local dirB = i < roadTiles.len() - 1 ? tile.getDirectionTo(roadTiles[i + 1]) : 0;
-
-			if ((tile.RoadDirections & this.Const.DirectionBit[dirA]) == 0 || (tile.RoadDirections & this.Const.DirectionBit[dirB]) == 0)
-			{
-				tile.RoadDirections = tile.RoadDirections | this.Const.DirectionBit[dirA] | this.Const.DirectionBit[dirB];
-			}
-
-			prevTile = tile;
-		} 
-		foreach(tile in roadTiles)
-		{
-			tile.spawnDetail(this.Const.World.RoadBrushes.get(tile.RoadDirections), this.Const.World.ZLevel.Road, this.Const.World.DetailType.Road, false);
-		}
-		
-		//add road connections to each other
-		this.updateProperties()
-		return true;
-	}
-
-	function buildHouses()
-	{
-		//add houses while upgrading
-		local tile = this.getTile();
-		local candidates = [];
-		local poorCandidates = [];
-
-		for( local i = 0; i < 6; i = ++i )
-		{
-			if (!tile.hasNextTile(i))
-			{
-			}
-			else
-			{
-				local nextTile = tile.getNextTile(i);
-
-				if (nextTile.IsOccupied)
-				{
-				}
-				else if (nextTile.Type == this.Const.World.TerrainType.Oasis || nextTile.Type == this.Const.World.TerrainType.Plains || nextTile.Type == this.Const.World.TerrainType.Tundra || nextTile.Type == this.Const.World.TerrainType.Steppe || nextTile.Type == this.Const.World.TerrainType.Snow)
-				{
-					candidates.push(nextTile);
-				}
-				else if (nextTile.Type == this.Const.World.TerrainType.Desert || nextTile.Type == this.Const.World.TerrainType.Hills || nextTile.Type == this.Const.World.TerrainType.Forest || nextTile.Type == this.Const.World.TerrainType.SnowyForest || nextTile.Type == this.Const.World.TerrainType.LeaveForest || nextTile.Type == this.Const.World.TerrainType.AutumnForest || nextTile.Type == this.Const.World.TerrainType.Swamp)
-				{
-					poorCandidates.push(nextTile);
-				}
-			}
-		}
-
-		local houses = 2
-
-		for( local c; houses != 0; houses = --houses )
-		{
-			local c = candidates.len() != 0 ? candidates : poorCandidates;
-			if (c.len() == 0)
-			{
-				break;
-			}
-			local i = this.Math.rand(0, c.len() - 1);
-			local v = this.Math.rand(1, 2);
-			this.m.HousesTiles.push({
-				X = c[i].SquareCoords.X,
-				Y = c[i].SquareCoords.Y,
-				V = v
-			});
-			c[i].clear();
-			c[i].IsOccupied = true;
-			local d;
-			if (this.m.Flags.get("BarbarianSprites"))
-			{
-				local isOnSnow = this.getTile().Type == this.Const.World.TerrainType.Snow;
-				for( local i = 0; i != 6; i = ++i )
-				{
-					if (this.getTile().hasNextTile(i) && this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Snow)
-					{
-						isOnSnow = true;
-						break;
-					}
-				}
-				local detail = isOnSnow? "world_wildmen_01_snow":"world_wildmen_01"
-				d = c[i].spawnDetail(detail, this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
-			}
-			else if (this.m.Flags.get("NomadSprites"))
-			{
-				d = c[i].spawnDetail("world_nomad_camp_02", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
-			}
-			else
-			{
-				d = c[i].spawnDetail("world_houses_0" + this.m.HousesType + "_0" + v, this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
-			}
-			d.Scale = 0.85;
-			c.remove(i);
-		}
-	}
-	
-	
-	function onAttachedLocationsChanged()
-	{
-		//note destroyed attached locations
-		foreach( a in this.m.AttachedLocations )
-		{
-			if (!a.isActive())
-			{
-				if (!this.m.Flags.get(a.m.ID))
-				{
-					this.m.Flags.set(a.m.ID, this.Time.getVirtualTimeF())
-				}
-			}
-		}
-
-	}
-	
-	function rebuildAttachedLocations()
-	{
-		//rebuild attached locations
-		foreach( a in this.m.AttachedLocations )
-		{
-			if (!a.isActive())
-			{
-				if (this.m.Flags.get(a.m.ID) && ((this.m.Flags.get(a.m.ID) + 7 * this.World.getTime().SecondsPerDay) <  this.Time.getVirtualTimeF()))
-				{
-					a.setActive(true);
-					this.m.Flags.remove(a.m.ID)
-				}
-			}
-		}
-	}
-	
 	
 	function onSerialize( _out )
 	{

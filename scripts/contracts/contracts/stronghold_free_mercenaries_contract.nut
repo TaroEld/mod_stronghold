@@ -66,7 +66,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					this.Contract.m.Target.getSprite("selection").Visible = true;
 					this.Contract.m.Target.setVisibleInFogOfWar(true);
 					this.Contract.m.Target.setOnCombatWithPlayerCallback(this.onTargetAttacked.bindenv(this));
-					this.Contract.m.Enemy_Faction = this.World.FactionManager.getFaction(this.Contract.m.Target.getFaction())
+					this.Contract.m.Enemy_Faction = this.Contract.m.Target.getFaction()
 				}
 				else
 				{
@@ -144,7 +144,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					this.Contract.m.Flags.set("Survivors", 0);
 
 					this.Contract.m.Target = this.WeakTableRef(party);
-					this.Contract.m.Enemy_Faction = this.WeakTableRef(selected_faction);
+					this.Contract.m.Enemy_Faction = party.getFaction();
 					this.Contract.m.Destination = this.WeakTableRef(selected_end_settlememt);
 					
 					this.Contract.m.Target.getSprite("selection").Visible = true;
@@ -183,7 +183,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			{
 				if (this.Time.getVirtualTimeF() >= this.Contract.m.LastCombatTime + 5.0)
 				{
-					this.Contract.m.Enemy_Faction.setIsTemporaryEnemy(true);
+					this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).setIsTemporaryEnemy(true);
 					this.Contract.m.LastCombatTime = this.Time.getVirtualTimeF();
 					this.World.Contracts.showCombatDialog(_isPlayerAttacking);
 				}
@@ -191,7 +191,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			
 			function onActorRetreated( _actor, _combatID )
 			{
-				if (!_actor.isNonCombatant() && _actor.getFaction() == this.Contract.m.Enemy_Faction.getID())
+				if (!_actor.isNonCombatant() && _actor.getFaction() == this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).getID())
 				{
 					this.Contract.m.Flags.set("Survivors", this.Flags.get("Survivors") + 1);
 				}
@@ -409,7 +409,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					function getResult()
 					{
 						this.Contract.m.Home.m.Flags.set("Mercenaries", true);
-						this.Contract.m.Enemy_Faction.addPlayerRelationEx( -100, "Murdered their men to free condemned criminals")
+						this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).addPlayerRelationEx( -100, "Murdered their men to free condemned criminals")
 						this.World.Contracts.finishActiveContract();
 						return 0;
 					}
@@ -490,8 +490,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 
 	function onSerialize( _out )
 	{
-		_out.writeI32(0);
-
+		_out.writeU8(this.m.Enemy_Faction);
 		if (this.m.Destination != null && !this.m.Destination.isNull())
 		{
 			_out.writeU32(this.m.Destination.getID());
@@ -508,13 +507,16 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		{
 			_out.writeU32(0);
 		}
+		
+
 
 		this.contract.onSerialize(_out);
 	}
 
 	function onDeserialize( _in )
 	{
-		_in.readI32();
+		this.m.Enemy_Faction = _in.readU8()
+
 		local destination = _in.readU32();
 
 		if (destination != 0)
@@ -526,8 +528,9 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		if (target != 0)
 		{
 			this.m.Target = this.WeakTableRef(this.World.getEntityByID(target));
-			this.m.Enemy_Faction = this.WeakTableRef(this.World.FactionManager.getFaction(this.m.Target.getFaction()))
 		}
+		
+
 		this.logInfo("Deserialising merc contract, enemy faction: " + this.m.Enemy_Faction);
 		
 		this.contract.onDeserialize(_in);

@@ -51,9 +51,14 @@ this.stronghold_follow_order <- this.inherit("scripts/ai/world/world_behavior", 
 			local player_tile = this.World.State.getPlayer().getTile()
 			if (_entity.getTile().ID != player_tile.ID)
 			{
-				local move = this.new("scripts/ai/world/orders/move_order");
-				move.setDestination(player_tile);
-				this.getController().addOrderInFront(move);
+				if(_entity.getTile().getDistanceTo(player_tile) > 10){
+					_entity.setPos(player_tile.Pos)
+				}
+				else{
+					local move = this.new("scripts/ai/world/orders/move_order");
+					move.setDestination(player_tile);
+					this.getController().addOrderInFront(move);
+				}
 				return true;
 			}
 		}

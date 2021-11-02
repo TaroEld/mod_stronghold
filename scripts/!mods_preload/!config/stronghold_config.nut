@@ -17,6 +17,8 @@ gt.Const.World.Stronghold.BaseNames <- [
 "Stronghold"]
 
 gt.Const.World.Stronghold.HamletName <- "Hamlet" 
+gt.Const.World.Stronghold.PlayerBaseSprites <- ["world_stronghold_01", "world_stronghold_02", "world_stronghold_03"]
+gt.Const.World.Stronghold.PlayerBaseSpritesUpgrading  <- ["world_stronghold_01", "world_stronghold_02", "world_stronghold_03"]
 gt.Const.World.Stronghold.PlayerFactionActions <- [
 "scripts/factions/actions/stronghold_guard_base_action", 
 "scripts/factions/actions/stronghold_send_caravan_action", 
@@ -78,12 +80,10 @@ gt.Const.World.Stronghold.FullDraftList <-
 	"brawler_background" ,
 	"butcher_background" ,
 	"caravan_hand_background" ,
-	"cripple_background" ,
 	"cultist_background" ,
 	"daytaler_background" ,
 	"deserter_background" ,
 	"disowned_noble_background" ,
-	"eunuch_background" ,
 	"farmhand_background" ,
 	"fisherman_background" ,
 	"flagellant_background" ,
@@ -110,7 +110,6 @@ gt.Const.World.Stronghold.FullDraftList <-
 	"poacher_background" ,
 	"raider_background" ,
 	"ratcatcher_background" ,
-	"refugee_background" ,
 	"retired_soldier_background" ,
 	"sellsword_background" ,
 	"servant_background" ,
@@ -123,6 +122,11 @@ gt.Const.World.Stronghold.FullDraftList <-
 	"wildman_background" ,
 	"witchhunter_background"
 ]
+//main options
+//to add one, you need a title = Text, as a function, optionally an isValid function, and an onChosen function that pushes a screen and grabs the options
+// here, you also add the overview and enough screens in most cases. The latter calls the function that effects the management option
+//if single choice, return "Overview_Building", otherwise return the ID of the screen you pushed, such as "Building_Choice"
+//generally also setCost here
 gt.Const.World.Stronghold.Main_Management_Options <-
 [
 	{
@@ -130,8 +134,8 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return format("Upgrade your %s", this.getHome().getSizeName())
 		}
 		ID = "Upgrade",
-		isValid = function(){
-			return this.isMainBase() && this.getHome().getSize() < 3 && !this.getHome().isUpgrading()
+		isValid = function(_contract){
+			return _contract.isMainBase() && _contract.getHome().getSize() < 3 && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			if (this.World.Contracts.getActiveContract() != null)
@@ -148,12 +152,12 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 				})
 				return "Upgrade_Contract_Active";
 			}
-			local advantages = this.Const.World.Stronghold.UnlockAdvantages[this.getHome().m.Size]
+			local advantages = this.Const.World.Stronghold.UnlockAdvantages[this.getHome().getSize()]
 			this.setCost(this.Const.World.Stronghold.PriceMult * this.Const.World.Stronghold.BuyPrices[this.getHome().getSize()])
 			local text =  "You can upgrade your " + this.getHome().getSizeName() + " to a " + this.getHome().getSizeName(true) + ". This would add these options: \n" + advantages +"\n This costs " + this.addCrownSymbol(this.getCost()) + " crowns.\nWhile upgrading, you won't be able to access most of the management options. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
 			this.addOverviewScreen(
-				title, 
-				format("Upgrade your %s", this.getHome().getSizeName())
+				format("Upgrade your %s", this.getHome().getSizeName()),
+				text
 			)
 			this.addEnoughScreen(
 				"Upgrading in progress", 
@@ -168,15 +172,15 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return format("Add a building to your %s", this.getHome().getSizeName())
 		},
 		ID = "Building",
-		isValid = function(){
+		isValid = function(_contract){
 			local current_buildings = 0;
-			local free_building_slots = this.getHome().getSize() + 4
-			foreach (building in this.getHome().m.Buildings){
+			local free_building_slots = _contract.getHome().getSize() + 4
+			foreach (building in _contract.getHome().m.Buildings){
 				if (building != null){
 					current_buildings++
 				}
 			}
-			return current_buildings < free_building_slots && !this.getHome().isUpgrading()
+			return current_buildings < free_building_slots && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -198,15 +202,15 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return format("Remove a building from your %s", this.getHome().getSizeName())
 		}
 		ID = "Building_Remove",
-		isValid = function(){
+		isValid = function(_contract){
 			local current_buildings = 0;
-			local free_building_slots = this.getHome().getSize() + 4
-			foreach (building in this.getHome().m.Buildings){
+			local free_building_slots = _contract.getHome().getSize() + 4
+			foreach (building in _contract.getHome().m.Buildings){
 				if (building != null){
 					current_buildings++
 				}	
 			}
-			return current_buildings >= free_building_slots && !this.getHome().isUpgrading()
+			return current_buildings >= free_building_slots && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -227,14 +231,14 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return format("Add a location to your %s", this.getHome().getSizeName())
 		},
 		ID = "Location",
-		isValid = function(){
+		isValid = function(_contract){
 			local current_locations = 0;
-			foreach (location in this.getHome().m.AttachedLocations){
+			foreach (location in _contract.getHome().m.AttachedLocations){
 				if (location != null){
 					current_locations++
 				}
 			}
-			return this.isMainBase() && current_locations < this.getHome().m.AttachedLocationsMax && !this.getHome().m.Flags.get("AllLocationsBuilt") && !this.getHome().isUpgrading()
+			return _contract.isMainBase() && current_locations < _contract.getHome().m.AttachedLocationsMax && !_contract.getHome().m.Flags.get("AllLocationsBuilt") && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -255,8 +259,8 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return "Build a road to another settlement."
 		},
 		ID = "Road",
-		isValid = function(){
-			return this.isMainBase() && this.getHome().m.Size > 1 && !this.getHome().isUpgrading()
+		isValid = function(_contract){
+			return _contract.isMainBase() && _contract.getHome().m.Size > 1 && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -277,8 +281,8 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return "Buy a Water Skin."
 			},
 		ID = "Waterskin",
-		isValid = function(){
-			return this.isMainBase() && this.getHome().m.Size == 3 && !this.getHome().isUpgrading()
+		isValid = function(_contract){
+			return _contract.isMainBase() && _contract.getHome().m.Size == 3 && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			if (!this.getHome().m.Flags.get("Waterskin"))
@@ -349,8 +353,8 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return "Hire mercenaries."
 			},
 		ID = "Mercenaries",
-		isValid = function(){
-			return this.isMainBase() && this.getHome().m.Size == 3
+		isValid = function(_contract){
+			return _contract.isMainBase() && _contract.getHome().m.Size == 3
 		},
 		onChosen = function(){
 			local has_mercs = false
@@ -408,8 +412,8 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return "Provide focused training to one of your recruits"
 			},
 		ID = "Teacher",
-		isValid = function(){
-			return this.isMainBase() && this.getHome().m.Size == 3 && !this.getHome().isUpgrading()
+		isValid = function(_contract){
+			return _contract.isMainBase() && _contract.getHome().m.Size == 3 && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.setCost(10 * this.Const.World.Stronghold.PriceMult);
@@ -450,17 +454,18 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return "Send gifts to a faction"
 			},
 		ID = "Gift",
-		isValid = function(){
-			return this.isMainBase() && this.getHome().m.Size > 1 && !this.getHome().isUpgrading()
+		isValid = function(_contract){
+			return _contract.isMainBase() && _contract.getHome().m.Size > 1 && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			local isValid = this.isGiftValid(true)
 			if (isValid[0])
 			{
 				local text = "You can choose to send gifts to a faction. This will consume the treasures you have in your inventory, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods."
+				text += "\n [i]This will spawn a caravan that moves to the destination. If it is destroyed, you lose your investment.[/i]"
 				text += "\n\n [i]Gain relation equal to 5% of the value of the treasures with the target faction.[/i]"
 				text += "\n [i]Treasures are gained from camps and events, for example a Signet Ring.[/i]"
-				text += "\n [i]This will spawn a caravan that moves to the destination. If it is destroyed, you lose your investment.[/i]"
+				
 				this.m.Screens.push
 				({
 					ID = "Send_Gift",
@@ -498,9 +503,9 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return "Leave a brother behind"
 			},
 		ID = "Store_Brother",
-		isValid = function(){
+		isValid = function(_contract){
 			local playerRoster = this.World.getPlayerRoster().getAll()
-			return (this.isMainBase() && playerRoster != null && playerRoster.len() > 1)
+			return (_contract.isMainBase() && playerRoster != null && playerRoster.len() > 1)
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -521,9 +526,9 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return "Retrieve a brother"
 			},
 		ID = "Retrieve_Brother",
-		isValid = function(){
+		isValid = function(_contract){
 			local playerRoster = this.World.getRoster(9999).getAll()
-			return (this.isMainBase() && playerRoster != null && playerRoster.len() > 0)
+			return (_contract.isMainBase() && playerRoster != null && playerRoster.len() > 0)
 		},
 		onChosen = function(){
 			this.m.Screens.push
@@ -544,8 +549,8 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return "Build a Hamlet"
 			},
 		ID = "Hamlet",
-		isValid = function(){
-			return (this.isMainBase() && this.getHome().m.Size == 3 && !this.Stronghold.getPlayerFaction().getFlags().get("BuildHamlet")) && !this.getHome().isUpgrading()
+		isValid = function(_contract){
+			return (_contract.isMainBase() && _contract.getHome().m.Size == 3 && !this.Stronghold.getPlayerFaction().getFlags().get("BuildHamlet")) && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.setCost(20 * this.Const.World.Stronghold.PriceMult);
@@ -566,8 +571,8 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return format("Remove your %s", this.getHome().getSizeName())
 			},
 		ID = "Remove_Base",
-		isValid = function(){
-			return !this.getHome().isUpgrading()
+		isValid = function(_contract){
+			return !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			this.addOverviewScreen(
@@ -612,7 +617,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Tavern"],
 		Path = "tavern_building",
 		SouthPath = false,
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
 		}
 	},
@@ -622,7 +627,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Kennel"],
 		Path = "kennel_building",
 		SouthPath = false,
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
 		}
 	},
@@ -633,7 +638,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Taxidermist"],
 		Path = "taxidermist_building",
 		SouthPath = "taxidermist_oriental_building",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
 		}
 	},
@@ -644,7 +649,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Temple"],
 		Path = "temple_building",
 		SouthPath = "temple_oriental_building",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
 		}
 	},
@@ -654,7 +659,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Training"],
 		Path = "training_hall_building",
 		SouthPath = false,
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
 		}
 	},
@@ -664,7 +669,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Alchemist"],
 		Path = "alchemist_building",
 		SouthPath = false,
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
 		}
 	},
@@ -675,7 +680,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Weaponsmith"],
 		Path = "weaponsmith_building",
 		SouthPath = "weaponsmith_oriental_building",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
 		}
 	},
@@ -686,7 +691,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Armorsmith"],
 		Path = "armorsmith_building",
 		SouthPath = "armorsmith_oriental_building",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
 		}
 	},
@@ -696,7 +701,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Fletcher"],
 		Path = "fletcher_building",
 		SouthPath = false,
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
 		}
 	},
@@ -706,7 +711,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Port"],
 		Path = "port_building",
 		SouthPath = false,
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && this.Stronghold.getPlayerBase().isCoastal())
 		}
 	},
@@ -716,124 +721,10 @@ gt.Const.World.Stronghold.Building_options <-
 		Cost = this.Const.World.Stronghold.BuildingPrices["Arena"],
 		Path = "arena_building",
 		SouthPath = false,
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && this.Stronghold.getPlayerBase().m.Size == 3)
 		}
 	},
-	{
-		Name = "Taver1n",
-		ID = "building.tavern",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Tavern"],
-		Path = "tavern_building",
-		SouthPath = false,
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-		}
-	},
-	{
-		Name = "Kenne1l",
-		ID = "building.kennel",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Kennel"],
-		Path = "kennel_building",
-		SouthPath = false,
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-		}
-	},
-	{
-		Name = "Taxide1rmist",
-		ID = "building.taxidermist",
-		SouthID = "building.taxidermist_oriental",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Taxidermist"],
-		Path = "taxidermist_building",
-		SouthPath = "taxidermist_oriental_building",
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
-		}
-	},
-	{
-		Name = "Te1mple",
-		ID = "building.temple",
-		SouthID = "building.temple",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Temple"],
-		Path = "temple_building",
-		SouthPath = "temple_oriental_building",
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
-		}
-	},
-	{
-		Name = "Trai1ning Hall",
-		ID = "building.training_hall",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Training"],
-		Path = "training_hall_building",
-		SouthPath = false,
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-		}
-	},
-	{
-		Name = "Alch1emist",
-		ID = "building.alchemist",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Alchemist"],
-		Path = "alchemist_building",
-		SouthPath = false,
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-		}
-	},
-	{
-		Name = "Wea1ponsmith",
-		ID = "building.weaponsmith",
-		SouthID = "building.weaponsmith_oriental",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Weaponsmith"],
-		Path = "weaponsmith_building",
-		SouthPath = "weaponsmith_oriental_building",
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
-		}
-	},
-	{
-		Name = "Armors1mith",
-		ID = "building.armorsmith",
-		SouthID = "building.armorsmith_oriental",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Armorsmith"],
-		Path = "armorsmith_building",
-		SouthPath = "armorsmith_oriental_building",
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
-		}
-	},
-	{
-		Name = "Flet1cher",
-		ID = "building.fletcher",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Fletcher"],
-		Path = "fletcher_building",
-		SouthPath = false,
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID))
-		}
-	},
-	{
-		Name = "P1ort",
-		ID = "building.port",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Port"],
-		Path = "port_building",
-		SouthPath = false,
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && this.Stronghold.getPlayerBase().isCoastal())
-		}
-	},
-	{
-		Name = "A1rena",
-		ID = "building.arena",
-		Cost = this.Const.World.Stronghold.BuildingPrices["Arena"],
-		Path = "arena_building",
-		SouthPath = false,
-		isValid = function(){
-			return (!this.Stronghold.getPlayerBase().hasBuilding(this.ID) && this.Stronghold.getPlayerBase().m.Size == 3)
-		}
-	}
 ],
 gt.Const.World.Stronghold.Location_options <-
 [
@@ -843,7 +734,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Cost = this.Const.World.Stronghold.LocationPrices["Workshop"],
 		Path = "workshop_location",
 		Text= "Build a workshop. Generates tools.",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
 		}
 	},
@@ -853,7 +744,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Cost = this.Const.World.Stronghold.LocationPrices["Ore"],
 		Path = "ore_smelters_location",
 		Text= "Build an ore smelter. Weaponsmiths carry more items.",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
 		}
 	},
@@ -863,7 +754,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Cost = this.Const.World.Stronghold.LocationPrices["Blast"],
 		Path = "blast_furnace_location",
 		Text= "Build a blast furnace. Armourers carry more items.",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
 		}
 	},
@@ -873,7 +764,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Cost = this.Const.World.Stronghold.LocationPrices["Stone"],
 		Path = "stone_watchtower_location",
 		Text= "Build a watchtower. Increases movement speed and sight range around the stronghold.",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
 		}
 	},
@@ -883,7 +774,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Cost = this.Const.World.Stronghold.LocationPrices["Militia"],
 		Path = "militia_trainingcamp_location",
 		Text= "Build a militia camp. Increases strength of mercenaries and number of recruits in the hamlet.",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
 		}
 	},
@@ -893,7 +784,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Cost = this.Const.World.Stronghold.LocationPrices["Wheat"],
 		Path = "wheat_fields_location",
 		Text= "Build Wheat Fields. You don't consume food around the stronghold.",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
 		}
 	},
@@ -903,7 +794,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Cost = this.Const.World.Stronghold.LocationPrices["Herbalists"],
 		Path = "herbalists_grove_location",
 		Text= "Build a Herbalists Grove. Hitpoints regenerate faster when around the stronghold.",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
 		}
 	},
@@ -913,7 +804,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Cost = this.Const.World.Stronghold.LocationPrices["Gold"],
 		Path = "gold_mine_location",
 		Text= "Build a gold mine. Gold will be generated over time.",
-		isValid = function(){
+		isValid = function(_contract){
 			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
 		}
 	}

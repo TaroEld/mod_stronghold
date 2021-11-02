@@ -16,6 +16,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.m.Type = "contract.stronghold_defeat_assailant_contract";
 		this.m.Name = format("Defend your %s", this.Stronghold.getPlayerBase().getSizeName());
 		this.m.TimeOut = this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 1500.0;
+		this.createStates();
+		this.createScreens();
 	}
 
 	function onImportIntro()
@@ -26,16 +28,12 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	function start()
 	{
 		//looks for closest settlement. Nobles and southern nobles have multiple options, so loop through and select the closest one
-		//missing nomads and other enemies
-		//should probably get revamped to be more dynamic
 		local player_base = this.Stronghold.getPlayerBase();
 		this.m.IsStarted = true;
 		this.setHome(player_base);
 		this.setOrigin(player_base);
 		this.m.AttacksRemaining = this.m.TargetLevel
-		this.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  this.Math.rand(4, 24) * this.World.getTime().SecondsPerHour
-		this.createStates();
-		this.createScreens();
+		this.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  this.Math.rand(12, 24) * this.World.getTime().SecondsPerHour
 		this.World.Contracts.setActiveContract(this);
 		this.setState("Running")
 	}
@@ -90,8 +88,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 
 	function createStates()
 	{
-
-
 		this.m.States.push({
 			ID = "Running",
 			function start()
@@ -135,7 +131,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 				}
 				else if (this.Contract.m.Origin == null || this.Contract.m.Origin.isNull() || !this.Contract.m.Origin.isAlive())
 				{
-					this.Contract.setScreen("After_Battle");
+					this.Contract.setScreen("Failure");
 					this.World.Contracts.showActiveContract();
 				}
 					
@@ -181,7 +177,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 
 				}
 			],
-			ShowObjectives = false,
+			ShowObjectives = true,
 			ShowPayment = false,
 			ShowEmployer = false,
 			ShowDifficulty = false,
@@ -189,6 +185,9 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			{
 				
 				this.Text = format("Your %s is now under construction. This will take %i %s. Enemies will attack it within the next day.", this.Const.World.Stronghold.BaseNames[this.Contract.m.TargetLevel-1], this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
+				this.Contract.m.BulletpointsObjectives = [
+					format("%i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
+				];
 			}
 		});
 		this.m.Screens.push({
@@ -277,29 +276,27 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					function getResult()
 					{
 
-						this.Contract.m.TimeOfNextAttack = this.Time.getVirtualTimeF() + (24 - this.World.getTime().Hours + this.Math.rand(0, 24)) * this.World.getTime().SecondsPerHour
-						this.Contract.m.BulletpointsObjectives.clear();
-						this.Contract.m.BulletpointsObjectives = [
-							format("%i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
-						];
+						this.Contract.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  (this.Math.rand(12, 24) * this.World.getTime().SecondsPerHour)
 						return 0;
 					}
 
 				},
 			],
-			ShowObjectives = false,
+			ShowObjectives = true,
 			ShowPayment = false,
 			ShowEmployer = false,
 			ShowDifficulty = false,
 			function start()
 			{
+				this.Contract.m.BulletpointsObjectives[0] = format("%i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
+				this.World.State.getWorldScreen().updateContract(this.Contract);
 			}
 		});
 		this.m.Screens.push({
 		
 			ID = "Victory_None_Left",
 			Title = "Victory!",
-			Text = format("You have defeated the enemies. Your %s is now secure.", this.Const.World.Stronghold.BaseNames[this.m.TargetLevel-1]),
+			Text = "",
 			Image = "",
 			List = [],
 			Options = [
@@ -311,6 +308,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						local player_base = this.Stronghold.getPlayerBase()
 						//upgrade looks and situation
 						player_base.m.Size = this.Contract.m.TargetLevel;
+						this.logInfo("Size in assailant  " + player_base.m.Size)
 						player_base.buildHouses();
 						//spawn new guards to reflect the change in size
 						local actionToFire = player_faction.m.Deck[0]
@@ -332,6 +330,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			ShowDifficulty = false,
 			function start()
 			{
+				this.Text = format("You have defeated the enemies. Your %s is now secure.", this.Const.World.Stronghold.BaseNames[this.Contract.m.TargetLevel-1])
 			}
 		});
 		
@@ -363,8 +362,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	{
 		local player_faction = this.Stronghold.getPlayerFaction()
 		local player_base = this.Stronghold.getPlayerBase()
-		
-		local party_difficulty =  (300 * this.getScaledDifficultyMult()) + (200 * player_base.m.Size)
+		local wave =  this.m.TargetLevel / this.m.AttacksRemaining 
+		local party_difficulty =  (300 * this.getScaledDifficultyMult()) + (100 * wave)
 		this.m.Destination = this.WeakTableRef(player_base);
 		local tile = player_base.getTile();
 		local allSettlements = []
@@ -442,10 +441,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 
 		origin = closest_settlement;
 		//spawn the party, assign AI controller, give the order to intercept the player. switches contract state to running straight away, no offer here
-		party.getLoot().ArmorParts = this.Math.rand(10, 30);
-		party.getLoot().Medicine = this.Math.rand(1, 3);
-		party.getLoot().Ammo = this.Math.rand(0, 30);
-		party.getLoot().Money = this.Math.rand(200, 300);
+		party.getLoot().ArmorParts = this.Math.rand(10, 30) * wave;
+		party.getLoot().Medicine = this.Math.rand(1, 3) * wave;
+		party.getLoot().Ammo = this.Math.rand(0, 30) * wave ;
+		party.getLoot().Money = this.Math.rand(200, 300) * wave;
 		party.getSprite("banner").setBrush(origin.getBanner());
 		party.getSprite("selection").Visible = true
 		party.setMovementSpeed(70);

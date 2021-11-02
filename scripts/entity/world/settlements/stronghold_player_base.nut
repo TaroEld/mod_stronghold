@@ -241,7 +241,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		//different looks
 		this.defineName()
 		local normalSprites = ["world_stronghold_01", "world_stronghold_02", "world_stronghold_03"]
-		local upgradingSprites = ["stronghold_01_upgrading", "stronghold_02_upgrading", "stronghold_03_upgrading"]
+		local upgradingSprites = ["stronghold_02_upgrading", "stronghold_03_upgrading"]
 		local barbarianSprites = ["world_wildmen_01", "world_wildmen_02", "world_wildmen_03"]
 		local barbarianSpritesSnow = ["world_wildmen_01_snow", "world_wildmen_02_snow", "world_wildmen_03_snow"]
 		local nomadSprites = ["world_nomad_camp_02", "world_nomad_camp_03", "world_nomad_camp_04"]
@@ -294,9 +294,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		
 		//update size etc after deserialisation
-		this.m.AttachedLocationsMax = this.Const.World.Stronghold.MaxAttachments[this.getSize()-1]
+		
+		
 		this.m.Sprite = sprites[this.getSize()-1]
-		if (!this.m.Flags.get("LevelOne")) this.m.Sprite = sprites[this.Math.min(2, this.getSize())] 
+		if (this.m.Flags.get("LevelOne") && this.isUpgrading()) this.m.Sprite = "stronghold_01_upgrading"
+
 		this.getSprite("body").setBrush(this.m.Sprite);
 		if (this.m.Flags.get("BarbarianSprites")||this.m.Flags.get("NomadSprites")){
 			this.getSprite("body").Scale = 1.25;
@@ -339,7 +341,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		{
 			this.getFlags().set("isSouthern", false)
 		}
-		
+		this.m.AttachedLocationsMax = this.Const.World.Stronghold.MaxAttachments[this.getSize()-1]
 	}
 	
 	
