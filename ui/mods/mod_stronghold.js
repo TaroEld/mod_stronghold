@@ -139,7 +139,7 @@ WorldCampfireScreenAssets.prototype.createStrongholdDIV = function (_parentDiv)
 	this.mStrongholdButton = layout.createImageButton(Path.GFX + 'ui/settlements/stronghold_01_retinue.png', function ()
 	{
 	    self.mParent.notifyBackendStrongholdButtonPressed();
-	});
+	}, "stronghold-retinue-button");
     return layout;
 };
 

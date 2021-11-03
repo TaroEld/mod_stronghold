@@ -171,9 +171,9 @@
     width: 25rem;
     height: 10rem;
 }
-.world-campfire-screen > .l-main-dialog-container .button:hover,
-.world-campfire-screen > .l-main-dialog-container .button.is-selected,
-.world-campfire-screen > .l-main-dialog-container .button[disabled]
+.world-campfire-screen > .l-main-dialog-container .stronghold-retinue-button.button:hover,
+.world-campfire-screen > .l-main-dialog-container  .stronghold-retinue-button.button.is-selected,
+.world-campfire-screen > .l-main-dialog-container .stronghold-retinue-button.button[disabled]
 {
     background-color: rgba(1, 1, 1, 0);
 }

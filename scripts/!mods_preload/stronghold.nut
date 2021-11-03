@@ -166,7 +166,7 @@
 	})
 
 	
-
+	/*
 	::mods_hookNewObject("entity/world/settlements/buildings/port_building", function ( o )
 	{
 		
@@ -183,7 +183,7 @@
 				return isHidden()
 			}
 		}
-	});
+	});*/
 
 	::mods_hookBaseClass("entity/world/location", function ( o )
 	{
@@ -376,11 +376,9 @@
 		
 	})
 	//sends caravans to player base if relation is above 70, gives higher chance to be chosen
-	::mods_hookNewObject("factions/actions/send_caravan_action", function ( o )
+	::mods_hookExactClass("factions/actions/send_caravan_action", function ( o )
 	{
 		
-		
-		while (!("onUpdate" in o)) o = o[o.SuperName];
 		local onUpdate = o.onUpdate;
 		o.onUpdate = function(_faction)
 		{
@@ -409,9 +407,8 @@
 	});
 	
 	//calls custom unload order if stronghold is target. Otheriwse returns vanilla function, which does nothing
-	::mods_hookNewObject("ai/world/orders/unload_order", function ( o )
+	::mods_hookExactClass("ai/world/orders/unload_order", function ( o )
 	{
-		while (!("onExecute" in o)) o = o[o.SuperName];
 		local onExecute = o.onExecute;
 		o.onExecute = function(_entity, _hasChanged)
 		{
@@ -432,10 +429,9 @@
 			return onExecute(_entity, _hasChanged)
 		}
 	});
-	::mods_hookNewObject("factions/actions/patrol_roads_action", function ( o )
+	::mods_hookExactClass("factions/actions/patrol_roads_action", function ( o )
 	{
 		//adds stronghold as possible patrol option if friendly with the faction
-		while (!("onUpdate" in o)) o = o[o.SuperName];
 		local onUpdate = o.onUpdate;
 		o.onUpdate = function(_faction)
 		{
@@ -449,7 +445,6 @@
 		}
 		
 		//needed for patrol to not start at player base. This whole thing is pretty jank, need to hook whole functions for small changes, would probably be better to separate entirely.
-		while (!("onExecute" in o)) o = o[o.SuperName];
 		local onExecute = o.onExecute;
 		o.onExecute = function(_faction)
 		{
