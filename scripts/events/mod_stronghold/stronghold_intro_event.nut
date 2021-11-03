@@ -4,7 +4,6 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 	},
 	function create()
 	{
-		this.logInfo("created")
 		this.m.ID = "event.stronghold_intro";
 		this.m.Title = "Stronghold";
 		this.m.IsSpecial = true;
@@ -20,57 +19,76 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		local build_cost = this.Const.World.Stronghold.BuyPrices[0] * priceMult;
 		local levelOneName = this.Const.World.Stronghold.BaseNames[0]
 
+		local hasInventoryUpgrade = this.World.Retinue.getInventoryUpgrades() > 0
 		local hasMoney = this.World.Assets.getMoney() >= build_cost
 		local isTileOccupied = this.World.State.getPlayer().getTile().IsOccupied
 		local hasContract = this.World.Contracts.getActiveContract() != null
 		local isCoastal = this.Stronghold.checkForCoastal(this.World.State.getPlayer().getTile())
 
-		local moneyText = coloredText("\n10000 crowns.", hasMoney)
-		local tileText = coloredText("\nThe tile must be empty.", !isTileOccupied)
-		local contractText = coloredText("\nYou must not have an active contract.", !hasContract)
-		local coastalText = isCoastal ? coloredText("\n\nYou will be able to build a port here.") : coloredText("\n\nYou won't be able to build a port here.", false);
+		local isValid = hasInventoryUpgrade && hasMoney && !isTileOccupied && !hasContract
+
+		local inventoryText = coloredText("\n-Upgrading your donkey to a cart.", hasInventoryUpgrade)
+		local moneyText = coloredText("\n-Having 10000 crowns.", hasMoney)
+		local tileText = coloredText("\n-Standing on an empty tile.", !isTileOccupied)
+		local contractText = coloredText("\n-Not having an active contract.", !hasContract)
+		local coastalText = isCoastal ? coloredText("you will be able to build a port here.") : coloredText("you won't be able to build a port here.", false);
 
 		local requirementsText = "Welcome to Stronghold. Here you can see what you need to build your base. You will start with a small " + levelOneName + ", which can later be upgraded to unlock more features."
 		requirementsText += format("\n\nBuilding a %s requires: ", levelOneName)
-		requirementsText += moneyText + tileText + contractText
-		requirementsText += (hasMoney && !isTileOccupied && !hasContract ) ? coloredText(format("\n\nYou CAN build a %s!", levelOneName)) : coloredText("\n\nYou CANNOT build a " + levelOneName + "!", false);
+		requirementsText += inventoryText + moneyText + tileText + contractText
 
-		requirementsText += coastalText
+
 		requirementsText += format("\n\n Building a %s will unlock these features: \n%s", levelOneName, this.Const.World.Stronghold.UnlockAdvantages[0])
+		requirementsText += format("\n\n Also, you %s", coastalText)
 
 		requirementsText += format("\n\n Once you've built the %s, click the large fortification in the background to open the management menu. You can rename it by clicking on the name.", levelOneName)
-		requirementsText += "\n\n Do you wish to proceed?"
 
+		local A_options;
+		if (isValid){
+			requirementsText += coloredText(format("\n\nYou CAN build a %s!", levelOneName)) + " Do you wish to proceed?"
+		 	A_options = 
+		 	[{
+				Text = "Yes, build a "+ this.Const.World.Stronghold.BaseNames[0] + " here",
+				function getResult( _event )
+				{
+					return "Base_Option";
+				}
+
+			},
+			{
+				Text = "No",
+				function getResult( _event )
+				{
+					_event.removeEvent()
+					return 0;
+				}
+
+			}]
+		}
+		else{
+			requirementsText += coloredText("\n\nYou CANNOT build a " + levelOneName + "!", false) + " Return when you have fulfilled all the requirements."
+	 	 	A_options = 
+	 	 	[{
+ 				Text = "Alright.",
+ 				function getResult( _event )
+ 				{
+ 					_event.removeEvent()
+ 					return 0;
+ 				}
+	 		}]
+		}
 		this.m.Screens.push({
 			ID = "A",
 			Text = requirementsText,
 			Image = "",
 			List = [],
 			Characters = [],
-			Options = [
-				{
-					Text = "Build a "+ this.Const.World.Stronghold.BaseNames[0] + " at the current position.",
-					function getResult( _event )
-					{
-						return "Base_Option";
-					}
-
-				},
-				{
-					Text = "Leave",
-					function getResult( _event )
-					{
-						_event.removeEvent()
-						return 0;
-					}
-
-				}
-			],
+			Options = A_options,
 			function start( _event )
 			{
 			}
- 
 		});
+
 		this.m.Screens.push({
 			ID = "Base_Option",
 			Text = "Are you sure? You will need a strong company to repel attackers.",

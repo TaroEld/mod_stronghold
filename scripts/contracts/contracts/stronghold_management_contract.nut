@@ -295,10 +295,13 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	{	
 	
 		//screen to choose the action
+		local taskText = ""
+		if(this.Stronghold.getPlayerBase().isUpgrading()) taskText += format("Your %s is currently upgrading. Some options are not available.\n", this.Stronghold.getPlayerBase().getSizeName()) 
+		taskText += "What do you wish to do?"
 		this.m.Screens.push({
 			ID = "Task",
 			Title = this.m.Title,
-			Text = "Which action do you want to do?",
+			Text = taskText,
 			Image = "",
 			List = [],
 			ShowEmployer = true,

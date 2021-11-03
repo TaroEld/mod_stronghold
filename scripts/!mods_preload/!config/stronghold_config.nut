@@ -152,6 +152,24 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 				})
 				return "Upgrade_Contract_Active";
 			}
+			if (this.World.Retinue.getInventoryUpgrades() < this.getHome().getSize() + 1)
+			{
+				this.World.Retinue.getInventoryUpgrades()
+				this.Const.Strings.InventoryHeader
+				local current = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades()]
+				local next = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades() + 1]
+				this.m.Screens.push
+				({
+					ID = "Upgrade_Contract_Active",
+					Title = "Requirements not met",
+					Text = format("You need to level up your %s to a %s before you can upgrade your %s!", current, next, this.getHome().getSizeName()),
+					Image = "",
+					List = [],
+					ShowEmployer = true,
+					Options = [this.addGenericOption("Alright.")]
+				})
+				return "Upgrade_Contract_Active";
+			}
 			local advantages = this.Const.World.Stronghold.UnlockAdvantages[this.getHome().getSize()]
 			this.setCost(this.Const.World.Stronghold.PriceMult * this.Const.World.Stronghold.BuyPrices[this.getHome().getSize()])
 			local text =  "You can upgrade your " + this.getHome().getSizeName() + " to a " + this.getHome().getSizeName(true) + ". This would add these options: \n" + advantages +"\n This costs " + this.addCrownSymbol(this.getCost()) + " crowns.\nWhile upgrading, you won't be able to access most of the management options. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
@@ -183,11 +201,22 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return current_buildings < free_building_slots && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
+			//market and management are by default
+			local current_buildings = -2;
+			local total_building_slots = this.getHome().getSize() + 2
+			foreach (building in this.getHome().m.Buildings){
+				if (building != null){
+					current_buildings++
+				}
+			}
+			local text = format("You can construct a new building for your %s. These are your available options.", this.getHome().getSizeName())
+			text += format("\nYour buildings occupy %i out of %i spots in your %s.", current_buildings, total_building_slots, this.getHome().getSizeName())
+			if (this.getHome().getSize() < 3) text += format("\nUpgrade your %s to unlock more slots.", this.getHome().getSizeName())
 			this.m.Screens.push
 			({
 				ID = "Building_Choice",
 				Title = "Choose a building",
-				Text = format("You can construct a new building for your %s. These are your available options.", this.Stronghold.getPlayerBase().getSizeName()),
+				Text = text,
 				Image = "",
 				List = [],
 				ShowEmployer = true,
@@ -241,11 +270,22 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			return _contract.isMainBase() && current_locations < _contract.getHome().m.AttachedLocationsMax && !_contract.getHome().m.Flags.get("AllLocationsBuilt") && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
+			local current_buildings = 0;
+			local total_building_slots = this.getHome().m.AttachedLocationsMax 
+			foreach (location in this.getHome().m.AttachedLocations){
+				if (location != null){
+					current_buildings++
+				}
+			}
+			local text = format("You can construct a new location close to your %s. This can provide various benefits. Each costs 10000 crowns.", this.getHome().getSizeName())
+			text += format("\nYour locations occupy %i out of %i spots of your %s.", current_buildings, total_building_slots, this.getHome().getSizeName())
+			if (this.getHome().getSize() < 3) text += format("\nUpgrade your %s to unlock more slots.", this.getHome().getSizeName())
+
 			this.m.Screens.push
 			({
 				ID = "Location_Choice",
 				Title = "Choose a location",
-				Text = format("You can construct a new location close to your %s. This can provide various benefits. Each costs 10000 crowns.", this.Stronghold.getPlayerBase().getSizeName()),
+				Text = text,
 				Image = "",
 				List = [],
 				ShowEmployer = true,
