@@ -98,6 +98,25 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function fadeOutAndDie(_force = false)
 	{
 		if (!_force) return
+		foreach( h in this.m.HousesTiles )
+		{
+			local tile = this.World.getTileSquare(h.X, h.Y);
+			tile.clear(this.Const.World.DetailType.Houses | this.Const.World.DetailType.Lighting);
+			local d = tile.spawnDetail("world_houses_0" + this.m.HousesType + "_0" + h.V + "_ruins", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
+			d.Scale = 0.85;
+			this.spawnFireAndSmoke(tile.Pos);
+		}
+		foreach (unit in this.Stronghold.getPlayerFaction().m.Units)
+		{
+			unit.fadeOutAndDie()
+		}
+		
+		this.spawnFireAndSmoke(this.getTile().Pos)
+		foreach (location in this.m.AttachedLocations)
+		{
+			this.spawnFireAndSmoke(location.getTile().Pos)
+			location.die()
+		}
 		this.m.IsAlive = false;
 		this.fadeAndDie();
 	}

@@ -21,9 +21,9 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.m.Culture = this.Const.World.Culture.Neutral;
 		this.m.IsMilitary = false;
 		this.m.Size = 1;
-		this.m.HousesType = 3;
+		this.m.HousesType = 2;
 		this.m.HousesMin = 1;
-		this.m.HousesMax = 2;
+		this.m.HousesMax = 3;
 		this.m.AttachedLocationsMax = 3;
 		this.m.LocationType = this.Const.World.LocationType.Settlement;
 		this.m.ShopSeed = this.Time.getRealTime() + this.Math.rand();
@@ -194,7 +194,6 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 			if (b != null)
 			{
 				if("LegendMod" in this.Const){
-					this.logInfo("called")
 					b.onUpdateDraftList(draftList, false)
 				}
 				else b.onUpdateDraftList(draftList);

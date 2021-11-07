@@ -11,32 +11,30 @@ this.stronghold_unload_order <- this.inherit("scripts/ai/world/world_behavior", 
 	function onExecute( _entity, _hasChanged )
 	{
 		local settlement = this.Stronghold.getPlayerBase()
-		if(settlement)
-		{
-			local items = settlement.getBuilding("building.storage_building").getStash().getItems()
-			local food = [];
-			foreach( i, item in items )
-			{
-				if (item != null && item.isItemType(this.Const.Items.ItemType.Food))
-				{
-					food.push(item);
-				}
-			}
-			//removes old food from storage
-			foreach (item in food)
-			{
-				settlement.getBuilding("building.storage_building").getStash().remove(item)
-			}
+		this.getController().popOrder();
+		if(!settlement) return true
 
-			foreach( item in _entity.getInventory() )
+		local items = settlement.getBuilding("building.storage_building").getStash().getItems()
+		local food = [];
+		foreach( i, item in items )
+		{
+			if (item != null && item.isItemType(this.Const.Items.ItemType.Food))
 			{
-				settlement.addImportedProduce(item);
+				food.push(item);
 			}
-			_entity.clearInventory();
+		}
+		//removes old food from storage
+		foreach (item in food)
+		{
+			settlement.getBuilding("building.storage_building").getStash().remove(item)
 		}
 
+		foreach( item in _entity.getInventory() )
+		{
+			settlement.addImportedProduce(item);
+		}
+		_entity.clearInventory();
 
-		this.getController().popOrder();
 		return true;
 	}
 

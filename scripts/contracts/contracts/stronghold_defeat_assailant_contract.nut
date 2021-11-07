@@ -51,7 +51,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		if (this.m.Flags.get("EnemyNobleHouse"))
 		{
 			this.World.FactionManager.getFaction(this.m.Flags.get("EnemyNobleHouse")).setIsTemporaryEnemy(true)
-			local entities = this.World.getAllEntitiesAtPos(this.World.State.getPlayer().getPos(), 3.0);
+			local entities = this.World.getAllEntitiesAtPos(this.getHome().getPos(), 3.0);
 			foreach(entity in entities)
 			{
 				if (entity.getFlags().get("Stronghold_Guards"))
@@ -64,14 +64,16 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 				}
 			}
 		}
-		local p = this.World.State.getLocalCombatProperties(this.World.State.getPlayer().getPos());
-		p.CombatID = "HoldChokepoint";
-		p.Music = this.Const.Music.NobleTracks;
+		
+		
+		
 		local isPlayerInitiated = false;
+		local p;
 		//special location if fighting at stronghold
-		if (this.isPlayerAt(this.m.Home))
+		if (this.getVecDistance(this.getHome().getPos(), this.World.State.getPlayer().getPos()) <= 250)
 		{
-			isPlayerInitiated = false;
+			p = this.World.State.getLocalCombatProperties(this.getHome().getPos());
+			isPlayerInitiated = true;
 			p.PlayerDeploymentType = this.Const.Tactical.DeploymentType.LineForward;
 			p.EnemyDeploymentType = this.Const.Tactical.DeploymentType.LineBack;
 			p.LocationTemplate = clone this.Const.Tactical.LocationTemplate;
@@ -80,11 +82,15 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			p.LocationTemplate.Fortification = this.Const.Tactical.FortificationType.WallsAndPalisade;
 			p.LocationTemplate.ShiftX = -10;
 		}
+		else p = this.World.State.getLocalCombatProperties(this.World.State.getPlayer().getPos());
+		p.Music = this.Const.Music.NobleTracks;
+		p.CombatID = "HoldChokepoint";
 
 		this.World.Contracts.startScriptedCombat(p, isPlayerInitiated, true, true);
 		
 		
 	}
+
 
 	function createStates()
 	{
@@ -260,14 +266,14 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				this.Contract.spawnNewAttackers()
-				this.Text = "Your spies have informed you that the enemies are imminent, hailing from the " + this.Const.Strings.Direction8[this.Stronghold.getPlayerBase().getTile().getDirectionTo(this.Contract.m.Target.getTile())]
+				this.Text = "Your scouts have informed you that the enemies are imminent, hailing from the " + this.Const.Strings.Direction8[this.Stronghold.getPlayerBase().getTile().getDirectionTo(this.Contract.m.Target.getTile())]
 			}
 		});
 		this.m.Screens.push({
 		
 			ID = "Victory_More_Left",
 			Title = "Victory!",
-			Text = "You have defeated the enemies. You can expect another attack during the next day.",
+			Text = "You have defeated the enemies, but it is not over yet. You can expect another attack during the next day.",
 			Image = "",
 			List = [],
 			Options = [
@@ -308,7 +314,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						local player_base = this.Stronghold.getPlayerBase()
 						//upgrade looks and situation
 						player_base.m.Size = this.Contract.m.TargetLevel;
-						this.logInfo("Size in assailant  " + player_base.m.Size)
 						player_base.buildHouses();
 						//spawn new guards to reflect the change in size
 						local actionToFire = player_faction.m.Deck[0]
@@ -363,7 +368,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		local player_faction = this.Stronghold.getPlayerFaction()
 		local player_base = this.Stronghold.getPlayerBase()
 		local wave =  this.m.TargetLevel / this.m.AttacksRemaining 
-		local party_difficulty =  (300 * this.getScaledDifficultyMult()) + (100 * wave)
+		local party_difficulty =  (150 + 50 * wave) * this.getScaledDifficultyMult()
 		this.m.Destination = this.WeakTableRef(player_base);
 		local tile = player_base.getTile();
 		local allSettlements = []

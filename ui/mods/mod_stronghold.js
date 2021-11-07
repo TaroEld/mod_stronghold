@@ -195,3 +195,5 @@ WorldCampfireScreenAssets.prototype.destroyDIV = function ()
     	this.mStrongholdButton = null;
     }
 };
+
+

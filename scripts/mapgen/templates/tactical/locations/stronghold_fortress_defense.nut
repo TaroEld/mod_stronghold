@@ -1,6 +1,7 @@
 this.stronghold_fortress_defense <- this.inherit("scripts/mapgen/tactical_template", {
 	//special location for defeat assailant quest
-	m = {},
+	m = {
+		},
 	function init()
 	{
 		this.m.Name = "tactical.stronghold_fortress_defense";
@@ -10,6 +11,12 @@ this.stronghold_fortress_defense <- this.inherit("scripts/mapgen/tactical_templa
 
 	function fill( _rect, _properties, _pass = 1 )
 	{
+		local middleObjects = [
+			"entity/tactical/objects/cartwheel",
+			"entity/tactical/objects/human_camp_supplies",
+			"entity/tactical/objects/human_camp_furniture",
+			"entity/tactical/objects/human_camp_wood",
+		]
 		local centerTile = this.Tactical.getTileSquare(_rect.W / 2 + _properties.ShiftX, _rect.H / 2 + _properties.ShiftY);
 		local isOnHill = centerTile.Level == 3;
 		local hasPalisade = _properties.Fortification != 0;
@@ -79,14 +86,23 @@ this.stronghold_fortress_defense <- this.inherit("scripts/mapgen/tactical_templa
 						o.setDirBasedOnCenter(centerTile, radius);
 					}
 				}		
-				if (d == 3 || d == -3)
+				if (d > -5 && d < 5)
 				{
-					if ((!isOnHill || tile.Level >= 2) && (this.Math.rand(1, 100) < 80) && y != centerTile.SquareCoords.Y && x != centerTile.SquareCoords.X)
+					if ((!isOnHill || tile.Level >= 2) && (this.Math.rand(1, 100) < 20) && y != centerTile.SquareCoords.Y && x != centerTile.SquareCoords.X)
+					{
+						tile.removeObject();
+						local chosenObject = middleObjects[this.Math.rand(0, middleObjects.len()-1)]
+						local o;
+						o = tile.spawnObject(chosenObject);
+					}
+				}
+				if (d == 0)
+				{
+					if ((!isOnHill || tile.Level >= 2))
 					{
 						tile.removeObject();
 						local o;
-						o = tile.spawnObject("entity/tactical/objects/graveyard_wall");
-						o.setDirBasedOnCenter(centerTile, radius);
+						o = tile.spawnObject("entity/tactical/objects/cart");
 					}
 				}
 			}

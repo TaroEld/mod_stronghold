@@ -29,7 +29,6 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 
 	function onExecute( _faction )
 	{
-		this.logInfo("executed")
 		local settlements = _faction.getSettlements();
 		local player_base = this.Stronghold.getPlayerBase()
 		local patrol_strength = 150 * (player_base.getSize()-1)
@@ -55,6 +54,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		party.setFootprintType(this.Const.World.FootprintsType.Mercenaries);
 		party.getFlags().set("Stronghold_Guards", true);
 		local c = party.getController();
+
 		local totalTime = this.World.getTime().SecondsPerDay * 7
 		local locations = player_base.m.AttachedLocations
 		foreach(settlement in this.Stronghold.getPlayerFaction().getSettlements())
@@ -70,6 +70,12 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		{
 			guard = this.new("scripts/ai/world/orders/guard_order");
 			guard.setTarget(player_base.getTile());
+			//keep the boys home if upgrading
+			if(player_base.isUpgrading()){
+				guard.setTime(totalTime);
+				c.addOrder(guard);
+				break
+			}
 			guard.setTime(idleTime);
 			c.addOrder(guard);
 			totalTime -= idleTime
@@ -81,6 +87,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 				c.addOrder(guard);
 				totalTime -= idleTime
 			}
+
 		}
 		local despawn = this.new("scripts/ai/world/orders/despawn_order");
 		c.addOrder(despawn);

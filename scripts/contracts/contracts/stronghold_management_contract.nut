@@ -144,12 +144,10 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			function getResult(_option)
 			{
 				if (this.Contract.m.ActiveScreen == null || this.Contract.m.ActiveScreen.ID == "Task"){
-					this.logInfo("removing contract")
 					this.Contract.removeThisContract()
 					return 0
 				}
 				else{
-					this.logInfo("NOT contract")
 					this.Contract.clearScreens()
 					return "Task"
 				}
@@ -324,7 +322,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		});
 	}
 
-	function addOverviewScreen(_title = "", _text = "", _callBackFunction = null){
+	function addOverviewScreen(_title, _text, _callBackFunction = null){
 		//adds the screen after you've chosen a main menu option, or a sub-option in a multiple choice menu
 		//checks if the monetary requirements have been met
 		this.m.Screens.push({
@@ -357,7 +355,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		});
 	}
 
-	function addEnoughScreen(_title = "", _text = "", _callBackFunction = null, overrideStart = null){
+	function addEnoughScreen(_title, _text, _callBackFunction, overrideStart = null){
 		//adds the final screen if the money fits
 		//calls the callback function that resolves the result, such as adding a building
 		local start = function(){
@@ -398,8 +396,12 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	//if the option has an isValid function, calls it while passing the contract, to allow for functions like getHome()
 	// _addOptionFunction must return a screen, which is then pushed to the Temp_Options array
 	//Temp_Variable_List is unused in this context, but might be worthwhile
+	//_checkValidity to check for isValid functions
+	//_clearIdx can be set to false to preserve the active option index, such as for the store brother screens
 
-	function buildActiveOptions(_optionsArray, _addOptionFunction, _checkValidity = true){
+
+	function buildActiveOptions(_optionsArray, _addOptionFunction, _checkValidity = true, _clearIdx = true){
+		if (_clearIdx) this.m.ActiveIdx = 0;
 		this.m.Temp_Options = []
 		foreach(option in _optionsArray)
 		{
@@ -471,24 +473,25 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	function getBuildingOptions()
 	{
 		this.buildActiveOptions(this.Const.World.Stronghold.Building_options, this.addBuildingScreen)
-		return getActiveOptions()
+		return this.getActiveOptions()
 	}
 
 	function getBuildingRemoveOptions()
 	{
 		local contract_options = clone this.Const.World.Stronghold.Building_options
 		local isSouthern = this.m.IsSouthern
+		local home = this.getHome()
 		contract_options = contract_options.filter(function(index, building){
-			return this.getHome().hasBuilding((isSouthern && "SouthID" in building)? building.SouthID : building.ID)
+			return home.hasBuilding((isSouthern && "SouthID" in building)? building.SouthID : building.ID)
 		});
 		this.buildActiveOptions(contract_options, this.addBuildingRemoveScreen, false)
-		return getActiveOptions()
+		return this.getActiveOptions()
 	}
 
 	function getLocationOptions()
 	{	
 		this.buildActiveOptions(this.Const.World.Stronghold.Location_options, this.addLocationScreen)
-		return getActiveOptions()
+		return this.getActiveOptions()
 	}
 
 	function getRoadOptions()
@@ -503,27 +506,26 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		
 		foreach (settlement in settlements)
 		{
-			if (settlement != null && settlement != home){
-				local dist = home.getTile().getDistanceTo(settlement.getTile());
-				if (home.m.ConnectedToByRoads.len() != 0 && (dist > 60 || (dist_map.len() > 10 && dist > dist_map[10])))  continue;
-				local results = home.getRoadCost(settlement);
-				local cost = results[0] 
-				local roadmult = results[1] 
-				if (cost && cost != 0)
-				{
-					road_options.push
-					({
-					Score = dist, 
-					Name = settlement.getName(),
-					Cost = cost,
-					Roadmult = roadmult,
-					Settlement = this.WeakTableRef(settlement)
-					
-					})
-					dist_map.push(dist)
-					dist_map.sort()
-				}
-
+			if (settlement == null || settlement == home) continue
+			
+			local dist = home.getTile().getDistanceTo(settlement.getTile());
+			if (home.m.ConnectedToByRoads.len() != 0 && (dist > 60 || (dist_map.len() > 10 && dist > dist_map[10])))  continue;
+			local results = home.getRoadCost(settlement);
+			local cost = results[0] 
+			local roadmult = results[1] 
+			if (cost && cost != 0)
+			{
+				road_options.push
+				({
+				Score = dist, 
+				Name = settlement.getName(),
+				Cost = cost,
+				Roadmult = roadmult,
+				Settlement = this.WeakTableRef(settlement)
+				
+				})
+				dist_map.push(dist)
+				dist_map.sort()
 			}
 		}
 		
@@ -538,7 +540,6 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				}
 			}]
 		}
-		this.logInfo("road issue before sort?")
 		local roadSort = function(_d1, _d2){
 			if (_d1.Score < _d2.Score)
 			{
@@ -554,32 +555,33 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 		road_options.sort(roadSort);
 		this.buildActiveOptions(road_options, this.addRoadScreen)
-		return getActiveOptions()
+		return this.getActiveOptions()
 	}
 	function getTrainerOptions()
 	{
-		local roster = this.World.getPlayerRoster().getAll().filter(function(bro){bro.getLevel() < 11 && !bro.getSkills().hasSkill("effects.trained")});	
+		local roster = this.World.getPlayerRoster().getAll().filter(function(idx, bro){
+			return bro.getLevel() < 11 && !bro.getSkills().hasSkill("effects.trained")});
 		this.buildActiveOptions(roster, this.addTrainerScreen)
-		return getActiveOptions()
+		return this.getActiveOptions()
 	}
 	function getGiftOptions()
 	{
 		local gift_options = clone this.m.Temp_Variable_List
 		this.m.Temp_Variable_List = []
 		this.buildActiveOptions(gift_options, this.addGiftScreen)
-		return getActiveOptions()
+		return this.getActiveOptions()
 	}
 
 	function getStoreBrotherOptions()
 	{
 		this.buildActiveOptions(this.World.getPlayerRoster().getAll(), this.addStoreBrotherScreen)
-		return getActiveOptions()
+		return this.getActiveOptions()
 	}
 
 	function getRetrieveBrotherOptions()
 	{
 		this.buildActiveOptions(this.World.getRoster(9999).getAll(), this.addRetrieveBrotherScreen)
-		return getActiveOptions()
+		return this.getActiveOptions()
 	}
 
 	function addMainMenuScreen(_screenVar, _idx){
@@ -617,7 +619,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				}
 				this.Contract.m.Temp_Variable_List = []
 				//allows to stay in the screen while removing the option
-				this.Contract.buildActiveOptions(this.World.getPlayerRoster().getAll(), this.Contract.addStoreBrotherScreen)
+				this.Contract.buildActiveOptions(this.World.getPlayerRoster().getAll(), this.Contract.addStoreBrotherScreen, false, false)
 				local newIdx = this.IDX - _option
 				foreach (screen in this.Contract.m.Screens)
 				{
@@ -642,7 +644,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 					return "Task"
 				}
 				this.Contract.m.Temp_Variable_List = []
-				this.Contract.buildActiveOptions(this.World.getRoster(9999).getAll(), this.Contract.addRetrieveBrotherScreen)
+				this.Contract.buildActiveOptions(this.World.getRoster(9999).getAll(), this.Contract.addRetrieveBrotherScreen, false, false)
 				local newIdx = this.IDX - _option
 				foreach (screen in this.Contract.m.Screens)
 				{
@@ -730,7 +732,6 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	}
 
 	function addRoadScreen(_screenVar, _idx){
-		this.logInfo("adding road screen")
 		local price = _screenVar.Cost * this.Const.World.Stronghold.RoadCost * this.Const.World.Stronghold.PriceMult
 		return{
 			Text = format("Road to %s (%i Crowns)", _screenVar.Name, price)
@@ -1157,6 +1158,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			local result = this.new(type.Script)
 			hamlet.assimilateCharacteristics(result)
 			hamlet.setDiscovered(true);
+			hamlet.buildHouses()
 			playerBase.buildRoad(hamlet)
 			player_faction.getFlags().set("BuildHamlet", true)
 
@@ -1182,7 +1184,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		this.World.Assets.getStash().makeEmptySlots(1);
 		local item = this.new("scripts/items/special/fountain_of_youth_item");
 		this.World.Assets.getStash().add(item);
-		this.Contract.clearScreens()
+		this.clearScreens()
 		return "Task";
 	}
 
@@ -1226,25 +1228,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		{
 			this.World.Contracts.removeContract(contract)
 		}
-		foreach (unit in player_faction.m.Units)
-		{
-			unit.fadeOutAndDie()
-		}
-		
-		foreach( h in this.getHome().m.HousesTiles )
-		{
-			local tile = this.World.getTileSquare(h.X, h.Y);
-			tile.clear(this.Const.World.DetailType.Houses | this.Const.World.DetailType.Lighting);
-			local d = tile.spawnDetail("world_houses_0" + this.getHome().m.HousesType + "_0" + h.V + "_ruins", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
-			d.Scale = 0.85;
-			this.getHome().spawnFireAndSmoke(tile.Pos);
-		}
-		this.getHome().spawnFireAndSmoke(this.getHome().getTile().Pos)
-		foreach (location in this.getHome().m.AttachedLocations)
-		{
-			this.getHome().spawnFireAndSmoke(location.getTile().Pos)
-			location.die()
-		}
+
 		foreach (settlement in player_faction.getSettlements())
 		{
 			settlement.fadeOutAndDie(true)

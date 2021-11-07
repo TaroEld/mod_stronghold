@@ -44,7 +44,8 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				this.Contract.m.BulletpointsObjectives = [
-					"Hunt down the noble caravan"
+					"Hunt down the noble caravan",
+					"Don't let their men escape"
 				];
 				this.Contract.setScreen("Task");
 			}
@@ -409,7 +410,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					function getResult()
 					{
 						this.Contract.m.Home.m.Flags.set("Mercenaries", true);
-						this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).addPlayerRelationEx( -100, "Murdered their men to free condemned criminals")
+						this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).addPlayerRelationEx( -50, "Murdered their men to free condemned criminals")
 						this.World.Contracts.finishActiveContract();
 						return 0;
 					}
@@ -530,8 +531,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			this.m.Target = this.WeakTableRef(this.World.getEntityByID(target));
 		}
 		
-
-		this.logInfo("Deserialising merc contract, enemy faction: " + this.m.Enemy_Faction);
 		
 		this.contract.onDeserialize(_in);
 

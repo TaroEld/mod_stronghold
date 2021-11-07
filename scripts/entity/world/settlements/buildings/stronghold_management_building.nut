@@ -1,12 +1,7 @@
 this.stronghold_management_building <- this.inherit("scripts/entity/world/settlements/buildings/building", {
 	//modified marketplace.
 	m = {
-		Stash = null
 	},
-	function getStash()
-	{
-		return this.m.Stash;
-	}
 
 	function create()
 	{
@@ -18,9 +13,6 @@ this.stronghold_management_building <- this.inherit("scripts/entity/world/settle
 		this.m.UIImageNight = "ui/settlements/building_06";
 		this.m.Tooltip = "world-town-screen.main-dialog-module.Management";
 		this.m.TooltipIcon = "ui/icons/buildings/tavern.png";
-		this.m.Stash = this.new("scripts/items/stash_container");
-		this.m.Stash.setID("shop");
-		this.m.Stash.setResizable(true);
 		this.m.IsClosedAtNight = false;
 		this.m.Sounds = [];
 		this.m.SoundsAtNight = [];
@@ -52,18 +44,6 @@ this.stronghold_management_building <- this.inherit("scripts/entity/world/settle
 		local playerBase = this.m.Settlement
 		this.m.UIImage = playerBase.m.UIBackgroundCenter + "_management"
 		this.m.UIImageNight = playerBase.m.UIBackgroundCenter + "_night" + "_management"
-	}
-		
-	function onSerialize( _out )
-	{
-		this.building.onSerialize(_out);
-		this.m.Stash.onSerialize(_out);
-	}
-
-	function onDeserialize( _in )
-	{
-		this.building.onDeserialize(_in);
-		this.m.Stash.onDeserialize(_in);
 	}
 
 });
