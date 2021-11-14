@@ -99,7 +99,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				this.Contract.m.BulletpointsObjectives = [
-					format("%i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
+					format("Defend against %i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
 				];
 			}
 			function update()
@@ -192,7 +192,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 				
 				this.Text = format("Your %s is now under construction. This will take %i %s. Enemies will attack it within the next day.", this.Const.World.Stronghold.BaseNames[this.Contract.m.TargetLevel-1], this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
 				this.Contract.m.BulletpointsObjectives = [
-					format("%i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
+					format("Defend against %i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
 				];
 			}
 		});
@@ -294,7 +294,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			ShowDifficulty = false,
 			function start()
 			{
-				this.Contract.m.BulletpointsObjectives[0] = format("%i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
+				this.Contract.m.BulletpointsObjectives[0] = format("Defend against %i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
 				this.World.State.getWorldScreen().updateContract(this.Contract);
 			}
 		});

@@ -189,6 +189,7 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 			updates = 1
 		};
 		foreach (item in this.m.Stash.getItems()){
+			if (item == null) continue
 			if (item.m.ID == "supplies.ammo"){
 				ammo_count++
 			}

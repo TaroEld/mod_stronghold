@@ -78,6 +78,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					local selected_start_settlement = null;
 					local selected_end_settlememt = null;
 					local total_dist = 0;
+					
 					foreach (faction in noble_factions)
 					{
 						local settlements = faction.getSettlements()
@@ -87,38 +88,75 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 						}
 						local start_settlement = null
 						local end_settlement = null
-						local closest_dist = 0
-						local furthest_dist = 0
+						local longestDistanceBetweenSettlements = 0
+						local distFurthestFromBase = 0
 						foreach (settlement in settlements)
 						{
-							if (!settlement.isIsolated() && settlement.getTile().getDistanceTo(player_base.getTile()) > furthest_dist)
+							if (!settlement.isIsolated() && settlement.getTile().getDistanceTo(player_base.getTile()) > distFurthestFromBase)
 							{
 								start_settlement = settlement
-								furthest_dist = settlement.getTile().getDistanceTo(player_base.getTile())
+								distFurthestFromBase = settlement.getTile().getDistanceTo(player_base.getTile())
 							}
 						}
+						if (start_settlement == null) continue
 						foreach (settlement in settlements)
 						{
-							if (settlement != start_settlement && settlement.isMilitary() && settlement.isConnectedToByRoads(start_settlement) && settlement.getTile().getDistanceTo(start_settlement.getTile()) > closest_dist)
+							if (settlement != start_settlement && settlement.isMilitary() && settlement.isConnectedToByRoads(start_settlement) && settlement.getTile().getDistanceTo(start_settlement.getTile()) > longestDistanceBetweenSettlements)
 							{
 								end_settlement = settlement
-								closest_dist = settlement.getTile().getDistanceTo(start_settlement.getTile())
+								longestDistanceBetweenSettlements = settlement.getTile().getDistanceTo(start_settlement.getTile())
 							}
 						}
-						if (end_settlement)
+						if (end_settlement == null) continue
+						if (selected_faction == null || longestDistanceBetweenSettlements > total_dist)
 						{
-							if (!selected_faction || closest_dist > total_dist)
+							selected_faction = faction;
+							total_dist = longestDistanceBetweenSettlements;
+							selected_start_settlement = start_settlement
+							selected_end_settlememt = end_settlement
+						}
+					}
+					if (selected_end_settlememt == null || selected_start_settlement == null)
+					{
+						local settlements = this.World.EntityManager.getSettlements()
+						local start_settlement = null
+						local end_settlement = null
+						local longestDistanceBetweenSettlements = 0
+						local distFurthestFromBase = 0
+						foreach (settlement in settlements)
+						{
+							if (!settlement.isIsolated() && settlement.m.Culture != this.Const.World.Culture.Southern && settlement.getTile().getDistanceTo(player_base.getTile()) > distFurthestFromBase)
 							{
-								selected_faction = faction;
-								total_dist = closest_dist;
-								selected_start_settlement = start_settlement
-								selected_end_settlememt = end_settlement
+								start_settlement = settlement
+								distFurthestFromBase = settlement.getTile().getDistanceTo(player_base.getTile())
 							}
+						}
+						if (start_settlement != null)
+						{
+							foreach (settlement in settlements)
+							{
+								if (settlement != start_settlement && settlement.isAlliedWith( start_settlement ) && settlement.isMilitary() && settlement.isConnectedToByRoads(start_settlement) 
+									&& settlement.getTile().getDistanceTo(start_settlement.getTile()) > longestDistanceBetweenSettlements)
+								{
+									end_settlement = settlement
+									longestDistanceBetweenSettlements = settlement.getTile().getDistanceTo(start_settlement.getTile())
+								}
+							}
+						}
+						if (end_settlement != null)
+						{
+							this.logInfo(start_settlement.getName())
+							this.logInfo(start_settlement.getFactionOfType(this.Const.FactionType.NobleHouse))
+							selected_faction = start_settlement.getFactionOfType(this.Const.FactionType.NobleHouse);
+							total_dist = longestDistanceBetweenSettlements;
+							selected_start_settlement = start_settlement
+							selected_end_settlememt = end_settlement
 						}
 					}
 					//failsafe
-					if (!selected_end_settlememt || !selected_start_settlement)
+					if (selected_end_settlememt == null || selected_start_settlement == null)
 					{
+						this.logInfo("COULD NOT FIND EITHER START OR END SETTLEMENT")
 						this.Contract.setState("Return");
 					}
 					
