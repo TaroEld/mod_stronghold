@@ -397,7 +397,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			{
 				closest = distance
 				closest_settlement = settlement
-				closest_faction = settlement.getOwner() ? settlement.getOwner(): this.World.FactionManager.getFaction(closest_settlement.getFaction());
+				closest_faction = settlement.getOwner() ? settlement.getOwner() : this.World.FactionManager.getFaction(closest_settlement.getFaction());
 			}
 		}
 		//some kinda bug makes distance be 0 sometimes, need to figure it out but until then set to 9999 if 0
@@ -420,7 +420,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		{
 			party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), "Nomads", false, this.Const.World.Spawn.NomadDefenders, party_difficulty);
 			party.setDescription("A warband of nomads.");
-			party.setFootprintType(this.Const.World.FootprintsType.OrientalBandits);
+			party.setFootprintType(this.Const.World.FootprintsType.Nomads);
 		}
 		else if (closest_faction.m.Type == this.Const.FactionType.NobleHouse)
 		{
