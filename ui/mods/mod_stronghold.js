@@ -158,6 +158,19 @@ WorldCampfireScreenAssets.prototype.loadFromData = function (_data){
 	}
 	retinue_loadFromData.call(this, _data)
 }
+var hire_show = WorldCampfireScreenHireDialogModule.prototype.show
+WorldCampfireScreenHireDialogModule.prototype.show = function (_withSlideAnimation)
+{
+	hire_show.call(this, _withSlideAnimation)
+	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.removeClass("display-block").addClass("display-none")
+}
+
+var hire_hide = WorldCampfireScreenHireDialogModule.prototype.hide
+WorldCampfireScreenHireDialogModule.prototype.hide = function ()
+{
+	hire_hide.call(this)
+	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.removeClass("display-none").addClass("display-block")
+}
 
 WorldCampfireScreen.prototype.notifyBackendStrongholdButtonPressed = function ()
 {
