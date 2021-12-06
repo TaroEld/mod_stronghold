@@ -24,10 +24,10 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		this.m.Flags = this.new("scripts/tools/tag_collection");
 		this.m.TempFlags = this.new("scripts/tools/tag_collection");
 		this.m.Type = "contract.stronghold_special_actions_contract";
-		this.m.Name = format("Manage your %s", this.Stronghold.getPlayerBase().getSizeName());
-		this.m.Title = format("Manage your %s", this.Stronghold.getPlayerBase().getSizeName());
+		this.m.Name = ""
+		this.m.Title = ""
 		this.m.TimeOut = this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 1500.0;
-		this.m.IsSouthern <- this.Stronghold.getPlayerBase().getFlags().get("isSouthern")
+		
 	}
 	//allows to use this for both main base and hamlet
 
@@ -35,9 +35,11 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	{
 		this.m.Name = format("Manage your %s", this.getHome().getSizeName());
 		this.m.Title = format("Manage your %s", this.getHome().getSizeName());
+		this.m.IsSouthern <- this.getHome().getFlags().get("isSouthern")
 	}
 	//do these after variables are set
-	function initScreensAndStates(){
+	function initScreensAndStates()
+	{
 		this.createStates();
 		this.createScreens();
 	}
@@ -45,14 +47,16 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	function setCost(_cost){
 		this.m.Cost = _cost
 	}
+
 	function getCost(){
 		return this.m.Cost
 	}
+
 	//disable some options for hamlet
 	function isMainBase(){
-		return this.getHome().getID() == this.Stronghold.getPlayerBase().getID()
+		return this.getHome().m.Flags.get("IsMainBase")
 	}
-	
+
 	function onImportIntro()
 	{
 	}
@@ -86,6 +90,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		this.World.queryTilesInRange(_tile, 1, 4, this.onTileInRegionQueried.bindenv(this), terrain.Region);
 		return terrain;
 	}
+
 	function onTileInRegionQueried( _tile, _region )
 	{
 		++_region[_tile.Type];
@@ -102,7 +107,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		this.m.Temp_Var = null;
 		this.m.ActiveIdx = 0;
 		this.m.Temp_Variable_List = [];
-		this.m.Title = format("Manage your %s", this.Stronghold.getPlayerBase().getSizeName());
+		this.m.Title = format("Manage your %s", this.getHome().getSizeName());
 		this.setCost(0)
 		this.createScreens()
 	}
@@ -294,7 +299,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	
 		//screen to choose the action
 		local taskText = ""
-		if(this.Stronghold.getPlayerBase().isUpgrading()) taskText += format("Your %s is currently upgrading. Some options are not available.\n", this.Stronghold.getPlayerBase().getSizeName()) 
+		if(this.getHome().isUpgrading()) taskText += format("Your %s is currently upgrading. Some options are not available.\n", this.getHome().getSizeName()) 
 		taskText += "What do you wish to do?"
 		this.m.Screens.push({
 			ID = "Task",
@@ -496,7 +501,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function getRoadOptions()
 	{
-		local home = this.Stronghold.getPlayerBase()
+		local home = this.getHome()
 		local tile = home.getTile()
 		local settlements = this.World.EntityManager.getSettlements();
 		local dist_map = []
@@ -797,7 +802,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				{
 					local items = []
 					items.extend(this.World.Assets.getStash().m.Items);
-					items.extend(this.Stronghold.getPlayerBase().getBuilding("building.storage_building").getStash().getItems())
+					items.extend(this.getHome().getBuilding("building.storage_building").getStash().getItems())
 					foreach( i, item in items )
 					{
 						if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
@@ -923,7 +928,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	function onRoadBuild()
 	{
 
-		local home = this.Stronghold.getPlayerBase();
+		local home = this.getHome();
 		home.buildRoad(this.m.Temp_Var.Settlement, this.m.Temp_Var.Roadmult)
 		this.clearScreens()
 		return "Task"
@@ -1114,7 +1119,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		local radius = 3
 		local used = [];
 		local list = this.Const.World.Settlements.Villages_small
-		local playerBase = this.Stronghold.getPlayerBase()
+		local playerBase = this.getHome()
 		local player_faction = this.Stronghold.getPlayerFaction()
 		while (tries++ < 3000)
 		{
@@ -1160,6 +1165,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			hamlet.setDiscovered(true);
 			hamlet.buildHouses()
 			playerBase.buildRoad(hamlet)
+			playerBase.getFlags().set("Child", hamlet.getID())
+			hamlet.getFlags().set("Parent", playerBase.getID())
 			player_faction.getFlags().set("BuildHamlet", true)
 
 			return

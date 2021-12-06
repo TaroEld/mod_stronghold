@@ -14,12 +14,6 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 	function onUpdate( _faction )
 	{
 		//only works with level 2+ base
-		local player_base = this.Stronghold.getPlayerBase()
-		if (!player_base || player_base.getSize() == 1)
-		{
-			return
-		}
-
 		this.m.Score = 10;
 	}
 
@@ -29,8 +23,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 
 	function onExecute( _faction )
 	{
-		local settlements = _faction.getSettlements();
-		local player_base = this.Stronghold.getPlayerBase()
+		local player_base = this.Math.randArray(_faction.getDevelopedBases())
 		local patrol_strength = 150 * (player_base.getSize()-1)
 		//despawn old mercenaries
 		if (_faction.m.Units.len() > 0)
@@ -57,12 +50,10 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 
 		local totalTime = this.World.getTime().SecondsPerDay * 7
 		local locations = player_base.m.AttachedLocations
-		foreach(settlement in this.Stronghold.getPlayerFaction().getSettlements())
-		{
-			if (settlement.getID() != player_base.getID()) {
-			    locations.push(settlement)
-			}	
-		}
+		local hamlet = player_base.getHamlet()
+		if (hamlet != false) {
+		    locations.push(hamlet)
+		}	
 		local guard;
 		local idleTime = this.World.getTime().SecondsPerDay/3
 		//make them patrol the attached locations

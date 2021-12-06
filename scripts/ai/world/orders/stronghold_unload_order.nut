@@ -10,9 +10,14 @@ this.stronghold_unload_order <- this.inherit("scripts/ai/world/world_behavior", 
 
 	function onExecute( _entity, _hasChanged )
 	{
-		local settlement = this.Stronghold.getPlayerBase()
+		local entities = this.World.getAllEntitiesAndOneLocationAtPos(_entity.getPos(), 2.0);
+		local settlement;
+		foreach( ent in entities )
+		{
+			if (ent.getFlags().get("IsMainBase")) settlement = ent
+		}
 		this.getController().popOrder();
-		if(!settlement) return true
+		if(settlement == null) return true
 
 		local items = settlement.getBuilding("building.storage_building").getStash().getItems()
 		local food = [];

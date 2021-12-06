@@ -62,15 +62,14 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 			return;
 		}
 		
-		local player_base = this.Stronghold.getPlayerBase()
-		if (player_base.hasSituation("situation.raided")) player_base.updateSituations()
+		local player_base = this.getMainBases()
+		foreach(settlement in this.getMainBases())
+		{
+			if (settlement.hasSituation("situation.raided")) settlement.updateSituations()
+		}
 		
 		//no actions on lvl1 playerbase, too small, would be too powerful
-		if (player_base.getSize() == 1)
-		{
-			return;
-		}
-
+		if (this.getDevelopedBases().len() == 0) return
 
 		if (!_ignoreDelay && this.m.LastActionTime + this.World.getTime().SecondsPerDay > this.Time.getVirtualTimeF())
 		{
@@ -113,6 +112,29 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 				card.execute()
 			}
 		}
+	}
+
+	function getMainBases(){
+		local bases = [];
+		foreach(settlement in this.getSettlements()){
+			if (settlement.getFlags().get("IsMainBase")) bases.push(settlement)
+		}
+		return bases
+	}
+	function getDevelopedBases()
+	{
+		local bases = [];
+		foreach(settlement in this.getMainBases()){
+			if (settlement.getSize() > 1) bases.push(settlement)
+		}
+		return bases
+	}
+	function getHamlets(){
+		local bases = [];
+		foreach(settlement in this.getSettlements()){
+			if (settlement.getFlags().get("IsSecondaryBase")) bases.push(settlement)
+		}
+		return bases
 	}
 	
 	function updateAlliancesPlayerFaction()

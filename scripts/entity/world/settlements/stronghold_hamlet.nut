@@ -92,7 +92,13 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 
 		return true;
 	}
-	
+
+	function getParent(){
+		local flag = this.m.Flags.get("Parent")
+		if (!flag) return false
+		return this.World.getEntityByID(flag)
+	}
+
 	function updateQuests()
 	{
 	}
@@ -154,7 +160,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		local rosterMin = 6
 		local rosterMax = 10
 		
-		if (this.Stronghold.getPlayerBase().hasAttachedLocation("attached_location.militia_trainingcamp")){
+		if (this.getParent().hasAttachedLocation("attached_location.militia_trainingcamp")){
 			rosterMin += 2;
 			rosterMax += 2;
 		}

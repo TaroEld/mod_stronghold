@@ -13,11 +13,6 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 
 	function onUpdate( _faction )
 	{
-		local player_base = this.Stronghold.getPlayerBase();
-		if (!player_base || player_base.isIsolated())
-		{
-			return;
-		}
 		this.m.Score = 10;
 	}
 
@@ -28,8 +23,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 	function onExecute( _faction )
 	{
 		local player_faction = this.Stronghold.getPlayerFaction();
-		local player_base = this.Stronghold.getPlayerBase();
-		if (!player_base) return
+		local player_base = this.Math.randArray(_faction.getDevelopedBases())
 		
 		//check for closest connected settlements. connected settlements are updated after roads are built
 		local settlements = this.World.EntityManager.getSettlements();

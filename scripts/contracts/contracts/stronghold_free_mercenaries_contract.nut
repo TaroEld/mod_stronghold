@@ -506,7 +506,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	}
 	function spawnMercenaries()
 	{
-		local player_base =  this.Stronghold.getPlayerBase()
+		local player_base =  this.getHome()
 		local player_faction = this.Stronghold.getPlayerFaction()
 		local mercenary_size = 200
 		if (player_base.hasAttachedLocation("attached_location.militia_trainingcamp"))

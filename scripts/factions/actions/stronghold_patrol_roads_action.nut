@@ -14,32 +14,40 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 	function onUpdate( _faction )
 	{
 		//only works with level 2+ base
-		local player_base = this.Stronghold.getPlayerBase()
-		if (!player_base || player_base.getSize() == 1 || player_base.isIsolated())
-		{
-			return
+		local player_bases = _faction.getDevelopedBases()
+		local nonIsolatedBases = []
+		foreach(settlement in player_bases){
+			if(!player_base.isIsolated()) nonIsolatedBases.push({Base = settlement, Connected = []})
 		}
+		if (nonIsolatedBases.len() == 0) return
+
 		local connected_settlements = [];
-		local friendly_factions = []
-		if (player_base)
+		local friendly_factions = 0
+		foreach (faction in this.World.FactionManager.getFactions())
 		{
-			foreach (faction in this.World.FactionManager.getFactions())
+			if (faction != null && faction.m.PlayerRelation > 70 && (faction.m.Type == this.Const.FactionType.NobleHouse || faction.m.Type == this.Const.FactionType.OrientalCityState))
 			{
-				if (faction != null && faction.m.PlayerRelation > 70 && (faction.m.Type == this.Const.FactionType.NobleHouse || faction.m.Type == this.Const.FactionType.OrientalCityState))
+				friendly_factions++
+				foreach( playerbase in nonIsolatedBases)
 				{
-					friendly_factions.push(faction)
 					foreach (settlement in faction.getSettlements())
 					{
-						if ( settlement.isConnectedToByRoads(player_base))
+						if (settlement.isConnectedToByRoads(playerbase.Base))
 						{
-							connected_settlements.push(settlement)
+							playerbase.Connected.push(settlement)
 						}
 					}
 				}
 			}
-			if (connected_settlements.len() < 3) {return}
 		}
-		this.m.Settlements <- connected_settlements;
+		local valid = []
+		foreach (playerBase in nonIsolatedBases)
+		{
+			if (playerBase.Connected.len() > 2) valid.push(playerBase)
+		}
+
+		if (valid.len() < 3) {return}
+		this.m.Settlements <- this.Math.randArray(valid);
 		//the more friendlies, the more patrols spawn
 		this.m.Cooldown = (this.World.getTime().SecondsPerDay * 7) / (friendly_factions.len()+1);
 		this.m.Score = 10;
@@ -51,7 +59,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 
 	function onExecute( _faction )
 	{
-		local player_base = this.Stronghold.getPlayerBase()
+		local player_base = this.m.Settlements.Base
 		local patrol_strength = 200 * (player_base.getSize()-1)
 		
 		//add strength if you have the attachment
@@ -66,12 +74,13 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		party.getFlags().set("Stronghold_Patrol", true);
 		local c = party.getController();
 		local index = 0;
+		local valid = this.m.Settlements.Connected
 		local target_settlements = [];
-		while (this.m.Settlements.len() > 0 && index < 5)
+		while (valid.len() > 0 && index < 5)
 		{
-			local rng = this.Math.rand(0, this.m.Settlements.len() -1)
-			target_settlements.push(this.m.Settlements[rng])
-			this.m.Settlements.remove(rng)
+			local rng = this.Math.rand(0, valid.len() -1)
+			target_settlements.push(valid[rng])
+			valid.remove(rng)
 			index++
 		}
 		local sort_settlements;

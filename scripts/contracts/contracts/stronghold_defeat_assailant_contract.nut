@@ -14,7 +14,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.m.Flags = this.new("scripts/tools/tag_collection");
 		this.m.TempFlags = this.new("scripts/tools/tag_collection");
 		this.m.Type = "contract.stronghold_defeat_assailant_contract";
-		this.m.Name = format("Defend your %s", this.Stronghold.getPlayerBase().getSizeName());
+		this.m.Name = ""
 		this.m.TimeOut = this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 1500.0;
 		this.createStates();
 		this.createScreens();
@@ -28,12 +28,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	function start()
 	{
 		//looks for closest settlement. Nobles and southern nobles have multiple options, so loop through and select the closest one
-		local player_base = this.Stronghold.getPlayerBase();
 		this.m.IsStarted = true;
-		this.setHome(player_base);
-		this.setOrigin(player_base);
 		this.m.AttacksRemaining = this.m.TargetLevel
 		this.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  this.Math.rand(12, 24) * this.World.getTime().SecondsPerHour
+		this.m.Name = format("Defend your %s", this.getHome().getSizeName());
 		this.World.Contracts.setActiveContract(this);
 		this.setState("Running")
 	}
@@ -173,8 +171,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					function getResult()
 					{
 						this.Contract.m.Flags.set("Introduced", true)
-						this.Stronghold.getPlayerBase().setUpgrading(true);
-						this.Stronghold.getPlayerBase().updateTown();
+						this.Contract.m.Home.setUpgrading(true);
+						this.Contract.m.Home.updateTown();
 
 						local player_faction = this.Stronghold.getPlayerFaction();
 						local actionToFire = player_faction.m.Deck[0]
@@ -216,9 +214,9 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					Text = "Barbarian",
 					function getResult()
 					{
-						this.Stronghold.getPlayerBase().m.Flags.set("BarbarianSprites", true)
+						this.Contract.m.Home.m.Flags.set("BarbarianSprites", true)
 						this.Contract.m.Flags.set("Sprite_Set", true)
-						this.Stronghold.getPlayerBase().updateTown()
+						this.Contract.m.Home.updateTown()
 					}
 
 				},
@@ -226,9 +224,9 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					Text = "Nomad",
 					function getResult()
 					{
-						this.Stronghold.getPlayerBase().m.Flags.set("NomadSprites", true)
+						this.Contract.m.Home.m.Flags.set("NomadSprites", true)
 						this.Contract.m.Flags.set("Sprite_Set", true)
-						this.Stronghold.getPlayerBase().updateTown()
+						this.Contract.m.Home.updateTown()
 
 					}
 
@@ -266,7 +264,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				this.Contract.spawnNewAttackers()
-				this.Text = "Your scouts have informed you that the enemies are imminent, hailing from the " + this.Const.Strings.Direction8[this.Stronghold.getPlayerBase().getTile().getDirectionTo(this.Contract.m.Target.getTile())]
+				this.Text = "Your scouts have informed you that the enemies are imminent, hailing from the " + this.Const.Strings.Direction8[this.Contract.m.Home.getTile().getDirectionTo(this.Contract.m.Target.getTile())]
 			}
 		});
 		this.m.Screens.push({
@@ -311,7 +309,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					function getResult()
 					{
 						local player_faction = this.Stronghold.getPlayerFaction()
-						local player_base = this.Stronghold.getPlayerBase()
+						local player_base = this.Contract.m.Home
 						//upgrade looks and situation
 						player_base.m.Size = this.Contract.m.TargetLevel;
 						player_base.buildHouses();
@@ -320,8 +318,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						actionToFire.execute(player_faction);
 						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
 						player_base.m.Flags.set("LevelOne", false)
-						this.Stronghold.getPlayerBase().setUpgrading(false);
-						this.Stronghold.getPlayerBase().updateTown()
+						this.Contract.m.Home.setUpgrading(false);
+						this.Contract.m.Home.updateTown()
 						this.World.Contracts.finishActiveContract();
 						return 0;
 
@@ -366,7 +364,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	function spawnNewAttackers()
 	{
 		local player_faction = this.Stronghold.getPlayerFaction()
-		local player_base = this.Stronghold.getPlayerBase()
+		local player_base = this.m.Home
 		local wave =  this.m.TargetLevel / this.m.AttacksRemaining 
 		local party_difficulty =  (150 + 50 * wave) * this.getScaledDifficultyMult()
 		this.m.Destination = this.WeakTableRef(player_base);

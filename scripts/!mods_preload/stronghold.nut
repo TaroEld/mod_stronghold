@@ -12,11 +12,14 @@
 		local consumeFood = o.consumeFood;		
 		o.consumeFood = function()
 		{
-			local player_base = this.Stronghold.getPlayerBase()
-			if (player_base && player_base.hasAttachedLocation("attached_location.wheat_fields") && this.World.State.getPlayer().getTile().getDistanceTo(player_base.getTile()) < 25)
-			{
-				return
-			}
+			local player_bases = this.Stronghold.getPlayerFaction().getMainBases()
+			foreach(player_base in player_bases)
+			{	
+				if (player_base.hasAttachedLocation("attached_location.wheat_fields") && this.World.State.getPlayer().getTile().getDistanceTo(player_base.getTile()) < 25)
+				{
+					return
+				}
+			}	
 			//else: vanilla function 
 			consumeFood()
 		}
@@ -28,65 +31,68 @@
 			if (this.World.getTime().Hours != this.m.LastHourUpdated)
 			{
 				//check for ranger start and lookout follower
-				local player_base = this.Stronghold.getPlayerBase()
-				if (player_base && player_base.hasAttachedLocation("attached_location.stone_watchtower") && this.World.State.getPlayer().getTile().getDistanceTo(player_base.getTile()) < 25)
-				{
-					if (this.World.Assets.getOrigin().getID() == "scenario.rangers")
+				local player_bases = this.Stronghold.getPlayerFaction().getMainBases()
+				foreach(player_base in player_bases)
+				{	
+					if (player_base.hasAttachedLocation("attached_location.stone_watchtower") && this.World.State.getPlayer().getTile().getDistanceTo(player_base.getTile()) < 25)
 					{
-						this.World.State.getPlayer().m.BaseMovementSpeed = 120
+						if (this.World.Assets.getOrigin().getID() == "scenario.rangers")
+						{
+							this.World.State.getPlayer().m.BaseMovementSpeed = 120
+						}
+						else
+						{
+							this.World.State.getPlayer().m.BaseMovementSpeed = 111
+						}
+						
+						if (this.World.Retinue.hasFollower("follower.lookout"))
+						{
+							this.World.State.getPlayer().m.VisionRadius = 750
+						}
+						else
+						{
+							this.World.State.getPlayer().m.VisionRadius = 625
+						}
+						
+					}
+					//if not in radius
+					else
+					{
+						if (this.World.Assets.getOrigin().getID() == "scenario.rangers")
+						{
+							this.World.State.getPlayer().m.BaseMovementSpeed = 111
+						}
+						else
+						{
+							this.World.State.getPlayer().m.BaseMovementSpeed = 105
+						}
+						
+						if (this.World.Retinue.hasFollower("follower.lookout"))
+						{
+							this.World.State.getPlayer().m.VisionRadius = 625
+						}
+						else
+						{
+							this.World.State.getPlayer().m.VisionRadius = 500
+						}
+					}
+					//same for herbalist grove
+					if (player_base.hasAttachedLocation("attached_location.herbalist_grove") && this.World.State.getPlayer().getTile().getDistanceTo(player_base.getTile()) < 25)
+					{
+						this.m.HitpointsPerHourMult = 1.2
 					}
 					else
 					{
-						this.World.State.getPlayer().m.BaseMovementSpeed = 111
+						this.m.HitpointsPerHourMult = 1.0
 					}
-					
-					if (this.World.Retinue.hasFollower("follower.lookout"))
+					//stored brothers draw half wage
+					if (this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
 					{
-						this.World.State.getPlayer().m.VisionRadius = 750
-					}
-					else
-					{
-						this.World.State.getPlayer().m.VisionRadius = 625
-					}
-					
-				}
-				//if not in radius
-				else
-				{
-					if (this.World.Assets.getOrigin().getID() == "scenario.rangers")
-					{
-						this.World.State.getPlayer().m.BaseMovementSpeed = 111
-					}
-					else
-					{
-						this.World.State.getPlayer().m.BaseMovementSpeed = 105
-					}
-					
-					if (this.World.Retinue.hasFollower("follower.lookout"))
-					{
-						this.World.State.getPlayer().m.VisionRadius = 625
-					}
-					else
-					{
-						this.World.State.getPlayer().m.VisionRadius = 500
-					}
-				}
-				//same for herbalist grove
-				if (player_base && player_base.hasAttachedLocation("attached_location.herbalist_grove") && this.World.State.getPlayer().getTile().getDistanceTo(player_base.getTile()) < 25)
-				{
-					this.m.HitpointsPerHourMult = 1.2
-				}
-				else
-				{
-					this.m.HitpointsPerHourMult = 1.0
-				}
-				//stored brothers draw half wage
-				if (player_base && this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
-				{
-					local town_roster = this.World.getRoster(9999)
-					foreach(bro in town_roster.getAll())
-					{
-						this.m.Money -= this.Math.floor(bro.getDailyCost()/2);
+						local town_roster = this.World.getRoster(9999)
+						foreach(bro in town_roster.getAll())
+						{
+							this.m.Money -= this.Math.floor(bro.getDailyCost()/2);
+						}
 					}
 				}
 			}
@@ -151,7 +157,7 @@
 		o.queryData <- function()
 		{
 			local result = queryData()
-			result.Assets.hasStronghold <- this.Stronghold.getPlayerBase() != false;
+			result.Assets.hasStronghold <- false;
 			return result;
 		}
 	});
@@ -166,26 +172,6 @@
 			this.World.Events.fire(event.getID())
 		};
 	})
-
-	
-	/*
-	::mods_hookNewObject("entity/world/settlements/buildings/port_building", function ( o )
-	{
-		
-		while (!("isHidden" in o)) o = o[o.SuperName];
-		local isHidden = o.isHidden;
-		o.isHidden = function()
-		{
-			if (this.Stronghold.getPlayerBase() && ("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() == this.Stronghold.getPlayerBase())
-			{
-				return false
-			}
-			else
-			{
-				return isHidden()
-			}
-		}
-	});*/
 
 	::mods_hookBaseClass("entity/world/location", function ( o )
 	{
@@ -385,11 +371,12 @@
 		o.onUpdate = function(_faction)
 		{
 			onUpdate(_faction)
-			if (this.m.Score == 0 || !this.Stronghold.getPlayerBase() || this.m.Dest == this.Stronghold.getPlayerBase()) return;
+			local player_base = this.Math.randArray(this.Stronghold.getPlayerFaction().getMainBases())
+			if (if (player_base == null) || this.m.Score == 0 || this.m.Dest == player_base) return;
 			if (_faction.m.PlayerRelation < 70 || (this.m.Start.getOwner() != null && this.m.Start.getOwner().m.PlayerRelation < 70)) return;
-			if (!this.isPathBetween(this.m.Start.getTile(), this.Stronghold.getPlayerBase().getTile(), true)) return;
+			if (!this.isPathBetween(this.m.Start.getTile(), player_base.getTile(), true)) return;
 			local exists = false;
-			foreach( situation in this.Stronghold.getPlayerBase().m.Situations )
+			foreach( situation in player_base.m.Situations )
 			{
 				if (situation.getID() == "situation.stronghold_well_supplied_ai")
 				{
@@ -403,7 +390,7 @@
 			}
 			
 			if (this.Math.rand(0, 100) < chance){
-				this.m.Dest = this.Stronghold.getPlayerBase()
+				this.m.Dest = player_base
 			}
 		}
 	});
@@ -415,17 +402,13 @@
 		o.onExecute = function(_entity, _hasChanged)
 		{
 			local entities = this.World.getAllEntitiesAndOneLocationAtPos(_entity.getPos(), 1.0);
-			local playerBase = this.Stronghold.getPlayerBase()
 			foreach( settlement in entities )
 			{
-				if (settlement.isLocation() && settlement.isEnterable())
+				if (settlement.isLocation() && settlement.isEnterable() && settlement.getFlags().get("IsMainBase"))
 				{
-					if (playerBase && settlement.getID() == playerBase.getID())
-					{
-						settlement.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_ai_situation"), 7);
-						this.getController().popOrder();
-						return true;
-					}
+					settlement.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_ai_situation"), 7);
+					this.getController().popOrder();
+					return true;
 				}
 			}
 			return onExecute(_entity, _hasChanged)
@@ -438,12 +421,13 @@
 		o.onUpdate = function(_faction)
 		{
 			onUpdate(_faction)
-			if (this.m.Score == 0 || !this.Stronghold.getPlayerBase() || _faction.m.PlayerRelation < 70) return;
+			local player_base = this.Math.randArray(this.Stronghold.getPlayerFaction().getMainBases())
+			if (this.m.Score == 0 || player_base == null || _faction.m.PlayerRelation < 70) return;
 			foreach( settlement in this.m.Settlements )
 			{
-				if (!this.isPathBetween(settlement.getTile(), this.Stronghold.getPlayerBase().getTile(), true)) return;
+				if (!this.isPathBetween(settlement.getTile(), player_base, true)) return;
 			}
-			this.m.Settlements.push(this.Stronghold.getPlayerBase())
+			this.m.Settlements.push(player_base)
 		}
 		
 		//needed for patrol to not start at player base. This whole thing is pretty jank, need to hook whole functions for small changes, would probably be better to separate entirely.
@@ -460,7 +444,7 @@
 				waypoints.push(wp);
 			}
 			//change here
-			if (this.Stronghold.getPlayerBase() && waypoints[0].getID() == this.Stronghold.getPlayerBase().getID())
+			if (waypoints[0].getFlags().get("IsMainBase"))
 			{
 				local temp = waypoints.remove(0)
 				waypoints.insert(1, temp)
@@ -671,7 +655,7 @@
 		this.World.Statistics.getFlags().increment("ItemsCrafted", 1);
 		this.World.Ambitions.updateUI();
 		local globalStash = this.World.Assets.getStash();
-		local townStash = this.Stronghold.getPlayerBase().getBuilding("building.storage_building").getStash()
+		local townStash = this.World.State.getCurrentTown().getBuilding("building.storage_building").getStash()
 		local hasAlchemist = this.World.Retinue.hasFollower("follower.alchemist");
 		local stash = globalStash
 		foreach( c in this.m.PreviewComponents )
@@ -704,7 +688,7 @@
 
 		this.updateAchievement("IMadeThis", 1, 1);
 		local globalStash = this.World.Assets.getStash();
-		local townStash = this.Stronghold.getPlayerBase().getBuilding("building.storage_building").getStash()
+		local townStash = this.World.State.getCurrentTown().getBuilding("building.storage_building").getStash()
 		local hasAlchemist = this.World.Retinue.hasFollower("follower.alchemist");
 		local stash = globalStash
 
@@ -748,7 +732,7 @@
 	{
 		local items = []
 		items.extend(this.World.Assets.getStash().m.Items);
-		items.extend(this.Stronghold.getPlayerBase().getBuilding("building.storage_building").getStash().getItems())
+		items.extend(this.World.State.getCurrentTown().getBuilding("building.storage_building").getStash().getItems())
 		return items
 	}
 	::mods_hookBaseClass("crafting/blueprint", function ( o ) 

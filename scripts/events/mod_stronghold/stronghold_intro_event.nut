@@ -102,9 +102,6 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 					{
 						local priceMult = this.Const.World.Stronghold.PriceMult
 						local build_cost = this.Const.World.Stronghold.BuyPrices[0] * priceMult
-						if (this.Stronghold.getPlayerBase() && this.Stronghold.getPlayerBase().getSize() != 3){
-							build_cost = priceMult * this.Const.World.Stronghold.BuyPrices[this.Stronghold.getPlayerBase().getSize()]
-						}
 						//called from retinue menu
 						this.World.Assets.addMoney(-build_cost);
 						local tile = this.World.State.getPlayer().getTile();

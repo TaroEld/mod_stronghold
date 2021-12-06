@@ -190,7 +190,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 		ID = "Building",
 		isValid = function(_contract){
 			local current_buildings = 0;
-			local free_building_slots = this.Stronghold.getPlayerBase().getSize() + 4
+			local free_building_slots = _contract.getHome().getSize() + 4
 			foreach (building in _contract.getHome().m.Buildings){
 				if (building != null){
 					current_buildings++
@@ -201,7 +201,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 		onChosen = function(){
 			//market and management are by default
 			local current_buildings = -2;
-			local total_building_slots = this.Stronghold.getPlayerBase().getSize() + 2
+			local total_building_slots = this.getHome().getSize() + 2
 			foreach (building in this.getHome().m.Buildings){
 				if (building != null){
 					current_buildings++
@@ -209,7 +209,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			}
 			local text = format("You can construct a new building for your %s. These are your available options.", this.getHome().getSizeName())
 			text += format("\nYour buildings occupy %i out of %i spots in your %s.", current_buildings, total_building_slots, this.getHome().getSizeName())
-			if (this.Stronghold.getPlayerBase().getSize() < 3) text += format("\nUpgrade your %s to unlock more slots.", this.getHome().getSizeName())
+			if (this.getHome().getSize() < 3) text += format("\nUpgrade your %s to unlock more slots.", this.getHome().getSizeName())
 			this.m.Screens.push
 			({
 				ID = "Building_Choice",
@@ -455,7 +455,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 		},
 		onChosen = function(){
 			this.setCost(10 * this.Const.World.Stronghold.PriceMult);
-			if (!this.Stronghold.getPlayerBase().m.Flags.get("Teacher"))
+			if (!this.getHome().m.Flags.get("Teacher"))
 			{
 				this.m.Screens.push
 				({
@@ -615,7 +615,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 		onChosen = function(){
 			this.addOverviewScreen(
 				"Remove your base",
-				format("FINAL WARNING! Are you really sure you want to remove your %s?", this.Stronghold.getPlayerBase().getSizeName())
+				format("FINAL WARNING! Are you really sure you want to remove your %s?", this.getHome().getSizeName())
 			)
 			if(this.World.Contracts.getActiveContract() != null)
 			{
@@ -623,7 +623,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 				({
 					ID = "Enough",
 					Title = this.m.Title,
-					Text = format("You can't remove your %s while having an active contract!", this.Stronghold.getPlayerBase().getSizeName()),
+					Text = format("You can't remove your %s while having an active contract!", this.getHome().getSizeName()),
 					Image = "",
 					List = [],
 					ShowEmployer = true,
@@ -639,7 +639,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			{
 				this.addEnoughScreen(
 					"Remove your base",
-					format("You removed your %s.", this.Stronghold.getPlayerBase().getSizeName()),
+					format("You removed your %s.", this.getHome().getSizeName()),
 					this.onRemoveBase
 				)
 			}
@@ -677,7 +677,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Path = "taxidermist_building",
 		SouthPath = "taxidermist_oriental_building",
 		isValid = function(_contract){
-			return (!_contract.getHome().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
+			return (!_contract.getHome().hasBuilding(this.ID) && !(_contract.getHome().hasBuilding(this.SouthID)))
 		}
 	},
 	{
@@ -688,7 +688,7 @@ gt.Const.World.Stronghold.Building_options <-
 		Path = "temple_building",
 		SouthPath = "temple_oriental_building",
 		isValid = function(_contract){
-			return (!_contract.getHome().hasBuilding(this.ID) && !(this.Stronghold.getPlayerBase().hasBuilding(this.SouthID)))
+			return (!_contract.getHome().hasBuilding(this.ID) && !(_contract.getHome().hasBuilding(this.SouthID)))
 		}
 	},
 	{
@@ -773,7 +773,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Path = "workshop_location",
 		Text= "Build a workshop. Generates tools.",
 		isValid = function(_contract){
-			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
+			return (!_contract.getHome().hasAttachedLocation(this.ID))
 		}
 	},
 	{
@@ -783,7 +783,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Path = "ore_smelters_location",
 		Text= "Build an ore smelter. Weaponsmiths carry more items.",
 		isValid = function(_contract){
-			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
+			return (!_contract.getHome().hasAttachedLocation(this.ID))
 		}
 	},
 	{
@@ -793,7 +793,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Path = "blast_furnace_location",
 		Text= "Build a blast furnace. Armourers carry more items.",
 		isValid = function(_contract){
-			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
+			return (!_contract.getHome().hasAttachedLocation(this.ID))
 		}
 	},
 	{
@@ -803,7 +803,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Path = "stone_watchtower_location",
 		Text= "Build a watchtower. Increases movement speed and sight range around the stronghold.",
 		isValid = function(_contract){
-			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
+			return (!_contract.getHome().hasAttachedLocation(this.ID))
 		}
 	},
 	{
@@ -813,7 +813,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Path = "militia_trainingcamp_location",
 		Text= "Build a militia camp. Increases strength of mercenaries and number of recruits in the hamlet.",
 		isValid = function(_contract){
-			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
+			return (!_contract.getHome().hasAttachedLocation(this.ID))
 		}
 	},
 	{
@@ -823,7 +823,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Path = "wheat_fields_location",
 		Text= "Build Wheat Fields. You don't consume food around the stronghold.",
 		isValid = function(_contract){
-			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
+			return (!_contract.getHome().hasAttachedLocation(this.ID))
 		}
 	},
 	{
@@ -833,7 +833,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Path = "herbalists_grove_location",
 		Text= "Build a Herbalists Grove. Hitpoints regenerate faster when around the stronghold.",
 		isValid = function(_contract){
-			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
+			return (!_contract.getHome().hasAttachedLocation(this.ID))
 		}
 	},
 	{
@@ -843,7 +843,7 @@ gt.Const.World.Stronghold.Location_options <-
 		Path = "gold_mine_location",
 		Text= "Build a gold mine. Gold will be generated over time.",
 		isValid = function(_contract){
-			return (!this.Stronghold.getPlayerBase().hasAttachedLocation(this.ID))
+			return (!_contract.getHome().hasAttachedLocation(this.ID))
 		}
 	}
 ],

@@ -48,7 +48,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	}
 	
 	
-	
 	function defineName()
 	{
 		if (this.getFlags().get("CustomName")) return;
@@ -93,6 +92,12 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function onLeave()
 	{
 		this.World.State.getTownScreen().getMainDialogModule().deleteRename()
+	}
+
+	function getHamlet(){
+		local flag = this.m.Flags.get("Child")
+		if (!flag) return false
+		return this.World.getEntityByID(flag)
 	}
 
 	function fadeOutAndDie(_force = false)
