@@ -177,8 +177,12 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						this.Contract.m.Home.updateTown();
 
 						local playerFaction = this.Stronghold.getPlayerFaction();
-						local actionToFire = playerFaction.m.Deck[0]
-						actionToFire.execute(playerFaction);
+						foreach(card in playerFaction.m.Deck){
+							if (card.getID() == "stronghold_guard_base_action"){
+								card.m.PlayerBase = this.Contract.m.Home;
+								card.execute(playerFaction);
+							}
+						}
 					}
 
 				}
@@ -316,8 +320,12 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						playerBase.m.Size = this.Contract.m.TargetLevel;
 						playerBase.buildHouses();
 						//spawn new guards to reflect the change in size
-						local actionToFire = playerFaction.m.Deck[0]
-						actionToFire.execute(playerFaction);
+						foreach(card in playerFaction.m.Deck){
+							if (card.getID() == "stronghold_guard_base_action"){
+								card.m.PlayerBase = this.Contract.m.Home;
+								card.execute(playerFaction);
+							}
+						}
 						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
 						playerBase.m.Flags.set("LevelOne", false)
 						this.Contract.m.Home.setUpgrading(false);

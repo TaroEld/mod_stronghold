@@ -69,7 +69,6 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 		}
 		
 		//no actions on lvl1 playerbase, too small, would be too powerful
-		if (this.getDevelopedBases().len() == 0) return
 
 		if (!_ignoreDelay && this.m.LastActionTime + this.World.getTime().SecondsPerDay > this.Time.getVirtualTimeF())
 		{
@@ -211,7 +210,7 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 
 	function isReadyToSpawnUnit()
 	{
-		return this.m.Units.len() <= this.m.Settlements.len();
+		return this.m.Units.len() <= this.m.Settlements.len() + 1;
 	}
 
 

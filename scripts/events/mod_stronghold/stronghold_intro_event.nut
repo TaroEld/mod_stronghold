@@ -24,18 +24,20 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		local isTileOccupied = this.World.State.getPlayer().getTile().IsOccupied
 		local hasContract = this.World.Contracts.getActiveContract() != null
 		local isCoastal = this.Stronghold.checkForCoastal(this.World.State.getPlayer().getTile())
+		local hasRenown = this.World.Assets.getBusinessReputation() > 500;
 
-		local isValid = hasInventoryUpgrade && hasMoney && !isTileOccupied && !hasContract
+		local isValid = hasRenown && hasInventoryUpgrade && hasMoney && !isTileOccupied && !hasContract
 
 		local inventoryText = coloredText("\n-Upgrading your donkey to a cart.", hasInventoryUpgrade)
+		local renownText = coloredText("\n-Having over 500 renown.", hasRenown)
 		local moneyText = coloredText("\n-Having 10000 crowns.", hasMoney)
 		local tileText = coloredText("\n-Standing on an empty tile.", !isTileOccupied)
 		local contractText = coloredText("\n-Not having an active contract.", !hasContract)
-		local coastalText = isCoastal ? coloredText("you will be able to build a port here.") : coloredText("you won't be able to build a port here.", false);
+		local coastalText = isCoastal ? coloredText("you will be able to build a port here.") : coloredText("you won't be able to build a port here, as you're not close enough to the sea.", false);
 
 		local requirementsText = "Welcome to Stronghold. Here you can see what you need to build your base. You will start with a small " + levelOneName + ", which can later be upgraded to unlock more features."
 		requirementsText += format("\n\nBuilding a %s requires: ", levelOneName)
-		requirementsText += inventoryText + moneyText + tileText + contractText
+		requirementsText += renownText + inventoryText + moneyText + tileText + contractText
 
 
 		requirementsText += format("\n\n Building a %s will unlock these features: \n%s", levelOneName, this.Const.World.Stronghold.UnlockAdvantages[0])
@@ -120,11 +122,16 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 							playerFaction.updatePlayerRelation()
 							this.World.FactionManager.m.Factions.push(playerFaction);
 							playerFaction.onUpdateRoster();
-							this.World.createRoster(9999)
 						}
 						
 						local playerBase = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_player_base", tile.Coords);
 						playerBase.getFlags().set("isPlayerBase", true);
+						playerBase.getFlags().set("RosterSeed", this.toHash(playerBase));
+						playerBase.getFlags().set("TimeUntilNextMercs", -1)
+						playerBase.getFlags().set("TimeUntilNextCaravan", -1)
+						playerBase.getFlags().set("TimeUntilNextPatrol", -1)
+
+						this.World.createRoster(this.toHash(playerBase));
 						playerBase.updateProperties()
 						playerFaction.addSettlement(playerBase);
 						playerBase.setUpgrading(true);

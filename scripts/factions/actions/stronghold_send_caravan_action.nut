@@ -1,29 +1,38 @@
 this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_action", {
 	m = {
-		Start = null,
-		Dest = null
+		PlayerBase = null,
 	},
 	function create()
 	{
 		this.m.ID = "stronghold_send_caravan_action";
-		this.m.Cooldown = this.World.getTime().SecondsPerDay * 7;
+		this.m.Cooldown = this.World.getTime().SecondsPerDay * 1;
 		this.m.IsSettlementsRequired = true;
 		this.faction_action.create();
 	}
 
 	function onUpdate( _faction )
 	{
-		this.m.Score = 10;
+		local basesRequiringCaravan = [];
+		foreach(playerBase in _faction.getDevelopedBases()){
+			if (this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextCaravan")){
+				basesRequiringCaravan.push(playerBase)
+			}
+		}
+		if (basesRequiringCaravan.len() == 0) return
+		this.m.PlayerBase = this.Math.randArray(basesRequiringCaravan);
+		//only works with level 2+ base
+		this.m.Score = 100;
 	}
 
 	function onClear()
 	{
+		this.m.PlayerBase = null
 	}
 
 	function onExecute( _faction )
 	{
 		local playerFaction = this.Stronghold.getPlayerFaction();
-		local playerBase = this.Math.randArray(_faction.getDevelopedBases())
+		local playerBase = this.m.PlayerBase;
 		
 		//check for closest connected settlements. connected settlements are updated after roads are built
 		local settlements = this.World.EntityManager.getSettlements();
@@ -47,7 +56,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 				}
 			}
 		}
-		if (!closest) {return}
+		if (!closest) return
 		
 		local patrol_strength = 100 * (playerBase.getSize()-1)
 		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp"))
@@ -119,6 +128,8 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		c.addOrder(move_back);
 		c.addOrder(unload);
 		c.addOrder(despawn);
+
+		playerBase.getFlags().set("TimeUntilNextCaravan", this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 7)
 		return true;
 	}
 

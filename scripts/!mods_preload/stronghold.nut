@@ -97,10 +97,10 @@
 					//stored brothers draw half wage
 					if (this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
 					{
-						local town_roster = this.World.getRoster(9999)
-						foreach(bro in town_roster.getAll())
-						{
-							this.m.Money -= this.Math.floor(bro.getDailyCost()/2);
+						foreach(playerBase in this.Stronghold.getPlayerFaction().getMainBases()){
+							foreach(bro in playerBase.getLocalRoster().getAll()){
+								this.m.Money -= this.Math.floor(bro.getDailyCost()/2);
+							}
 						}
 					}
 				}
@@ -116,9 +116,10 @@
 			local money = getDailyMoneyCost()
 			if (this.Stronghold.getPlayerBase())
 			{
-				foreach (bro in this.World.getRoster(9999).getAll())
-				{
-					money += this.Math.floor(bro.getDailyCost()/2)
+				foreach(playerBase in this.Stronghold.getPlayerFaction().getMainBases()){
+					foreach(bro in playerBase.getLocalRoster().getAll()){
+						money += this.Math.floor(bro.getDailyCost()/2)
+					}
 				}
 			}
 			return money
@@ -166,7 +167,7 @@
 		o.queryData <- function()
 		{
 			local result = queryData()
-			local show = this.Stronghold.getPlayerFaction() == null || this.Stronghold.getPlayerFaction().getMainBases().len() < this.Const.World.Stronghold.MaxStrongholdNumber
+			local show = this.Stronghold.getPlayerFaction() == null || this.Stronghold.getPlayerFaction().getMainBases().len() < this.Const.World.Stronghold.getMaxStrongholdNumber()
 			result.Assets.showStrongholdButton <- show;
 			return result;
 		}
@@ -183,134 +184,6 @@
 		};
 	})
 
-	::mods_hookBaseClass("entity/world/location", function ( o )
-	{
-		//point is to not reduce named item chance based on the  stronghold. first rolls normal onspawned, then adds nameds based on difference of distance. Math is probably off
-		
-		while (!("onSpawned" in o)) o = o[o.SuperName];
-		local onSpawned = o.onSpawned;
-		o.onSpawned = function()
-		{ 
-			onSpawned()
-			if (this.Stronghold.getPlayerFaction() != null && this.Stronghold.getPlayerFaction().getSettlements().len() > 0)
-			{
-				local loot = this.m.Loot.getItems();
-				local named_count = 0;
-				foreach( item in loot )
-				{
-					if (item.isItemType(this.Const.Items.ItemType.Named))
-					{
-						named_count++
-					}
-				}
-				if (named_count > 1){
-					return
-				}
-				local playerBases = []
-				foreach (set in this.Stronghold.getPlayerFaction().getSettlements()) playerBases.push(set.getID())
-
-				local location_tile = this.getTile();
-				local locationToSettlementDist = 9999;
-				local closest_settlement;
-				
-				foreach( sett in this.World.EntityManager.getSettlements() )
-				{
-					local d =  location_tile.getDistanceTo(sett.getTile());
-					if (d < locationToSettlementDist)
-					{
-						locationToSettlementDist = d;
-						closest_settlement = sett
-					}
-					
-				}
-				if (playerBases.find(closest_settlement.getID()) == null){
-					return;
-				}
-
-				local nearest_dist = 9000;
-				foreach( s in this.World.EntityManager.getSettlements() )
-				{
-					if (playerBases.find(s.getID()) == null)
-					{
-						local d =  location_tile.getDistanceTo(s.getTile());
-						if (d < nearest_dist)
-						{
-							nearest_dist = d;
-						}
-					}
-				}
-
-				local distance_modifier = sqrt(nearest_dist*nearest_dist - locationToSettlementDist*locationToSettlementDist)
-				if (!this.isLocationType(this.Const.World.LocationType.Unique))
-				{
-					for( local chance = (this.m.Resources + distance_modifier * 4) / 5.0 - 37.0; named_count < 2;  )
-					{
-						local r = this.Math.rand(1, 100);
-
-						if (r <= chance)
-						{
-							chance = chance - r;
-							named_count++;
-							local type = this.Math.rand(20, 100);
-
-							if (type <= 40)
-							{
-								local weapons = clone this.Const.Items.NamedWeapons;
-
-								if (this.m.NamedWeaponsList != null && this.m.NamedWeaponsList.len() != 0)
-								{
-									weapons.extend(this.m.NamedWeaponsList);
-									weapons.extend(this.m.NamedWeaponsList);
-								}
-
-								this.m.Loot.add(this.new("scripts/items/" + weapons[this.Math.rand(0, weapons.len() - 1)]));
-							}
-							else if (type <= 60)
-							{
-								local shields = clone this.Const.Items.NamedShields;
-
-								if (this.m.NamedShieldsList != null && this.m.NamedShieldsList.len() != 0)
-								{
-									shields.extend(this.m.NamedShieldsList);
-									shields.extend(this.m.NamedShieldsList);
-								}
-
-								this.m.Loot.add(this.new("scripts/items/" + shields[this.Math.rand(0, shields.len() - 1)]));
-							}
-							else if (type <= 80)
-							{
-								local helmets = clone this.Const.Items.NamedHelmets;
-
-								if (this.m.NamedHelmetsList != null && this.m.NamedHelmetsList.len() != 0)
-								{
-									helmets.extend(this.m.NamedHelmetsList);
-									helmets.extend(this.m.NamedHelmetsList);
-								}
-
-								this.m.Loot.add(this.new("scripts/items/" + helmets[this.Math.rand(0, helmets.len() - 1)]));
-							}
-							else if (type <= 100)
-							{
-								local armor = clone this.Const.Items.NamedArmors;
-
-								if (this.m.NamedArmorsList != null && this.m.NamedArmorsList.len() != 0)
-								{
-									armor.extend(this.m.NamedArmorsList);
-									armor.extend(this.m.NamedArmorsList);
-								}
-								this.m.Loot.add(this.new("scripts/items/" + armor[this.Math.rand(0, armor.len() - 1)]));
-							}
-						}
-						else
-						{
-							break;
-						}
-					}
-				}
-				
-			}
-		}
-	});
 	
 	local stronghold_assignTroops = function ( _party, _partyList, _resources, _weightMode = 1)
 	{

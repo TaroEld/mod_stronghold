@@ -5,7 +5,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 	{
 		this.m.ID = "stronghold_patrol_roads_action";
 		//spawn them every 4 days
-		this.m.Cooldown = this.World.getTime().SecondsPerDay * 4;
+		this.m.Cooldown = this.World.getTime().SecondsPerDay * 1;
 		this.m.IsSettlementsRequired = true;
 		this.m.Settlements <- null;
 		this.faction_action.create();
@@ -14,43 +14,34 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 	function onUpdate( _faction )
 	{
 		//only works with level 2+ base
+		local playerFaction = this.Stronghold.getPlayerFaction();
 		local playerBases = _faction.getDevelopedBases()
 		local nonIsolatedBases = []
-		foreach(playerBase in playerBases){
-			if(!playerBase.isIsolated()) nonIsolatedBases.push({Base = playerBase, Connected = []})
-		}
-		if (nonIsolatedBases.len() == 0) return
+		local settlements = this.World.EntityManager.getSettlements();
 
-		local connected_settlements = [];
-		local friendly_factions = 0
-		foreach (faction in this.World.FactionManager.getFactions())
-		{
-			if (faction != null && faction.m.PlayerRelation > 70 && (faction.m.Type == this.Const.FactionType.NobleHouse || faction.m.Type == this.Const.FactionType.OrientalCityState))
+		foreach(playerBase in playerBases){
+			if (playerBase.isIsolated() || this.Time.getVirtualTimeF() < playerBase.getFlags().get("TimeUntilNextPatrol")) continue
+
+			local connected = []
+			foreach (settlement in settlements)
 			{
-				friendly_factions++
-				foreach( playerBase in nonIsolatedBases)
+				if (settlement.getID() == playerBase.getID()) continue
+				if (settlement.getOwner().m.Type == this.Const.FactionType.Player && !settlement.isMainBase()) continue
+				if (!playerBase.isConnectedToByRoads(settlement)) continue
+				if (settlement.getOwner() == null || settlement.getOwner().isAlliedWith(playerFaction.getID()))
 				{
-					foreach (settlement in faction.getSettlements())
-					{
-						if (settlement.isConnectedToByRoads(playerBase.Base))
-						{
-							playerBase.Connected.push(settlement)
-						}
-					}
+					connected.push(settlement)
 				}
 			}
+			if (connected.len() > 2){
+				nonIsolatedBases.push({Base = playerBase, Connected = connected})
+			}
 		}
-		local valid = []
-		foreach (playerBase in nonIsolatedBases)
-		{
-			if (playerBase.Connected.len() > 2) valid.push(playerBase)
-		}
-
-		if (valid.len() < 3) {return}
-		this.m.Settlements <- this.Math.randArray(valid);
+		if (nonIsolatedBases.len() == 0) return
+		this.m.Settlements <- this.Math.randArray(nonIsolatedBases);
 		//the more friendlies, the more patrols spawn
-		this.m.Cooldown = (this.World.getTime().SecondsPerDay * 7) / (friendly_factions.len()+1);
-		this.m.Score = 10;
+		//this.m.Cooldown = (this.World.getTime().SecondsPerDay * 7) / (friendly_factions.len()+1);
+		this.m.Score = 100;
 	}
 
 	function onClear()
@@ -111,6 +102,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		}
 		local despawn = this.new("scripts/ai/world/orders/despawn_order");
 		c.addOrder(despawn);
+		playerBase.getFlags().set("TimeUntilNextPatrol", this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 7)
 		return true;
 	}
 

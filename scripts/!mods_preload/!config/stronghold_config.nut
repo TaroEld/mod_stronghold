@@ -5,6 +5,25 @@ gt.Const.World.Stronghold.PriceMult <- 1000; //fastest way to change prices, eve
 gt.Const.World.Stronghold.BuyPrices <- [10, 20, 20]; //base prices for build/upgrade
 gt.Const.World.Stronghold.MaxAttachments <- [3, 6, 9]; //base prices for build/upgrade
 gt.Const.World.Stronghold.MaxStrongholdNumber <- 999;
+gt.Const.World.Stronghold.RenownPerLevel <- [
+		500,
+		1500,
+		3000,
+		5000,
+		7000,
+		9000,
+		11000,
+		13000,
+		15000
+]
+gt.Const.World.Stronghold.getMaxStrongholdNumber <- function(){
+	local renown = this.World.Assets.getBusinessReputation();
+	local level = 0;
+	foreach(lvl in this.RenownPerLevel){
+		if (renown > lvl) level++
+	}
+	return level
+}
 
 gt.Const.World.Stronghold.UnlockAdvantages <-[
 	"You can leave items and brothers behind, to retrieve them later as you need them.\n You can construct up to three settlement buildings.\nYou can construct up to three locations, granting various advantages.\n You will be able to upgrade your base, unlocking more features.",
@@ -266,7 +285,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 					current_locations++
 				}
 			}
-			return _contract.isMainBase() && current_locations < _contract.getHome().m.AttachedLocationsMax && !_contract.getHome().m.Flags.get("AllLocationsBuilt") && !_contract.getHome().isUpgrading()
+			return _contract.isMainBase() && current_locations < _contract.getHome().m.AttachedLocationsMax && !_contract.getHome().isUpgrading()
 		},
 		onChosen = function(){
 			local current_buildings = 0;
@@ -566,7 +585,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			},
 		ID = "Retrieve_Brother",
 		isValid = function(_contract){
-			local playerRoster = this.World.getRoster(9999).getAll()
+			local playerRoster = _contract.getHome().getLocalRoster().getAll()
 			return (_contract.isMainBase() && playerRoster != null && playerRoster.len() > 0)
 		},
 		onChosen = function(){
@@ -849,6 +868,9 @@ gt.Const.World.Stronghold.Location_options <-
 	}
 ],
 
+
+
+//----------------------------------------------- quick access functions ---------------------------------------------------
 gt.Stronghold <- {}
 gt.Stronghold.getPlayerBase <- function()
 {

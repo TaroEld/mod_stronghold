@@ -26,16 +26,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.HousesMin = 1;
 		this.m.HousesMax = 2;
 		this.m.AttachedLocationsMax = 3;
-		this.m.LocationType = this.Const.World.LocationType.Settlement;
-		this.m.ShopSeed = this.Time.getRealTime() + this.Math.rand();
-		this.m.RosterSeed = this.Time.getRealTime() + this.Math.rand();
-		this.m.Modifiers = this.new("scripts/entity/world/settlement_modifiers");
-		this.m.IsAttackable = false;
-		this.m.IsDestructible = false;
-		this.m.IsShowingStrength = false;
-		this.m.IsScalingDefenders = false;
-		this.m.IsShowingLabel = true;
-		this.m.VisibilityMult = 2.0;
 		this.m.IsVisited = true;
 		this.m.IsUpgrading <- false;
 		this.m.Banner = this.World.Assets.getBannerID();
@@ -98,6 +88,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local flag = this.m.Flags.get("Child")
 		if (!flag) return false
 		return this.World.getEntityByID(flag)
+	}
+
+	//I dont trust the roster seed
+	function getLocalRoster(){
+		return this.World.getRoster(this.getFlags().get("RosterSeed"))
 	}
 
 	function fadeOutAndDie(_force = false)

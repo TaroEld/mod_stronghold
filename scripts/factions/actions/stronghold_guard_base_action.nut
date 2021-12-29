@@ -1,41 +1,56 @@
 this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_action", {
 	//spawns the mercs that defend the base.
 	//they patrol around the settlement and the attached locations
-	m = {},
+	m = {
+		PlayerBase = null,
+	},
 	function create()
 	{
 		this.m.ID = "stronghold_guard_base_action";
 		//spawn them once a week
-		this.m.Cooldown = this.World.getTime().SecondsPerDay * 7;
+		this.m.Cooldown = this.World.getTime().SecondsPerDay * 1;
 		this.m.IsSettlementsRequired = true;
 		this.faction_action.create();
 	}
 
 	function onUpdate( _faction )
 	{
+		local basesRequiringMercs = [];
+		local mercIDs = [];
+		foreach(unit in _faction.m.Units){
+			if (unit.getFlags().get("Stronghold_Guards")){
+				mercIDs.push(unit.getFlags().get("Stronghold_Base_ID"))
+			}
+		}
+		foreach(playerBase in _faction.getMainBases()){
+			if (mercIDs.find(playerBase.getID()) == null && this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextMercs")){
+				basesRequiringMercs.push(playerBase)
+			}
+		}
+		if (basesRequiringMercs.len() == 0) return
+		this.m.PlayerBase = this.Math.randArray(basesRequiringMercs);
 		//only works with level 2+ base
-		this.m.Score = 10;
+		this.m.Score = 100;
 	}
 
 	function onClear()
 	{
+		this.m.PlayerBase = null;
+		this.m.Score = 0;
 	}
 
-	function onExecute( _faction )
+	function onExecute( _faction)
 	{
-		local playerBase = this.Math.randArray(_faction.getMainBases())
-		local patrol_strength = 150 * (playerBase.getSize()-1)
-		//despawn old mercenaries
-		if (_faction.m.Units.len() > 0)
-		{
-			foreach (unit in _faction.m.Units)
-			{
-				if (unit.getFlags().get("Stronghold_Guards") && unit.getFlags().get("Stronghold_Base_ID") == playerBase.getID())
-				{
-					unit.fadeOutAndDie();
-				}
+		local playerBase = this.m.PlayerBase
+		if (playerBase == null) return //failsave
+		foreach(unit in _faction.m.Units){
+			if (unit.getFlags().get("Stronghold_Guards") && unit.getFlags().get("Stronghold_Base_ID") == playerBase.getID()){
+				unit.fadeOutAndDie();
 			}
 		}
+
+		local patrol_strength = 100 * (playerBase.getSize())
+
 		//add strength if you have the attachment
 		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp")){
 			patrol_strength += 200
@@ -47,6 +62,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		party.setFootprintType(this.Const.World.FootprintsType.Mercenaries);
 		party.getFlags().set("Stronghold_Guards", true);
 		party.getFlags().set("Stronghold_Base_ID", playerBase.getID());
+		playerBase.getFlags().set("TimeUntilNextMercs", this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 7)
 		local c = party.getController();
 
 		local totalTime = this.World.getTime().SecondsPerDay * 7

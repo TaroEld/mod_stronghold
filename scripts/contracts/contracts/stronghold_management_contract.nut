@@ -571,7 +571,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function getRetrieveBrotherOptions()
 	{
-		this.buildActiveOptions(this.World.getRoster(9999).getAll(), this.addRetrieveBrotherScreen)
+		this.buildActiveOptions(this.getHome().getLocalRoster().getAll(), this.addRetrieveBrotherScreen)
 		return this.getActiveOptions()
 	}
 
@@ -630,12 +630,12 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			function getResult(_option)
 			{
 				this.Contract.retrieveBro(this.Option)
-				if (this.World.getRoster(9999).getAll().len() == 0){
+				if (this.Contract.getHome().getLocalRoster().getAll().len() == 0){
 					this.Contract.clearScreens()
 					return "Task"
 				}
 				this.Contract.m.Temp_Variable_List = []
-				this.Contract.buildActiveOptions(this.World.getRoster(9999).getAll(), this.Contract.addRetrieveBrotherScreen, false, false)
+				this.Contract.buildActiveOptions(this.Contract.getHome().getLocalRoster().getAll(), this.Contract.addRetrieveBrotherScreen, false, false)
 				local newIdx = this.IDX - _option
 				foreach (screen in this.Contract.m.Screens)
 				{
@@ -901,10 +901,6 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		]
 		home.buildAttachedLocation(1, text, validTerrain, [], 1)
 		home.buildRoad(home.m.AttachedLocations[home.m.AttachedLocations.len()-1])
-		if (this.Const.World.Stronghold.Location_options.len() == home.m.IsCoastal ? home.m.AttachedLocations.len() : home.m.AttachedLocations.len() +1)
-		{
-			home.getFlags().set("AllLocationsBuilt", true)
-		}
 		this.clearScreens()
 		return "Task"
 	}
@@ -1077,19 +1073,19 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function storeBro(_bro)
 	{
-		local townRoster = this.World.getRoster(9999)
-	    local playerRoster = this.World.getPlayerRoster()
+		local townRoster = this.getHome().getLocalRoster();
+	    local playerRoster = this.World.getPlayerRoster();
 	    if (playerRoster.getAll().len() == 1 || _bro.getFlags().get("IsPlayerCharacter")) return false;
-		townRoster.add(_bro)
-		playerRoster.remove(_bro)
+		townRoster.add(_bro);
+		playerRoster.remove(_bro);
 		return true;
 	}
 	function retrieveBro(_bro)
 	{
-		local townRoster = this.World.getRoster(9999)
-	    local playerRoster = this.World.getPlayerRoster()
-		playerRoster.add(_bro)
-		townRoster.remove(_bro)
+		local townRoster = this.getHome().getLocalRoster();
+	    local playerRoster = this.World.getPlayerRoster();
+		playerRoster.add(_bro);
+		townRoster.remove(_bro);
 	}
 
 	function onHamletBuild(){
