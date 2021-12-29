@@ -105,40 +105,44 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 						//called from retinue menu
 						this.World.Assets.addMoney(-build_cost);
 						local tile = this.World.State.getPlayer().getTile();
-						local player_faction = this.Stronghold.getPlayerFaction()
+						local playerFaction = this.Stronghold.getPlayerFaction()
 						//create new faction if it doesn't exist already
-						if (!player_faction)
+						if (playerFaction == null)
 						{
-							player_faction = this.new("scripts/factions/stronghold_player_faction");
-							player_faction.setID(this.World.FactionManager.m.Factions.len());
-							player_faction.setName("The " + this.World.Assets.getName());
-							player_faction.setMotto("\"" + "Soldiers Live" + "\"");
-							player_faction.setDescription("The only way to leave the company is feet first.");
-							player_faction.m.Banner = this.World.Assets.getBannerID()
-							player_faction.setDiscovered(true);
-							player_faction.m.PlayerRelation = 100;		
-							player_faction.updatePlayerRelation()
-							this.World.FactionManager.m.Factions.push(player_faction);
-							player_faction.onUpdateRoster();
+							playerFaction = this.new("scripts/factions/stronghold_player_faction");
+							playerFaction.setID(this.World.FactionManager.m.Factions.len());
+							playerFaction.setName("The " + this.World.Assets.getName());
+							playerFaction.setMotto("\"" + "Soldiers Live" + "\"");
+							playerFaction.setDescription("The only way to leave the company is feet first.");
+							playerFaction.m.Banner = this.World.Assets.getBannerID()
+							playerFaction.setDiscovered(true);
+							playerFaction.m.PlayerRelation = 100;		
+							playerFaction.updatePlayerRelation()
+							this.World.FactionManager.m.Factions.push(playerFaction);
+							playerFaction.onUpdateRoster();
 							this.World.createRoster(9999)
 						}
 						
-						local player_base = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_player_base", tile.Coords);
-						player_base.getFlags().set("isPlayerBase", true);
-						player_base.updateProperties()
-						player_faction.addSettlement(player_base);
-						player_base.setUpgrading(true);
-						player_base.m.Flags.set("LevelOne", true)
-						player_base.updateTown();
+						local playerBase = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_player_base", tile.Coords);
+						playerBase.getFlags().set("isPlayerBase", true);
+						playerBase.updateProperties()
+						playerFaction.addSettlement(playerBase);
+						playerBase.setUpgrading(true);
+						playerBase.m.Flags.set("LevelOne", true)
+						playerBase.updateTown();
+						if(playerBase.m.IsCoastal){
+							playerBase.buildHarborLocation();
+							playerBase.buildRoad(playerBase.m.AttachedLocations[playerBase.m.AttachedLocations.len()-1])
+						}
 						
 						tile.IsOccupied = true;
 						tile.TacticalType = this.Const.World.TerrainTacticalType.Urban;
 						//spawn assailant quest
 						local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
-						contract.setEmployerID(player_faction.getRandomCharacter().getID());
-						contract.setFaction(player_faction.getID());
-						contract.setHome(player_base);
-						contract.setOrigin(player_base);
+						contract.setEmployerID(playerFaction.getRandomCharacter().getID());
+						contract.setFaction(playerFaction.getID());
+						contract.setHome(playerBase);
+						contract.setOrigin(playerBase);
 						contract.m.TargetLevel = 1
 						this.World.Contracts.addContract(contract);
 						contract.start();

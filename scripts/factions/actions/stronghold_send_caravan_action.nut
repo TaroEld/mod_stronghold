@@ -22,8 +22,8 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 
 	function onExecute( _faction )
 	{
-		local player_faction = this.Stronghold.getPlayerFaction();
-		local player_base = this.Math.randArray(_faction.getDevelopedBases())
+		local playerFaction = this.Stronghold.getPlayerFaction();
+		local playerBase = this.Math.randArray(_faction.getDevelopedBases())
 		
 		//check for closest connected settlements. connected settlements are updated after roads are built
 		local settlements = this.World.EntityManager.getSettlements();
@@ -31,17 +31,17 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		local closest_dist = 9999;
 		foreach (settlement in settlements)
 		{
-			if (settlement.getOwner().m.Type != this.Const.FactionType.Player &&  player_base.isConnectedToByRoads(settlement) && (settlement.getOwner() == null || settlement.getOwner().isAlliedWith(player_faction.getID())))
+			if (settlement.getOwner().m.Type != this.Const.FactionType.Player &&  playerBase.isConnectedToByRoads(settlement) && (settlement.getOwner() == null || settlement.getOwner().isAlliedWith(playerFaction.getID())))
 			{
 				if (!closest)
 				{
-					closest_dist = settlement.getTile().getDistanceTo(player_base.getTile())
+					closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
 					closest = settlement
 				}
-				if (settlement.getTile().getDistanceTo(player_base.getTile()) < closest_dist && this.Math.rand(0, 10) > 5)
+				if (settlement.getTile().getDistanceTo(playerBase.getTile()) < closest_dist && this.Math.rand(0, 10) > 5)
 				{
 					{
-						closest_dist = settlement.getTile().getDistanceTo(player_base.getTile())
+						closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
 						closest = settlement
 					}
 				}
@@ -49,12 +49,12 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		}
 		if (!closest) {return}
 		
-		local patrol_strength = 100 * (player_base.getSize()-1)
-		if (player_base.hasAttachedLocation("attached_location.militia_trainingcamp"))
+		local patrol_strength = 100 * (playerBase.getSize()-1)
+		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp"))
 		{
 			patrol_strength += 100
 		}
-		local party = _faction.spawnEntity(player_base.getTile(), "Caravan of " + player_base.getName(), true, this.Const.World.Spawn.Caravan, 50);
+		local party = _faction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 50);
 		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, patrol_strength);
 
 		//reset values to caravan after adding mercs
@@ -108,7 +108,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		wait.setTime(5);
 		
 		local move_back = this.new("scripts/ai/world/orders/move_order");
-		move_back.setDestination(player_base.getTile());
+		move_back.setDestination(playerBase.getTile());
 		move_back.setRoadsOnly(true);
 		
 		local unload = this.new("scripts/ai/world/orders/stronghold_unload_order");

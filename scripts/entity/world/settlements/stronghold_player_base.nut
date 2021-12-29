@@ -335,6 +335,9 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.UIBackgroundRight = selectedBackgroundSprites.UIBackgroundRight + (isOnSnow ? "_snow" : "")
 		this.m.UIRampPathway = selectedBackgroundSprites.UIRampPathway
 		this.m.Lighting = selectedBackgroundSprites.Lighting
+		if(this.m.IsCoastal){
+			this.m.UIBackgroundLeft = "ui/settlements/water_01";
+		}
 
 		
 		
@@ -428,151 +431,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	
 	function buildAttachedLocation( _num, _script, _terrain, _nearbyTerrain, _additionalDistance = 0, _mustBeNearRoad = false, _clearTile = true )
 	{
-		//vanilla has a small chance to spawn the location dead, removed that
-		_num = this.Math.min(_num, this.m.AttachedLocationsMax - this.m.AttachedLocations.len());
-
-		if (_num <= 0)
-		{
-			return;
-		}
-
-		local tries = 0;
-		local myTile = this.getTile();
-
-		while (_num > 0 && tries++ < 1000)
-		{
-			local x = this.Math.rand(myTile.SquareCoords.X - 2 - _additionalDistance, myTile.SquareCoords.X + 2 + _additionalDistance);
-			local y = this.Math.rand(myTile.SquareCoords.Y - 2 - _additionalDistance, myTile.SquareCoords.Y + 2 + _additionalDistance);
-
-			if (!this.World.isValidTileSquare(x, y))
-			{
-				continue;
-			}
-
-			local tile = this.World.getTileSquare(x, y);
-
-			if (tile.IsOccupied)
-			{
-				continue;
-			}
-
-			if (_mustBeNearRoad && tile.HasRoad)
-			{
-				continue;
-			}
-			
-			if (tile.HasRoad)
-			{
-				continue;
-			}
-
-			if (tile.getDistanceTo(myTile) == 1 && _additionalDistance >= 0 || tile.getDistanceTo(myTile) < _additionalDistance)
-			{
-				continue;
-			}
-
-			local terrainFits = false;
-
-			foreach( t in _terrain )
-			{
-				if (t == tile.Type)
-				{
-					if (_nearbyTerrain.len() == 0 && !_mustBeNearRoad)
-					{
-						terrainFits = true;
-					}
-					else
-					{
-						for( local i = 0; i < 6; i = ++i )
-						{
-							if (!tile.hasNextTile(i))
-							{
-							}
-							else
-							{
-								local next = tile.getNextTile(i);
-
-								if (_mustBeNearRoad && !next.HasRoad)
-								{
-								}
-								else
-								{
-									if (_nearbyTerrain.len() != 0)
-									{
-										foreach( n in _nearbyTerrain )
-										{
-											if (next.Type == n)
-											{
-												terrainFits = true;
-												break;
-											}
-										}
-									}
-									else
-									{
-										terrainFits = true;
-									}
-
-									if (terrainFits)
-									{
-										break;
-									}
-								}
-							}
-						}
-					}
-
-					if (terrainFits)
-					{
-						break;
-					}
-				}
-			}
-
-			if (!terrainFits)
-			{
-				continue;
-			}
-
-			if (tile.getDistanceTo(myTile) > 2)
-			{
-				local navSettings = this.World.getNavigator().createSettings();
-				navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost_Flat;
-				local path = this.World.getNavigator().findPath(myTile, tile, navSettings, 0);
-
-				if (path.isEmpty())
-				{
-					continue;
-				}
-			}
-
-			if (_clearTile)
-			{
-				tile.clearAllBut(this.Const.World.DetailType.Shore);
-			}
-			else
-			{
-				tile.clear(this.Const.World.DetailType.NotCompatibleWithRoad);
-			}
-
-			local entity = this.World.spawnLocation(_script, tile.Coords);
-			entity.setSettlement(this);
-
-			if (entity.onBuild())
-			{
-				this.m.AttachedLocations.push(entity);
-				_num = --_num;
-				tries = 0;
-				entity.setActive(true);
-			}
-			else
-			{
-				entity.die();
-				continue;
-			}
-		}
-
-		this.updateProduce();
+		this.settlement.buildAttachedLocation(_num, _script, _terrain, _nearbyTerrain, _additionalDistance, _mustBeNearRoad, _clearTile)
+		this.m.AttachedLocations[this.m.AttachedLocations.len()-1].setActive(true)
 	}
 	
 	function buildHouses()
@@ -813,7 +673,9 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		} 
 		foreach(tile in roadTiles)
 		{
-			tile.spawnDetail(this.Const.World.RoadBrushes.get(tile.RoadDirections), this.Const.World.ZLevel.Road, this.Const.World.DetailType.Road, false);
+			if (tile.Type != this.Const.World.TerrainType.Ocean){
+				tile.spawnDetail(this.Const.World.RoadBrushes.get(tile.RoadDirections), this.Const.World.ZLevel.Road, this.Const.World.DetailType.Road, false);
+			}
 		}
 		
 		//add road connections to each other
@@ -821,111 +683,45 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return true;
 	}
 	
-	//changed coastal, might be whack as deep sea is not necessarily accessible
-	function updateProperties()
-	{
-		local myTile = this.getTile();
-		local mapSize = this.World.getMapSize();
-		this.m.ConnectedTo = [];
-		this.m.ConnectedToByRoads = [];
-		local settlements = this.World.EntityManager.getSettlements();
-		local navSettings = this.World.getNavigator().createSettings();
-
-		foreach( s in settlements )
-		{
-			if (s.getID() == this.getID())
-			{
-				continue;
-			}
-
-			navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost_Flat;
-			local path = this.World.getNavigator().findPath(myTile, s.getTile(), navSettings, 0);
-
-			if (!path.isEmpty())
-			{
-				this.m.ConnectedTo.push(s.getID());
-			}
-		}
-
-		if (!this.isIsolated())
-		{
-			foreach( s in settlements )
-			{
-				if (s.getID() == this.getID())
-				{
-					continue;
-				}
-
-				navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost;
-				navSettings.RoadOnly = true;
-				local path = this.World.getNavigator().findPath(myTile, s.getTile(), navSettings, 0);
-
-				if (!path.isEmpty())
-				{
-					this.m.ConnectedToByRoads.push(s.getID());
-					s.m.ConnectedToByRoads.push(this.getID())
-				}
-			}
-		}
-
-		this.m.IsCoastal = this.Stronghold.checkForCoastal(this.getTile())
-
-		if (this.m.IsCoastal)
-		{
-			if (this.m.DeepOceanTile == null)
-			{
-				this.m.DeepOceanTile = this.findAccessibleOceanEdge(0, mapSize.X, 0, 1);
-			}
-
-			if (this.m.DeepOceanTile == null)
-			{
-				this.m.DeepOceanTile = this.findAccessibleOceanEdge(0, 1, 0, mapSize.Y);
-			}
-
-			if (this.m.DeepOceanTile == null)
-			{
-				this.m.DeepOceanTile = this.findAccessibleOceanEdge(mapSize.X - 1, mapSize.X, 0, mapSize.Y);
-			}
-
-			if (this.m.DeepOceanTile == null)
-			{
-				this.m.DeepOceanTile = this.findAccessibleOceanEdge(0, mapSize.X, mapSize.Y - 1, mapSize.Y);
-			}
-		}
-	}
 	
-	function checkForCoastal(_tile)
+	function checkForCoastal()
 	{
-		//modded from vanilla to allow for longer range
 		local isCoastal = false;
-		local recursiveCheck;
-		recursiveCheck = function (_tile, _index = 0)
-		{	
-			if(_tile.Type == this.Const.World.TerrainType.Ocean || _tile.Type == this.Const.World.TerrainType.Shore){
-				isCoastal = true;
-				return;
-			}
-			if(_index == 2) return 
-			for( local i = 0; i < 6; i = ++i )
+		for( local i = 0; i < 6; i = ++i )
+		{
+			if (!this.getTile().hasNextTile(i))
 			{
-				if (!_tile.hasNextTile(i))
-				{
-				}
-				else
-				{
-					local next = _tile.getNextTile(i);
-					if(next.Type == this.Const.World.TerrainType.Ocean || next.Type == this.Const.World.TerrainType.Shore){
-						isCoastal = true;
-						return;
-					}
-					recursiveCheck(next, _index+1)
-				}
+			}
+			else if (this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Ocean || this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Shore)
+			{
+				isCoastal = true;
+				break;
 			}
 		}
-		recursiveCheck(_tile)
 		return isCoastal
 	}
-	
+
+
+	function buildHarborLocation()
+	{
+		for( local i = 0; i < 6; i = ++i )
+		{
+			if (!this.getTile().hasNextTile(i))
+			{
+				continue
+			}
+			else if (this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Ocean || this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Shore)
+			{
+				local entity = this.World.spawnLocation("scripts/entity/world/attached_location/harbor_location", this.getTile().getNextTile(i).Coords);
+				entity.setSettlement(this);
+				entity.onBuild()
+				this.m.AttachedLocations.push(entity);
+				entity.setActive(true);
+				return
+			}
+		}
+	}
+
 	//disables lights when alt location
 	function onUpdate()
 	{

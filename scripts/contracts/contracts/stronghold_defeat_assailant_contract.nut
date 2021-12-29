@@ -55,9 +55,9 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 				if (entity.getFlags().get("Stronghold_Guards"))
 				{
 					local noble = this.World.FactionManager.getFaction(this.m.Flags.get("EnemyNobleHouse"))
-					local player_faction = this.Stronghold.getPlayerFaction()
-					noble.removeAlly(player_faction.getID());
-					player_faction.removeAlly(noble.getID());
+					local playerFaction = this.Stronghold.getPlayerFaction()
+					noble.removeAlly(playerFaction.getID());
+					playerFaction.removeAlly(noble.getID());
 
 				}
 			}
@@ -82,8 +82,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		}
 		else p = this.World.State.getLocalCombatProperties(this.World.State.getPlayer().getPos());
 		p.Music = this.Const.Music.NobleTracks;
-		p.CombatID = "HoldChokepoint";
-
+		p.CombatID = "Stronghold";
 		this.World.Contracts.startScriptedCombat(p, isPlayerInitiated, true, true);
 		
 		
@@ -148,7 +147,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			
 			function onCombatVictory( _combatID )
 			{
-				this.Contract.m.Target = null
+				if (_combatID == "Stronghold"){
+					this.Contract.m.Target = null
+				}
+
 			}			
 			
 
@@ -174,9 +176,9 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						this.Contract.m.Home.setUpgrading(true);
 						this.Contract.m.Home.updateTown();
 
-						local player_faction = this.Stronghold.getPlayerFaction();
-						local actionToFire = player_faction.m.Deck[0]
-						actionToFire.execute(player_faction);
+						local playerFaction = this.Stronghold.getPlayerFaction();
+						local actionToFire = playerFaction.m.Deck[0]
+						actionToFire.execute(playerFaction);
 					}
 
 				}
@@ -308,16 +310,16 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					Text = "Excellent.",
 					function getResult()
 					{
-						local player_faction = this.Stronghold.getPlayerFaction()
-						local player_base = this.Contract.m.Home
+						local playerFaction = this.Stronghold.getPlayerFaction()
+						local playerBase = this.Contract.m.Home
 						//upgrade looks and situation
-						player_base.m.Size = this.Contract.m.TargetLevel;
-						player_base.buildHouses();
+						playerBase.m.Size = this.Contract.m.TargetLevel;
+						playerBase.buildHouses();
 						//spawn new guards to reflect the change in size
-						local actionToFire = player_faction.m.Deck[0]
-						actionToFire.execute(player_faction);
+						local actionToFire = playerFaction.m.Deck[0]
+						actionToFire.execute(playerFaction);
 						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
-						player_base.m.Flags.set("LevelOne", false)
+						playerBase.m.Flags.set("LevelOne", false)
 						this.Contract.m.Home.setUpgrading(false);
 						this.Contract.m.Home.updateTown()
 						this.World.Contracts.finishActiveContract();
@@ -363,12 +365,12 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	}
 	function spawnNewAttackers()
 	{
-		local player_faction = this.Stronghold.getPlayerFaction()
-		local player_base = this.m.Home
+		local playerFaction = this.Stronghold.getPlayerFaction()
+		local playerBase = this.m.Home
 		local wave =  this.m.TargetLevel / this.m.AttacksRemaining 
 		local party_difficulty =  (150 + 50 * wave) * this.getScaledDifficultyMult()
-		this.m.Destination = this.WeakTableRef(player_base);
-		local tile = player_base.getTile();
+		this.m.Destination = this.WeakTableRef(playerBase);
+		local tile = playerBase.getTile();
 		local allSettlements = []
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Goblins).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Orcs).getSettlements())
@@ -462,7 +464,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false);
 		local destroy = this.new("scripts/ai/world/orders/stronghold_destroy_order");
 		destroy.setTargetTile(tile);
-		destroy.setTargetID(player_base.getID());
+		destroy.setTargetID(playerBase.getID());
 		destroy.setTime(120.0);
 		c.addOrder(destroy);
 		local despawn = this.new("scripts/ai/world/orders/despawn_order");

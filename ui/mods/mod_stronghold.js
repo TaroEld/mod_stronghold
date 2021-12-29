@@ -152,7 +152,7 @@ WorldCampfireScreenAssets.prototype.createDIV = function (_parentDiv)
 
 var retinue_loadFromData = WorldCampfireScreenAssets.prototype.loadFromData
 WorldCampfireScreenAssets.prototype.loadFromData = function (_data){
-	if(this.mStrongholdButton != null && 'hasStronghold' in _data && _data['hasStronghold'] === true){
+	if(this.mStrongholdButton != null && 'showStrongholdButton' in _data && _data['showStrongholdButton'] === false){
 		this.mStrongholdButton.remove();
 		this.mStrongholdButton = null;
 	}

@@ -62,7 +62,7 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 			return;
 		}
 		
-		local player_base = this.getMainBases()
+		local playerBase = this.getMainBases()
 		foreach(settlement in this.getMainBases())
 		{
 			if (settlement.hasSituation("situation.raided")) settlement.updateSituations()
@@ -94,7 +94,7 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 				if (u.isAlive() && !u.getController().hasOrders())
 				{
 					local move = this.new("scripts/ai/world/orders/move_order");
-					move.setDestination(player_base.getTile());
+					move.setDestination(playerBase.getTile());
 					local despawn = this.new("scripts/ai/world/orders/despawn_order");
 					u.getController().addOrder(move);
 					u.getController().addOrder(despawn);
@@ -117,7 +117,9 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 	function getMainBases(){
 		local bases = [];
 		foreach(settlement in this.getSettlements()){
-			if (settlement.getFlags().get("IsMainBase")) bases.push(settlement)
+			if (settlement.getFlags().get("IsMainBase")){
+				bases.push(settlement)
+			}
 		}
 		return bases
 	}
@@ -125,7 +127,10 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 	{
 		local bases = [];
 		foreach(settlement in this.getMainBases()){
-			if (settlement.getSize() > 1) bases.push(settlement)
+			if (settlement.getSize() > 1){
+
+				bases.push(settlement)
+			}
 		}
 		return bases
 	}
@@ -144,7 +149,7 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 		{
 			if(faction != null)
 			{
-				if (faction.m.PlayerRelation >20)
+				if (faction.m.PlayerRelation > 20)
 				{
 					this.addAlly(faction.getID());
 					faction.addAlly(this.getID());
@@ -199,15 +204,17 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 
 	}
 
+	function makeSettlementsFriendlyToPlayer()
+	{
+
+	}
+
 	function isReadyToSpawnUnit()
 	{
 		return this.m.Units.len() <= this.m.Settlements.len();
 	}
 
-	function makeSettlementsFriendlyToPlayer()
-	{
 
-	}
 
 
 	function onUpdateRoster()

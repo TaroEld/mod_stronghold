@@ -72,7 +72,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 				else
 				{
 					
-					local player_base = this.Contract.m.Home;
+					local playerBase = this.Contract.m.Home;
 					local noble_factions = this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse);
 					local selected_faction = null;
 					local selected_start_settlement = null;
@@ -92,10 +92,10 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 						local distFurthestFromBase = 0
 						foreach (settlement in settlements)
 						{
-							if (!settlement.isIsolated() && settlement.getTile().getDistanceTo(player_base.getTile()) > distFurthestFromBase)
+							if (!settlement.isIsolated() && settlement.getTile().getDistanceTo(playerBase.getTile()) > distFurthestFromBase)
 							{
 								start_settlement = settlement
-								distFurthestFromBase = settlement.getTile().getDistanceTo(player_base.getTile())
+								distFurthestFromBase = settlement.getTile().getDistanceTo(playerBase.getTile())
 							}
 						}
 						if (start_settlement == null) continue
@@ -125,10 +125,10 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 						local distFurthestFromBase = 0
 						foreach (settlement in settlements)
 						{
-							if (!settlement.isIsolated() && settlement.m.Culture != this.Const.World.Culture.Southern && settlement.getTile().getDistanceTo(player_base.getTile()) > distFurthestFromBase)
+							if (!settlement.isIsolated() && settlement.m.Culture != this.Const.World.Culture.Southern && settlement.getTile().getDistanceTo(playerBase.getTile()) > distFurthestFromBase)
 							{
 								start_settlement = settlement
-								distFurthestFromBase = settlement.getTile().getDistanceTo(player_base.getTile())
+								distFurthestFromBase = settlement.getTile().getDistanceTo(playerBase.getTile())
 							}
 						}
 						if (start_settlement != null)
@@ -506,14 +506,14 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	}
 	function spawnMercenaries()
 	{
-		local player_base =  this.getHome()
-		local player_faction = this.Stronghold.getPlayerFaction()
+		local playerBase =  this.getHome()
+		local playerFaction = this.Stronghold.getPlayerFaction()
 		local mercenary_size = 200
-		if (player_base.hasAttachedLocation("attached_location.militia_trainingcamp"))
+		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp"))
 		{
 			mercenary_size += 100
 		}
-		local party = player_faction.spawnEntity(this.World.State.getPlayer().getTile(), "Freed mercenaries", true, this.Const.World.Spawn.Mercenaries, mercenary_size);
+		local party = playerFaction.spawnEntity(this.World.State.getPlayer().getTile(), "Freed mercenaries", true, this.Const.World.Spawn.Mercenaries, mercenary_size);
 		party.getSprite("body").setBrush("figure_mercenary_01");
 		party.setDescription("A band of mercenaries following you around.");
 		party.setFootprintType(this.Const.World.FootprintsType.CityState);

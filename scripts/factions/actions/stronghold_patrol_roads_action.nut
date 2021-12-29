@@ -14,10 +14,10 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 	function onUpdate( _faction )
 	{
 		//only works with level 2+ base
-		local player_bases = _faction.getDevelopedBases()
+		local playerBases = _faction.getDevelopedBases()
 		local nonIsolatedBases = []
-		foreach(settlement in player_bases){
-			if(!player_base.isIsolated()) nonIsolatedBases.push({Base = settlement, Connected = []})
+		foreach(playerBase in playerBases){
+			if(!playerBase.isIsolated()) nonIsolatedBases.push({Base = playerBase, Connected = []})
 		}
 		if (nonIsolatedBases.len() == 0) return
 
@@ -28,13 +28,13 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 			if (faction != null && faction.m.PlayerRelation > 70 && (faction.m.Type == this.Const.FactionType.NobleHouse || faction.m.Type == this.Const.FactionType.OrientalCityState))
 			{
 				friendly_factions++
-				foreach( playerbase in nonIsolatedBases)
+				foreach( playerBase in nonIsolatedBases)
 				{
 					foreach (settlement in faction.getSettlements())
 					{
-						if (settlement.isConnectedToByRoads(playerbase.Base))
+						if (settlement.isConnectedToByRoads(playerBase.Base))
 						{
-							playerbase.Connected.push(settlement)
+							playerBase.Connected.push(settlement)
 						}
 					}
 				}
@@ -59,16 +59,16 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 
 	function onExecute( _faction )
 	{
-		local player_base = this.m.Settlements.Base
-		local patrol_strength = 200 * (player_base.getSize()-1)
+		local playerBase = this.m.Settlements.Base
+		local patrol_strength = 200 * (playerBase.getSize()-1)
 		
 		//add strength if you have the attachment
-		if (player_base.hasAttachedLocation("attached_location.militia_trainingcamp")){
+		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp")){
 			patrol_strength += 200
 		}
-		local party = _faction.stronghold_spawnEntity(player_base.getTile(), "Mercenary patrol of " + player_base.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
+		local party = _faction.stronghold_spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
 		party.m.OnCombatWithPlayerCallback = null;
-		party.getSprite("body").setBrush(player_base.m.troopSprites);
+		party.getSprite("body").setBrush(playerBase.m.troopSprites);
 		party.setDescription("A band of mercenaries patrolling the roads.");
 		party.setFootprintType(this.Const.World.FootprintsType.Mercenaries);
 		party.getFlags().set("Stronghold_Patrol", true);
@@ -99,9 +99,9 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 			return furthest
 		}	
 				
-		local waypoint_1 = sort_settlements(player_base, target_settlements)
+		local waypoint_1 = sort_settlements(playerBase, target_settlements)
 		local waypoint_2 = sort_settlements(waypoint_1, target_settlements)
-		local sorted_list = [waypoint_1, waypoint_2, player_base];
+		local sorted_list = [waypoint_1, waypoint_2, playerBase];
 		foreach (town in sorted_list)
 		{
 			local move = this.new("scripts/ai/world/orders/move_order");

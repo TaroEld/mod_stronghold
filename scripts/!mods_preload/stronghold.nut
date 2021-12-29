@@ -3,19 +3,27 @@
 ::mods_registerCSS("mod_stronghold.css");
 ::mods_queue("mod_stronghold", null, function()
 {	
-
+	this.Math.randArray <- function(_array){
+		if (typeof _array != "array") {
+			this.logWarning("_array not an array or empty")
+			return
+		}
+		if(_array.len() == 0) return null
+		return _array[this.Math.rand(0, _array.len()-1)]
+	}
 
 	::mods_hookNewObjectOnce("states/world/asset_manager", function (o)
 	{
-		
+
 		//don't consume food if wheat fields attached
 		local consumeFood = o.consumeFood;		
 		o.consumeFood = function()
 		{
-			local player_bases = this.Stronghold.getPlayerFaction().getMainBases()
-			foreach(player_base in player_bases)
+			if(this.Stronghold.getPlayerFaction() == null) return
+			local playerBases = this.Stronghold.getPlayerFaction().getMainBases()
+			foreach(playerBase in playerBases)
 			{	
-				if (player_base.hasAttachedLocation("attached_location.wheat_fields") && this.World.State.getPlayer().getTile().getDistanceTo(player_base.getTile()) < 25)
+				if (playerBase.hasAttachedLocation("attached_location.wheat_fields") && this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < 25)
 				{
 					return
 				}
@@ -31,10 +39,11 @@
 			if (this.World.getTime().Hours != this.m.LastHourUpdated)
 			{
 				//check for ranger start and lookout follower
-				local player_bases = this.Stronghold.getPlayerFaction().getMainBases()
-				foreach(player_base in player_bases)
+				if(this.Stronghold.getPlayerFaction() == null) return
+				local playerBases = this.Stronghold.getPlayerFaction().getMainBases()
+				foreach(playerBase in playerBases)
 				{	
-					if (player_base.hasAttachedLocation("attached_location.stone_watchtower") && this.World.State.getPlayer().getTile().getDistanceTo(player_base.getTile()) < 25)
+					if (playerBase.hasAttachedLocation("attached_location.stone_watchtower") && this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < 25)
 					{
 						if (this.World.Assets.getOrigin().getID() == "scenario.rangers")
 						{
@@ -77,7 +86,7 @@
 						}
 					}
 					//same for herbalist grove
-					if (player_base.hasAttachedLocation("attached_location.herbalist_grove") && this.World.State.getPlayer().getTile().getDistanceTo(player_base.getTile()) < 25)
+					if (playerBase.hasAttachedLocation("attached_location.herbalist_grove") && this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < 25)
 					{
 						this.m.HitpointsPerHourMult = 1.2
 					}
@@ -157,7 +166,8 @@
 		o.queryData <- function()
 		{
 			local result = queryData()
-			result.Assets.hasStronghold <- false;
+			local show = this.Stronghold.getPlayerFaction() == null || this.Stronghold.getPlayerFaction().getMainBases().len() < this.Const.World.Stronghold.MaxStrongholdNumber
+			result.Assets.showStrongholdButton <- show;
 			return result;
 		}
 	});
@@ -371,12 +381,13 @@
 		o.onUpdate = function(_faction)
 		{
 			onUpdate(_faction)
-			local player_base = this.Math.randArray(this.Stronghold.getPlayerFaction().getMainBases())
-			if (if (player_base == null) || this.m.Score == 0 || this.m.Dest == player_base) return;
+			if (this.Stronghold.getPlayerFaction() == null) return
+			local playerBase = this.Math.randArray(this.Stronghold.getPlayerFaction().getMainBases())
+			if (playerBase == null || this.m.Score == 0 || this.m.Dest == playerBase) return;
 			if (_faction.m.PlayerRelation < 70 || (this.m.Start.getOwner() != null && this.m.Start.getOwner().m.PlayerRelation < 70)) return;
-			if (!this.isPathBetween(this.m.Start.getTile(), player_base.getTile(), true)) return;
+			if (!this.isPathBetween(this.m.Start.getTile(), playerBase.getTile(), true)) return;
 			local exists = false;
-			foreach( situation in player_base.m.Situations )
+			foreach( situation in playerBase.m.Situations )
 			{
 				if (situation.getID() == "situation.stronghold_well_supplied_ai")
 				{
@@ -390,7 +401,7 @@
 			}
 			
 			if (this.Math.rand(0, 100) < chance){
-				this.m.Dest = player_base
+				this.m.Dest = playerBase
 			}
 		}
 	});
@@ -421,13 +432,14 @@
 		o.onUpdate = function(_faction)
 		{
 			onUpdate(_faction)
-			local player_base = this.Math.randArray(this.Stronghold.getPlayerFaction().getMainBases())
-			if (this.m.Score == 0 || player_base == null || _faction.m.PlayerRelation < 70) return;
+			if (this.Stronghold.getPlayerFaction() == null) return
+			local playerBase = this.Math.randArray(this.Stronghold.getPlayerFaction().getMainBases())
+			if (this.m.Score == 0 || playerBase == null || _faction.m.PlayerRelation < 70) return;
 			foreach( settlement in this.m.Settlements )
 			{
-				if (!this.isPathBetween(settlement.getTile(), player_base, true)) return;
+				if (!this.isPathBetween(settlement.getTile(), playerBase.getTile(), true)) return;
 			}
-			this.m.Settlements.push(player_base)
+			this.m.Settlements.push(playerBase)
 		}
 		
 		//needed for patrol to not start at player base. This whole thing is pretty jank, need to hook whole functions for small changes, would probably be better to separate entirely.
@@ -542,10 +554,10 @@
 		{
 			if (_data[0].len() > 0)
 			{
-				local player_base = this.World.State.getCurrentTown()
-				player_base.m.Name = _data[0]
-				player_base.getFlags().set("CustomName", true)
-				player_base.getLabel("name").Text = _data[0];
+				local playerBase = this.World.State.getCurrentTown()
+				playerBase.m.Name = _data[0]
+				playerBase.getFlags().set("CustomName", true)
+				playerBase.getLabel("name").Text = _data[0];
 				this.reload()
 			}
 		}

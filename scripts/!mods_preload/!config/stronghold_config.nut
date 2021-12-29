@@ -4,6 +4,7 @@ gt.Const.World.Stronghold.MaxMenuOptionsLen <- 9; // max length of menu options,
 gt.Const.World.Stronghold.PriceMult <- 1000; //fastest way to change prices, everything gets mult by this
 gt.Const.World.Stronghold.BuyPrices <- [10, 20, 20]; //base prices for build/upgrade
 gt.Const.World.Stronghold.MaxAttachments <- [3, 6, 9]; //base prices for build/upgrade
+gt.Const.World.Stronghold.MaxStrongholdNumber <- 999;
 
 gt.Const.World.Stronghold.UnlockAdvantages <-[
 	"You can leave items and brothers behind, to retrieve them later as you need them.\n You can construct up to three settlement buildings.\nYou can construct up to three locations, granting various advantages.\n You will be able to upgrade your base, unlocking more features.",
@@ -261,7 +262,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 		isValid = function(_contract){
 			local current_locations = 0;
 			foreach (location in _contract.getHome().m.AttachedLocations){
-				if (location != null){
+				if (location != null && location.m.ID != "attached_location.harbor"){
 					current_locations++
 				}
 			}
@@ -271,7 +272,7 @@ gt.Const.World.Stronghold.Main_Management_Options <-
 			local current_buildings = 0;
 			local total_building_slots = this.getHome().m.AttachedLocationsMax 
 			foreach (location in this.getHome().m.AttachedLocations){
-				if (location != null){
+				if (location != null && location.m.ID != "attached_location.harbor"){
 					current_buildings++
 				}
 			}
@@ -851,10 +852,10 @@ gt.Const.World.Stronghold.Location_options <-
 gt.Stronghold <- {}
 gt.Stronghold.getPlayerBase <- function()
 {
-	local player_faction = this.Stronghold.getPlayerFaction()
-	if (player_faction)
+	local playerFaction = this.Stronghold.getPlayerFaction()
+	if (playerFaction != null)
 	{
-		local player_settlements = player_faction.getSettlements()
+		local player_settlements = playerFaction.getSettlements()
 		foreach (settlement in player_settlements)
 		{
 			if(settlement.getFlags().get("isPlayerBase")){
@@ -873,7 +874,7 @@ gt.Stronghold.getPlayerBase <- function()
 gt.Stronghold.getPlayerFaction <- function()
 {
 	if ("FactionManager" in this.World) return this.World.FactionManager.getFactionOfType(this.Const.FactionType.Player)
-	return false
+	return null
 }
 
 gt.Stronghold.getClosestDistance <- function(_destination, _list, _tiles = false)
@@ -911,28 +912,17 @@ gt.Stronghold.getClosestDistance <- function(_destination, _list, _tiles = false
 //modded from vanilla to allow for longer range
 gt.Stronghold.checkForCoastal <- function(_tile)
 {
-	local recursiveCheck;
-	recursiveCheck = function (_tile, _index = 0)
-	{	
-		if(_tile.Type == this.Const.World.TerrainType.Ocean || _tile.Type == this.Const.World.TerrainType.Shore){
-			return true;
-		}
-		if(_index == 2) return false
-		for( local i = 0; i < 6; i = ++i )
+	local isCoastal = false;
+	for( local i = 0; i < 6; i = ++i )
+	{
+		if (!_tile.hasNextTile(i))
 		{
-			if (!_tile.hasNextTile(i))
-			{
-			}
-			else
-			{
-				local next = _tile.getNextTile(i);
-				if(next.Type == this.Const.World.TerrainType.Ocean || next.Type == this.Const.World.TerrainType.Shore){
-					return true;
-				}
-				return recursiveCheck(next, _index+1)
-			}
+		}
+		else if (_tile.getNextTile(i).Type == this.Const.World.TerrainType.Ocean || _tile.getNextTile(i).Type == this.Const.World.TerrainType.Shore)
+		{
+			isCoastal = true;
+			break;
 		}
 	}
-	local isCoastal = recursiveCheck(_tile)
 	return isCoastal
 }

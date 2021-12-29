@@ -8,7 +8,7 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 		this.situation.create();
 		this.m.ID = "situation.stronghold_well_supplied";
 		this.m.Name = this.defineName();
-		this.m.Description = this.defineDescription();
+		this.m.Description = ""
 		this.m.Icon = "ui/settlement_status/settlement_effect_03.png";
 		this.m.Rumors = [
 			"Trade with %settlement% is prospering, my friend! Safe roads and full stocks, let\'s hope it stays this way...",
@@ -34,11 +34,10 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 	}
 
 	//should be dynamic and check the properties
-	function defineDescription()
+	function defineDescription(_town)
 	{
-		local player_base = this.World.State.getCurrentTown();
 		local description = "With no noble house asking for tariffs, you can get very good prices for your goods. ";
-		local mults = this.Const.World.Stronghold.WellSupplied[player_base.getSize()-1]
+		local mults = this.Const.World.Stronghold.WellSupplied[_town.getSize()-1]
 		return description
 	}
 
@@ -54,8 +53,10 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 
 	function onUpdate( _modifiers )
 	{ 
-		local player_base = this.World.State.getCurrentTown();
-		local mults = this.Const.World.Stronghold.WellSupplied[player_base.getSize()-1]
+		local playerBase = this.World.State.getCurrentTown();
+		if (playerBase == null) return
+		this.defineDescription(playerBase);
+		local mults = this.Const.World.Stronghold.WellSupplied[playerBase.getSize()-1]
 		_modifiers.RarityMult = mults.Rarity;
 		_modifiers.BuyPriceMult = mults.BuyPrice;
 		_modifiers.SellPriceMult = mults.SellPrice;

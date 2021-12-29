@@ -264,18 +264,10 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			{
 				this.Contract.setScreen("Task");
 			}
-
-			function end()
-			{
-			}
-
 		});
 		//only for remove base, forces the user to return to the world map and avoids leave errors
 		this.m.States.push({
 			ID = "Running",
-			function start()
-			{
-			}
 			function update()
 			{
 				if(this.Contract.m.Flags.get("Remove_Base"))
@@ -285,12 +277,6 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 					return 0;
 				}
 			}
-
-
-			function end()
-			{
-			}
-
 		});
 	}
 
@@ -911,12 +897,11 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			this.Const.World.TerrainType.Farmland,
 			this.Const.World.TerrainType.Snow,
 			this.Const.World.TerrainType.Badlands,
-			this.Const.World.TerrainType.Tundra,
-			this.Const.World.TerrainType.Shore
+			this.Const.World.TerrainType.Tundra
 		]
 		home.buildAttachedLocation(1, text, validTerrain, [], 1)
 		home.buildRoad(home.m.AttachedLocations[home.m.AttachedLocations.len()-1])
-		if (this.Const.World.Stronghold.Location_options.len() == home.m.AttachedLocations.len())
+		if (this.Const.World.Stronghold.Location_options.len() == home.m.IsCoastal ? home.m.AttachedLocations.len() : home.m.AttachedLocations.len() +1)
 		{
 			home.getFlags().set("AllLocationsBuilt", true)
 		}
@@ -1008,18 +993,18 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	}
 	
 	function onGiftSend(){
-		local player_faction = this.Stronghold.getPlayerFaction();
-		local player_base = this.getHome()
+		local playerFaction = this.Stronghold.getPlayerFaction();
+		local playerBase = this.getHome()
 		local destination = this.m.Temp_Var;
 		local destination_faction = destination.Faction;
 		local destination_town = destination.Town;
 		
-		local patrol_strength = 400 +  100 * (player_base.getSize()-1)
-		if (player_base.hasAttachedLocation("attached_location.militia_trainingcamp"))
+		local patrol_strength = 400 +  100 * (playerBase.getSize()-1)
+		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp"))
 		{
 			patrol_strength += 100
 		}
-		local party = player_faction.spawnEntity(player_base.getTile(), "Caravan of " + player_base.getName(), true, this.Const.World.Spawn.Caravan, 100);
+		local party = playerFaction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 100);
 		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, patrol_strength);
 		party.setDescription("A caravan bringing gifts to " + destination_town.getName() );
 		party.setFootprintType(this.Const.World.FootprintsType.Caravan);
@@ -1035,7 +1020,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		
 		local totalReputation = 0
 		local playerStash = this.World.Assets.getStash()
-		local storageStash = player_base.getBuilding("building.storage_building").getStash()
+		local storageStash = playerBase.getBuilding("building.storage_building").getStash()
 		local toRemoveStorage = []
 		local toRemovePlayer = []
 		//remove treasure from player inventory and add 0.05x their value as reputation on arrival
@@ -1048,7 +1033,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				toRemovePlayer.push(item)
 			}
 		}
-		local stash = player_base.getBuilding("building.storage_building").getStash().getItems()
+		local stash = playerBase.getBuilding("building.storage_building").getStash().getItems()
 		
 		foreach( i, item in storageStash.getItems() )
 		{
@@ -1120,7 +1105,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		local used = [];
 		local list = this.Const.World.Settlements.Villages_small
 		local playerBase = this.getHome()
-		local player_faction = this.Stronghold.getPlayerFaction()
+		local playerFaction = this.Stronghold.getPlayerFaction()
 		while (tries++ < 3000)
 		{
 			if (tries%100 == 0) radius++
@@ -1159,7 +1144,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				continue;
 			}
 			local hamlet = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_hamlet", tile.Coords);
-			player_faction.addSettlement(hamlet);
+			playerFaction.addSettlement(hamlet);
 			local result = this.new(type.Script)
 			hamlet.assimilateCharacteristics(result)
 			hamlet.setDiscovered(true);
@@ -1167,17 +1152,17 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			playerBase.buildRoad(hamlet)
 			playerBase.getFlags().set("Child", hamlet.getID())
 			hamlet.getFlags().set("Parent", playerBase.getID())
-			player_faction.getFlags().set("BuildHamlet", true)
+			playerFaction.getFlags().set("BuildHamlet", true)
 
 			return
 		}
 	}
 
 	function onUpgradeBought(){
-		local player_faction = this.Stronghold.getPlayerFaction()
+		local playerFaction = this.Stronghold.getPlayerFaction()
 		local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
-		contract.setEmployerID(player_faction.getRandomCharacter().getID());
-		contract.setFaction(player_faction.getID());
+		contract.setEmployerID(playerFaction.getRandomCharacter().getID());
+		contract.setFaction(playerFaction.getID());
 		contract.setHome(this.getHome());
 		contract.setOrigin(this.getHome());
 		contract.m.TargetLevel = this.getHome().getSize() + 1
@@ -1196,14 +1181,14 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	}
 
 	function onMercenariesHired(){
-		local player_base = this.getHome()
-		local player_faction = this.Stronghold.getPlayerFaction();
+		local playerBase = this.getHome()
+		local playerFaction = this.Stronghold.getPlayerFaction();
 		local mercenary_size = 200
-		if (player_base.hasAttachedLocation("attached_location.militia_trainingcamp"))
+		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp"))
 		{
 			mercenary_size += 100
 		}
-		local party = player_faction.spawnEntity(player_base.getTile(), "Mercenary band of " + player_base.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
+		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
 		party.getSprite("body").setBrush("figure_mercenary_01");
 		party.setDescription("A band of mercenaries following you around.");
 		party.getFlags().set("Stronghold_Mercenaries", true);
@@ -1229,17 +1214,17 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function removeBase()
 	{
-		local player_faction = this.Stronghold.getPlayerFaction()
-		local contracts = player_faction.getContracts()
+		local playerFaction = this.Stronghold.getPlayerFaction()
+		local contracts = playerFaction.getContracts()
 		foreach (contract in contracts)
 		{
 			this.World.Contracts.removeContract(contract)
 		}
-
-		foreach (settlement in player_faction.getSettlements())
-		{
-			settlement.fadeOutAndDie(true)
+		local toRemove = this.getHome()
+		if ("getHamlet" in toRemove && toRemove.getHamlet() != false){
+			toRemove.getHamlet().fadeOutAndDie(true)
 		}
+		toRemove.fadeOutAndDie(true)
 	}
 
 });
