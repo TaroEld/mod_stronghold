@@ -160,7 +160,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			}
 		}	
 				
-		if (this.m.Size == 3 && !find_waterskin && !this.m.Flags.get("Waterskin"))
+		if (this.m.Size == 3 && !find_waterskin && !fac.m.Flags.get("Waterskin"))
 		{
 			local contract = this.new("scripts/contracts/contracts/stronghold_find_waterskin_recipe_contract");
 			contract.setEmployerID(fac.getRandomCharacter().getID());
@@ -168,14 +168,14 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			this.World.Contracts.addContract(contract);
 		}
 		
-		if (this.m.Size == 3 && !free_mercenaries && !this.m.Flags.get("Mercenaries"))
+		if (this.m.Size == 3 && !free_mercenaries && !fac.m.Flags.get("Mercenaries"))
 		{
 			local contract = this.new("scripts/contracts/contracts/stronghold_free_mercenaries_contract");
 			contract.setEmployerID(fac.getRandomCharacter().getID());
 			contract.setFaction(fac.getID())
 			this.World.Contracts.addContract(contract);
 		}
-		if (this.m.Size == 3 && !find_trainer && !this.m.Flags.get("Teacher"))
+		if (this.m.Size == 3 && !find_trainer && !fac.m.Flags.get("Teacher"))
 		{
 			local contract = this.new("scripts/contracts/contracts/stronghold_free_trainer_contract");
 			contract.setEmployerID(fac.getRandomCharacter().getID());

@@ -375,7 +375,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					Text = "You can tag along you lot.",
 					function getResult()
 					{
-						this.Contract.m.Home.m.Flags.set("Mercenaries", true);
+						this.Stronghold.getPlayerFaction().m.Flags.set("Mercenaries", true);
 						this.Contract.m.Home.clearContracts()
 						this.World.Contracts.finishActiveContract();
 						return 0;

@@ -62,12 +62,12 @@ gt.Const.World.Stronghold.BuildingPrices <-
 gt.Const.World.Stronghold.LocationPrices <-
 {
 	Workshop = 10,
-	Ore = 10,
-	Blast = 10,
+	Ore = 5,
+	Blast = 5,
 	Stone = 10,
-	Militia = 10,
-	Wheat = 10,
-	Herbalists = 10,
+	Militia = 5,
+	Wheat = 5,
+	Herbalists = 5,
 	Gold = 10
 };
 gt.Const.World.Stronghold.WellSupplied <-

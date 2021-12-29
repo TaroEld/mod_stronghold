@@ -401,7 +401,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 					Text = "Excellent.",
 					function getResult()
 					{
-						this.Contract.m.Home.m.Flags.set("Teacher", true);
+						this.Stronghold.getPlayerFaction().m.Flags.set("Teacher", true);
 						this.Contract.m.Home.clearContracts()
 						this.World.Contracts.finishActiveContract();
 						return 0;

@@ -88,7 +88,7 @@
 					//same for herbalist grove
 					if (playerBase.hasAttachedLocation("attached_location.herbalist_grove") && this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < 25)
 					{
-						this.m.HitpointsPerHourMult = 1.2
+						this.m.HitpointsPerHourMult = 1.4
 					}
 					else
 					{

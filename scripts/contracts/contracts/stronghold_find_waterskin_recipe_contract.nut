@@ -277,7 +277,7 @@ this.stronghold_find_waterskin_recipe_contract <- this.inherit("scripts/contract
 					Text = "Excellent.",
 					function getResult()
 					{
-						this.Contract.m.Home.m.Flags.set("Waterskin", true);
+						this.Stronghold.getPlayerFaction().m.Flags.set("Waterskin", true);
 						this.Contract.m.Home.clearContracts()
 						this.World.Contracts.finishActiveContract();
 						return 0;
