@@ -19,7 +19,7 @@
 		local consumeFood = o.consumeFood;		
 		o.consumeFood = function()
 		{
-			if(this.Stronghold.getPlayerFaction() == null) return
+			if(this.Stronghold.getPlayerFaction() == null) return consumeFood()
 			local playerBases = this.Stronghold.getPlayerFaction().getMainBases()
 			foreach(playerBase in playerBases)
 			{	
@@ -28,7 +28,6 @@
 					return
 				}
 			}	
-			//else: vanilla function 
 			consumeFood()
 		}
 		
@@ -36,10 +35,10 @@
 		o.update = function(_worldState)
 		{			
 			//set movementspeed and vision radius if watchtower location
+			if(this.Stronghold.getPlayerFaction() == null) return update(_worldState)
 			if (this.World.getTime().Hours != this.m.LastHourUpdated)
 			{
 				//check for ranger start and lookout follower
-				if(this.Stronghold.getPlayerFaction() == null) return
 				local playerBases = this.Stronghold.getPlayerFaction().getMainBases()
 				foreach(playerBase in playerBases)
 				{	
@@ -94,13 +93,14 @@
 					{
 						this.m.HitpointsPerHourMult = 1.0
 					}
-					//stored brothers draw half wage
-					if (this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
-					{
-						foreach(playerBase in this.Stronghold.getPlayerFaction().getMainBases()){
-							foreach(bro in playerBase.getLocalRoster().getAll()){
-								this.m.Money -= this.Math.floor(bro.getDailyCost()/2);
-							}
+					
+				}
+				//stored brothers draw half wage
+				if (this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
+				{
+					foreach(playerBase in this.Stronghold.getPlayerFaction().getMainBases()){
+						foreach(bro in playerBase.getLocalRoster().getAll()){
+							this.m.Money -= this.Math.floor(bro.getDailyCost()/2);
 						}
 					}
 				}
