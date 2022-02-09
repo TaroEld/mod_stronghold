@@ -63,8 +63,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			}
 		}
 		
-		
-		
 		local isPlayerInitiated = false;
 		local p;
 		//special location if fighting at stronghold
@@ -137,6 +135,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					this.Contract.setScreen("Failure");
 					this.World.Contracts.showActiveContract();
 				}
+				else if (this.Contract.m.Origin.getFlags().get("UpgradeInterrupted")){
+					this.Contract.setScreen("FailureInterrupt");
+					this.World.Contracts.showActiveContract();
+				}
 					
 				if (this.Contract.m.Target != null && this.Contract.isPlayerAt(this.Contract.m.Target))
 				{
@@ -173,6 +175,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					function getResult()
 					{
 						this.Contract.m.Flags.set("Introduced", true)
+						this.Contract.m.Home.m.Size = this.Contract.m.TargetLevel;
 						this.Contract.m.Home.setUpgrading(true);
 						this.Contract.m.Home.updateTown();
 
@@ -194,56 +197,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				
-				this.Text = format("Your %s is now under construction. This will take %i %s. Enemies will attack it within the next day.", this.Const.World.Stronghold.BaseNames[this.Contract.m.TargetLevel-1], this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
+				this.Text = format("Your %s is now under construction. This will take %i %s. Enemies will attack it within the next day.", this.Stronghold.BaseNames[this.Contract.m.TargetLevel-1], this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
 				this.Contract.m.BulletpointsObjectives = [
 					format("Defend against %i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
 				];
-			}
-		});
-		this.m.Screens.push({
-		
-			ID = "Select_Sprites",
-			Title = "Select faction",
-			Text = "What style should your base look like? This is purely cosmetic.",
-			Image = "",
-			List = [],
-			Options = [
-				{
-					Text = "Noble (default).",
-					function getResult()
-					{
-						this.Contract.m.Flags.set("Sprite_Set", true)
-					}
-
-				},
-				{
-					Text = "Barbarian",
-					function getResult()
-					{
-						this.Contract.m.Home.m.Flags.set("BarbarianSprites", true)
-						this.Contract.m.Flags.set("Sprite_Set", true)
-						this.Contract.m.Home.updateTown()
-					}
-
-				},
-				{
-					Text = "Nomad",
-					function getResult()
-					{
-						this.Contract.m.Home.m.Flags.set("NomadSprites", true)
-						this.Contract.m.Flags.set("Sprite_Set", true)
-						this.Contract.m.Home.updateTown()
-
-					}
-
-				},
-			],
-			ShowObjectives = false,
-			ShowPayment = false,
-			ShowEmployer = false,
-			ShowDifficulty = false,
-			function start()
-			{
 			}
 		});
 		this.m.Screens.push({
@@ -270,7 +227,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				this.Contract.spawnNewAttackers()
-				this.Text = "Your scouts have informed you that the enemies are imminent, hailing from the " + this.Const.Strings.Direction8[this.Contract.m.Home.getTile().getDirectionTo(this.Contract.m.Target.getTile())]
+				this.Text = "Your scouts have informed you that the enemies are imminent, hailing from the " + this.Const.Strings.Direction8[this.Contract.m.Home.getTile().getDirection8To(this.Contract.m.Target.getTile())]
 			}
 		});
 		this.m.Screens.push({
@@ -317,7 +274,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						local playerFaction = this.Stronghold.getPlayerFaction()
 						local playerBase = this.Contract.m.Home
 						//upgrade looks and situation
-						playerBase.m.Size = this.Contract.m.TargetLevel;
 						playerBase.buildHouses();
 						//spawn new guards to reflect the change in size
 						foreach(card in playerFaction.m.Deck){
@@ -327,7 +283,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 							}
 						}
 						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
-						playerBase.m.Flags.set("LevelOne", false)
 						this.Contract.m.Home.setUpgrading(false);
 						this.Contract.m.Home.updateTown()
 						this.World.Contracts.finishActiveContract();
@@ -343,7 +298,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			ShowDifficulty = false,
 			function start()
 			{
-				this.Text = format("You have defeated the enemies. Your %s is now secure.", this.Const.World.Stronghold.BaseNames[this.Contract.m.TargetLevel-1])
+				this.Text = format("You have defeated the enemies. Your %s is now secure.", this.Stronghold.BaseNames[this.Contract.m.TargetLevel-1])
 			}
 		});
 		
@@ -370,6 +325,34 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			}
 
 		});
+		this.m.Screens.push({
+			ID = "FailureInterrupt",
+			Title = "Failure!",
+			Text = "{You ran from the battle. Your upgrade has been interrupted, and your base knocked back to the previous level.}",
+			Image = "",
+			List = [],
+			Options = [
+				{
+					Text = "We'll get them next time.",
+					function getResult()
+					{
+						local playerBase = this.Contract.getHome()
+						playerBase.getFlags().remove("UpgradeInterrupted");
+						playerBase.m.Size = playerBase.m.Size - 1;
+						playerBase.setUpgrading(false);
+						playerBase.updateTown();
+						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
+						this.World.Contracts.finishActiveContract();
+						return 0;
+					}
+
+				},
+			],
+			function start()
+			{
+			}
+
+		});
 	}
 	function spawnNewAttackers()
 	{
@@ -384,6 +367,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Orcs).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Barbarians).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.OrientalBandits).getSettlements())
+		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Zombies).getSettlements())
 		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse)){
 			if(noble.getPlayerRelation() < 70 ) allSettlements.extend(noble.getSettlements())
 			
@@ -395,70 +379,89 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		
 		local closest = 9999
 		local closest_settlement;
-		local closest_faction;
-
 		foreach (settlement in allSettlements)
 		{
-			if(!settlement) continue
+			if( settlement == null || this.m.Flags.has(settlement.getID())) continue
+
 			local distance = settlement.getTile().getDistanceTo(tile)
-			if (distance && distance < closest)
+			if (closest_settlement == null || distance < closest)
 			{
+				
 				closest = distance
 				closest_settlement = settlement
-				closest_faction = settlement.getOwner() ? settlement.getOwner() : this.World.FactionManager.getFaction(closest_settlement.getFaction());
 			}
 		}
+		local closest_faction = closest_settlement.getOwner() ? closest_settlement.getOwner() : this.World.FactionManager.getFaction(closest_settlement.getFaction());
 		//some kinda bug makes distance be 0 sometimes, need to figure it out but until then set to 9999 if 0
 		local party;
 		local origin;
-		
-		if (closest_faction.m.Type == this.Const.FactionType.Goblins)
-		{
-			party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), "Goblin Raiders", false, this.Const.World.Spawn.GoblinRaiders, party_difficulty);
-			party.setDescription("A warband of goblins.");
-			party.setFootprintType(this.Const.World.FootprintsType.Goblins);
+		local factionTypes = {}
+		factionTypes[this.Const.FactionType.Goblins] <- {
+			Name = "Goblin Raiders",
+			Spawnlist = this.Const.World.Spawn.GoblinRaiders,
+			Description = "A warband of goblins.",
+			Footprint = this.Const.World.FootprintsType.Goblins,
+			Noble = false
 		}
-		else if (closest_faction.m.Type == this.Const.FactionType.Barbarians)
-		{
-			party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), "Barbarians", false, this.Const.World.Spawn.Barbarians, party_difficulty);
-			party.setDescription("A warband of barbarian tribals.");
-			party.setFootprintType(this.Const.World.FootprintsType.Barbarians);
+		factionTypes[this.Const.FactionType.Barbarians] <- {
+			Name = "Barbarians",
+			Spawnlist = this.Const.World.Spawn.Barbarians,
+			Description = "A warband of barbarian tribals.",
+			Footprint = this.Const.World.FootprintsType.Barbarians,
+			Noble = false
 		}
-		else if (closest_faction.m.Type == this.Const.FactionType.OrientalBandits)
-		{
-			party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), "Nomads", false, this.Const.World.Spawn.NomadDefenders, party_difficulty);
-			party.setDescription("A warband of nomads.");
-			party.setFootprintType(this.Const.World.FootprintsType.Nomads);
+		factionTypes[this.Const.FactionType.OrientalBandits] <- {
+			Name = "Nomads",
+			Spawnlist = this.Const.World.Spawn.NomadDefenders,
+			Description = "A warband of nomads.",
+			Footprint = this.Const.World.FootprintsType.Nomads,
+			Noble = false
 		}
-		else if (closest_faction.m.Type == this.Const.FactionType.NobleHouse)
-		{
-			party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, party_difficulty);
-			party.setDescription("An army of noble soldiers.");
-			party.setFootprintType(this.Const.World.FootprintsType.Nobles);
+		factionTypes[this.Const.FactionType.Orcs] <- {
+			Name = "Orc Marauders",
+			Spawnlist = this.Const.World.Spawn.OrcRaiders,
+			Description = "A warband of Orcs.",
+			Footprint = this.Const.World.FootprintsType.Orcs,
+			Noble = false
+		}
+		factionTypes[this.Const.FactionType.Zombies] <- {
+			Name = "Army of the dead",
+			Spawnlist = this.Const.World.Spawn.Necromancer,
+			Description = "An army of undead lead by a necromancer.",
+			Footprint = this.Const.World.FootprintsType.Undead,
+			Noble = false
+		}
+		factionTypes[this.Const.FactionType.NobleHouse] <- {
+			Name = "Noble Army",
+			Spawnlist = this.Const.World.Spawn.Noble,
+			Description = "An army of noble soldiers.",
+			Footprint = this.Const.World.FootprintsType.Nobles,
+			Noble = true
+		}
+		factionTypes[this.Const.FactionType.OrientalCityState] <- {
+			Name = "City State Army",
+			Spawnlist = this.Const.World.Spawn.Noble,
+			Description = "An army of city state soldiers.",
+			Footprint = this.Const.World.FootprintsType.Nobles,
+			Noble = true
+		}
+		local factionType = factionTypes[closest_faction.m.Type]
+		local party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, party_difficulty);
+		party.setDescription(factionType.Description);
+		party.setFootprintType(factionType.Footprint);
+
+		if (factionType.Noble){
 			this.m.Flags.set("EnemyNobleHouse", closest_faction.getID());
-			
-		}
-		else if (closest_faction.m.Type == this.Const.FactionType.OrientalCityState)
-		{
-			party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), "City State Army", false, this.Const.World.Spawn.Southern, party_difficulty);
-			party.setDescription("An army of city state soldiers.");
-			party.setFootprintType(this.Const.World.FootprintsType.Nobles);
-			this.m.Flags.set("EnemyNobleHouse", closest_faction.getID())
-		}
-		else
-		{
-			party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), "Orc Marauders", false, this.Const.World.Spawn.OrcRaiders, party_difficulty);
-			party.setDescription("A warband of orcs.");
-			party.setFootprintType(this.Const.World.FootprintsType.Orcs);
 		}
 
-		origin = closest_settlement;
+		//can't get the same location twice
+		this.m.Flags.set(closest_settlement.getID(), true)
 		//spawn the party, assign AI controller, give the order to intercept the player. switches contract state to running straight away, no offer here
 		party.getLoot().ArmorParts = this.Math.rand(10, 30) * wave;
 		party.getLoot().Medicine = this.Math.rand(1, 3) * wave;
 		party.getLoot().Ammo = this.Math.rand(0, 30) * wave ;
 		party.getLoot().Money = this.Math.rand(200, 300) * wave;
-		party.getSprite("banner").setBrush(origin.getBanner());
+		party.getSprite("banner").setBrush(closest_settlement.getBanner());
 		party.getSprite("selection").Visible = true
 		party.setMovementSpeed(70);
 		party.setAttackableByAI(false);
@@ -470,7 +473,9 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		local c = party.getController();
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false);
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false);
-		local destroy = this.new("scripts/ai/world/orders/stronghold_destroy_order");
+		local destroy;
+		if (this.m.Flags.get("IsUpgrading")) destroy = this.new("scripts/ai/world/orders/stronghold_interrupt_upgrade_order");
+		else destroy = this.new("scripts/ai/world/orders/stronghold_destroy_order");
 		destroy.setTargetTile(tile);
 		destroy.setTargetID(playerBase.getID());
 		destroy.setTime(120.0);

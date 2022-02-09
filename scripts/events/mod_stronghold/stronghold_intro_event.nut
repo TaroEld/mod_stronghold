@@ -15,15 +15,15 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 			return  "[color=" + this.Const.UI.Color.NegativeEventValue + "]" + _text + "[/color]"
 		}
 		
-		local priceMult = this.Const.World.Stronghold.PriceMult;
-		local build_cost = this.Const.World.Stronghold.BuyPrices[0] * priceMult;
-		local levelOneName = this.Const.World.Stronghold.BaseNames[0]
+		local priceMult = this.Stronghold.PriceMult;
+		local build_cost = this.Stronghold.BuyPrices[0] * priceMult;
+		local levelOneName = this.Stronghold.BaseNames[0]
 
 		local hasInventoryUpgrade = this.World.Retinue.getInventoryUpgrades() > 0
 		local hasMoney = this.World.Assets.getMoney() >= build_cost
 		local isTileOccupied = this.World.State.getPlayer().getTile().IsOccupied
 		local hasContract = this.World.Contracts.getActiveContract() != null
-		local isCoastal = this.Stronghold.checkForCoastal(this.World.State.getPlayer().getTile())
+		local isCoastal = this.Stronghold.isOnTile(this.World.State.getPlayer().getTile(), [this.Const.World.TerrainType.Ocean, this.Const.World.TerrainType.Shore])
 		local hasRenown = this.World.Assets.getBusinessReputation() > 500;
 
 		local isValid = hasRenown && hasInventoryUpgrade && hasMoney && !isTileOccupied && !hasContract
@@ -40,7 +40,7 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		requirementsText += renownText + inventoryText + moneyText + tileText + contractText
 
 
-		requirementsText += format("\n\n Building a %s will unlock these features: \n%s", levelOneName, this.Const.World.Stronghold.UnlockAdvantages[0])
+		requirementsText += format("\n\n Building a %s will unlock these features: \n%s", levelOneName, this.Stronghold.UnlockAdvantages[0])
 		requirementsText += format("\n\n Also, you %s", coastalText)
 
 		requirementsText += format("\n\n Once you've built the %s, click the large fortification in the background to open the management menu. You can rename it by clicking on the name.", levelOneName)
@@ -50,7 +50,7 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 			requirementsText += coloredText(format("\n\nYou CAN build a %s!", levelOneName)) + " Do you wish to proceed?"
 		 	A_options = 
 		 	[{
-				Text = "Yes, build a "+ this.Const.World.Stronghold.BaseNames[0] + " here",
+				Text = "Yes, build a "+ this.Stronghold.BaseNames[0] + " here",
 				function getResult( _event )
 				{
 					return "Base_Option";
@@ -102,57 +102,7 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 					Text = "Yes",
 					function getResult( _event )
 					{
-						local priceMult = this.Const.World.Stronghold.PriceMult
-						local build_cost = this.Const.World.Stronghold.BuyPrices[0] * priceMult
-						//called from retinue menu
-						this.World.Assets.addMoney(-build_cost);
-						local tile = this.World.State.getPlayer().getTile();
-						local playerFaction = this.Stronghold.getPlayerFaction()
-						//create new faction if it doesn't exist already
-						if (playerFaction == null)
-						{
-							playerFaction = this.new("scripts/factions/stronghold_player_faction");
-							playerFaction.setID(this.World.FactionManager.m.Factions.len());
-							playerFaction.setName("The " + this.World.Assets.getName());
-							playerFaction.setMotto("\"" + "Soldiers Live" + "\"");
-							playerFaction.setDescription("The only way to leave the company is feet first.");
-							playerFaction.m.Banner = this.World.Assets.getBannerID()
-							playerFaction.setDiscovered(true);
-							playerFaction.m.PlayerRelation = 100;		
-							playerFaction.updatePlayerRelation()
-							this.World.FactionManager.m.Factions.push(playerFaction);
-							playerFaction.onUpdateRoster();
-						}
-						
-						local playerBase = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_player_base", tile.Coords);
-						playerBase.getFlags().set("isPlayerBase", true);
-						playerBase.getFlags().set("RosterSeed", this.toHash(playerBase));
-						playerBase.getFlags().set("TimeUntilNextMercs", -1)
-						playerBase.getFlags().set("TimeUntilNextCaravan", -1)
-						playerBase.getFlags().set("TimeUntilNextPatrol", -1)
-
-						this.World.createRoster(this.toHash(playerBase));
-						playerBase.updateProperties()
-						playerFaction.addSettlement(playerBase);
-						playerBase.setUpgrading(true);
-						playerBase.m.Flags.set("LevelOne", true)
-						playerBase.updateTown();
-						if(playerBase.m.IsCoastal){
-							playerBase.buildHarborLocation();
-							playerBase.buildRoad(playerBase.m.AttachedLocations[playerBase.m.AttachedLocations.len()-1])
-						}
-						
-						tile.IsOccupied = true;
-						tile.TacticalType = this.Const.World.TerrainTacticalType.Urban;
-						//spawn assailant quest
-						local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
-						contract.setEmployerID(playerFaction.getRandomCharacter().getID());
-						contract.setFaction(playerFaction.getID());
-						contract.setHome(playerBase);
-						contract.setOrigin(playerBase);
-						contract.m.TargetLevel = 1
-						this.World.Contracts.addContract(contract);
-						contract.start();
+						this.Stronghold.buildMainBase()
 						_event.removeEvent()
 						return 0
 					}

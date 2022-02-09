@@ -93,17 +93,17 @@
 					{
 						this.m.HitpointsPerHourMult = 1.0
 					}
-					
-				}
-				//stored brothers draw half wage
-				if (this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
-				{
-					foreach(playerBase in this.Stronghold.getPlayerFaction().getMainBases()){
+
+					//stored brothers draw half wage
+					if (this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
+					{
 						foreach(bro in playerBase.getLocalRoster().getAll()){
 							this.m.Money -= this.Math.floor(bro.getDailyCost()/2);
 						}
 					}
+					
 				}
+
 			}
 			//then run vanilla updte
 			update(_worldState)
@@ -167,7 +167,7 @@
 		o.queryData <- function()
 		{
 			local result = queryData()
-			local show = this.Stronghold.getPlayerFaction() == null || this.Stronghold.getPlayerFaction().getMainBases().len() < this.Const.World.Stronghold.getMaxStrongholdNumber()
+			local show = this.Stronghold.getPlayerFaction() == null || this.Stronghold.getPlayerFaction().getMainBases().len() < this.Stronghold.getMaxStrongholdNumber()
 			result.Assets.showStrongholdButton <- show;
 			return result;
 		}
@@ -627,7 +627,7 @@
 		local craftable = o.isCraftable
 		o.isCraftable = function()
 		{
-			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && "isPlayerBase" in this.World.State.getCurrentTown().m)
+			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && "isMainBase" in this.World.State.getCurrentTown() && this.World.State.getCurrentTown().isMainBase())
 			{
 
 				local getStash = this.World.Assets.getStash().getItems
@@ -645,7 +645,7 @@
 		local craft = o.craft
 		o.craft = function()
 		{
-			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && "isPlayerBase" in this.World.State.getCurrentTown().m)
+			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && "isMainBase" in this.World.State.getCurrentTown() && this.World.State.getCurrentTown().isMainBase())
 			{
 				return ("LegendsMod" in this.getroottable() ? consumeStashItemsLegends() : consumeStashItemsVanilla())			
 			}
@@ -657,7 +657,7 @@
 		local getIngredients = o.getIngredients
 		o.getIngredients = function()
 		{
-			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && "isPlayerBase" in this.World.State.getCurrentTown().m)
+			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && "isMainBase" in this.World.State.getCurrentTown() && this.World.State.getCurrentTown().isMainBase())
 			{
 				local getStash = this.World.Assets.getStash().getItems
 				this.World.Assets.getStash().getItems = getCombinedStash

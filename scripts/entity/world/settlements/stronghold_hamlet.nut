@@ -7,7 +7,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.settlement.create();
 		this.m.Name = "Fortress"
 		this.defineName();
-		this.m.DraftList = this.Const.World.Stronghold.FullDraftList;
+		this.m.DraftList = this.Stronghold.FullDraftList;
 		this.m.UIDescription = "Your hamlet";
 		this.m.Description = "Your hamlet";
 		this.m.UIBackgroundCenter = "ui/settlements/stronghold_01";
@@ -61,6 +61,10 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		return this.Stronghold.getPlayerFaction()
 	}
 	
+	function isMainBase(){
+		return false;
+	}
+	
 	/*function defineName()
 	{
 		if (this.getFlags().get("CustomName")) return;
@@ -78,7 +82,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 	}*/
 
 	function getSizeName(){
-		return this.Const.World.Stronghold.HamletName
+		return this.Stronghold.HamletName
 	}
 	
 	function onEnter()
@@ -98,11 +102,6 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		if (!flag) return false
 		return this.World.getEntityByID(flag)
 	}
-
-	function updateQuests()
-	{
-	}
-	
 
 	function getContracts()
 	{

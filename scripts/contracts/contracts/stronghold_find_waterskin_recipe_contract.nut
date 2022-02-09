@@ -278,7 +278,7 @@ this.stronghold_find_waterskin_recipe_contract <- this.inherit("scripts/contract
 					function getResult()
 					{
 						this.Stronghold.getPlayerFaction().m.Flags.set("Waterskin", true);
-						this.Contract.m.Home.clearContracts()
+						this.Stronghold.getPlayerFaction().clearContracts()
 						this.World.Contracts.finishActiveContract();
 						return 0;
 					}
@@ -330,7 +330,7 @@ this.stronghold_find_waterskin_recipe_contract <- this.inherit("scripts/contract
 	function removeThisContract()
 	{
 		this.World.Contracts.removeContract(this);
-		this.m.Home.updateQuests()
+		this.Stronghold.getPlayerFaction().updateQuests();
 		this.World.State.getTownScreen().updateContracts();
 	}
 

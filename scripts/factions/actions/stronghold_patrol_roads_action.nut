@@ -20,7 +20,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		local settlements = this.World.EntityManager.getSettlements();
 
 		foreach(playerBase in playerBases){
-			if (playerBase.isIsolated() || this.Time.getVirtualTimeF() < playerBase.getFlags().get("TimeUntilNextPatrol")) continue
+			if (playerBase.isIsolated() || this.Time.getVirtualTimeF() < playerBase.getFlags().get("TimeUntilNextPatrol") || playerBase.isUpgrading()) continue
 
 			local connected = []
 			foreach (settlement in settlements)

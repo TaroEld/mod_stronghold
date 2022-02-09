@@ -34,25 +34,27 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_storage_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/tavern_building"), 5);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
+	}
+
+	function onBuild()
+	{
+		this.getFlags().set("CustomSprite", "Default")
+		this.getFlags().set("IsSouthern", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert, this.Const.World.TerrainType.Oasis]) ||  this.getTile().TacticalType == this.Const.World.TerrainTacticalType.DesertHills) // why is desertHills not just a terrain type wtf
+		this.getFlags().set("IsOnSnow", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Snow]));
+		this.getFlags().set("IsOnDesert", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert]));
+		this.getFlags().set("isPlayerBase", true);
 		this.getFlags().set("IsMainBase", true)
-	}
-	
-	
-	function defineName()
-	{
-		if (this.getFlags().get("CustomName")) return;
-		//dynamic name to add distinction for size, also adds the company name
-		local company_name = this.World.Assets.getName();
-		local final_name = company_name;
-		if (company_name.slice(company_name.len()-1, company_name.len()) == "s") final_name +="' "
-		else final_name += "'s "
-		final_name += this.getSizeName();
-		this.m.Name = final_name;
-	}
-	
-	function isEnterable()
-	{
-		return true;
+		this.getFlags().set("TimeUntilNextMercs", -1)
+		this.getFlags().set("TimeUntilNextCaravan", -1)
+		this.getFlags().set("TimeUntilNextPatrol", -1)
+		this.getFlags().set("RosterSeed", this.toHash(this));
+		this.World.createRoster(this.toHash(this));
+		this.updateProperties()
+		this.updateTown();
+		if(this.m.IsCoastal){
+			this.buildHarborLocation();
+			this.buildRoad(this.m.AttachedLocations[this.m.AttachedLocations.len()-1])
+		}
 	}
 	
 	function onEnter()
@@ -65,7 +67,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.CurrentBuilding = null;
 		this.updateShop();
 		this.Math.seedRandom(this.Time.getRealTime());
-		this.updateQuests();
+		this.Stronghold.getPlayerFaction().updateQuests();
 		this.rebuildAttachedLocations()
 		//jank way to update sprite
 		if (this.m.Buildings[5] != null)
@@ -83,7 +85,13 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		this.World.State.getTownScreen().getMainDialogModule().deleteRename()
 	}
+	function isMainBase(){
+		return true;
+	}
 
+	function isMaxLevel(){
+		return !this.isUpgrading() && this.getSize() == 3
+	}
 	function getHamlet(){
 		local flag = this.m.Flags.get("Child")
 		if (!flag) return false
@@ -93,6 +101,74 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	//I dont trust the roster seed
 	function getLocalRoster(){
 		return this.World.getRoster(this.getFlags().get("RosterSeed"))
+	}
+
+	//disables lights when alt location
+	function onUpdate()
+	{
+		local lighting = this.getSprite("lighting");
+
+		if (!this.m.IsActive)
+		{
+			lighting.Alpha = 0;
+			return;
+		}
+
+		if (lighting.IsFadingDone)
+		{
+			if (lighting.Alpha == 0 && this.World.getTime().TimeOfDay >= 4 && this.World.getTime().TimeOfDay <= 7)
+			{
+				local insideScreen = this.World.getCamera().isInsideScreen(this.getPos(), 0);
+
+				if (insideScreen)
+				{
+					lighting.fadeIn(5000);
+				}
+				else
+				{
+					lighting.Alpha = 255;
+				}
+
+				foreach( h in this.m.HousesTiles )
+				{
+					//disable lights on houses
+					if (!this.m.Flags.get("BarbarianSprites") && !this.m.Flags.get("NomadSprites"))
+					{
+						local tile = this.World.getTileSquare(h.X, h.Y);
+						local d = tile.spawnDetail("world_houses_0" + this.m.HousesType + "_0" + h.V + "_light", this.Const.World.ZLevel.Object - 4, this.Const.World.DetailType.Lighting, false, insideScreen);
+						d.IgnoreAmbientColor = true;
+						d.Scale = 0.85;
+					}
+				}
+			}
+			else if (lighting.Alpha != 0 && this.World.getTime().TimeOfDay >= 0 && this.World.getTime().TimeOfDay <= 3)
+			{
+				local insideScreen = this.World.getCamera().isInsideScreen(this.getPos(), 0);
+
+				if (insideScreen)
+				{
+					lighting.fadeOut(4000);
+				}
+				else
+				{
+					lighting.Alpha = 0;
+				}
+
+				foreach( h in this.m.HousesTiles )
+				{
+					local tile = this.World.getTileSquare(h.X, h.Y);
+
+					if (insideScreen)
+					{
+						tile.clearAndFade(this.Const.World.DetailType.Lighting);
+					}
+					else
+					{
+						tile.clear(this.Const.World.DetailType.Lighting);
+					}
+				}
+			}
+		}
 	}
 
 	function fadeOutAndDie(_force = false)
@@ -132,66 +208,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			})
 		}
 		return ret
-	}
-
-	function updateQuests()
-	{
-		//adds/removes quests when entering town. Takes care of conflicing quests.		
-		local fac = this.Stronghold.getPlayerFaction();
-		local contracts = fac.getContracts();
-		local find_waterskin = false;
-		local free_mercenaries = false;
-		local find_trainer = false;
-		//vars for every quest, allows to plug it in later to remove it
-		foreach(contract in contracts)
-		{
-			
-			if (contract.m.Type == "contract.stronghold_find_waterskin_recipe_contract")
-			{
-				find_waterskin = true;
-			}
-			if (contract.m.Type == "contract.stronghold_free_mercenaries_contract")
-			{
-				free_mercenaries = true;
-			}
-			if (contract.m.Type == "contract.stronghold_free_trainer_contract")
-			{
-				find_trainer = true;
-			}
-		}	
-				
-		if (this.m.Size == 3 && !find_waterskin && !fac.m.Flags.get("Waterskin"))
-		{
-			local contract = this.new("scripts/contracts/contracts/stronghold_find_waterskin_recipe_contract");
-			contract.setEmployerID(fac.getRandomCharacter().getID());
-			contract.setFaction(fac.getID())
-			this.World.Contracts.addContract(contract);
-		}
-		
-		if (this.m.Size == 3 && !free_mercenaries && !fac.m.Flags.get("Mercenaries"))
-		{
-			local contract = this.new("scripts/contracts/contracts/stronghold_free_mercenaries_contract");
-			contract.setEmployerID(fac.getRandomCharacter().getID());
-			contract.setFaction(fac.getID())
-			this.World.Contracts.addContract(contract);
-		}
-		if (this.m.Size == 3 && !find_trainer && !fac.m.Flags.get("Teacher"))
-		{
-			local contract = this.new("scripts/contracts/contracts/stronghold_free_trainer_contract");
-			contract.setEmployerID(fac.getRandomCharacter().getID());
-			contract.setFaction(fac.getID())
-			this.World.Contracts.addContract(contract);
-		}
-	}
-	
-	function clearContracts()
-	{
-		//clears all contracts after some features
-		local contracts = this.Stronghold.getPlayerFaction().getContracts();
-		foreach (contract in contracts)
-		{
-			this.World.Contracts.removeContract(contract)
-		}
 	}
 	
 	function updateShop( _force = false )
@@ -248,105 +264,75 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return this.m.IsUpgrading
 	}
 
+
 	function getSizeName(_nextLevel = false){
-		if (_nextLevel) return this.Const.World.Stronghold.BaseNames[this.getSize()]
-		return this.Const.World.Stronghold.BaseNames[this.getSize()-1]
+		local size = this.getSize()
+		if (this.isUpgrading()) size = this.Math.max(1, size-1)
+		if (_nextLevel) return this.Stronghold.BaseNames[size]
+		return this.Stronghold.BaseNames[size-1]
 	}
 	
 	
 	function updateTown(){
-		//updates town after upgrading and loading the game. Necessary to update the sprites, names etc.
-		
-		//different looks
-		this.defineName()
-		local normalSprites = ["world_stronghold_01", "world_stronghold_02", "world_stronghold_03"]
-		local upgradingSprites = ["stronghold_02_upgrading", "stronghold_03_upgrading"]
-		local barbarianSprites = ["world_wildmen_01", "world_wildmen_02", "world_wildmen_03"]
-		local barbarianSpritesSnow = ["world_wildmen_01_snow", "world_wildmen_02_snow", "world_wildmen_03_snow"]
-		local nomadSprites = ["world_nomad_camp_02", "world_nomad_camp_03", "world_nomad_camp_04"]
-		local backgroundSprites =
-		[
-			{
-				UIBackgroundCenter = "ui/settlements/stronghold_01",
-				UIBackgroundLeft = "ui/settlements/bg_houses_01_left",
-				UIBackgroundRight = "ui/settlements/bg_houses_01_right",
-				UIRampPathway = "ui/settlements/ramp_01_planks",
-				Lighting = "world_stronghold_01_light"
-			},
-			{
-				UIBackgroundCenter = "ui/settlements/stronghold_02",
-				UIBackgroundLeft = "ui/settlements/bg_houses_02_left",
-				UIBackgroundRight = "ui/settlements/bg_houses_02_right",
-				UIRampPathway = "ui/settlements/ramp_01_planks",
-				Lighting = "world_stronghold_02_light"
-			},
-			{
-				UIBackgroundCenter = "ui/settlements/stronghold_03",
-				UIBackgroundLeft = "ui/settlements/bg_houses_03_left",
-				UIBackgroundRight = "ui/settlements/bg_houses_03_right",
-				UIRampPathway = "ui/settlements/ramp_01_cobblestone",
-				Lighting = "world_stronghold_03_light"
-			}
-		]
-		local selectedBackgroundSprites =  backgroundSprites[this.getSize()-1]
-		local sprites;
-		sprites = this.isUpgrading() ? upgradingSprites : normalSprites;
-		this.m.troopSprites <- "figure_mercenary_01";
-		local isOnSnow = this.getTile().Type == this.Const.World.TerrainType.Snow;
-		for( local i = 0; i != 6; i = ++i )
-		{
-			if (this.getTile().hasNextTile(i) && this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Snow)
-			{
-				isOnSnow = true;
-				break;
-			}
-		}
-		if (this.m.Flags.get("BarbarianSprites"))
-		{
-			isOnSnow ? sprites = barbarianSpritesSnow : sprites = barbarianSprites
-			this.m.troopSprites <- "figure_wildman_01";
-		}
-		else if (this.m.Flags.get("NomadSprites"))
-		{
-			this.m.troopSprites <- "figure_nomad_03";
-			sprites = nomadSprites
-		}
-		
-		//update size etc after deserialisation
-		
-		
-		this.m.Sprite = sprites[this.getSize()-1]
-		if (this.m.Flags.get("LevelOne") && this.isUpgrading()) this.m.Sprite = "stronghold_01_upgrading"
 
-		this.getSprite("body").setBrush(this.m.Sprite);
-		if (this.m.Flags.get("BarbarianSprites")||this.m.Flags.get("NomadSprites")){
-			this.getSprite("body").Scale = 1.25;
-		}
+		//updates town after upgrading and loading the game. Necessary to update the sprites, names etc.
+		this.m.troopSprites <- "figure_mercenary_01";
+		this.defineName()
+		this.getLabel("name").Text = this.getName();
+		this.getLabel("name").Visible = true;
 		this.m.UIDescription = format("Your %s", this.getSizeName());
 		this.m.Description = format("Your %s", this.getSizeName());
 
-		this.m.UIBackgroundCenter = selectedBackgroundSprites.UIBackgroundCenter + (isOnSnow ? "_snow" : "")
-		this.m.UIBackgroundLeft = selectedBackgroundSprites.UIBackgroundLeft + (isOnSnow ? "_snow" : "")
-		this.m.UIBackgroundRight = selectedBackgroundSprites.UIBackgroundRight + (isOnSnow ? "_snow" : "")
-		this.m.UIRampPathway = selectedBackgroundSprites.UIRampPathway
-		this.m.Lighting = selectedBackgroundSprites.Lighting
-		if(this.m.IsCoastal){
-			this.m.UIBackgroundLeft = "ui/settlements/water_01";
-		}
-
-		
+		this.updateLook()
 		
 		//add management building
 		if (this.m.Buildings[6] == null)
 		{
-			this.addBuilding(this.new("scripts/entity/world/settlem ents/buildings/stronghold_management_building"), 6);
+			this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 		}
 		this.m.Buildings[6].updateSprite()
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
 		//need to update building size since it's changed to 9 during serialisation
 
-		this.getLabel("name").Text = this.getName();
-		this.getLabel("name").Visible = true;
+		
+		this.m.AttachedLocationsMax = this.Stronghold.MaxAttachments[this.getSize()-1]
+	}
+
+	function defineName()
+	{
+		if (this.getFlags().get("CustomName")) return;
+		//dynamic name to add distinction for size, also adds the company name
+		local company_name = this.World.Assets.getName();
+		local final_name = company_name;
+		if (company_name.slice(company_name.len()-1, company_name.len()) == "s") final_name += "' "
+		else final_name += "'s "
+		final_name += this.getSizeName();
+		this.m.Name = final_name;
+	}
+
+	function updateLook(){
+
+		// local normalSprites = ["world_luft_01", "world_luft_02", "world_luft_03"]
+		// local upgradingSprites = ["world_luft_01u", "world_luft_02_u"]
+		local spriteID = this.getFlags().get("CustomSprite")
+		local isOnSnow = this.getFlags().get("IsOnSnow")
+		local isOnDesert = this.getFlags().get("IsOnDesert")
+		local constSprites = this.Stronghold.Visuals[this.Stronghold.VisualsMap[spriteID]];
+		local sprites = constSprites.Levels;
+		sprites = sprites[this.getSize()-1]
+
+		this.m.Sprite = this.isUpgrading() ? sprites.Upgrading : sprites.Base;
+		this.getSprite("body").setBrush(this.m.Sprite);
+
+		this.m.UIBackgroundCenter = sprites.Background.UIBackgroundCenter + (isOnSnow ? "_snow" : "")
+		this.m.UIBackgroundLeft = sprites.Background.UIBackgroundLeft + (isOnSnow ? "_snow" : "")
+		this.m.UIBackgroundRight = sprites.Background.UIBackgroundRight + (isOnSnow ? "_snow" : "")
+		this.m.UIRampPathway = sprites.Background.UIRampPathway
+		this.m.Lighting = sprites.BaseNight
+		if(this.m.IsCoastal){
+			this.m.UIBackgroundLeft = "ui/settlements/water_01";
+		}
+
 		local light = this.getSprite("lighting");
 		this.setSpriteColorization("lighting", false);
 		if (this.m.Lighting != "");
@@ -355,15 +341,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		light.IgnoreAmbientColor = true;
 		light.Alpha = 0;
-		local tile = this.getTile()
-		if (tile.Type == this.Const.World.TerrainType.Desert || tile.Type == this.Const.World.TerrainType.Oasis || tile.TacticalType == this.Const.World.TerrainTacticalType.DesertHills){
-			this.getFlags().set("isSouthern", true)
-		}
-		else
-		{
-			this.getFlags().set("isSouthern", false)
-		}
-		this.m.AttachedLocationsMax = this.Const.World.Stronghold.MaxAttachments[this.getSize()-1]
 	}
 	
 	
@@ -391,26 +368,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			}
 		}
 
-	}
-	
-	function onBuild()
-	{
-
-	}
-
-	
-	function updateRoster( _force = false )
-	{
-	}
-	
-	function getPriceMult()
-	{
-		return 1.3;
-	}
-
-	function hasContract( _id )
-	{
-		return true;
 	}
 	
 	function addImportedProduce( _p )
@@ -479,28 +436,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			c[i].clear();
 			c[i].IsOccupied = true;
 			local d;
-			if (this.m.Flags.get("BarbarianSprites"))
-			{
-				local isOnSnow = this.getTile().Type == this.Const.World.TerrainType.Snow;
-				for( local i = 0; i != 6; i = ++i )
-				{
-					if (this.getTile().hasNextTile(i) && this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Snow)
-					{
-						isOnSnow = true;
-						break;
-					}
-				}
-				local detail = isOnSnow? "world_wildmen_01_snow":"world_wildmen_01"
-				d = c[i].spawnDetail(detail, this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
-			}
-			else if (this.m.Flags.get("NomadSprites"))
-			{
-				d = c[i].spawnDetail("world_nomad_camp_02", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
-			}
-			else
-			{
-				d = c[i].spawnDetail("world_houses_0" + this.m.HousesType + "_0" + v, this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
-			}
+			d = c[i].spawnDetail("world_houses_0" + this.m.HousesType + "_0" + v, this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
+
 			d.Scale = 0.85;
 			c.remove(i);
 		}
@@ -579,7 +516,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local navSettings = this.World.getNavigator().createSettings();
 		navSettings.RoadMult = 0.15;
 		navSettings.StopAtRoad = false;
-		local 	roadCost =  clone this.Const.World.TerrainTypeNavCost
+		local roadCost =  clone this.Const.World.TerrainTypeNavCost
 		foreach (tile in roadCost) tile *= 1.5
 		navSettings.ActionPointCosts = roadCost
 
@@ -678,24 +615,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return true;
 	}
 	
-	
-	function checkForCoastal()
-	{
-		local isCoastal = false;
-		for( local i = 0; i < 6; i = ++i )
-		{
-			if (!this.getTile().hasNextTile(i))
-			{
-			}
-			else if (this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Ocean || this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Shore)
-			{
-				isCoastal = true;
-				break;
-			}
-		}
-		return isCoastal
-	}
-
 
 	function buildHarborLocation()
 	{
@@ -717,72 +636,23 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 	}
 
-	//disables lights when alt location
-	function onUpdate()
+	function isEnterable()
 	{
-		local lighting = this.getSprite("lighting");
+		return true;
+	}
 
-		if (!this.m.IsActive)
-		{
-			lighting.Alpha = 0;
-			return;
-		}
+	function updateRoster( _force = false )
+	{
+	}
+	
+	function getPriceMult()
+	{
+		return 1.3;
+	}
 
-		if (lighting.IsFadingDone)
-		{
-			if (lighting.Alpha == 0 && this.World.getTime().TimeOfDay >= 4 && this.World.getTime().TimeOfDay <= 7)
-			{
-				local insideScreen = this.World.getCamera().isInsideScreen(this.getPos(), 0);
-
-				if (insideScreen)
-				{
-					lighting.fadeIn(5000);
-				}
-				else
-				{
-					lighting.Alpha = 255;
-				}
-
-				foreach( h in this.m.HousesTiles )
-				{
-					//disable lights on houses
-					if (!this.m.Flags.get("BarbarianSprites") && !this.m.Flags.get("NomadSprites"))
-					{
-						local tile = this.World.getTileSquare(h.X, h.Y);
-						local d = tile.spawnDetail("world_houses_0" + this.m.HousesType + "_0" + h.V + "_light", this.Const.World.ZLevel.Object - 4, this.Const.World.DetailType.Lighting, false, insideScreen);
-						d.IgnoreAmbientColor = true;
-						d.Scale = 0.85;
-					}
-				}
-			}
-			else if (lighting.Alpha != 0 && this.World.getTime().TimeOfDay >= 0 && this.World.getTime().TimeOfDay <= 3)
-			{
-				local insideScreen = this.World.getCamera().isInsideScreen(this.getPos(), 0);
-
-				if (insideScreen)
-				{
-					lighting.fadeOut(4000);
-				}
-				else
-				{
-					lighting.Alpha = 0;
-				}
-
-				foreach( h in this.m.HousesTiles )
-				{
-					local tile = this.World.getTileSquare(h.X, h.Y);
-
-					if (insideScreen)
-					{
-						tile.clearAndFade(this.Const.World.DetailType.Lighting);
-					}
-					else
-					{
-						tile.clear(this.Const.World.DetailType.Lighting);
-					}
-				}
-			}
-		}
+	function hasContract( _id )
+	{
+		return true;
 	}
 	
 	function onSerialize( _out )

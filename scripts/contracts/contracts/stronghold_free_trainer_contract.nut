@@ -402,7 +402,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 					function getResult()
 					{
 						this.Stronghold.getPlayerFaction().m.Flags.set("Teacher", true);
-						this.Contract.m.Home.clearContracts()
+						this.Stronghold.getPlayerFaction().clearContracts()
 						this.World.Contracts.finishActiveContract();
 						return 0;
 					}
@@ -454,7 +454,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 	function removeThisContract()
 	{
 		this.World.Contracts.removeContract(this);
-		this.m.Home.updateQuests()
+		this.Stronghold.getPlayerFaction().updateQuests();
 		this.World.State.getTownScreen().updateContracts();
 	}
 	

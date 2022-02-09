@@ -35,7 +35,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	{
 		this.m.Name = format("Manage your %s", this.getHome().getSizeName());
 		this.m.Title = format("Manage your %s", this.getHome().getSizeName());
-		this.m.IsSouthern <- this.getHome().getFlags().get("isSouthern")
+		this.m.IsSouthern <- this.getHome().getFlags().get("IsSouthern")
 	}
 	//do these after variables are set
 	function initScreensAndStates()
@@ -54,7 +54,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	//disable some options for hamlet
 	function isMainBase(){
-		return this.getHome().m.Flags.get("IsMainBase")
+		return this.getHome().isMainBase()
 	}
 
 	function onImportIntro()
@@ -183,8 +183,6 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	{
 		if ("LegendMod" in this.getroottable().Const) this.World.State.getPlayer().calculateModifiers();
 		this.World.Contracts.removeContract(this);
-		this.m.Home.updateQuests()
-		this.World.State.getTownScreen().updateContracts();
 	}
 
 	function onEscPressed()
@@ -413,7 +411,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		if (this.m.ActiveIdx == this.m.Temp_Options.len()) this.m.ActiveIdx = 0
 
 		local newOptions = [];
-		for (local x = 0; x < this.m.Temp_Options.len() && x < this.Const.World.Stronghold.MaxMenuOptionsLen; x++){
+		for (local x = 0; x < this.m.Temp_Options.len() && x < this.Stronghold.MaxMenuOptionsLen; x++){
 			newOptions.push(clone this.m.Temp_Options[this.m.ActiveIdx])
 			this.m.ActiveIdx++
 			if (this.m.ActiveIdx == this.m.Temp_Options.len()){
@@ -422,7 +420,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			}
 
 		}
-		if (this.m.Temp_Options.len() > this.Const.World.Stronghold.MaxMenuOptionsLen){
+		if (this.m.Temp_Options.len() > this.Stronghold.MaxMenuOptionsLen){
 			newOptions.push(getMoreOptionsOption())
 		}
 		newOptions.push(this.addGenericOption("Not right now."))
@@ -456,20 +454,20 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function getMainMenuOptions()
 	{
-		this.buildActiveOptions(this.Const.World.Stronghold.Main_Management_Options, this.addMainMenuScreen)
+		this.buildActiveOptions(this.Stronghold.Main_Management_Options, this.addMainMenuScreen)
 		return this.getActiveOptions();
 	}
 
 
 	function getBuildingOptions()
 	{
-		this.buildActiveOptions(this.Const.World.Stronghold.Building_options, this.addBuildingScreen)
+		this.buildActiveOptions(this.Stronghold.Building_options, this.addBuildingScreen)
 		return this.getActiveOptions()
 	}
 
 	function getBuildingRemoveOptions()
 	{
-		local contract_options = clone this.Const.World.Stronghold.Building_options
+		local contract_options = clone this.Stronghold.Building_options
 		local isSouthern = this.m.IsSouthern
 		local home = this.getHome()
 		contract_options = contract_options.filter(function(index, building){
@@ -481,7 +479,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function getLocationOptions()
 	{	
-		this.buildActiveOptions(this.Const.World.Stronghold.Location_options, this.addLocationScreen)
+		this.buildActiveOptions(this.Stronghold.Location_options, this.addLocationScreen)
 		return this.getActiveOptions()
 	}
 
@@ -575,6 +573,12 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		return this.getActiveOptions()
 	}
 
+	function getBaseSyleOptions()
+	{
+		this.buildActiveOptions(this.Stronghold.Visuals, this.addBaseVisualScreen)
+		return this.getActiveOptions()
+	}
+
 	function addMainMenuScreen(_screenVar, _idx){
 		return {
 			Text = _screenVar.Text.call(this),
@@ -652,12 +656,12 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function addBuildingScreen(_screenVar, _idx){
 		return {
-			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Const.World.Stronghold.PriceMult) + " crowns)",
+			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Stronghold.PriceMult) + " crowns)",
 			function getResult(_option)
 			{
 				local building = this.Option
 				this.Contract.m.Temp_Var <- (this.Contract.m.IsSouthern &&  building.SouthPath) ? building.SouthPath : building.Path
-				this.Contract.setCost(building.Cost * this.Const.World.Stronghold.PriceMult)	
+				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	
 				this.Contract.addOverviewScreen(
 					format("Build a %s", building.Name), 
 					format("You selected a %s. This will cost %i. Do you wish to build this?", building.Name, this.Contract.getCost())
@@ -699,12 +703,12 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function addLocationScreen(_screenVar, _idx){
 		return {
-			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Const.World.Stronghold.PriceMult) + " crowns)",
+			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Stronghold.PriceMult) + " crowns)",
 			function getResult(_option)
 			{
 				local building = this.Option
 				this.Contract.m.Temp_Var <- building.Path
-				this.Contract.setCost(building.Cost * this.Const.World.Stronghold.PriceMult)	
+				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	
 				this.Contract.addOverviewScreen(
 					format("Build a %s", building.Name), 
 					format("You selected a %s. This will cost %i. Do you wish to build this?", building.Name,
@@ -723,13 +727,13 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	}
 
 	function addRoadScreen(_screenVar, _idx){
-		local price = _screenVar.Cost * this.Const.World.Stronghold.RoadCost * this.Const.World.Stronghold.PriceMult
+		local price = _screenVar.Cost * this.Stronghold.RoadCost * this.Stronghold.PriceMult
 		return{
 			Text = format("Road to %s (%i Crowns)", _screenVar.Name, price)
 			function getResult(_option)
 			{
 				this.Contract.m.Temp_Var <- this.Option;
-				this.Contract.setCost(this.Option.Cost * this.Const.World.Stronghold.RoadCost * this.Const.World.Stronghold.PriceMult)
+				this.Contract.setCost(this.Option.Cost * this.Stronghold.RoadCost * this.Stronghold.PriceMult)
 				this.Contract.addOverviewScreen(
 					format("Build a road"), 
 					format("You will try to build a road to %s. This will cost %i crowns. Do you wish to do this?", this.Option.Name, this.Contract.getCost())
@@ -819,8 +823,32 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			Option = _screenVar
 		}
 	}
+	function addBaseVisualScreen(_screenVar, _idx){
+		return{
+			Text = _screenVar.Name,
+			function getResult(_option)
+			{
+				this.Contract.m.Temp_Var = this.Option;
+				local name = this.Option.Name
+				this.Contract.addOverviewScreen(
+					format("%s", name), 
+					format("Change visual style of this base to %s", name)
+				)
+				this.Contract.addEnoughScreen(
+					"Style changed.",
+					format("Style changed to %s", name),
+					this.Contract.onStyleChanged
+				)
+				return "Overview_Building";
+			},
+			IDX = _idx,
+			Option = _screenVar
+		}
+	}
 
-
+	function onStyleChanged(){
+		this.getHome().getFlags().set("CustomSprite", this.m.Temp_Var.ID)
+	}
 	
 	function onBuildingAdded()
 	{
@@ -1161,6 +1189,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		contract.setFaction(playerFaction.getID());
 		contract.setHome(this.getHome());
 		contract.setOrigin(this.getHome());
+		contract.m.Flags.set("IsUpgrading", true)
 		contract.m.TargetLevel = this.getHome().getSize() + 1
 		this.World.Contracts.addContract(contract);
 		contract.start();

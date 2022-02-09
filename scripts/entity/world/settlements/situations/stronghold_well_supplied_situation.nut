@@ -37,7 +37,7 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 	function defineDescription(_town)
 	{
 		local description = "With no noble house asking for tariffs, you can get very good prices for your goods. ";
-		local mults = this.Const.World.Stronghold.WellSupplied[_town.getSize()-1]
+		local mults = this.Stronghold.WellSupplied[_town.getSize()-1]
 		return description
 	}
 
@@ -56,7 +56,7 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 		local playerBase = this.World.State.getCurrentTown();
 		if (playerBase == null) return
 		this.defineDescription(playerBase);
-		local mults = this.Const.World.Stronghold.WellSupplied[playerBase.getSize()-1]
+		local mults = this.Stronghold.WellSupplied[playerBase.getSize()-1]
 		_modifiers.RarityMult = mults.Rarity;
 		_modifiers.BuyPriceMult = mults.BuyPrice;
 		_modifiers.SellPriceMult = mults.SellPrice;

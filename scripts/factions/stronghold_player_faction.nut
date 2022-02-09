@@ -16,7 +16,7 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 		this.m.CombatMusic = this.Const.Music.NobleTracks;
 		this.m.RelationDecayPerDay = 0;
 		this.m.BannerPrefix = "banner_"
-		this.addTrait(this.Const.World.Stronghold.PlayerFactionActions)
+		this.addTrait(this.Stronghold.PlayerFactionActions)
 	}
 	function getName()
 	{
@@ -113,32 +113,19 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 		}
 	}
 
-	function getMainBases(){
-		local bases = [];
-		foreach(settlement in this.getSettlements()){
-			if (settlement.getFlags().get("IsMainBase")){
-				bases.push(settlement)
-			}
-		}
-		return bases
+	function getMainBases()
+	{
+		return this.getSettlements().filter(@(a, b) b.isMainBase())
 	}
+
 	function getDevelopedBases()
 	{
-		local bases = [];
-		foreach(settlement in this.getMainBases()){
-			if (settlement.getSize() > 1){
-
-				bases.push(settlement)
-			}
-		}
-		return bases
+		return this.getMainBases().filter(@(a, b) b.getSize() > 1)
 	}
-	function getHamlets(){
-		local bases = [];
-		foreach(settlement in this.getSettlements()){
-			if (settlement.getFlags().get("IsSecondaryBase")) bases.push(settlement)
-		}
-		return bases
+
+	function getHamlets()
+	{
+		return this.getSettlements().filter(@(a, b) !b.isMainBase())
 	}
 	
 	function updateAlliancesPlayerFaction()
@@ -213,9 +200,6 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 		return this.m.Units.len() <= this.m.Settlements.len() + 1;
 	}
 
-
-
-
 	function onUpdateRoster()
 	{
 		//add a single noble for the roster, later has retired units
@@ -234,6 +218,65 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 	function isReadyForContract()
 	{
 		return false;
+	}
+
+	function clearContracts()
+	{
+		//clears all contracts after some features
+		local contracts = this.getContracts();
+		foreach (contract in contracts)
+		{
+			this.World.Contracts.removeContract(contract)
+		}
+	}
+	
+	function updateQuests()
+	{
+		//adds/removes quests when entering town. Takes care of conflicing quests.	
+		if (this.getMainBases().filter(@(a, b) b.isMaxLevel()).len() == 0) return
+		local contracts = this.getContracts();
+		local find_waterskin = false;
+		local free_mercenaries = false;
+		local find_trainer = false;
+		//vars for every quest, allows to plug it in later to remove it
+		foreach(contract in contracts)
+		{
+			if (contract.m.Type == "contract.stronghold_find_waterskin_recipe_contract")
+			{
+				find_waterskin = true;
+			}
+			if (contract.m.Type == "contract.stronghold_free_mercenaries_contract")
+			{
+				free_mercenaries = true;
+			}
+			if (contract.m.Type == "contract.stronghold_free_trainer_contract")
+			{
+				find_trainer = true;
+			}
+		}	
+				
+		if (!find_waterskin && !this.m.Flags.get("Waterskin"))
+		{
+			local contract = this.new("scripts/contracts/contracts/stronghold_find_waterskin_recipe_contract");
+			contract.setEmployerID(this.getRandomCharacter().getID());
+			contract.setFaction(this.getID())
+			this.World.Contracts.addContract(contract);
+		}
+		
+		if (!free_mercenaries && !this.m.Flags.get("Mercenaries"))
+		{
+			local contract = this.new("scripts/contracts/contracts/stronghold_free_mercenaries_contract");
+			contract.setEmployerID(this.getRandomCharacter().getID());
+			contract.setFaction(this.getID())
+			this.World.Contracts.addContract(contract);
+		}
+		if (!find_trainer && !this.m.Flags.get("Teacher"))
+		{
+			local contract = this.new("scripts/contracts/contracts/stronghold_free_trainer_contract");
+			contract.setEmployerID(this.getRandomCharacter().getID());
+			contract.setFaction(this.getID())
+			this.World.Contracts.addContract(contract);
+		}
 	}
 	
 	//should it ever change, this returns it

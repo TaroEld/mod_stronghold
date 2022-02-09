@@ -14,7 +14,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 	{
 		local basesRequiringCaravan = [];
 		foreach(playerBase in _faction.getDevelopedBases()){
-			if (this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextCaravan")){
+			if (this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextCaravan") && !playerBase.isUpgrading()){
 				basesRequiringCaravan.push(playerBase)
 			}
 		}

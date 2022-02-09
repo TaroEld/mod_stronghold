@@ -145,8 +145,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 						}
 						if (end_settlement != null)
 						{
-							this.logInfo(start_settlement.getName())
-							this.logInfo(start_settlement.getFactionOfType(this.Const.FactionType.NobleHouse))
 							selected_faction = start_settlement.getFactionOfType(this.Const.FactionType.NobleHouse);
 							total_dist = longestDistanceBetweenSettlements;
 							selected_start_settlement = start_settlement
@@ -376,7 +374,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					function getResult()
 					{
 						this.Stronghold.getPlayerFaction().m.Flags.set("Mercenaries", true);
-						this.Contract.m.Home.clearContracts()
+						this.Stronghold.getPlayerFaction().clearContracts()
 						this.World.Contracts.finishActiveContract();
 						return 0;
 					}
@@ -392,7 +390,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 							}
 						}
 						this.Contract.m.Home.m.Flags.set("Mercenaries", true);
-						this.Contract.m.Home.clearContracts()
+						this.Stronghold.getPlayerFaction().clearContracts()
 						this.World.Contracts.finishActiveContract();
 						return 0;
 					}
@@ -501,7 +499,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	function removeThisContract()
 	{
 		this.World.Contracts.removeContract(this);
-		this.m.Home.updateQuests()
+		this.Stronghold.getPlayerFaction().updateQuests();
 		this.World.State.getTownScreen().updateContracts();
 	}
 	function spawnMercenaries()
