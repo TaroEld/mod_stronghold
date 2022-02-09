@@ -7,7 +7,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.settlement.create();
 		this.m.isPlayerBase <- true;
 		this.m.Name = "Fortress"
-		this.defineName();
 		this.m.DraftList = [];
 		this.m.UIDescription = "Your stronghold";
 		this.m.Description = "Your stronghold";
@@ -31,6 +30,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Banner = this.World.Assets.getBannerID();
 		this.m.IsShowingBanner = true;
 		this.m.Buildings.resize(7, null)
+		this.defineName();
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_storage_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/tavern_building"), 5);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
