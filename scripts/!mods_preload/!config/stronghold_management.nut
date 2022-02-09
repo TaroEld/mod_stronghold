@@ -195,7 +195,7 @@ gt.Stronghold.Main_Management_Options <-
 			return _contract.isMainBase() && _contract.getHome().isMaxLevel()
 		},
 		onChosen = function(){
-			if (!this.getHome().m.Flags.get("Waterskin"))
+			if (!this.Stronghold.getPlayerFaction().m.Flags.get("Waterskin"))
 			{
 				this.m.Screens.push
 				({
@@ -273,7 +273,7 @@ gt.Stronghold.Main_Management_Options <-
 					has_mercs = true
 				}
 			}
-			if (!this.getHome().m.Flags.get("Mercenaries"))
+			if (!this.Stronghold.getPlayerFaction().m.Flags.get("Mercenaries"))
 			{
 				this.m.Screens.push
 				({
@@ -327,7 +327,7 @@ gt.Stronghold.Main_Management_Options <-
 		},
 		onChosen = function(){
 			this.setCost(10 * this.Stronghold.PriceMult);
-			if (!this.getHome().m.Flags.get("Teacher"))
+			if (!this.Stronghold.getPlayerFaction().m.Flags.get("Teacher"))
 			{
 				this.m.Screens.push
 				({

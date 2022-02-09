@@ -66,7 +66,8 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		local c = party.getController();
 
 		local totalTime = this.World.getTime().SecondsPerDay * 7
-		local locations = playerBase.m.AttachedLocations
+		local locations = []
+		locations.extend(playerBase.m.AttachedLocations)
 		local hamlet = playerBase.getHamlet()
 		if (hamlet != false) {
 		    locations.push(hamlet)
