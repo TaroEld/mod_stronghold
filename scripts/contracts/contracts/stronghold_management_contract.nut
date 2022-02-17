@@ -925,9 +925,10 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			this.Const.World.TerrainType.Farmland,
 			this.Const.World.TerrainType.Snow,
 			this.Const.World.TerrainType.Badlands,
-			this.Const.World.TerrainType.Tundra
+			this.Const.World.TerrainType.Tundra,
+			this.Const.World.TerrainType.Oasis,
 		]
-		home.buildAttachedLocation(1, text, validTerrain, [], 1)
+		home.buildAttachedLocation(1, text, validTerrain, [], 2)
 		home.buildRoad(home.m.AttachedLocations[home.m.AttachedLocations.len()-1])
 		this.clearScreens()
 		return "Task"

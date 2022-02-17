@@ -208,11 +208,15 @@ gt.Stronghold.getClosestDistance <- function(_destination, _list, _tiles = false
 //modded from vanilla to allow for longer range
 gt.Stronghold.isOnTile <- function(_tile, _tileTypes)
 {
-	foreach(tile in _tileTypes){
-		if (_tile.Type == _tile) return true
+	foreach(tileType in _tileTypes){
+		if (_tile.Type == tileType){
+			return true
+		}
 		for( local i = 0; i != 6; i = ++i )
 		{
-			if (_tile.hasNextTile(i) && _tile.getNextTile(i).Type == _tile) return true;
+			if (_tile.hasNextTile(i) && _tile.getNextTile(i).Type == tileType){
+				return true;
+			}
 		}
 	}
 	return false

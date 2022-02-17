@@ -383,7 +383,140 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	
 	function buildAttachedLocation( _num, _script, _terrain, _nearbyTerrain, _additionalDistance = 0, _mustBeNearRoad = false, _clearTile = true )
 	{
-		this.settlement.buildAttachedLocation(_num, _script, _terrain, _nearbyTerrain, _additionalDistance, _mustBeNearRoad, _clearTile)
+		local tries = 0;
+		local myTile = this.getTile();
+		local foundTile = false;
+		_additionalDistance = 0;
+
+		while (_num > 0 && tries++ < 10000 && !foundTile)
+		{
+			if(tries % 1000 == 0){
+				_additionalDistance++
+			}
+			local x = this.Math.rand(myTile.SquareCoords.X - 2 - _additionalDistance, myTile.SquareCoords.X + 2 + _additionalDistance);
+			local y = this.Math.rand(myTile.SquareCoords.Y - 2 - _additionalDistance, myTile.SquareCoords.Y + 2 + _additionalDistance);
+
+			if (!this.World.isValidTileSquare(x, y))
+			{
+				continue;
+			}
+
+			local tile = this.World.getTileSquare(x, y);
+
+			if (tile.IsOccupied)
+			{
+				continue;
+			}
+
+			if (_mustBeNearRoad && tile.HasRoad)
+			{
+				continue;
+			}
+
+			if (tile.getDistanceTo(myTile) == 1 && _additionalDistance >= 0 || tile.getDistanceTo(myTile) < _additionalDistance)
+			{
+				continue;
+			}
+
+			local terrainFits = false;
+
+			foreach( t in _terrain )
+			{
+				if (t == tile.Type)
+				{
+					if (_nearbyTerrain.len() == 0 && !_mustBeNearRoad)
+					{
+						terrainFits = true;
+					}
+					else
+					{
+						for( local i = 0; i < 6; i = ++i )
+						{
+							if (!tile.hasNextTile(i))
+							{
+							}
+							else
+							{
+								local next = tile.getNextTile(i);
+
+								if (_mustBeNearRoad && !next.HasRoad)
+								{
+								}
+								else
+								{
+									if (_nearbyTerrain.len() != 0)
+									{
+										foreach( n in _nearbyTerrain )
+										{
+											if (next.Type == n)
+											{
+												terrainFits = true;
+												break;
+											}
+										}
+									}
+									else
+									{
+										terrainFits = true;
+									}
+
+									if (terrainFits)
+									{
+										break;
+									}
+								}
+							}
+						}
+					}
+
+					if (terrainFits)
+					{
+						break;
+					}
+				}
+			}
+
+			if (!terrainFits)
+			{
+				continue;
+			}
+
+			if (tile.getDistanceTo(myTile) > 2)
+			{
+				local navSettings = this.World.getNavigator().createSettings();
+				navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost_Flat;
+				local path = this.World.getNavigator().findPath(myTile, tile, navSettings, 0);
+
+				if (path.isEmpty())
+				{
+					continue;
+				}
+			}
+
+			if (_clearTile)
+			{
+				tile.clearAllBut(this.Const.World.DetailType.Shore);
+			}
+			else
+			{
+				tile.clear(this.Const.World.DetailType.NotCompatibleWithRoad);
+			}
+
+			local entity = this.World.spawnLocation(_script, tile.Coords);
+			entity.setSettlement(this);
+
+			if (entity.onBuild())
+			{
+				this.m.AttachedLocations.push(entity);
+				_num = --_num;
+				tries = 0;
+			}
+			else
+			{
+				entity.die();
+				continue;
+			}
+		}
 		this.m.AttachedLocations[this.m.AttachedLocations.len()-1].setActive(true)
 	}
 	
