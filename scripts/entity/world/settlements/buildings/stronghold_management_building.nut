@@ -10,7 +10,7 @@ this.stronghold_management_building <- this.inherit("scripts/entity/world/settle
 		this.m.Name = "Management";
 		this.m.Description = "Manage your base";
 		this.m.UIImage = "ui/settlements/stronghold_01_management";
-		this.m.UIImageNight = "ui/settlements/building_06";
+		this.m.UIImageNight = "ui/settlements/stronghold_01_night_management";
 		this.m.Tooltip = "world-town-screen.main-dialog-module.Management";
 		this.m.TooltipIcon = "ui/icons/buildings/tavern.png";
 		this.m.IsClosedAtNight = false;
