@@ -228,16 +228,41 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 		}
 		if (this.m.Settlement.hasAttachedLocation("attached_location.gold_mine"))
 		{
-			local money = this.new("scripts/items/supplies/money_item")
-			money.setAmount(_daysPassed*150);
-			this.m.Stash.add(money)
+			local money = this.new("scripts/items/supplies/money_item");
+			local moneyPerMine = this.Stronghold.DailyGoldPerGoldMine;
+			if (this.Stronghold.AllowMoreThanOneGoldMine) {
+				// More than one possible mine scenario, money = number of mines * daily money per mine * number of days
+				// Get number of mines
+				local numberOfMines = countAttachedLocations("attached_location.gold_mine");
+				money.setAmount(_daysPassed * numberOfMines * moneyPerMine);
+			} else {
+				// Only one possible mine scenario, money = daily money per mine * number of days
+				money.setAmount(_daysPassed * moneyPerMine);
+			}
+			// Now that money value is calculated, add it to stash
+			this.m.Stash.add(money);
 		}
 
+		// Finally, add all items to be added to the stash/marketplace
 		foreach (item in toAdd)
 		{
 			item.m.PriceMult = 0;
 			this.m.Stash.add(item);
 		}
+	}
+
+	function countAttachedLocations( _id )
+	{
+		local count = 0;
+		foreach( a in this.m.Settlement.getActiveAttachedLocations() )
+		{
+			if (a.isActive() && a.getTypeID() == _id)
+			{
+				count = count + 1;
+			}
+		}
+
+		return count;
 	}
 
 	function onSerialize( _out )
