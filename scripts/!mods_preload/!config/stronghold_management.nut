@@ -740,10 +740,11 @@ gt.Stronghold.Location_options <-
 		Path = "gold_mine_location",
 		Text= "Build a gold mine. Gold will be generated over time.",
 		isValid = function(_contract){
-			return (!_contract.getHome().hasAttachedLocation(this.ID))
+			if (this.Stronghold.AllowMoreThanOneGoldMine) {
+				return true;
+			} else {
+				return (!_contract.getHome().hasAttachedLocation(this.ID))
+			}
 		}
 	}
 ]
-
-
-
