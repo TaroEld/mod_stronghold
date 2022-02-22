@@ -710,7 +710,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				this.Contract.m.Temp_Var <- building.Path
 				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	
 				this.Contract.addOverviewScreen(
-					format("Build a %s", building.Name), 
+					format("Build a %s (%i crowns)", building.Name, this.Contract.getCost()), 
 					format("You selected a %s. This will cost %i. Do you wish to build this?", building.Name,
 					this.Contract.getCost())
 				)

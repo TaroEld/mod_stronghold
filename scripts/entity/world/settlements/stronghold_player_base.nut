@@ -85,7 +85,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		this.World.State.getTownScreen().getMainDialogModule().deleteRename()
 	}
-	
+
 	function isMainBase(){
 		return true;
 	}
@@ -257,6 +257,20 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.updateImportedProduce();
 	}
 
+	function countAttachedLocations( _id )
+	{
+		local count = 0;
+		foreach( a in this.getActiveAttachedLocations() )
+		{
+			if (a.isActive() && a.getTypeID() == _id)
+			{
+				count = count + 1;
+			}
+		}
+
+		return count;
+	}
+
 	function setUpgrading(_bool){
 		this.m.IsUpgrading = _bool;
 	}
@@ -315,9 +329,13 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 		// local normalSprites = ["world_luft_01", "world_luft_02", "world_luft_03"]
 		// local upgradingSprites = ["world_luft_01u", "world_luft_02_u"]
+
+		//backward compatibility
 		if (!this.getFlags().has("CustomSprite")){
 			this.getFlags().set("CustomSprite", "Default")
 		}
+
+
 		local spriteID = this.getFlags().get("CustomSprite")
 		local isOnSnow = this.getFlags().get("IsOnSnow")
 		local isOnDesert = this.getFlags().get("IsOnDesert")

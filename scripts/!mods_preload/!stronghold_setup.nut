@@ -1,16 +1,29 @@
-::mods_registerMod("mod_stronghold", 1.0);
-::mods_registerJS("mod_stronghold.js");
-::mods_registerCSS("mod_stronghold.css");
+local gt = this.getroottable();
+gt.Stronghold <- {};
+::mods_registerMod("mod_stronghold", 1.16);
 ::mods_queue("mod_stronghold", null, function()
 {	
-	this.Math.randArray <- function(_array){
-		if (typeof _array != "array") {
-			this.logWarning("_array not an array or empty")
-			return
-		}
-		if(_array.len() == 0) return null
-		return _array[this.Math.rand(0, _array.len()-1)]
-	}
+	
+	::mods_registerJS("mod_stronghold.js");
+	::mods_registerCSS("mod_stronghold.css");
+	
+	gt.Stronghold.loadSettings();
+	delete gt.Stronghold.loadSettings;
+
+	gt.Stronghold.setupVarious();
+	delete gt.Stronghold.setupVarious;
+
+	gt.Stronghold.setupVisuals();
+	delete gt.Stronghold.setupVisuals;
+
+	gt.Stronghold.setupMainManagementOptions();
+	delete gt.Stronghold.setupMainManagementOptions;
+
+	gt.Stronghold.setupLocationDefs();
+	delete gt.Stronghold.setupLocationDefs;
+
+	gt.Stronghold.setupBuildingDefs();
+	delete gt.Stronghold.setupBuildingDefs;
 
 	::mods_hookNewObjectOnce("states/world/asset_manager", function (o)
 	{

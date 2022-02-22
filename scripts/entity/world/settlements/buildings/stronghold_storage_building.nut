@@ -202,8 +202,10 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 		}
 		if(this.m.Settlement.hasAttachedLocation("attached_location.workshop"))
 		{
-			tool_increment +=2;
-			tool_max += 2;
+			local toolPerWorkshop = this.Stronghold.Locations["Workshop"].ToolsPerWorkshop;
+			local numberOfWorkshops = this.m.Settlement.countAttachedLocations("attached_location.workshop");
+			tool_increment += toolPerWorkshop * numberOfWorkshops;
+			tool_max += toolPerWorkshop * numberOfWorkshops;
 		}
 		for (local x = 0; x < updates; x++)
 		{
@@ -229,17 +231,9 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 		if (this.m.Settlement.hasAttachedLocation("attached_location.gold_mine"))
 		{
 			local money = this.new("scripts/items/supplies/money_item");
-			local moneyPerMine = this.Stronghold.DailyGoldPerGoldMine;
-			if (this.Stronghold.AllowMoreThanOneGoldMine) {
-				// More than one possible mine scenario, money = number of mines * daily money per mine * number of days
-				// Get number of mines
-				local numberOfMines = countAttachedLocations("attached_location.gold_mine");
-				money.setAmount(_daysPassed * numberOfMines * moneyPerMine);
-			} else {
-				// Only one possible mine scenario, money = daily money per mine * number of days
-				money.setAmount(_daysPassed * moneyPerMine);
-			}
-			// Now that money value is calculated, add it to stash
+			local moneyPerMine = this.Stronghold.Locations["Gold_Mine"].GoldIncomePerMine;
+			local numberOfMines = this.m.Settlement.countAttachedLocations("attached_location.gold_mine");
+			money.setAmount(_daysPassed * numberOfMines * moneyPerMine);
 			this.m.Stash.add(money);
 		}
 
@@ -249,20 +243,6 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 			item.m.PriceMult = 0;
 			this.m.Stash.add(item);
 		}
-	}
-
-	function countAttachedLocations( _id )
-	{
-		local count = 0;
-		foreach( a in this.m.Settlement.getActiveAttachedLocations() )
-		{
-			if (a.isActive() && a.getTypeID() == _id)
-			{
-				count = count + 1;
-			}
-		}
-
-		return count;
 	}
 
 	function onSerialize( _out )
