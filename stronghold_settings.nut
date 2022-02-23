@@ -1,7 +1,6 @@
 local gt = this.getroottable();
 
-
-// General multiplier for crown values of prices.
+// General multiplier for crown values of prices
 gt.Stronghold.PriceMult <- 1000; 
 
 // Base price to build / upgrade / upgrade
@@ -29,6 +28,13 @@ gt.Stronghold.RenownPerLevel <- [
 // Cost of each road segment
 gt.Stronghold.RoadCost <- 0.5; 
 
+
+// Maximum amount of each item that can be produced and stored by the base
+gt.Stronghold.MaxAmountOfStoredTools = 8;
+gt.Stronghold.MaxAmountOfStoredMedicine = 5;
+gt.Stronghold.MaxAmountOfStoredAmmo = 6;
+
+
 // Base name for each tier, used in descriptions
 gt.Stronghold.BaseNames <- [
 	"Fort",
@@ -55,13 +61,15 @@ gt.Stronghold.BuildingPrices <-
 	Arena = 20
 };
 
+
 // Change settings related to attached locations
 gt.Stronghold.Locations <-
 {
 	Workshop = {
 		Cost = 10, // Cost for each attached location, multiplied by PriceMult (1000 by default)
 		MaxAmount = 1, // Maximum amount allowed per base
-		ToolsPerWorkshop = 2 // Amount of tools generated every three days
+		ToolsPerWorkshop = 2, // Amount of tools generated every three days
+		MaxItemSlots = 2 // Amount added to the maximum amount of stored items of this type
 	},
 	Ore_Smelter = {
 		Cost = 5,

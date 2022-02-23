@@ -181,9 +181,12 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 		local tool_increment = town_size;
 		local medicine_increment = town_size;
 		local ammo_increment = town_size;
-		local tool_max = 8
-		local medicine_max = 5
-		local ammo_max = 6
+		local tool_max = this.Stronghold.MaxAmountOfStoredTools;
+		local medicine_max = this.Stronghold.MaxAmountOfStoredMedicine;
+		local ammo_max = this.Stronghold.MaxAmountOfStoredAmmo;
+		
+		
+		
 		local updates = this.Math.abs(_daysPassed/3);
 		if (updates == 0){ 
 			updates = 1
@@ -200,12 +203,13 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 				medicine_count++
 			}
 		}
-		if(this.m.Settlement.hasAttachedLocation("attached_location.workshop"))
+		if (this.m.Settlement.hasAttachedLocation("attached_location.workshop"))
 		{
 			local toolPerWorkshop = this.Stronghold.Locations["Workshop"].ToolsPerWorkshop;
+			local toolMaxPerWorkshop = this.Stronghold.Locations["Workshop"].MaxItemSlots;
 			local numberOfWorkshops = this.m.Settlement.countAttachedLocations("attached_location.workshop");
 			tool_increment += toolPerWorkshop * numberOfWorkshops;
-			tool_max += toolPerWorkshop * numberOfWorkshops;
+			tool_max += toolMaxPerWorkshop * numberOfWorkshops;
 		}
 		for (local x = 0; x < updates; x++)
 		{
