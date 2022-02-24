@@ -1,7 +1,7 @@
 local gt = this.getroottable();
 gt.Stronghold <- {};
 ::mods_registerMod("mod_stronghold", 1.16);
-::mods_queue("mod_stronghold", null, function()
+::mods_queue("mod_stronghold", ">mod_MSU", function()
 {	
 	
 	::mods_registerJS("mod_stronghold.js");
@@ -139,6 +139,82 @@ gt.Stronghold <- {};
 
 			
 	});
+
+	::mods_hookExactClass("entity/world/party", function(o){
+		local party_onUpdate = o.onUpdate
+		o.onUpdate = function()
+		{
+			foreach(settlement in this.Stronghold.getPlayerFaction().getMainBases()){
+				if (settlement.hasAttachedLocation("attached_location.stone_watchtower") && this.getTile().getDistanceTo(settlement.getTile()) < 15){
+					this.setVisibleInFogOfWar(true);
+					break;
+				}
+				else{
+					this.setVisibleInFogOfWar(false);
+				}
+			}
+			party_onUpdate();
+		}
+	})
+
+	::mods_hookNewObject("ui/screens/world/modules/world_town_screen/town_shop_dialog_module", function(o){
+		o.onReforgeNamedItem <- function(_data){
+
+			//check if in player base and store
+			local town = this.World.State.getCurrentTown();
+			if (!town.getFlags().get("IsMainBase") ||
+				!town.hasAttachedLocation("attached_location.ore_smelters") ||
+				this.World.State.getTownScreen().getShopDialogModule().getShop().m.ID = "building.storage_building")
+			{
+				return
+				{
+					IsValid = false
+				}
+			}
+
+			local sourceItemIdx = _data[0];
+			local force = _data[1]
+			local sourceItem = this.m.Shop.getStash().getItemAtIndex(sourceItemIdx);
+			if (force != true){
+				
+				if (sourceItem == null || sourceItem.item == null || !sourceItem.item.isItemType(this.Const.Items.ItemType.Named))
+				{
+					return
+					{
+						IsValid = false
+					}
+				}
+				return {
+					IsValid = true,
+					ShowPopup = true,
+					ItemIdx = sourceItemIdx,
+					ItemName = sourceItem.item.getName(),
+					Price = sourceItem.item.m.Value,
+					Affordable = sourceItem.item.m.Value < this.World.Assets.getMoney()
+				}
+			}
+			
+			if (!this.World.Flags.get("ReforgeNamedItemSeed"))
+			{
+				this.World.Flags.set("ReforgeNamedItemSeed", this.Math.rand(0, 100000))
+			}
+			this.World.Flags.increment("ReforgeNamedItemSeed")
+
+			sourceItem = this.m.Shop.getStash().removeByIndex(sourceItemIdx);
+			local name = sourceItem.getName();
+			local type = sourceItem.ClassNameHash;
+			local price = sourceItem.m.Value
+			local replacementItem = this.new(this.IO.scriptFilenameByHash(type));
+			replacementItem.setName(name);
+			this.World.Assets.addMoney(-price);
+			this.m.Shop.getStash().add(replacementItem);
+			local result = {
+				Item = this.UIDataHelper.convertItemToUIData(replacementItem, true, null),
+				Assets = this.m.Parent.queryAssetsInformation()
+			};
+			return result;
+		}
+	})
 	
 	
 	::mods_hookDescendants("items/item", function ( o )
