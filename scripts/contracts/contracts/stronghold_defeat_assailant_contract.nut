@@ -440,9 +440,9 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		}
 		factionTypes[this.Const.FactionType.OrientalCityState] <- {
 			Name = "City State Army",
-			Spawnlist = this.Const.World.Spawn.Noble,
+			Spawnlist = this.Const.World.Spawn.Southern,
 			Description = "An army of city state soldiers.",
-			Footprint = this.Const.World.FootprintsType.Nobles,
+			Footprint = this.Const.World.FootprintsType.CityState,
 			Noble = true
 		}
 		local factionType = factionTypes[closest_faction.m.Type]
