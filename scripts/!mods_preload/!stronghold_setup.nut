@@ -158,8 +158,7 @@ gt.Stronghold <- {};
 	})
 
 	::mods_hookNewObject("ui/screens/world/modules/world_town_screen/town_shop_dialog_module", function(o){
-		o.onReforgeNamedItem <- function(_data){
-
+		o.onReforgeIsValid <- function(_idx){
 			//check if in player base and store
 			local town = this.World.State.getCurrentTown();
 			if (!town.getFlags().get("IsMainBase") ||
@@ -172,35 +171,28 @@ gt.Stronghold <- {};
 				}
 			}
 
-			local sourceItemIdx = _data[0];
-			local force = _data[1]
-			local sourceItem = this.m.Shop.getStash().getItemAtIndex(sourceItemIdx);
-			if (force != true){
-				
-				if (sourceItem == null || sourceItem.item == null || !sourceItem.item.isItemType(this.Const.Items.ItemType.Named))
-				{
-					return
-					{
-						IsValid = false
-					}
-				}
-				return {
-					IsValid = true,
-					ShowPopup = true,
-					ItemIdx = sourceItemIdx,
-					ItemName = sourceItem.item.getName(),
-					Price = sourceItem.item.m.Value,
-					Affordable = sourceItem.item.m.Value < this.World.Assets.getMoney()
-				}
+			local sourceItem = this.m.Shop.getStash().getItemAtIndex(_idx);
+			if (sourceItem == null || sourceItem.item == null || !sourceItem.item.isItemType(this.Const.Items.ItemType.Named))
+			{
+				return { IsValid = false }
 			}
-			
+
+			return {
+				IsValid = true,
+				ItemIdx = _idx,
+				ItemName = sourceItem.item.getName(),
+				Price = sourceItem.item.m.Value,
+				Affordable = sourceItem.item.m.Value < this.World.Assets.getMoney()
+			}
+		}
+
+		o.onReforgeNamedItem <- function(_idx){
 			if (!this.World.Flags.get("ReforgeNamedItemSeed"))
 			{
 				this.World.Flags.set("ReforgeNamedItemSeed", this.Math.rand(0, 100000))
 			}
 			this.World.Flags.increment("ReforgeNamedItemSeed")
-
-			sourceItem = this.m.Shop.getStash().removeByIndex(sourceItemIdx);
+			local sourceItem = this.m.Shop.getStash().removeByIndex(_idx);
 			local name = sourceItem.getName();
 			local type = sourceItem.ClassNameHash;
 			local price = sourceItem.m.Value
