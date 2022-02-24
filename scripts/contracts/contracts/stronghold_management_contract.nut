@@ -703,7 +703,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function addLocationScreen(_screenVar, _idx){
 		return {
-			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Stronghold.PriceMult) + " crowns)",
+			Text = _screenVar.Text +  " (" +  (_screenVar.Cost * this.Stronghold.PriceMult) + " crowns)",
 			function getResult(_option)
 			{
 				local building = this.Option

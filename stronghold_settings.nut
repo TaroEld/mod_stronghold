@@ -30,9 +30,9 @@ gt.Stronghold.RoadCost <- 0.5;
 
 
 // Maximum amount of each item that can be produced and stored by the base
-gt.Stronghold.MaxAmountOfStoredTools = 8;
-gt.Stronghold.MaxAmountOfStoredMedicine = 5;
-gt.Stronghold.MaxAmountOfStoredAmmo = 6;
+gt.Stronghold.MaxAmountOfStoredTools <- 150;
+gt.Stronghold.MaxAmountOfStoredMedicine <- 100;
+gt.Stronghold.MaxAmountOfStoredAmmo <- 300;
 
 
 // Base name for each tier, used in descriptions
@@ -68,8 +68,8 @@ gt.Stronghold.Locations <-
 	Workshop = {
 		Cost = 10, // Cost for each attached location, multiplied by PriceMult (1000 by default)
 		MaxAmount = 1, // Maximum amount allowed per base
-		ToolsPerWorkshop = 2, // Amount of tools generated every three days
-		MaxItemSlots = 2 // Amount added to the maximum amount of stored items of this type
+		DailyIncome = 40, // Amount of tools generated every three days
+		MaxItemSlots = 40 // Amount added to the maximum amount of stored items of this type
 	},
 	Ore_Smelter = {
 		Cost = 5,
@@ -85,7 +85,8 @@ gt.Stronghold.Locations <-
 	},
 	Militia_Trainingcamp = {
 		Cost = 5,
-		MaxAmount = 1,
+		MaxAmount = 3,
+		DailyIncome = 200
 	},
 	Wheat_Fields = {
 		Cost = 5,
@@ -98,6 +99,6 @@ gt.Stronghold.Locations <-
 	Gold_Mine = {
 		Cost = 10,
 		MaxAmount = 1,
-		GoldIncomePerMine = 150
+		DailyIncome = 150
 	}
 };

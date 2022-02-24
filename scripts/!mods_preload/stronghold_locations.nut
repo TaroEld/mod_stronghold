@@ -10,7 +10,8 @@ gt.Stronghold.setupLocationDefs <- function()
 			ConstID = "Workshop",
 			Cost = 0, //cost is set below this array
 			Path = "workshop_location",
-			Text= "Build a workshop. Generates tools.",
+			Text = "Build a workshop. Generates tools.",
+			DescriptionText = "",
 			isValid = null //isValid is set below this array if null
 		},
 		{
@@ -20,6 +21,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			Cost = 0,
 			Path = "ore_smelters_location",
 			Text = "Build an ore smelter. Weaponsmiths carry more items.",
+			DescriptionText = "",
 			isValid = null
 		},
 		{
@@ -29,6 +31,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			Cost = 0,
 			Path = "blast_furnace_location",
 			Text = "Build a blast furnace. Armourers carry more items.",
+			DescriptionText = "",
 			isValid = null
 		},
 		{
@@ -38,6 +41,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			Cost = 0,
 			Path = "stone_watchtower_location",
 			Text = "Build a watchtower. Increases movement speed and sight range around the stronghold.",
+			DescriptionText = "",
 			isValid = null
 		},
 		{
@@ -47,6 +51,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			Cost = 0,
 			Path = "militia_trainingcamp_location",
 			Text = "Build a militia camp. Increases strength of mercenaries and number of recruits in the hamlet.",
+			DescriptionText = "",
 			isValid = null
 		},
 		{
@@ -56,6 +61,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			Cost = 0,
 			Path = "wheat_fields_location",
 			Text = "Build Wheat Fields. You don't consume food around the stronghold.",
+			DescriptionText = "",
 			isValid = null
 		},
 		{
@@ -65,6 +71,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			Cost = 0,
 			Path = "herbalists_grove_location",
 			Text = "Build a Herbalists Grove. Hitpoints regenerate faster when around the stronghold.",
+			DescriptionText = "",
 			isValid = null
 		},
 		{
@@ -74,6 +81,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			Cost = 0,
 			Path = "gold_mine_location",
 			Text = "Build a gold mine. Gold will be generated over time.",
+			DescriptionText = "",
 			isValid = null
 		}
 	]
@@ -85,7 +93,7 @@ gt.Stronghold.setupLocationDefs <- function()
 		{
 			location.isValid = function(_contract)
 			{
-				return this.Stronghold.Locations[this.ConstID].MaxAmount > this.getHome().countAttachedLocations(this.ID)
+				return this.Stronghold.Locations[this.ConstID].MaxAmount > _contract.getHome().countAttachedLocations(this.ID)
 			}.bindenv(location)
 		}
 	}
