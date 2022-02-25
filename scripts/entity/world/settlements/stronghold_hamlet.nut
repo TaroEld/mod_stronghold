@@ -157,12 +157,10 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		}
 
 		local rosterMin = 6
-		local rosterMax = 10
-		
-		if (this.getParent().hasAttachedLocation("attached_location.militia_trainingcamp")){
-			rosterMin += 2;
-			rosterMax += 2;
-		}
+		local rosterMax = 12
+		local minMaxIncrease = this.getParent().countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].RecruitIncrease
+		rosterMin += minMaxIncrease;
+		rosterMax += minMaxIncrease;
 
 		if (iterations < 7)
 		{

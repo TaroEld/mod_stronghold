@@ -52,11 +52,9 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 	{
 		local playerBase = this.m.Settlements.Base
 		local patrol_strength = 200 * (playerBase.getSize()-1)
+		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
 		
-		//add strength if you have the attachment
-		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp")){
-			patrol_strength += 200
-		}
+
 		local party = _faction.stronghold_spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
 		party.m.OnCombatWithPlayerCallback = null;
 		party.getSprite("body").setBrush(playerBase.m.troopSprites);

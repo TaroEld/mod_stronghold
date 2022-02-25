@@ -60,7 +60,7 @@ WorldTownScreenShopDialogModule.prototype.createItemSlot = function (_owner, _in
                     }
                     else
                     {
-                        console.error('sell');
+                        //console.error('sell');
                         self.swapItem(itemIdx, owner, null, WorldTownScreenShop.ItemOwner.Shop);
                     }
                 } break;

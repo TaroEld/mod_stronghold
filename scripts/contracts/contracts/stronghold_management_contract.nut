@@ -702,21 +702,27 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	}
 
 	function addLocationScreen(_screenVar, _idx){
+		local vocals = ["a", "e", "i", "o", "u", ]
+		local function isInVocals(_char){
+			_char = _char.tochar().tolower()
+			return vocals.find(_char) != null
+		}
+		local title = format("Build %s %s (%i crowns)", isInVocals(_screenVar.Name[0]) ? "an " : "a ", _screenVar.Name, _screenVar.Cost * this.Stronghold.PriceMult)
 		return {
-			Text = _screenVar.Text +  " (" +  (_screenVar.Cost * this.Stronghold.PriceMult) + " crowns)",
+			Text = title,
 			function getResult(_option)
 			{
 				local building = this.Option
 				this.Contract.m.Temp_Var <- building.Path
 				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	
-				this.Contract.addOverviewScreen(
-					format("Build a %s (%i crowns)", building.Name, this.Contract.getCost()), 
-					format("You selected a %s. This will cost %i. Do you wish to build this?", building.Name,
-					this.Contract.getCost())
-				)
+				local text = format("You selected %s %s. This will cost %i crowns.\n", isInVocals(building.Name[0]) ? "an" : "a", building.Name, this.Contract.getCost())
+				text += building.Text + "\nDo you wish to build this?";
+				
+				this.Contract.addOverviewScreen(title, text)
+				
 				this.Contract.addEnoughScreen(
-					"Purchase a new location",
-					format("Your %s is finished.", building.Name),
+					"Build a new location",
+					format("Your %s has been built.", building.Name),
 					this.Contract.onLocationAdded
 				)
 				return "Overview_Building";
@@ -1025,10 +1031,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		local destination_town = destination.Town;
 		
 		local patrol_strength = 400 +  100 * (playerBase.getSize()-1)
-		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp"))
-		{
-			patrol_strength += 100
-		}
+		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+		
 		local party = playerFaction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 100);
 		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, patrol_strength);
 		party.setDescription("A caravan bringing gifts to " + destination_town.getName() );
@@ -1210,10 +1214,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		local playerBase = this.getHome()
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local mercenary_size = 200
-		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp"))
-		{
-			mercenary_size += 100
-		}
+		mercenary_size += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease 
+
 		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
 		party.getSprite("body").setBrush("figure_mercenary_01");
 		party.setDescription("A band of mercenaries following you around.");

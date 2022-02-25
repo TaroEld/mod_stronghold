@@ -12,8 +12,8 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 	{
 		this.building.create();
 		this.m.ID = "building.storage_building";
-		this.m.Name = "Storage";
-		this.m.Description = "Your companies storage building";
+		this.m.Name = "Warehouse";
+		this.m.Description = "Your companies warehouse";
 		this.m.UIImage = "ui/settlements/building_06";
 		this.m.UIImageNight = "ui/settlements/building_06";
 		this.m.Tooltip = "world-town-screen.main-dialog-module.Storage";
