@@ -79,6 +79,8 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 			guard.setTarget(playerBase.getTile());
 			//keep the boys home if upgrading
 			if(playerBase.isUpgrading()){
+				c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
+				c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
 				guard.setTime(totalTime);
 				c.addOrder(guard);
 				break

@@ -395,7 +395,7 @@ gt.Stronghold.setupMainManagementOptions <- function()
 				{
 					local text = "You can choose to send gifts to a faction. This will consume the treasures you have in your inventory, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods.\n\n"
 					if (!isValid[1]) text += "You need at least 5000 crowns to send a gift!\n"
-					if (!isValid[2]) text += "You need at least 2 treasures in your inventory or storage to send a gift!\n"
+					if (!isValid[2]) text += "You need at least 2 treasures in your inventory or warehouse to send a gift!\n"
 					if (!isValid[3]) text += "You can't reach anyone by road or you are already friends with all factions!\n"
 					this.m.Screens.push
 					({
