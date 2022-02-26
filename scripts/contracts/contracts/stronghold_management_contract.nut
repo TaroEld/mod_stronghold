@@ -701,24 +701,29 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 
-	function addLocationScreen(_screenVar, _idx){
-		local vocals = ["a", "e", "i", "o", "u", ]
+	function addLocationScreen(_screenVar, _idx)
+	{
+		local vocals = ["a", "e", "i", "o", "u", ];
 		local function isInVocals(_char){
-			_char = _char.tochar().tolower()
-			return vocals.find(_char) != null
+			_char = _char.tochar().tolower();
+			return vocals.find(_char) != null;
 		}
-		local title = format("Build %s %s (%i crowns)", isInVocals(_screenVar.Name[0]) ? "an " : "a ", _screenVar.Name, _screenVar.Cost * this.Stronghold.PriceMult)
+		local title = format("Build %s %s (%i crowns)", isInVocals(_screenVar.Name[0]) ? "an " : "a ", _screenVar.Name, _screenVar.Cost * this.Stronghold.PriceMult);
 		return {
 			Text = title,
 			function getResult(_option)
 			{
-				local building = this.Option
-				this.Contract.m.Temp_Var <- building.Path
-				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	
-				local text = format("You selected %s %s. This will cost %i crowns.\n", isInVocals(building.Name[0]) ? "an" : "a", building.Name, this.Contract.getCost())
-				text += building.Text + "\nDo you wish to build this?";
+				local building = this.Option;
+				this.Contract.m.Temp_Var <- building.Path;
+				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	;
+				local text = format("You selected %s %s. This will cost %i crowns.\n", isInVocals(building.Name[0]) ? "an" : "a", building.Name, this.Contract.getCost());
+				text += building.Text;
+				if(this.Stronghold.Locations[building.ConstID].MaxAmount != 1){
+					text += format("\nYou can build a total of %i %s", this.Stronghold.Locations[building.ConstID].MaxAmount, building.Name);
+				}
+				text += "\nDo you wish to build this?";
 				
-				this.Contract.addOverviewScreen(title, text)
+				this.Contract.addOverviewScreen(title, text);
 				
 				this.Contract.addEnoughScreen(
 					"Build a new location",

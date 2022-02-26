@@ -20,7 +20,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			ConstID = "Ore_Smelter",
 			Cost = 0,
 			Path = "ore_smelters_location",
-			Text = "This will allow the local weaponsmiths to carry more items. It will also allow them to work with unusual materials, allowing you to reforge named items.",
+			Text = "This will allow the local weaponsmiths to carry more items. It will also allow them to work with unusual materials, allowing you to reforge named items. \n To reforge a named item, put it in the warehouse and shift-rightclick on it.",
 			isValid = null
 		},
 		{

@@ -68,19 +68,22 @@ gt.Stronghold.Locations <-
 	Workshop = {
 		Cost = 10, // Cost for each attached location, multiplied by PriceMult (1000 by default)
 		MaxAmount = 1, // Maximum amount allowed per base
-		DailyIncome = 40, // Amount of tools generated every three days
+		DailyIncome = 40, // Amount of tools generated every day
 		MaxItemSlots = 40 // Amount added to the maximum amount of stored items of this type
 	},
+
 	Ore_Smelter = {
 		Cost = 5,
 		MaxAmount = 1,
-		ReforgeMultiplier = 1.0
+		ReforgeMultiplier = 1.5 // Price multiplier applied on the base value of reforging
 	},
+
 	Blast_Furnace = {
 		Cost = 5,
 		MaxAmount = 1,
 		RepairMultiplier = 0.7 // Value by which instant repair will be reduced
 	},
+
 	Stone_Watchtower = {
 		Cost = 10,
 		MaxAmount = 1,
@@ -88,8 +91,8 @@ gt.Stronghold.Locations <-
 		EffectRange = 25, // Distance in tiles for which the next two effects work
 		VisionIncrease = 125, // Amount of extra vision you get around the base
 		MovementSpeedIncrease = 9 // Amount of extra movement speed you get around the base
-
 	},
+
 	Militia_Trainingcamp = {
 		Cost = 5,
 		MaxAmount = 3,
@@ -97,16 +100,19 @@ gt.Stronghold.Locations <-
 		MercenaryStrengthIncrease = 100, // Amount of strength added to new mercenary and caravan parties
 		RecruitIncrease = 2 // Amount of recruits added to the Hamlet roster
 	},
+
 	Wheat_Fields = {
 		Cost = 5,
 		MaxAmount = 1,
 		EffectRange = 25, // Distance in tiles for which the effect works
 	},
+
 	Herbalists_Grove = {
 		Cost = 5,
 		MaxAmount = 1,
 		EffectRange = 25, // Distance in tiles for which the effect works
 	},
+
 	Gold_Mine = {
 		Cost = 10,
 		MaxAmount = 1,

@@ -43,65 +43,94 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.getFlags().set("IsOnSnow", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Snow]));
 		this.getFlags().set("IsOnDesert", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert]));
 		this.getFlags().set("isPlayerBase", true);
-		this.getFlags().set("IsMainBase", true)
-		this.getFlags().set("TimeUntilNextMercs", -1)
-		this.getFlags().set("TimeUntilNextCaravan", -1)
-		this.getFlags().set("TimeUntilNextPatrol", -1)
+		this.getFlags().set("IsMainBase", true);
+		this.getFlags().set("TimeUntilNextMercs", -1);
+		this.getFlags().set("TimeUntilNextCaravan", -1);
+		this.getFlags().set("TimeUntilNextPatrol", -1);
 		this.getFlags().set("RosterSeed", this.toHash(this));
+		this.getFlags().set("LastProduceUpdate", this.Time.getVirtualTimeF());
 		this.World.createRoster(this.toHash(this));
-		this.updateProperties()
+		this.updateProperties();
 		this.updateTown();
-		if(this.m.IsCoastal){
+		if(this.m.IsCoastal)
+		{
 			this.buildHarborLocation();
-			this.buildRoad(this.m.AttachedLocations[this.m.AttachedLocations.len()-1])
+			this.buildRoad(this.m.AttachedLocations[this.m.AttachedLocations.len()-1]);
 		}
 	}
 	
 	function onEnter()
 	{
 		//updates buildings, shops, quests, attached locations
-		this.World.State.getTownScreen().getMainDialogModule().loadRename()
-		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
-		this.updateSituations()
 		this.location.onEnter();
 		this.m.CurrentBuilding = null;
+		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
+		this.updateProducedItems();
+		this.updateSituations();
 		this.updateShop();
-		this.Math.seedRandom(this.Time.getRealTime());
+
 		this.Stronghold.getPlayerFaction().updateQuests();
-		this.rebuildAttachedLocations()
+		this.rebuildAttachedLocations();
+
 		//jank way to update sprite
 		if (this.m.Buildings[5] != null)
 		{
 			if (this.m.Buildings[5].m.UIImage.slice(0, 5) != "small")
 			{
-				this.m.Buildings[5].m.UIImage = "small_" + this.m.Buildings[5].m.UIImage
-				this.m.Buildings[5].m.UIImageNight = "small_" + this.m.Buildings[5].m.UIImageNight
+				this.m.Buildings[5].m.UIImage = "small_" + this.m.Buildings[5].m.UIImage;
+				this.m.Buildings[5].m.UIImageNight = "small_" + this.m.Buildings[5].m.UIImageNight;
 			}
 		}
+		this.Math.seedRandom(this.Time.getRealTime());
+		this.World.State.getTownScreen().getMainDialogModule().loadRename();
 		return true;
+	}
+
+	function updateProducedItems()
+	{
+		local lastUpdateTime = this.getFlags().get("LastProduceUpdate");
+		// If older save
+		if (lastUpdateTime == false)
+		{
+			this.getFlags().set("LastProduceUpdate", this.Time.getVirtualTimeF());
+			return;
+		}
+		local daysPassed = (this.Time.getVirtualTimeF() - lastUpdateTime) / this.World.getTime().SecondsPerDay;
+
+		if ( daysPassed == 0)
+		{
+			return;
+		}
+		this.getFlags().set("LastProduceUpdate", this.Time.getVirtualTimeF());
+
+		this.m.Buildings[2].updateProducedItems(daysPassed);
 	}
 	
 	function onLeave()
 	{
-		this.World.State.getTownScreen().getMainDialogModule().deleteRename()
+		this.World.State.getTownScreen().getMainDialogModule().deleteRename();
 	}
 
-	function isMainBase(){
+	function isMainBase()
+	{
 		return true;
 	}
 
-	function isMaxLevel(){
-		return !this.isUpgrading() && this.getSize() == 3
+	function isMaxLevel()
+	{
+		return !this.isUpgrading() && this.getSize() == 3;
 	}
-	function getHamlet(){
-		local flag = this.m.Flags.get("Child")
-		if (!flag) return false
-		return this.World.getEntityByID(flag)
+
+	function getHamlet()
+	{
+		local flag = this.m.Flags.get("Child");
+		return flag ? this.World.getEntityByID(flag) : false;
 	}
 
 	//I dont trust the roster seed
-	function getLocalRoster(){
-		return this.World.getRoster(this.getFlags().get("RosterSeed"))
+	function getLocalRoster()
+	{
+		return this.World.getRoster(this.getFlags().get("RosterSeed"));
 	}
 
 	//disables lights when alt location
@@ -200,61 +229,16 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function getTooltip()
 	{
-		local ret = this.settlement.getTooltip()
-		if (this.isUpgrading()){ 
+		local ret = this.settlement.getTooltip();
+		if (this.isUpgrading())
+		{ 
 			ret.push({
 				id = 99,
 				type = "description",
 				text = format("\n Currently upgrading to a %s", this.getSizeName(true))
 			})
 		}
-		return ret
-	}
-	
-	function updateShop( _force = false )
-	{
-		//modified vanilla function to allow storage_building to generate free items.
-		if (this.m.LastShopUpdate == 0.0){
-			this.m.LastShopUpdate = this.Time.getVirtualTimeF() - 3 * this.World.getTime().SecondsPerDay
-		}
-		local daysPassed = (this.Time.getVirtualTimeF() - this.m.LastShopUpdate) / this.World.getTime().SecondsPerDay;
-
-		if (!_force && this.m.LastShopUpdate != 0 && daysPassed < 3)
-		{
-			this.updateImportedProduce();
-			return;
-		}
-
-		if (this.m.ShopSeed != 0)
-		{
-			this.Math.seedRandom(this.m.ShopSeed);
-		}
-
-		this.m.ShopSeed = this.Math.floor(this.Time.getRealTime() + this.Math.rand());
-		this.m.LastShopUpdate = this.Time.getVirtualTimeF();
-
-		foreach( building in this.m.Buildings )
-		{
-			if (building != null)
-			{
-				if(building.m.ID == "building.storage_building"){
-					building.onUpdateShopList(daysPassed);
-				}
-				else{
-					building.onUpdateShopList();
-				}
-
-				if (building.getStash() != null)
-				{
-					foreach( s in this.m.Situations )
-					{
-						s.onUpdateShop(building.getStash());
-					}
-				}
-			}
-		}
-
-		this.updateImportedProduce();
+		return ret;
 	}
 
 	function countAttachedLocations( _id )

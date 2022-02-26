@@ -154,7 +154,7 @@ gt.Stronghold <- {};
 			{
 				return { IsValid = false }
 			}
-			local price = sourceItem.item.m.Value * sourceItem.item.getPriceMult()
+			local price = sourceItem.item.m.Value * this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier;
 
 			return {
 				IsValid = true,
@@ -170,15 +170,15 @@ gt.Stronghold <- {};
 			local sourceItem = this.m.Shop.getStash().removeByIndex(_idx);
 			local name = sourceItem.getName();
 			local type = sourceItem.ClassNameHash;
-			local price = sourceItem.m.Value * sourceItem.getPriceMult()
+			local price = sourceItem.m.Value * this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier;
 
 			//can't savescum quite as easily
 			if (!this.World.Flags.get("ReforgeNamedItemSeed"))
 			{
-				this.World.Flags.set("ReforgeNamedItemSeed", this.World.State.getCurrentTown().getFlags().get("RosterSeed"))
+				this.World.Flags.set("ReforgeNamedItemSeed", this.World.State.getCurrentTown().getFlags().get("RosterSeed"));
 			}
-			this.World.Flags.increment("ReforgeNamedItemSeed")
-			this.Math.seedRandom(this.World.Flags.get("ReforgeNamedItemSeed"))
+			this.World.Flags.increment("ReforgeNamedItemSeed");
+			this.Math.seedRandom(this.World.Flags.get("ReforgeNamedItemSeed"));
 
 			local replacementItem = this.new(this.IO.scriptFilenameByHash(type));
 			replacementItem.setName(name);
@@ -216,7 +216,7 @@ gt.Stronghold <- {};
 			local price = (item.getConditionMax() - item.getCondition()) * this.Const.World.Assets.CostToRepairPerPoint;
 			local value = item.m.Value * (1.0 - item.getCondition() / item.getConditionMax()) * 0.2 * this.World.State.getCurrentTown().getPriceMult() * this.Const.Difficulty.SellPriceMult[this.World.Assets.getEconomicDifficulty()];
 			price = this.Math.max(price, value) * this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier;
-			price = price.tointeger()
+			price = price.tointeger();
 
 			if (this.World.Assets.getMoney() < price)
 			{
