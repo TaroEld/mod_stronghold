@@ -1,22 +1,14 @@
 this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	//custom player base settlement type. spawns custom storage building, modified marketplace that allows for both selling of trash and food and for storing items
 	//many of the stronghold features are handled here
-	m = {},
+	m = {
+		isPlayerBase = true,
+		IsUpgrading = false
+	},
+
 	function create()
 	{
 		this.settlement.create();
-		this.m.isPlayerBase <- true;
-		this.m.Name = "Fortress"
-		this.m.DraftList = [];
-		this.m.UIDescription = "Your stronghold";
-		this.m.Description = "Your stronghold";
-		this.m.UIBackgroundCenter = "ui/settlements/stronghold_01";
-		this.m.UIBackgroundLeft = "ui/settlements/bg_houses_01_left";
-		this.m.UIBackgroundRight = "ui/settlements/bg_houses_01_right";
-		this.m.UIRampPathway = "ui/settlements/ramp_01_planks";
-		this.m.UISprite = "ui/settlement_sprites/stronghold_01.png";
-		this.m.Sprite = "world_stronghold_01";
-		this.m.Lighting = "world_stronghold_01_light";
 		this.m.Rumors = this.Const.Strings.RumorsFarmingSettlement;
 		this.m.Culture = this.Const.World.Culture.Neutral;
 		this.m.IsMilitary = true;
@@ -26,10 +18,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.HousesMax = 2;
 		this.m.AttachedLocationsMax = 3;
 		this.m.IsVisited = true;
-		this.m.IsUpgrading <- false;
 		this.m.Banner = this.World.Assets.getBannerID();
-		this.m.IsShowingBanner = true;
-		this.m.Buildings.resize(7, null)
+		this.m.Buildings.resize(7, null);
 		this.defineName();
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_storage_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/tavern_building"), 5);
@@ -255,46 +245,46 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return count;
 	}
 
-	function setUpgrading(_bool){
+	function setUpgrading(_bool)
+	{
 		this.m.IsUpgrading = _bool;
 	}
 
-	function isUpgrading(){
-		return this.m.IsUpgrading
+	function isUpgrading()
+	{
+		return this.m.IsUpgrading;
 	}
 
-
-	function getSizeName(_nextLevel = false){
-		local size = this.getSize()
-		if (this.isUpgrading()) size = this.Math.max(1, size-1)
-		if (_nextLevel) return this.Stronghold.BaseNames[size]
-		return this.Stronghold.BaseNames[size-1]
+	function getSizeName(_nextLevel = false)
+	{
+		local size = this.getSize();
+		if (this.isUpgrading()) size = this.Math.max(1, size-1);
+		if (_nextLevel) return this.Stronghold.BaseNames[size];
+		return this.Stronghold.BaseNames[size-1];
 	}
 	
-	
-	function updateTown(){
-
+	function updateTown()
+	{
 		//updates town after upgrading and loading the game. Necessary to update the sprites, names etc.
 		this.m.troopSprites <- "figure_mercenary_01";
-		this.defineName()
+		this.defineName();
 		this.getLabel("name").Text = this.getName();
 		this.getLabel("name").Visible = true;
 		this.m.UIDescription = format("Your %s", this.getSizeName());
 		this.m.Description = format("Your %s", this.getSizeName());
 
-		this.updateLook()
+		this.updateLook();
 		
 		//add management building
 		if (this.m.Buildings[6] == null)
 		{
 			this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 		}
-		this.m.Buildings[6].updateSprite()
+		this.m.Buildings[6].updateSprite();
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
 		//need to update building size since it's changed to 9 during serialisation
 
-		
-		this.m.AttachedLocationsMax = this.Stronghold.MaxAttachments[this.getSize()-1]
+		this.m.AttachedLocationsMax = this.Stronghold.MaxAttachments[this.getSize()-1];
 	}
 
 	function defineName()
@@ -309,33 +299,34 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Name = final_name;
 	}
 
-	function updateLook(){
-
+	function updateLook()
+	{
 		// local normalSprites = ["world_luft_01", "world_luft_02", "world_luft_03"]
 		// local upgradingSprites = ["world_luft_01u", "world_luft_02_u"]
 
 		//backward compatibility
-		if (!this.getFlags().has("CustomSprite")){
-			this.getFlags().set("CustomSprite", "Default")
+		if (!this.getFlags().has("CustomSprite"))
+		{
+			this.getFlags().set("CustomSprite", "Default");
 		}
 
-
-		local spriteID = this.getFlags().get("CustomSprite")
-		local isOnSnow = this.getFlags().get("IsOnSnow")
-		local isOnDesert = this.getFlags().get("IsOnDesert")
+		local spriteID = this.getFlags().get("CustomSprite");
+		local isOnSnow = this.getFlags().get("IsOnSnow");
+		local isOnDesert = this.getFlags().get("IsOnDesert");
 		local constSprites = this.Stronghold.Visuals[this.Stronghold.VisualsMap[spriteID]];
 		local sprites = constSprites.Levels;
-		sprites = sprites[this.getSize()-1]
+		sprites = sprites[this.getSize()-1];
 
 		this.m.Sprite = this.isUpgrading() ? sprites.Upgrading : sprites.Base;
 		this.getSprite("body").setBrush(this.m.Sprite);
 
-		this.m.UIBackgroundCenter = sprites.Background.UIBackgroundCenter + (isOnSnow ? "_snow" : "")
-		this.m.UIBackgroundLeft = sprites.Background.UIBackgroundLeft + (isOnSnow ? "_snow" : "")
-		this.m.UIBackgroundRight = sprites.Background.UIBackgroundRight + (isOnSnow ? "_snow" : "")
-		this.m.UIRampPathway = sprites.Background.UIRampPathway
-		this.m.Lighting = sprites.BaseNight
-		if(this.m.IsCoastal){
+		this.m.UIBackgroundCenter = sprites.Background.UIBackgroundCenter + (isOnSnow ? "_snow" : "");
+		this.m.UIBackgroundLeft = sprites.Background.UIBackgroundLeft + (isOnSnow ? "_snow" : "");
+		this.m.UIBackgroundRight = sprites.Background.UIBackgroundRight + (isOnSnow ? "_snow" : "");
+		this.m.UIRampPathway = sprites.Background.UIRampPathway;
+		this.m.Lighting = sprites.BaseNight;
+		if(this.m.IsCoastal)
+		{
 			this.m.UIBackgroundLeft = "ui/settlements/water_01";
 		}
 
@@ -348,8 +339,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		light.IgnoreAmbientColor = true;
 		light.Alpha = 0;
 	}
-	
-	
 	
 	function addBuilding( _building, _slot = null )
 	{
@@ -373,7 +362,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				}
 			}
 		}
-
 	}
 	
 	function addImportedProduce( _p )
@@ -397,7 +385,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		while (_num > 0 && tries++ < 10000 && !foundTile)
 		{
 			if(tries % 1000 == 0){
-				_additionalDistance++
+				_additionalDistance++;
 			}
 			local x = this.Math.rand(myTile.SquareCoords.X - 2 - _additionalDistance, myTile.SquareCoords.X + 2 + _additionalDistance);
 			local y = this.Math.rand(myTile.SquareCoords.Y - 2 - _additionalDistance, myTile.SquareCoords.Y + 2 + _additionalDistance);
@@ -622,7 +610,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			{
 				if (!this.m.Flags.get(a.m.ID))
 				{
-					this.m.Flags.set(a.m.ID, this.Time.getVirtualTimeF())
+					this.m.Flags.set(a.m.ID, this.Time.getVirtualTimeF());
 				}
 			}
 		}
@@ -639,7 +627,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				if (this.m.Flags.get(a.m.ID) && ((this.m.Flags.get(a.m.ID) + 7 * this.World.getTime().SecondsPerDay) <  this.Time.getVirtualTimeF()))
 				{
 					a.setActive(true);
-					this.m.Flags.remove(a.m.ID)
+					this.m.Flags.remove(a.m.ID);
 				}
 			}
 		}
@@ -655,12 +643,12 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local navSettings = this.World.getNavigator().createSettings();
 		navSettings.RoadMult = 0.15;
 		navSettings.StopAtRoad = false;
-		local roadCost =  clone this.Const.World.TerrainTypeNavCost
+		local roadCost =  clone this.Const.World.TerrainTypeNavCost;
 		foreach (tile in roadCost) tile *= 1.5
-		navSettings.ActionPointCosts = roadCost
+		navSettings.ActionPointCosts = roadCost;
 
 		local chosen_road;
-		local least_dist = 9999
+		local least_dist = 9999;
 		while (navSettings.RoadMult < 0.5)
 		{
 
@@ -678,9 +666,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				}
 				
 				local countroads = 0;
-				foreach(tile in roadTiles){
-					if (tile.HasRoad){
-						countroads++
+				foreach(tile in roadTiles)
+				{
+					if (tile.HasRoad)
+					{
+						countroads++;
 					}
 				
 				}
@@ -688,11 +678,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				{
 					if (chosen_road == null || roadTiles.len() < least_dist)
 					{
-						chosen_road = [(roadTiles.len() - countroads), navSettings.RoadMult]
+						chosen_road = [(roadTiles.len() - countroads), navSettings.RoadMult];
 					}
 				}
 			}
-			navSettings.RoadMult = navSettings.RoadMult+0.05
+			navSettings.RoadMult = navSettings.RoadMult + 0.05;
 		}
 		if (chosen_road != null) return chosen_road
 		else return [false, false]
@@ -708,9 +698,9 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local navSettings = this.World.getNavigator().createSettings();
 		navSettings.RoadMult = _roadmult;
 		navSettings.StopAtRoad = false;
-		local roadCost =  clone this.Const.World.TerrainTypeNavCost
+		local roadCost =  clone this.Const.World.TerrainTypeNavCost;
 		foreach (tile in roadCost) tile *= 1.5
-		navSettings.ActionPointCosts = roadCost
+		navSettings.ActionPointCosts = roadCost;
 
 		local path = this.World.getNavigator().findPath(this.getTile(), closest, navSettings, 0);
 
@@ -750,7 +740,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		
 		//add road connections to each other
-		this.updateProperties()
+		this.updateProperties();
 		return true;
 	}
 	
@@ -761,16 +751,16 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		{
 			if (!this.getTile().hasNextTile(i))
 			{
-				continue
+				continue;
 			}
 			else if (this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Ocean || this.getTile().getNextTile(i).Type == this.Const.World.TerrainType.Shore)
 			{
 				local entity = this.World.spawnLocation("scripts/entity/world/attached_location/harbor_location", this.getTile().getNextTile(i).Coords);
 				entity.setSettlement(this);
-				entity.onBuild()
+				entity.onBuild();
 				this.m.AttachedLocations.push(entity);
 				entity.setActive(true);
-				return
+				return;
 			}
 		}
 	}
@@ -797,8 +787,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function onSerialize( _out )
 	{
 		this.settlement.onSerialize(_out);
-		_out.writeU8(this.m.Size)
-		_out.writeBool(this.m.IsUpgrading)
+		_out.writeU8(this.m.Size);
+		_out.writeBool(this.m.IsUpgrading);
 		
 	}
 	
@@ -806,8 +796,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		this.settlement.onDeserialize(_in);
 		this.m.Size  = _in.readU8();
-		this.m.IsUpgrading = _in.readBool()
-		this.updateTown()
+		this.m.IsUpgrading = _in.readBool();
+		this.updateTown();
 	}
 	
 
