@@ -354,12 +354,13 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 
 		});
 	}
+	
 	function spawnNewAttackers()
 	{
 		local playerFaction = this.Stronghold.getPlayerFaction()
 		local playerBase = this.m.Home
 		local wave =  this.m.TargetLevel / this.m.AttacksRemaining 
-		local party_difficulty =  (150 + 30 * wave) * this.getScaledDifficultyMult()
+		local party_difficulty =  (this.Stronghold.InitialFightBaseStrength + this.Stronghold.InitialFightStrengthPerLevel * wave) * this.getScaledDifficultyMult();
 		this.m.Destination = this.WeakTableRef(playerBase);
 		local tile = playerBase.getTile();
 		local allSettlements = []

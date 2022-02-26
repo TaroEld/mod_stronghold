@@ -29,7 +29,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			ConstID = "Blast_Furnace",
 			Cost = 0,
 			Path = "blast_furnace_location",
-			Text = format("This will allow the local armorsmiths to carry more items. It will also enable them to repair your armors more efficiently, giving you a %i discount on repairing armor at the armorsmith.",  
+			Text = format("This will allow the local armorsmiths to carry more items. It will also enable them to repair your armors more efficiently, giving you a %i percent discount on repairing armor at the armorsmith.",  
 				((1 - gt.Stronghold.Locations["Blast_Furnace"].RepairMultiplier)*100).tointeger()),
 			isValid = null
 		},
@@ -48,7 +48,7 @@ gt.Stronghold.setupLocationDefs <- function()
 			ConstID = "Militia_Trainingcamp",
 			Cost = 0,
 			Path = "militia_trainingcamp_location",
-			Text = format("This trainingcamp will allow the fresh recruits that you leave behind to train and become more experienced. Each trainingcamp generates %i experience per day, which is divided over all stored brothers below level 8\nFurthermore, your allied mercenaries will also train here, increasing the strength of mercenary parties and caravans\nIf you build a hamlet, each trainingcamp will also increase the amount of recruits that will line up to join you by %i.", 
+			Text = format("This trainingcamp will allow the fresh recruits that you leave behind to train and become more experienced. Each trainingcamp generates %i experience per day, which is divided over all stored brothers below level 8.\nFurthermore, your allied mercenaries will also train here, increasing the strength of mercenary parties and caravans.\nIf you build a hamlet, each trainingcamp will also increase the amount of recruits that will line up to join you by %i.", 
 					gt.Stronghold.Locations["Militia_Trainingcamp"].DailyIncome, gt.Stronghold.Locations["Militia_Trainingcamp"].RecruitIncrease),
 			isValid = null
 		},

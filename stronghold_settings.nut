@@ -25,6 +25,13 @@ gt.Stronghold.RenownPerLevel <- [
 		15000
 ]
 
+// Base difficulty of the base defence fight
+gt.Stronghold.InitialFightBaseStrength <- 150; 
+
+// Extra difficulty added per wave of attacker, so by default first wave adds 30, second wave adds 60, third wave adds 90
+gt.Stronghold.InitialFightStrengthPerLevel <- 30; 
+
+
 // Cost of each road segment
 gt.Stronghold.RoadCost <- 0.5; 
 
@@ -73,7 +80,7 @@ gt.Stronghold.Locations <-
 	},
 
 	Ore_Smelter = {
-		Cost = 5,
+		Cost = 10,
 		MaxAmount = 1,
 		ReforgeMultiplier = 1.5 // Price multiplier applied on the base value of reforging
 	},
@@ -94,7 +101,7 @@ gt.Stronghold.Locations <-
 	},
 
 	Militia_Trainingcamp = {
-		Cost = 5,
+		Cost = 10,
 		MaxAmount = 3,
 		DailyIncome = 200, // Amount of Experience generated each day
 		MercenaryStrengthIncrease = 100, // Amount of strength added to new mercenary and caravan parties

@@ -727,7 +727,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				local text = format("You selected %s %s. This will cost %i crowns.\n", isInVocals(building.Name[0]) ? "an" : "a", building.Name, this.Contract.getCost());
 				text += building.Text;
 				if(this.Stronghold.Locations[building.ConstID].MaxAmount != 1){
-					text += format("\nYou can build a total of %i %s", this.Stronghold.Locations[building.ConstID].MaxAmount, building.Name);
+					text += format("\nYou can build a total of %i %ss.", this.Stronghold.Locations[building.ConstID].MaxAmount, building.Name);
 				}
 				text += "\nDo you wish to build this?";
 				
