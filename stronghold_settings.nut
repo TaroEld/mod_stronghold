@@ -35,8 +35,12 @@ gt.Stronghold.InitialFightStrengthPerLevel <- 30;
 // Cost of each road segment
 gt.Stronghold.RoadCost <- 0.5; 
 
+// Daily production of each item. Note that this is the 'amount' value; one item of tools has an amount of 25, medicine 20, and ammo 50.
+gt.Stronghold.ToolsPerDay <- 9;
+gt.Stronghold.MedicinePerDay <- 7;
+gt.Stronghold.AmmoPerDay <- 20;
 
-// Maximum amount of each item that can be produced and stored by the base
+// Maximum amount of each item that can be stored in the warehouse. Also the 'amount' value.
 gt.Stronghold.MaxAmountOfStoredTools <- 150;
 gt.Stronghold.MaxAmountOfStoredMedicine <- 100;
 gt.Stronghold.MaxAmountOfStoredAmmo <- 300;
@@ -75,20 +79,20 @@ gt.Stronghold.Locations <-
 	Workshop = {
 		Cost = 10, // Cost for each attached location, multiplied by PriceMult (1000 by default)
 		MaxAmount = 1, // Maximum amount allowed per base
-		DailyIncome = 40, // Amount of tools generated every day
+		DailyIncome = 20, // Amount of tools generated every day
 		MaxItemSlots = 40 // Amount added to the maximum amount of stored items of this type
 	},
 
 	Ore_Smelter = {
 		Cost = 10,
 		MaxAmount = 1,
-		ReforgeMultiplier = 1.5 // Price multiplier applied on the base value of reforging
+		ReforgeMultiplier = 1.5 // Price multiplier applied on the base value of the item being reforged
 	},
 
 	Blast_Furnace = {
 		Cost = 5,
 		MaxAmount = 1,
-		RepairMultiplier = 0.7 // Value by which instant repair will be reduced
+		RepairMultiplier = 0.7 // Value by which instant repair will be multiplied
 	},
 
 	Stone_Watchtower = {
@@ -117,6 +121,8 @@ gt.Stronghold.Locations <-
 	Herbalists_Grove = {
 		Cost = 5,
 		MaxAmount = 1,
+		DailyIncome = 20, // Amount of extra medicine generated every day
+		MaxItemSlots = 40, // Amount added to the maximum amount of stored items of this type
 		EffectRange = 25, // Distance in tiles for which the effect works
 	},
 

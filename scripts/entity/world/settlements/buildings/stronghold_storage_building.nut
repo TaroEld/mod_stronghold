@@ -175,31 +175,40 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 				Script = "scripts/items/supplies/armor_parts_item"
 				Max = this.Stronghold.MaxAmountOfStoredTools,
 				MaxPerStack = 25,
-				ToAdd = townSize * _daysPassed * 9
+				ToAdd = townSize * _daysPassed * this.Stronghold.ToolsPerDay
 			},
 			Medicine = {
 				ID = "supplies.medicine",
 				Script = "scripts/items/supplies/medicine_item",
 				Max = this.Stronghold.MaxAmountOfStoredMedicine,
 				MaxPerStack = 20,
-				ToAdd = townSize * _daysPassed * 7
+				ToAdd = townSize * _daysPassed * this.Stronghold.MedicinePerDay
 			},
 			Ammo = {
 				ID = "supplies.ammo",
 				Script = "scripts/items/supplies/ammo_item",
 				Max = this.Stronghold.MaxAmountOfStoredAmmo,
 				MaxPerStack = 50,
-				ToAdd = townSize * _daysPassed * 20
+				ToAdd = townSize * _daysPassed * this.Stronghold.AmmoPerDay
 			},
 		}
 
-		if (this.m.Settlement.hasAttachedLocation("attached_location.workshop"))
+		local numberOfWorkshops = this.m.Settlement.countAttachedLocations("attached_location.workshop");
+		if (numberOfWorkshops > 0)
 		{
 			local toolPerWorkshop = this.Stronghold.Locations["Workshop"].DailyIncome;
 			local toolMaxPerWorkshop = this.Stronghold.Locations["Workshop"].MaxItemSlots;
-			local numberOfWorkshops = this.m.Settlement.countAttachedLocations("attached_location.workshop");
 			itemsToAdd.Armor.ToAdd += toolPerWorkshop * numberOfWorkshops * _daysPassed;
 			itemsToAdd.Armor.Max += toolMaxPerWorkshop * numberOfWorkshops;
+		}
+
+		local numberOfHerbalists = this.m.Settlement.countAttachedLocations("attached_location.herbalists_grove");
+		if (numberOfHerbalists > 0)
+		{
+			local medicinePerHerbalist = this.Stronghold.Locations["Herbalists_Grove"].DailyIncome;
+			local medicineMaxPerHerbalist = this.Stronghold.Locations["Herbalists_Grove"].MaxItemSlots;
+			itemsToAdd.Medicine.ToAdd += medicinePerHerbalist * numberOfHerbalists * _daysPassed;
+			itemsToAdd.Medicine.Max += medicineMaxPerHerbalist * numberOfHerbalists;
 		}
 
 		// iterates through items in stash to add the current to the total to be added, also finds money item because that can just be one stack

@@ -67,7 +67,8 @@ gt.Stronghold.setupLocationDefs <- function()
 			ConstID = "Herbalists_Grove",
 			Cost = 0,
 			Path = "herbalists_grove_location",
-			Text = "The wise women of the herbalists grove know how to treat wounds with special and curious methods. Hitpoints regenerate faster when around the stronghold.",
+			Text = format("The wise women of the herbalists grove know how to treat wounds with special and curious methods. Hitpoints regenerate faster when around the stronghold\nThey will also gather herbal medicine for you. You can expect to receive %i extra medicine every day, and your warehouse will be able to store %i more.", 
+				gt.Stronghold.Locations["Herbalists_Grove"].DailyIncome, gt.Stronghold.Locations["Herbalists_Grove"].MaxItemSlots),
 			isValid = null
 		},
 		{
