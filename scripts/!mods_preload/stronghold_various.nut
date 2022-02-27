@@ -5,6 +5,8 @@ gt.Stronghold.setupVarious <- function()
 	// max length of menu options, limitation of the text window size. got it at 11 so leave 2 spaces for 'back' etc
 	gt.Stronghold.MaxMenuOptionsLen <- 9; 
 
+	gt.Stronghold.MAX_BASE_SIZE <- 3;
+
 	gt.Stronghold.UnlockAdvantages <- [
 		"You can leave items and brothers behind, to retrieve them later as you need them.\n You can construct up to three settlement buildings.\nYou can construct up to three locations, granting various advantages.\n You will be able to upgrade your base, unlocking more features.",
 		"Bands of mercenaries will join your base and guard it against aggressors.\nYou can construct an additional building and three additional locations.\nYou can construct roads to other settlements, connecting your base to the world.",

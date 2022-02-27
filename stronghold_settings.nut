@@ -45,6 +45,8 @@ gt.Stronghold.MaxAmountOfStoredTools <- 150;
 gt.Stronghold.MaxAmountOfStoredMedicine <- 100;
 gt.Stronghold.MaxAmountOfStoredAmmo <- 300;
 
+// Add gold generated in base directly to the asset crowns on base enter instead of creating a crowns item
+gt.Stronghold.AddGoldDirectlyToAssets <- false; 
 
 // Base name for each tier, used in descriptions
 gt.Stronghold.BaseNames <- [
