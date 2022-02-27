@@ -50,11 +50,9 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		}
 
 		local patrol_strength = 100 * (playerBase.getSize())
+		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
 
-		//add strength if you have the attachment
-		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp")){
-			patrol_strength += 200
-		}
+
 		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary guards of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
 		party.m.OnCombatWithPlayerCallback = null;
 		party.getSprite("body").setBrush(playerBase.m.troopSprites);
@@ -81,6 +79,8 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 			guard.setTarget(playerBase.getTile());
 			//keep the boys home if upgrading
 			if(playerBase.isUpgrading()){
+				c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
+				c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
 				guard.setTime(totalTime);
 				c.addOrder(guard);
 				break

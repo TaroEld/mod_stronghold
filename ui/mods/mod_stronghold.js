@@ -30,6 +30,142 @@ $.fn.changeDialogFooterRows = function(_rows, _big)
 };
 
 
+var old_createItemSlot = WorldTownScreenShopDialogModule.prototype.createItemSlot
+WorldTownScreenShopDialogModule.prototype.createItemSlot = function (_owner, _index, _parentDiv, _screenDiv)
+{
+    var self = this;
+    var result = old_createItemSlot.call(this, _owner, _index, _parentDiv, _screenDiv);
+    result.off("mousedown");
+    result.assignListItemRightClick(function (_item, _event)
+	{
+        var data = _item.data('item');
+
+        var isEmpty = (data !== null && 'isEmpty' in data) ? data.isEmpty : true;
+        var owner = (data !== null && 'owner' in data) ? data.owner : null;
+        //var itemId = (data !== null && 'id' in data) ? data.id : null;
+        var itemIdx = (data !== null && 'index' in data) ? data.index : null;
+		var repairItem = KeyModiferConstants.AltKey in _event && _event[KeyModiferConstants.AltKey] === true;
+		var reforgeItem = KeyModiferConstants.ShiftKey in _event && _event[KeyModiferConstants.ShiftKey] === true;
+
+        if(isEmpty === false && owner !== null && itemIdx !== null)
+        {
+            switch(owner)
+            {
+                case WorldTownScreenShop.ItemOwner.Stash:
+                {
+                    if (repairItem === true)
+                    {
+                        //console.info('destroy');
+                        self.repairItem(itemIdx);
+                    }
+                    else
+                    {
+                        //console.error('sell');
+                        self.swapItem(itemIdx, owner, null, WorldTownScreenShop.ItemOwner.Shop);
+                    }
+                } break;
+                case WorldTownScreenShop.ItemOwner.Shop:
+                {
+                	if (reforgeItem == true){
+                    	self.checkIfReforgeIsValid(itemIdx)
+                    	return false
+                    }
+                    else{
+                    	self.swapItem(itemIdx, owner, null, WorldTownScreenShop.ItemOwner.Stash);
+                    }
+         
+                } break;
+            }
+        }
+    });
+    return result
+}
+
+WorldTownScreenShopDialogModule.prototype.showConfirmReforgeDialog = function(_sourceItemIdx, _itemName, _price, _affordable){
+     var self = this;
+     this.mPopupDialog = $('.world-town-screen').createPopupDialog('Confirm reforging', null, null, "confirm-reforge-dialog");
+     this.mPopupDialog.addPopupDialogContent(this.createConfirmReforgeContent(this.mPopupDialog, _itemName, _price, _affordable));
+     if(_affordable == true){
+     	this.mPopupDialog.addPopupDialogOkButton(function (_dialog)
+     	{
+     	   self.mPopupDialog = null;
+     	   self.reforgeNamedItemAfterClick(_sourceItemIdx);
+     	   _dialog.destroyPopupDialog();
+
+     	});
+     	this.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
+     	{
+     	   self.mPopupDialog = null;
+     	   _dialog.destroyPopupDialog();
+     	});
+     }
+     else{
+     	this.mPopupDialog.addPopupDialogOkButton(function (_dialog)
+     	{
+     	   self.mPopupDialog = null;
+     	   _dialog.destroyPopupDialog();
+     	});
+     }
+}
+
+WorldTownScreenShopDialogModule.prototype.createConfirmReforgeContent = function (_dialog, _itemName, _price, _affordable)
+{
+    var result = $('<div class="confirm-reforge-container"/>');
+
+    var row = $('<div class="row"/>');
+    result.append(row);
+
+    var label = $('<div class="text-font-normal font-color-label"></div>');
+    if(_affordable === true){
+    	label.html("Are you sure you want to reforge the " + _itemName + " ? This will cost " + _price + " crowns.")
+    }
+    else{
+    	label.html("You can't afford to reforge the " + _itemName + " ! (" + _price + " crowns.)")
+    }
+    row.append(label);
+
+    return result;
+};
+
+WorldTownScreenShopDialogModule.prototype.reforgeNamedItemAfterClick = function(_sourceItemIdx){
+    
+    var self = this;
+   	SQ.call(this.mSQHandle, 'onReforgeNamedItem', _sourceItemIdx, function (data)
+    {
+        // check if we have an error
+        if (ErrorCode.Key in data)
+        {
+            self.notifyEventListener(ErrorCode.Key, data[ErrorCode.Key]);
+        }
+        else
+        {
+            if(data.Item != null)
+            {
+                self.updateSlotItem(WorldTownScreenShop.ItemOwner.Shop, self.mShopSlots, data.Item, _sourceItemIdx, WorldTownScreenShop.ItemFlag.Updated);
+            }
+
+            self.mParent.loadAssetData(data.Assets);
+        }
+    });
+};
+
+WorldTownScreenShopDialogModule.prototype.checkIfReforgeIsValid = function (_sourceItemIdx)
+{
+	var self = this;
+    SQ.call(this.mSQHandle, 'onReforgeIsValid', _sourceItemIdx, function(data){
+    	if (data === undefined || data == null || typeof (data) !== 'object')
+    	{
+    	    console.error('ERROR: Failed to reforge item.');
+    	    return;
+    	}
+    	if (data["IsValid"] === false){
+    		return
+    	}
+    	self.showConfirmReforgeDialog(data["ItemIdx"], data["ItemName"], data["Price"], data["Affordable"]);
+    });
+};
+
+
 WorldTownScreenMainDialogModule.prototype.renameTown = function (_dialog)
 {
 	

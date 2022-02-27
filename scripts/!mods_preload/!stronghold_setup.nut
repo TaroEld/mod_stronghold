@@ -1,16 +1,28 @@
-::mods_registerMod("mod_stronghold", 1.0);
-::mods_registerJS("mod_stronghold.js");
-::mods_registerCSS("mod_stronghold.css");
-::mods_queue("mod_stronghold", null, function()
+local gt = this.getroottable();
+gt.Stronghold <- {};
+::mods_registerMod("mod_stronghold", 1.16);
+::mods_queue("mod_stronghold", ">mod_MSU", function()
 {	
-	this.Math.randArray <- function(_array){
-		if (typeof _array != "array") {
-			this.logWarning("_array not an array or empty")
-			return
-		}
-		if(_array.len() == 0) return null
-		return _array[this.Math.rand(0, _array.len()-1)]
-	}
+	
+	::mods_registerJS("mod_stronghold.js");
+	::mods_registerCSS("mod_stronghold.css");
+	
+	this.include("stronghold_settings")
+
+	gt.Stronghold.setupVarious();
+	delete gt.Stronghold.setupVarious;
+
+	gt.Stronghold.setupVisuals();
+	delete gt.Stronghold.setupVisuals;
+
+	gt.Stronghold.setupMainManagementOptions();
+	delete gt.Stronghold.setupMainManagementOptions;
+
+	gt.Stronghold.setupLocationDefs();
+	delete gt.Stronghold.setupLocationDefs;
+
+	gt.Stronghold.setupBuildingDefs();
+	delete gt.Stronghold.setupBuildingDefs;
 
 	::mods_hookNewObjectOnce("states/world/asset_manager", function (o)
 	{
@@ -23,12 +35,12 @@
 			local playerBases = this.Stronghold.getPlayerFaction().getMainBases()
 			foreach(playerBase in playerBases)
 			{	
-				if (playerBase.hasAttachedLocation("attached_location.wheat_fields") && this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < 25)
+				if (playerBase.hasAttachedLocation("attached_location.wheat_fields") && this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < this.Stronghold.Locations["Wheat_Fields"].EffectRange)
 				{
 					return
 				}
 			}	
-			consumeFood()
+			return consumeFood()
 		}
 		
 		local update = o.update;		
@@ -40,52 +52,25 @@
 			{
 				//check for ranger start and lookout follower
 				local playerBases = this.Stronghold.getPlayerFaction().getMainBases()
+				local isRangers = this.World.Assets.getOrigin().getID() == "scenario.rangers";
+				local hasLookout = this.World.Retinue.hasFollower("follower.lookout");
 				foreach(playerBase in playerBases)
 				{	
-					if (playerBase.hasAttachedLocation("attached_location.stone_watchtower") && this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < 25)
+					if (playerBase.hasAttachedLocation("attached_location.stone_watchtower") 
+						&& this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < this.Stronghold.Locations["Stone_Watchtower"].EffectRange)
 					{
-						if (this.World.Assets.getOrigin().getID() == "scenario.rangers")
-						{
-							this.World.State.getPlayer().m.BaseMovementSpeed = 120
-						}
-						else
-						{
-							this.World.State.getPlayer().m.BaseMovementSpeed = 111
-						}
-						
-						if (this.World.Retinue.hasFollower("follower.lookout"))
-						{
-							this.World.State.getPlayer().m.VisionRadius = 750
-						}
-						else
-						{
-							this.World.State.getPlayer().m.VisionRadius = 625
-						}
-						
+						this.World.State.getPlayer().m.BaseMovementSpeed = isRangers ? 111 + this.Stronghold.Locations["Stone_Watchtower"].MovementSpeedIncrease : 105 + this.Stronghold.Locations["Stone_Watchtower"].MovementSpeedIncrease
+						this.World.State.getPlayer().m.VisionRadius = hasLookout ? 625 + this.Stronghold.Locations["Stone_Watchtower"].VisionIncrease : 500 + this.Stronghold.Locations["Stone_Watchtower"].VisionIncrease
 					}
 					//if not in radius
 					else
 					{
-						if (this.World.Assets.getOrigin().getID() == "scenario.rangers")
-						{
-							this.World.State.getPlayer().m.BaseMovementSpeed = 111
-						}
-						else
-						{
-							this.World.State.getPlayer().m.BaseMovementSpeed = 105
-						}
-						
-						if (this.World.Retinue.hasFollower("follower.lookout"))
-						{
-							this.World.State.getPlayer().m.VisionRadius = 625
-						}
-						else
-						{
-							this.World.State.getPlayer().m.VisionRadius = 500
-						}
+						this.World.State.getPlayer().m.BaseMovementSpeed = isRangers ? 111 : 105
+						this.World.State.getPlayer().m.VisionRadius = hasLookout ? 625 : 500 
 					}
 					//same for herbalist grove
-					if (playerBase.hasAttachedLocation("attached_location.herbalist_grove") && this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < 25)
+					if (playerBase.hasAttachedLocation("attached_location.herbalist_grove") 
+						&& this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < this.Stronghold.Locations["Herbalists_Grove"].EffectRange)
 					{
 						this.m.HitpointsPerHourMult = 1.4
 					}
@@ -97,7 +82,8 @@
 					//stored brothers draw half wage
 					if (this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
 					{
-						foreach(bro in playerBase.getLocalRoster().getAll()){
+						foreach(bro in playerBase.getLocalRoster().getAll())
+						{
 							this.m.Money -= this.Math.floor(bro.getDailyCost()/2);
 						}
 					}
@@ -127,6 +113,128 @@
 
 			
 	});
+
+	::mods_hookExactClass("entity/world/party", function(o){
+		local party_onUpdate = o.onUpdate
+		o.onUpdate = function()
+		{
+			if(this.Stronghold.getPlayerFaction() == null) return party_onUpdate()
+			foreach(settlement in this.Stronghold.getPlayerFaction().getMainBases()){
+				if (settlement.hasAttachedLocation("attached_location.stone_watchtower") 
+					&& this.getTile().getDistanceTo(settlement.getTile()) < this.Stronghold.Locations["Stone_Watchtower"].VisionInFogOfWarRange)
+				{
+					this.setVisibleInFogOfWar(true);
+					break;
+				}
+				else{
+					this.setVisibleInFogOfWar(false);
+				}
+			}
+			party_onUpdate();
+		}
+	})
+
+	::mods_hookNewObject("ui/screens/world/modules/world_town_screen/town_shop_dialog_module", function(o){
+		o.onReforgeIsValid <- function(_idx)
+		{
+			//check if in player base and store
+			local town = this.World.State.getCurrentTown();
+			if (!town.getFlags().get("IsMainBase") ||
+				!town.hasAttachedLocation("attached_location.ore_smelters") ||
+				this.World.State.getTownScreen().getShopDialogModule().getShop().m.ID != "building.storage_building")
+			{
+				return
+				{
+					IsValid = false
+				}
+			}
+
+			local sourceItem = this.m.Shop.getStash().getItemAtIndex(_idx);
+			if (sourceItem == null || sourceItem.item == null || !sourceItem.item.isItemType(this.Const.Items.ItemType.Named))
+			{
+				return { IsValid = false }
+			}
+			local price = sourceItem.item.m.Value * this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier;
+
+			return {
+				IsValid = true,
+				ItemIdx = _idx,
+				ItemName = sourceItem.item.getName(),
+				Price = price,
+				Affordable = price < this.World.Assets.getMoney()
+			}
+		}
+
+		o.onReforgeNamedItem <- function(_idx)
+		{
+			local sourceItem = this.m.Shop.getStash().removeByIndex(_idx);
+			local name = sourceItem.getName();
+			local type = sourceItem.ClassNameHash;
+			local price = sourceItem.m.Value * this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier;
+
+			//can't savescum quite as easily
+			if (!this.World.Flags.get("ReforgeNamedItemSeed"))
+			{
+				this.World.Flags.set("ReforgeNamedItemSeed", this.World.State.getCurrentTown().getFlags().get("RosterSeed"));
+			}
+			this.World.Flags.increment("ReforgeNamedItemSeed");
+			this.Math.seedRandom(this.World.Flags.get("ReforgeNamedItemSeed"));
+
+			local replacementItem = this.new(this.IO.scriptFilenameByHash(type));
+			replacementItem.setName(name);
+			this.World.Assets.addMoney(-price);
+			this.m.Shop.getStash().add(replacementItem);
+			this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + this.Math.rand(0, 6) + ".wav", 1.0);
+			local result = {
+				Item = this.UIDataHelper.convertItemToUIData(replacementItem, true, null),
+				Assets = this.m.Parent.queryAssetsInformation()
+			};
+			return result;
+		}
+
+		local onRepairItem = o.onRepairItem
+		o.onRepairItem <- function(_itemIndex)
+		{
+			local town = this.World.State.getCurrentTown();
+			if (!town.getFlags().get("IsMainBase") || !town.hasAttachedLocation("attached_location.blast_furnace"))
+			{
+				return onRepairItem(_itemIndex);
+			}
+
+			if (!this.m.Shop.isRepairOffered())
+			{
+				return null;
+			}
+
+			local item = this.Stash.getItemAtIndex(_itemIndex).item;
+
+			if (item.getConditionMax() <= 1 || item.getCondition() >= item.getConditionMax())
+			{
+				return null;
+			}
+
+			local price = (item.getConditionMax() - item.getCondition()) * this.Const.World.Assets.CostToRepairPerPoint;
+			local value = item.m.Value * (1.0 - item.getCondition() / item.getConditionMax()) * 0.2 * this.World.State.getCurrentTown().getPriceMult() * this.Const.Difficulty.SellPriceMult[this.World.Assets.getEconomicDifficulty()];
+			price = this.Math.max(price, value) * this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier;
+			price = price.tointeger();
+
+			if (this.World.Assets.getMoney() < price)
+			{
+				return null;
+			}
+
+			this.World.Assets.addMoney(-price);
+			item.setCondition(item.getConditionMax());
+			item.setToBeRepaired(false);
+			this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + this.Math.rand(0, 6) + ".wav", 1.0);
+			local result = {
+				Item = this.UIDataHelper.convertItemToUIData(item, true, this.Const.UI.ItemOwner.Stash),
+				Assets = this.m.Parent.queryAssetsInformation()
+			};
+			this.World.Statistics.getFlags().increment("ItemsRepaired");
+			return result;
+		}
+	})
 	
 	
 	::mods_hookDescendants("items/item", function ( o )
@@ -454,6 +562,30 @@
 
 	::mods_hookNewObject("ui/screens/tooltip/tooltip_events", function ( o )
 	{
+		// adapt armorsmith discount tooltip
+		local tactical_helper_addHintsToTooltip = o.tactical_helper_addHintsToTooltip;
+		o.tactical_helper_addHintsToTooltip = function ( _activeEntity, _entity, _item, _itemOwner, _ignoreStashLocked = false )
+		{
+			local result = tactical_helper_addHintsToTooltip( _activeEntity, _entity, _item, _itemOwner, _ignoreStashLocked)
+			local town = this.World.State.getCurrentTown();
+			if (_itemOwner != "world-town-screen-shop-dialog-module.stash" || town == null || town.getCurrentBuilding() == null || !town.getCurrentBuilding().isRepairOffered() || !town.getFlags().get("IsMainBase") || !town.hasAttachedLocation("attached_location.blast_furnace"))
+			{
+				return result;
+			}
+
+			local price = (_item.getConditionMax() - _item.getCondition()) * this.Const.World.Assets.CostToRepairPerPoint;
+			local value = _item.m.Value * (1.0 - _item.getCondition() / _item.getConditionMax()) * 0.2 * this.World.State.getCurrentTown().getPriceMult() * this.Const.Difficulty.SellPriceMult[this.World.Assets.getEconomicDifficulty()];
+			price = this.Math.max(price, value) * this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier;
+			price = price.tointeger();
+			foreach(entry in result){
+				if("text" in entry && entry.text.find("to have it repaired") != null){
+					entry.text = "Pay [img]gfx/ui/tooltips/money.png[/img]" + price + " to have it repaired"
+					break;
+				}
+			}
+			return result
+		}
+
 		local general_queryUIElementTooltipData = o.general_queryUIElementTooltipData
 		o.general_queryUIElementTooltipData = function( _entityId, _elementId, _elementOwner )
 		{
@@ -485,12 +617,12 @@
 						{
 							id = 1,
 							type = "title",
-							text = "Storage"
+							text = "Warehouse"
 						},
 						{
 							id = 2,
 							type = "description",
-							text = "Your companies storage building. Here, you can store items to retrieve them at a later date."
+							text = "Your companies warehouse. Here, you can store items to retrieve them at a later date."
 						}
 					];
 

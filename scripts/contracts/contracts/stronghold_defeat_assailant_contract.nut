@@ -178,14 +178,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						this.Contract.m.Home.m.Size = this.Contract.m.TargetLevel;
 						this.Contract.m.Home.setUpgrading(true);
 						this.Contract.m.Home.updateTown();
-
-						local playerFaction = this.Stronghold.getPlayerFaction();
-						foreach(card in playerFaction.m.Deck){
-							if (card.getID() == "stronghold_guard_base_action"){
-								card.m.PlayerBase = this.Contract.m.Home;
-								card.execute(playerFaction);
-							}
-						}
 					}
 
 				}
@@ -276,15 +268,15 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						//upgrade looks and situation
 						playerBase.buildHouses();
 						//spawn new guards to reflect the change in size
+						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
+						this.Contract.m.Home.setUpgrading(false);
+						this.Contract.m.Home.updateTown()
 						foreach(card in playerFaction.m.Deck){
 							if (card.getID() == "stronghold_guard_base_action"){
 								card.m.PlayerBase = this.Contract.m.Home;
 								card.execute(playerFaction);
 							}
 						}
-						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
-						this.Contract.m.Home.setUpgrading(false);
-						this.Contract.m.Home.updateTown()
 						this.World.Contracts.finishActiveContract();
 						return 0;
 
@@ -354,12 +346,13 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 
 		});
 	}
+
 	function spawnNewAttackers()
 	{
 		local playerFaction = this.Stronghold.getPlayerFaction()
 		local playerBase = this.m.Home
 		local wave =  this.m.TargetLevel / this.m.AttacksRemaining 
-		local party_difficulty =  (150 + 50 * wave) * this.getScaledDifficultyMult()
+		local party_difficulty =  (this.Stronghold.InitialFightBaseStrength + this.Stronghold.InitialFightStrengthPerLevel * wave) * this.getScaledDifficultyMult();
 		this.m.Destination = this.WeakTableRef(playerBase);
 		local tile = playerBase.getTile();
 		local allSettlements = []
@@ -484,6 +477,17 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		c.addOrder(despawn);
 		this.m.HasSpawnedUnit = true;
 		this.m.AttacksRemaining--
+
+		//spawn new mercs to help you in the fight
+		local playerFaction = this.Stronghold.getPlayerFaction();
+		foreach(card in playerFaction.m.Deck)
+		{
+			if (card.getID() == "stronghold_guard_base_action")
+			{
+				card.m.PlayerBase = this.m.Home;
+				card.execute(playerFaction);
+			}
+		}	
 	}
 	
 	function onPrepareVariables( _vars )

@@ -30,14 +30,6 @@ this.stronghold_management_building <- this.inherit("scripts/entity/world/settle
 		this.World.Contracts.showContractByID(contract.getID());
 	}
 
-	function onSettlementEntered()
-	{
-	}
-
-	function onUpdateShopList()
-	{
-		
-	}
 
 	function updateSprite()
 	{

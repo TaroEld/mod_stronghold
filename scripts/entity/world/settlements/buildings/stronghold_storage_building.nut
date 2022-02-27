@@ -12,8 +12,8 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 	{
 		this.building.create();
 		this.m.ID = "building.storage_building";
-		this.m.Name = "Storage";
-		this.m.Description = "Your companies storage building";
+		this.m.Name = "Warehouse";
+		this.m.Description = "Your companies warehouse";
 		this.m.UIImage = "ui/settlements/building_06";
 		this.m.UIImageNight = "ui/settlements/building_06";
 		this.m.Tooltip = "world-town-screen.main-dialog-module.Storage";
@@ -160,109 +160,131 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 	function onClicked( _townScreen )
 	{
 		this.getStash().sort()
-		this.Stronghold.time <- this.Time.getExactTime()
 		_townScreen.getShopDialogModule().setShop(this);
 		_townScreen.showShopDialog();
 		this.pushUIMenuStack();
 	}
 
-	function onSettlementEntered()
+	function updateProducedItems(_daysPassed)
 	{
-	}
+		local townSize = this.m.Settlement.getSize();
 
-	function onUpdateShopList(_daysPassed)
-	{
-		// adds free items every 3 days. Max of max_each in town store. Sets the price mult to 0 to make them free.
-		local town_size = this.m.Settlement.getSize() -1 ;
-		local toAdd = [];
-		local tool_count = 0;
-		local medicine_count = 0;
-		local ammo_count = 0;
-		local tool_increment = town_size;
-		local medicine_increment = town_size;
-		local ammo_increment = town_size;
-		local tool_max = 8
-		local medicine_max = 5
-		local ammo_max = 6
-		local updates = this.Math.abs(_daysPassed/3);
-		if (updates == 0){ 
-			updates = 1
-		};
-		foreach (item in this.m.Stash.getItems()){
-			if (item == null) continue
-			if (item.m.ID == "supplies.ammo"){
-				ammo_count++
-			}
-			else if (item.m.ID == "supplies.armor_parts"){
-				tool_count++
-			}
-			else if (item.m.ID == "supplies.medicine"){
-				medicine_count++
-			}
+		local itemsToAdd = {
+			Armor = {
+				ID = "supplies.armor_parts",
+				Script = "scripts/items/supplies/armor_parts_item"
+				Max = this.Stronghold.MaxAmountOfStoredTools,
+				MaxPerStack = 25,
+				ToAdd = townSize * _daysPassed * this.Stronghold.ToolsPerDay
+			},
+			Medicine = {
+				ID = "supplies.medicine",
+				Script = "scripts/items/supplies/medicine_item",
+				Max = this.Stronghold.MaxAmountOfStoredMedicine,
+				MaxPerStack = 20,
+				ToAdd = townSize * _daysPassed * this.Stronghold.MedicinePerDay
+			},
+			Ammo = {
+				ID = "supplies.ammo",
+				Script = "scripts/items/supplies/ammo_item",
+				Max = this.Stronghold.MaxAmountOfStoredAmmo,
+				MaxPerStack = 50,
+				ToAdd = townSize * _daysPassed * this.Stronghold.AmmoPerDay
+			},
 		}
-		if(this.m.Settlement.hasAttachedLocation("attached_location.workshop"))
+
+		local numberOfWorkshops = this.m.Settlement.countAttachedLocations("attached_location.workshop");
+		if (numberOfWorkshops > 0)
 		{
-			tool_increment +=2;
-			tool_max += 2;
+			local toolPerWorkshop = this.Stronghold.Locations["Workshop"].DailyIncome;
+			local toolMaxPerWorkshop = this.Stronghold.Locations["Workshop"].MaxItemSlots;
+			itemsToAdd.Armor.ToAdd += toolPerWorkshop * numberOfWorkshops * _daysPassed;
+			itemsToAdd.Armor.Max += toolMaxPerWorkshop * numberOfWorkshops;
 		}
-		for (local x = 0; x < updates; x++)
+
+		local numberOfHerbalists = this.m.Settlement.countAttachedLocations("attached_location.herbalists_grove");
+		if (numberOfHerbalists > 0)
 		{
-			for (local y = 0; y < town_size; y++)
+			local medicinePerHerbalist = this.Stronghold.Locations["Herbalists_Grove"].DailyIncome;
+			local medicineMaxPerHerbalist = this.Stronghold.Locations["Herbalists_Grove"].MaxItemSlots;
+			itemsToAdd.Medicine.ToAdd += medicinePerHerbalist * numberOfHerbalists * _daysPassed;
+			itemsToAdd.Medicine.Max += medicineMaxPerHerbalist * numberOfHerbalists;
+		}
+
+		// iterates through items in stash to add the current to the total to be added, also finds money item because that can just be one stack
+		local moneyItem = null;
+		local toRemove = [];
+		foreach (idx, item in this.m.Stash.getItems())
+		{
+			if (item == null) continue;
+			if (item.getID() == "supplies.money") 
 			{
-				if(medicine_count < medicine_max){
-					toAdd.push(this.new("scripts/items/supplies/medicine_item"));
-					medicine_count++
-				}
-				if(ammo_count < ammo_max){
-					toAdd.push(this.new("scripts/items/supplies/ammo_item"));
-					ammo_count++
-				}
-				
+				moneyItem = item;
+				continue;
 			}
-			for (local y = 0; y < tool_increment; y++){
-				if(tool_count < tool_max){
-					toAdd.push(this.new("scripts/items/supplies/armor_parts_item"));
-					tool_count++
+			foreach(itemToAdd in itemsToAdd)
+			{
+				if (itemToAdd.ID == item.m.ID)
+				{
+					itemToAdd.ToAdd += item.getAmount();
+					toRemove.push(item);
+					break;
 				}
 			}
 		}
+		// Remove current items and just go off total. Can't remove items from array while iterating through it so do that here
+		foreach(item in toRemove)
+		{
+			this.m.Stash.remove(item);
+		}
+
+		local item;
+		local amount;
+		foreach(itemToAdd in itemsToAdd)
+		{
+			// can't add more than storage max of each item in total
+			itemToAdd.ToAdd = this.Math.min(itemToAdd.ToAdd, itemToAdd.Max);
+			while (itemToAdd.ToAdd > 0)
+			{
+				item = this.new(itemToAdd.Script);
+				amount = this.Math.min(itemToAdd.MaxPerStack, itemToAdd.ToAdd).tointeger();
+				item.setAmount(amount);
+				itemToAdd.ToAdd -= amount;
+				item.m.PriceMult = 0;
+				this.m.Stash.add(item);
+			}
+		}
+		
 		if (this.m.Settlement.hasAttachedLocation("attached_location.gold_mine"))
 		{
-			local money = this.new("scripts/items/supplies/money_item");
-			local moneyPerMine = this.Stronghold.DailyGoldPerGoldMine;
-			if (this.Stronghold.AllowMoreThanOneGoldMine) {
-				// More than one possible mine scenario, money = number of mines * daily money per mine * number of days
-				// Get number of mines
-				local numberOfMines = countAttachedLocations("attached_location.gold_mine");
-				money.setAmount(_daysPassed * numberOfMines * moneyPerMine);
-			} else {
-				// Only one possible mine scenario, money = daily money per mine * number of days
-				money.setAmount(_daysPassed * moneyPerMine);
-			}
-			// Now that money value is calculated, add it to stash
-			this.m.Stash.add(money);
-		}
-
-		// Finally, add all items to be added to the stash/marketplace
-		foreach (item in toAdd)
-		{
-			item.m.PriceMult = 0;
-			this.m.Stash.add(item);
-		}
-	}
-
-	function countAttachedLocations( _id )
-	{
-		local count = 0;
-		foreach( a in this.m.Settlement.getActiveAttachedLocations() )
-		{
-			if (a.isActive() && a.getTypeID() == _id)
+			local moneyPerMine = this.Stronghold.Locations["Gold_Mine"].DailyIncome;
+			local numberOfMines = this.m.Settlement.countAttachedLocations("attached_location.gold_mine");
+			local totalMoney = _daysPassed * numberOfMines * moneyPerMine;
+			if(moneyItem == null)
 			{
-				count = count + 1;
+				moneyItem = this.new("scripts/items/supplies/money_item");
+				moneyItem.setAmount(totalMoney);
+				this.m.Stash.add(moneyItem);
+			}
+			else
+			{
+				moneyItem.setAmount(moneyItem.getAmount() + totalMoney);
 			}
 		}
 
-		return count;
+		if (this.m.Settlement.hasAttachedLocation("attached_location.militia_trainingcamp"))
+		{
+			local XpPerDay = this.Stronghold.Locations["Militia_Trainingcamp"].DailyIncome;
+			local numberOfTrainingGrounds = this.m.Settlement.countAttachedLocations("attached_location.militia_trainingcamp");
+			local validBros = this.m.Settlement.getLocalRoster().getAll().filter( @(a, b) b.getLevel() <= 7);
+			local totalXP = XpPerDay * _daysPassed * numberOfTrainingGrounds;
+			local XpPerBro = totalXP  / validBros.len();
+			foreach (bro in validBros)
+			{
+				bro.addXP(XpPerBro.tointeger(), false);
+				bro.updateLevel();
+			}
+		}
 	}
 
 	function onSerialize( _out )

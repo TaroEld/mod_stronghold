@@ -1,20 +1,19 @@
 this.stronghold_management_contract <- this.inherit("scripts/contracts/contract", {
-	//main settlement interface of the stronghold.
-	//General flow: "Task" screen lists all the available options. Clicking on one calls the respective function, which checks if some condition is fulfilled and adds the respective options
-	//Completing or aborting an action returns the user to the "Task" screen
-	//main menu options, buildings and locations are stored in the config file in tables, so should be easy to add more
-	//screen options should accomodate more options than the height allows, in which case you get a 'more options' option
+	// Main settlement interface of the stronghold.
+	// General flow: "Task" screen lists all the available options from config/stronghold_management, gathered by calling their IsValid. 
+	// Clicking on one calls the respective function, which builds the related menu options / possibilities based on IsValid calls (eg does the base already have this building)
+	// Completing or aborting an action returns the user to the "Task" screen in most cases, but can also stay in that screen (eg storing brothers) or return to town (add building)
+	// Main menu options, buildings and locations are stored in the config file in tables, so should be easy to add more
+	// Screen options should accomodate more options than the height allows, in which case you get a 'more options' option
 	m = {
 		Reward = 0,
 		Title = "",
 		Cost = 0,
 		Text = "",
-		//for valid locations for attachments
 		Temp_Var = null, //used as a generic variable to record the choice of the player
 		Temp_Variable_List = [], //used as a generic container to record options, used to index in and get the right choice.
-		//gathers the screen options, getActiveOptions() grabs them from here
-		Temp_Options = [],
-		ActiveIdx = 0,
+		Temp_Options = [], //gathers the screen options, getActiveOptions() grabs them from here
+		ActiveIdx = 0, // Current option index, used if there are more than the max amount of options for a page
 
 	},
 
@@ -311,7 +310,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		});
 	}
 
-	function addOverviewScreen(_title, _text, _callBackFunction = null){
+	function addOverviewScreen(_title, _text, _callBackFunction = null)
+	{
 		//adds the screen after you've chosen a main menu option, or a sub-option in a multiple choice menu
 		//checks if the monetary requirements have been met
 		this.m.Screens.push({
@@ -344,7 +344,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		});
 	}
 
-	function addEnoughScreen(_title, _text, _callBackFunction, overrideStart = null){
+	function addEnoughScreen(_title, _text, _callBackFunction, overrideStart = null)
+	{
 		//adds the final screen if the money fits
 		//calls the callback function that resolves the result, such as adding a building
 		local start = function(){
@@ -380,16 +381,15 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		});
 	}
 	
-	//gathers all the options of a screen in a list
-	//pass an array of options, such as a list of buildings, brothers etc
-	//if the option has an isValid function, calls it while passing the contract, to allow for functions like getHome()
+	// gathers all the options of a screen in a list
+	// pass an array of options, such as a list of buildings, brothers etc
+	// if the option has an isValid function, calls it while passing the contract, to allow for functions like getHome()
 	// _addOptionFunction must return a screen, which is then pushed to the Temp_Options array
-	//Temp_Variable_List is unused in this context, but might be worthwhile
-	//_checkValidity to check for isValid functions
-	//_clearIdx can be set to false to preserve the active option index, such as for the store brother screens
-
-
-	function buildActiveOptions(_optionsArray, _addOptionFunction, _checkValidity = true, _clearIdx = true){
+	// Temp_Variable_List is unused in this context, but might be worthwhile
+	// _checkValidity to check for isValid functions
+	// _clearIdx can be set to false to preserve the active option index, such as for the store brother screens
+	function buildActiveOptions(_optionsArray, _addOptionFunction, _checkValidity = true, _clearIdx = true)
+	{
 		if (_clearIdx) this.m.ActiveIdx = 0;
 		this.m.Temp_Options = []
 		foreach(option in _optionsArray)
@@ -403,9 +403,10 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 
-	//grabs a number of options from the stored list, also fixes the index and adds the 'more options' and return screens
-	//good luck
-	function getActiveOptions(_newIdx = null, genericOption = null){
+	// grabs a number of options from the stored list, also fixes the index and adds the 'more options' and return screens
+	// good luck
+	function getActiveOptions(_newIdx = null, genericOption = null)
+	{
 		if (_newIdx != null) this.m.ActiveIdx = _newIdx
 		if (this.m.ActiveIdx < 0) this.m.ActiveIdx += this.m.Temp_Options.len()
 		if (this.m.ActiveIdx == this.m.Temp_Options.len()) this.m.ActiveIdx = 0
@@ -427,10 +428,10 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		return newOptions
 	}
 
-	//gets the next page of options
-	//uses the ActiveIdx variable
-	function getMoreOptionsOption(){
-
+	// gets the next page of options
+	// uses the ActiveIdx variable
+	function getMoreOptionsOption()
+	{
 		return {
 			Text = "More options",
 			function getResult(_option)
@@ -546,6 +547,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		this.buildActiveOptions(road_options, this.addRoadScreen)
 		return this.getActiveOptions()
 	}
+
 	function getTrainerOptions()
 	{
 		local roster = this.World.getPlayerRoster().getAll().filter(function(idx, bro){
@@ -553,6 +555,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		this.buildActiveOptions(roster, this.addTrainerScreen)
 		return this.getActiveOptions()
 	}
+
 	function getGiftOptions()
 	{
 		local gift_options = clone this.m.Temp_Variable_List
@@ -592,7 +595,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	}
 
 
-	function addStoreBrotherScreen(_screenVar, _idx){
+	function addStoreBrotherScreen(_screenVar, _idx)
+	{
 		return {
 			Text = _screenVar.getName(),
 			function getResult(_option)
@@ -628,7 +632,9 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			Option = _screenVar
 		}
 	}
-	function addRetrieveBrotherScreen(_screenVar, _idx){
+
+	function addRetrieveBrotherScreen(_screenVar, _idx)
+	{
 		return {
 			Text = _screenVar.getName(),
 			function getResult(_option)
@@ -654,7 +660,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 
-	function addBuildingScreen(_screenVar, _idx){
+	function addBuildingScreen(_screenVar, _idx)
+	{
 		return {
 			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Stronghold.PriceMult) + " crowns)",
 			function getResult(_option)
@@ -678,7 +685,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 	
-	function addBuildingRemoveScreen(_screenVar, _idx){
+	function addBuildingRemoveScreen(_screenVar, _idx)
+	{
 		return {
 			Text = "Remove a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (this is free).",
 			function getResult(_option)
@@ -701,22 +709,33 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 
-	function addLocationScreen(_screenVar, _idx){
+	function addLocationScreen(_screenVar, _idx)
+	{
+		local vocals = ["a", "e", "i", "o", "u", ];
+		local function isInVocals(_char){
+			_char = _char.tochar().tolower();
+			return vocals.find(_char) != null;
+		}
+		local title = format("Build %s %s (%i crowns)", isInVocals(_screenVar.Name[0]) ? "an " : "a ", _screenVar.Name, _screenVar.Cost * this.Stronghold.PriceMult);
 		return {
-			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Stronghold.PriceMult) + " crowns)",
+			Text = title,
 			function getResult(_option)
 			{
-				local building = this.Option
-				this.Contract.m.Temp_Var <- building.Path
-				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	
-				this.Contract.addOverviewScreen(
-					format("Build a %s", building.Name), 
-					format("You selected a %s. This will cost %i. Do you wish to build this?", building.Name,
-					this.Contract.getCost())
-				)
+				local building = this.Option;
+				this.Contract.m.Temp_Var <- building.Path;
+				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	;
+				local text = format("You selected %s %s. This will cost %i crowns.\n", isInVocals(building.Name[0]) ? "an" : "a", building.Name, this.Contract.getCost());
+				text += building.Text;
+				if(this.Stronghold.Locations[building.ConstID].MaxAmount != 1){
+					text += format("\nYou can build a total of %i %ss.", this.Stronghold.Locations[building.ConstID].MaxAmount, building.Name);
+				}
+				text += "\nDo you wish to build this?";
+				
+				this.Contract.addOverviewScreen(title, text);
+				
 				this.Contract.addEnoughScreen(
-					"Purchase a new location",
-					format("Your %s is finished.", building.Name),
+					"Build a new location",
+					format("Your %s has been built.", building.Name),
 					this.Contract.onLocationAdded
 				)
 				return "Overview_Building";
@@ -726,7 +745,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 
-	function addRoadScreen(_screenVar, _idx){
+	function addRoadScreen(_screenVar, _idx)
+	{
 		local price = _screenVar.Cost * this.Stronghold.RoadCost * this.Stronghold.PriceMult
 		return{
 			Text = format("Road to %s (%i Crowns)", _screenVar.Name, price)
@@ -750,7 +770,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 
-	function addTrainerScreen(_screenVar, _idx){
+	function addTrainerScreen(_screenVar, _idx)
+	{
 		return{
 			Text = _screenVar.getName(),
 			function getResult(_option)
@@ -777,7 +798,9 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 		
 	}
-	function addGiftScreen(_screenVar, _idx){
+
+	function addGiftScreen(_screenVar, _idx)
+	{
 		return{
 			Text = _screenVar.Faction.getName(),
 			function getResult(_option)
@@ -823,7 +846,9 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			Option = _screenVar
 		}
 	}
-	function addBaseVisualScreen(_screenVar, _idx){
+	
+	function addBaseVisualScreen(_screenVar, _idx)
+	{
 		return{
 			Text = _screenVar.Name,
 			function getResult(_option)
@@ -846,7 +871,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 
-	function onStyleChanged(){
+	function onStyleChanged()
+	{
 		this.getHome().getFlags().set("CustomSprite", this.m.Temp_Var.ID)
 	}
 	
@@ -1017,7 +1043,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 	
-	function onGiftSend(){
+	function onGiftSend()
+	{
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local playerBase = this.getHome()
 		local destination = this.m.Temp_Var;
@@ -1025,10 +1052,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		local destination_town = destination.Town;
 		
 		local patrol_strength = 400 +  100 * (playerBase.getSize()-1)
-		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp"))
-		{
-			patrol_strength += 100
-		}
+		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+		
 		local party = playerFaction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 100);
 		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, patrol_strength);
 		party.setDescription("A caravan bringing gifts to " + destination_town.getName() );
@@ -1117,7 +1142,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		townRoster.remove(_bro);
 	}
 
-	function onHamletBuild(){
+	function onHamletBuild()
+	{
 		this.spawnHamlet()
 		this.removeThisContract()
 		return 0;
@@ -1183,7 +1209,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		}
 	}
 
-	function onUpgradeBought(){
+	function onUpgradeBought()
+	{
 		local playerFaction = this.Stronghold.getPlayerFaction()
 		local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
 		contract.setEmployerID(playerFaction.getRandomCharacter().getID());
@@ -1198,7 +1225,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		return 0;
 	}
 
-	function onWaterSkinBought(){
+	function onWaterSkinBought()
+	{
 		this.World.Assets.getStash().makeEmptySlots(1);
 		local item = this.new("scripts/items/special/fountain_of_youth_item");
 		this.World.Assets.getStash().add(item);
@@ -1206,14 +1234,13 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		return "Task";
 	}
 
-	function onMercenariesHired(){
+	function onMercenariesHired()
+	{
 		local playerBase = this.getHome()
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local mercenary_size = 200
-		if (playerBase.hasAttachedLocation("attached_location.militia_trainingcamp"))
-		{
-			mercenary_size += 100
-		}
+		mercenary_size += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease 
+
 		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
 		party.getSprite("body").setBrush("figure_mercenary_01");
 		party.setDescription("A band of mercenaries following you around.");
@@ -1230,7 +1257,8 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		return "Task";
 	}
 
-	function onRemoveBase(){
+	function onRemoveBase()
+	{
 		this.World.Contracts.setActiveContract(this);
 		this.m.Flags.set("Remove_Base", true)
 		this.setState("Running")
