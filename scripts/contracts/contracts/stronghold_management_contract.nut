@@ -850,7 +850,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	function addBaseVisualScreen(_screenVar, _idx)
 	{
 		return{
-			Text = _screenVar.Name,
+			Text = _screenVar.Name + " by " + _screenVar.Author,
 			function getResult(_option)
 			{
 				this.Contract.m.Temp_Var = this.Option;
@@ -873,7 +873,9 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function onStyleChanged()
 	{
-		this.getHome().getFlags().set("CustomSprite", this.m.Temp_Var.ID)
+		this.getHome().onVisualsChanged(this.m.Temp_Var.ID);
+		this.removeThisContract()
+		return 0;
 	}
 	
 	function onBuildingAdded()
