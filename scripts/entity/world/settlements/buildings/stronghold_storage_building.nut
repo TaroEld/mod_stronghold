@@ -259,8 +259,12 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 		{
 			local moneyPerMine = this.Stronghold.Locations["Gold_Mine"].DailyIncome;
 			local numberOfMines = this.m.Settlement.countAttachedLocations("attached_location.gold_mine");
-			local totalMoney = _daysPassed * numberOfMines * moneyPerMine;
-			if(moneyItem == null)
+			local totalMoney = (_daysPassed * numberOfMines * moneyPerMine).tointeger();
+			if(this.Stronghold.Locations["Gold_Mine"].AddGoldDirectlyToAssets == true)
+			{
+				this.World.Assets.addMoney(totalMoney);
+			} 
+			else if(moneyItem == null)
 			{
 				moneyItem = this.new("scripts/items/supplies/money_item");
 				moneyItem.setAmount(totalMoney);

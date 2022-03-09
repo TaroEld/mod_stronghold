@@ -10,7 +10,7 @@ gt.Stronghold.setupMainManagementOptions <- function()
 			}
 			ID = "Upgrade",
 			isValid = function(_contract){
-				return _contract.isMainBase() && _contract.getHome().getSize() < 3 && !_contract.getHome().isUpgrading()
+				return _contract.isMainBase() && _contract.getHome().getSize() < this.Stronghold.MAX_BASE_SIZE && !_contract.getHome().isUpgrading()
 			},
 			onChosen = function(){
 				if (this.World.Contracts.getActiveContract() != null)

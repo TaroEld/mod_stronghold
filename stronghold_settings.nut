@@ -129,6 +129,7 @@ gt.Stronghold.Locations <-
 	Gold_Mine = {
 		Cost = 10,
 		MaxAmount = 1,
-		DailyIncome = 150
+		DailyIncome = 150,
+		AddGoldDirectlyToAssets = false // Add gold generated in base directly to the asset crowns on base enter instead of creating a crowns item
 	}
 };
