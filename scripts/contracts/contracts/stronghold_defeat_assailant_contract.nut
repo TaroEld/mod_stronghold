@@ -358,7 +358,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		local allSettlements = []
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Goblins).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Orcs).getSettlements())
-		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Barbarians).getSettlements())
+		if(this.Const.DLC.Wildmen) allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Barbarians).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.OrientalBandits).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Zombies).getSettlements())
 		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse)){
@@ -396,12 +396,15 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			Footprint = this.Const.World.FootprintsType.Goblins,
 			Noble = false
 		}
-		factionTypes[this.Const.FactionType.Barbarians] <- {
-			Name = "Barbarians",
-			Spawnlist = this.Const.World.Spawn.Barbarians,
-			Description = "A warband of barbarian tribals.",
-			Footprint = this.Const.World.FootprintsType.Barbarians,
-			Noble = false
+		if(this.Const.DLC.Wildmen)
+		{
+			factionTypes[this.Const.FactionType.Barbarians] <- {
+				Name = "Barbarians",
+				Spawnlist = this.Const.World.Spawn.Barbarians,
+				Description = "A warband of barbarian tribals.",
+				Footprint = this.Const.World.FootprintsType.Barbarians,
+				Noble = false
+			}
 		}
 		factionTypes[this.Const.FactionType.OrientalBandits] <- {
 			Name = "Nomads",
