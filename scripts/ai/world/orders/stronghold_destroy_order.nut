@@ -29,10 +29,7 @@ this.stronghold_destroy_order <- this.inherit("scripts/ai/world/orders/destroy_o
 			{
 				if (e.isAlive() && e.getID() == this.m.TargetID)
 				{
-					
-					e.setActive(false);
-					e.getTile().spawnDetail(e.m.Sprite + "_ruins", this.Const.World.ZLevel.Object - 3, 0, false);
-					e.fadeOutAndDie(true);
+					e.getFlags().set("BuildInterrupted", true);
 					break;
 				}
 			}

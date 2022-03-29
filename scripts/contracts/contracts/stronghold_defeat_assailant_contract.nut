@@ -109,19 +109,12 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					this.World.Contracts.m.IsEventVisible = true;
 					this.World.State.showEventScreen(this.Contract, true, true)
 				} 
-				if (!this.Contract.m.HasSpawnedUnit && this.Time.getVirtualTimeF() > this.Contract.m.TimeOfNextAttack && this.Contract.m.AttacksRemaining > 0)
+				else if (!this.Contract.m.HasSpawnedUnit && this.Time.getVirtualTimeF() > this.Contract.m.TimeOfNextAttack && this.Contract.m.AttacksRemaining > 0)
 				{
 					this.Contract.setScreen("Enemies_Incoming")
 					this.World.Contracts.showActiveContract();
 				}
-				//different sprites, disabled for now
-				/*
-				if (!this.Contract.m.Flags.get("Sprite_Set") && this.Contract.m.Home.getSize() == 1)
-				{
-					this.Contract.setScreen("Select_Sprites")
-					this.World.Contracts.showActiveContract();
-				}*/
-				if (this.Contract.m.HasSpawnedUnit && (this.Contract.m.Target == null || this.Contract.m.Target.isNull()))
+				else if (this.Contract.m.HasSpawnedUnit && (this.Contract.m.Target == null || this.Contract.m.Target.isNull()))
 				{
 					if (this.Contract.m.AttacksRemaining > 0){
 						this.Contract.m.HasSpawnedUnit = false
@@ -130,9 +123,9 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					else this.Contract.setScreen("Victory_None_Left");
 					this.World.Contracts.showActiveContract();
 				}
-				else if (this.Contract.m.Origin == null || this.Contract.m.Origin.isNull() || !this.Contract.m.Origin.isAlive())
+				else if (this.Contract.m.Origin.getFlags().get("BuildInterrupted"))
 				{
-					this.Contract.setScreen("Failure");
+					this.Contract.setScreen("FailureBuild");
 					this.World.Contracts.showActiveContract();
 				}
 				else if (this.Contract.m.Origin.getFlags().get("UpgradeInterrupted")){
@@ -140,7 +133,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					this.World.Contracts.showActiveContract();
 				}
 					
-				if (this.Contract.m.Target != null && this.Contract.isPlayerAt(this.Contract.m.Target))
+				else if (this.Contract.m.Target != null && this.Contract.isPlayerAt(this.Contract.m.Target))
 				{
 					this.Contract.onDestinationAttacked(this.Contract.m.Target, false);
 				}
@@ -152,7 +145,20 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 				if (_combatID == "Stronghold"){
 					this.Contract.m.Target = null
 				}
-
+			}
+			function onRetreatedFromCombat( _combatID )
+			{
+				if (_combatID == "Stronghold")
+				{
+					if(this.Contract.m.Flags.get("IsUpgrading"))
+					{
+						this.Contract.m.Origin.getFlags().set("UpgradeInterrupted", true)
+					}
+					else
+					{
+						this.Contract.m.Origin.getFlags().set("BuildInterrupted", true)
+					}
+				}
 			}			
 			
 
@@ -295,7 +301,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		});
 		
 		this.m.Screens.push({
-			ID = "Failure",
+			ID = "FailureBuild",
 			Title = "Failure!",
 			Text = "{You ran from the battle. Your fortress has been wiped from the map. You are a failure!}",
 			Image = "",
@@ -305,6 +311,11 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					Text = "This was unwise.",
 					function getResult()
 					{
+						if (this.Contract.m.Target != null || !this.Contract.m.Target.isNull())
+						{
+							this.Contract.m.Target.die()
+						}
+						this.Contract.m.Home.fadeOutAndDie(true)
 						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
 						this.World.Contracts.finishActiveContract();
 						return 0;
@@ -328,6 +339,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					Text = "We'll get them next time.",
 					function getResult()
 					{
+						if (this.Contract.m.Target != null || !this.Contract.m.Target.isNull())
+						{
+							this.Contract.m.Target.die()
+						}
 						local playerBase = this.Contract.getHome()
 						playerBase.getFlags().remove("UpgradeInterrupted");
 						playerBase.m.Size = playerBase.m.Size - 1;
