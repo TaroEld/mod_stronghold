@@ -270,7 +270,7 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 			contract.setFaction(this.getID())
 			this.World.Contracts.addContract(contract);
 		}
-		if (!find_trainer && !this.m.Flags.get("Teacher"))
+		if (!find_trainer && !this.m.Flags.get("Teacher") && this.Const.DLC.Wildmen)
 		{
 			local contract = this.new("scripts/contracts/contracts/stronghold_free_trainer_contract");
 			contract.setEmployerID(this.getRandomCharacter().getID());
