@@ -43,6 +43,11 @@ var StrongholdScreen = function ()
         "mBuildingAsset"     : null,
         "mLocationAsset"     : null
     }
+    this.mAllAssetData = null;
+    //left side tab container
+    this.mModuleOptionsContainer = null;
+    //main content container for modules
+    this.mModuleContentContainer = null;
     this.createModules();
 };
 
@@ -87,17 +92,18 @@ StrongholdScreen.prototype.getModule = function ( _module )
 
 StrongholdScreen.prototype.createModules = function ()
 {
-	this.Modules["MainModule"].Module = new StrongholdScreenMainDialogModule(this);
-    this.Modules["Test1"].Module = new StrongholdScreenMainDialogModule(this);
-    this.Modules["Test2"].Module = new StrongholdScreenMainDialogModule(this);
-    this.Modules["Test3"].Module = new StrongholdScreenMainDialogModule(this);
-    this.Modules["Test4"].Module = new StrongholdScreenMainDialogModule(this);
+	this.Modules["MainModule"].Module = new StrongholdScreenMainDialogModule(this, "MainModule");
+    this.Modules["Test1"].Module = new StrongholdScreenMainDialogModule(this, "Test1");
+    this.Modules["Test2"].Module = new StrongholdScreenMainDialogModule(this, "Test2");
+    this.Modules["Test3"].Module = new StrongholdScreenMainDialogModule(this, "Test3");
+    this.Modules["Test4"].Module = new StrongholdScreenMainDialogModule(this, "Test4");
 };
 
 StrongholdScreen.prototype.registerModules = function ()
 {
     var self = this;
     Object.keys(this.Modules).forEach(function(_key){
+        console.error("registering module: " + _key)
         self.Modules[_key].Module.register(self.mModuleContentContainer);
     })
 };
@@ -142,13 +148,29 @@ StrongholdScreen.prototype.createAssetDIV = function (_parentDiv, _imagePath, _c
     return layout;
 };
 
-StrongholdScreen.prototype.loadAssetData = function( _data )
+StrongholdScreen.prototype.loadAssetData = function(_data)
 {
     var self = this;
-    Object.keys(_data).forEach(function(_key){
-        self.mAssets[_key].data("value", _data[_key])
+    this.mAllAssetData = _data;
+    this.mTitle.html(this.mAllAssetData.Name)
+    var assets = this.mAllAssetData['Assets']
+    Object.keys(this.mAssets).forEach(function(_key){
+        self.mAssets[_key].data("value", assets[_key]);
         var label = self.mAssets[_key].find('.label:first');
-        label.html(self.mAssets[_key].data("value"))
+        var labelText = assets[_key]
+        if((assets[_key + "Max"]) !== undefined)
+        {
+            labelText += " / " + assets[_key + "Max"] 
+        }
+        label.html(labelText)
+    })
+    Object.keys(this.Modules).forEach(function(_key){
+        var curModule = self.Modules[_key];
+        if(curModule !== undefined && curModule.Module !== null)
+        {
+            curModule.Module.loadAssetData(self.mAllAssetData);
+        }
+        
     })
 }
 
@@ -156,7 +178,7 @@ StrongholdScreen.prototype.show = function (_data)
 {
     if(_data !== undefined && _data !== null && typeof(_data) === 'object')
     {
-		this.loadAssetData(_data['Assets']);
+		this.loadAssetData(_data);
     }
     console.error("StrongholdScreen show")
     this.mContainer.removeClass('display-none').addClass('display-block');
@@ -223,7 +245,7 @@ StrongholdScreen.prototype.createDIV = function (_parentDiv)
 	_parentDiv.append(this.mContainer);
     var dialogLayout = $('<div class="l-stronghold-dialog-container"/>');
     this.mContainer.append(dialogLayout);
-    this.mDialogContainer = $('<div class="ui-control dialog dialog-1024-768"/>');
+    this.mDialogContainer = $('<div class="ui-control dialog dialog-stronghold-main"/>');
     dialogLayout.append(this.mDialogContainer)
 
     var header = $('<div class="header"/>');

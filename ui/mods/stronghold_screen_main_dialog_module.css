@@ -11,11 +11,35 @@
 
 .stronghold-main-dialog-container 
 {
-    top: 0;
-    left: 0;
-/*    width: 50%;
-    height: 50%;*/
-    border: 4px solid green;
-    /*position: absolute;*/
-    overflow: hidden;
+    /*border: 4px solid green;*/
 }
+.stronghold-main-dialog-container .stronghold-main-content-container
+{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.stronghold-main-content-container .row
+{
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    border-image: url("coui://gfx/ui/skin/line_gold.png") 0% 0% 100% 0%;
+    border-image-outset: 0 0 0.5rem 0;
+
+    /*border: 2px solid yellow;*/
+}
+
+.stronghold-main-content-container .row .change-base-name-input-container
+{
+   /*border: 2px solid purple;*/
+}
+
+.stronghold-main-content-container .row .change-base-name-button-container
+{
+    height: 5rem;
+    width: 17.5rem;
+    line-height: 3.0rem;
+
+    /*border: 2px solid blue;*/
+} 

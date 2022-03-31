@@ -29,7 +29,6 @@ $.fn.changeDialogFooterRows = function(_rows, _big)
     return this;
 };
 
-
 var old_createItemSlot = WorldTownScreenShopDialogModule.prototype.createItemSlot
 WorldTownScreenShopDialogModule.prototype.createItemSlot = function (_owner, _index, _parentDiv, _screenDiv)
 {

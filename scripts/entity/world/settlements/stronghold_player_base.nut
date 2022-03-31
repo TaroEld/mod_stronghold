@@ -797,6 +797,22 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function getUIData()
 	{
+		this.logInfo("this.getName() " + this.getName())
+		local playerRoster = this.World.getPlayerRoster().getAll().len();
+		local townRoster = this.getLocalRoster().getAll().len();
+		local maxBuildingSlots = this.getSize() + 4;
+		local currentBuildings = 0
+		foreach (building in this.m.Buildings){
+			if (building != null){
+				currentBuildings++
+			}
+		}
+		local currentLocations = 0;
+		foreach (location in this.m.AttachedLocations){
+			if (location != null && location.m.ID != "attached_location.harbor"){
+				currentLocations++
+			}
+		}
 		local ret = {
 			Name = this.getName(),
 			ID = this.getID(),
@@ -804,15 +820,18 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				
 			},
 			Assets = {
-				mMoneyAsset = 1,
-				mFoodAsset = 2,
-				mAmmoAsset = 3,
-				mSuppliesAsset = 4,
-				mMedicineAsset = 5,
-				mBrothersAsset = 6,
-				mRosterAsset = 7,
-				mBuildingAsset = 9,
-				mLocationAsset = 8,
+				mMoneyAsset = this.World.Assets.getMoney(),
+				mFoodAsset = this.World.Assets.getFood(),
+				mAmmoAsset = this.World.Assets.getArmorParts(),
+				mSuppliesAsset = this.World.Assets.getAmmo(),
+				mMedicineAsset = this.World.Assets.getMedicine(),
+				mBrothersAsset = playerRoster,
+				mBrothersAssetMax = this.World.Assets.getBrothersMax(),
+				mRosterAsset = townRoster,
+				mBuildingAsset = currentBuildings,
+				mBuildingAssetMax = maxBuildingSlots,
+				mLocationAsset = currentLocations,
+				mLocationAssetMax = this.m.AttachedLocationsMax,
 			}
 		};
 		return ret

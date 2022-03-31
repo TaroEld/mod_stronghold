@@ -78,10 +78,8 @@ this.stronghold_screen <- {
 			{
 				this.logWarning("Menustack pop")
 				::Stronghold.StrongholdScreen.hide();
+				this.m.WorldTownScreen.getMainDialogModule().reload();
 				this.m.WorldTownScreen.showLastActiveDialog();
-			}, function ()
-			{
-				return true;
 			});
 			this.m.JSHandle.asyncCall("show", this.m.Town.getUIData());
 		}
@@ -131,6 +129,15 @@ this.stronghold_screen <- {
 	{
 		this.logWarning("onScreenHidden")
 		this.m.Visible = false;
+	}
+
+	function changeBaseName(_data)
+	{
+		this.logInfo("changeBaseName " + _data)
+		this.m.Town.m.Name = _data;
+		this.m.Town.getFlags().set("CustomName", true);
+		this.m.Town.getLabel("name").Text = _data;
+		this.m.JSHandle.asyncCall("loadAssetData", this.m.Town.getUIData());
 	}
 };
 
