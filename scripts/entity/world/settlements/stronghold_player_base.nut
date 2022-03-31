@@ -783,6 +783,40 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		return true;
 	}
+
+	function showStrongholdUIDialog()
+	{
+		::Stronghold.StrongholdScreen.setTown(this);
+		if(::Stronghold.StrongholdScreen.m.JSHandle == null)
+		{
+			::Stronghold.StrongholdScreen.m.JSHandle = this.UI.connect("StrongholdScreen", ::Stronghold.StrongholdScreen);
+		}
+		::Stronghold.StrongholdScreen.show();
+
+	}
+
+	function getUIData()
+	{
+		local ret = {
+			Name = this.getName(),
+			ID = this.getID(),
+			Visuals = {
+				
+			},
+			Assets = {
+				mMoneyAsset = 1,
+				mFoodAsset = 2,
+				mAmmoAsset = 3,
+				mSuppliesAsset = 4,
+				mMedicineAsset = 5,
+				mBrothersAsset = 6,
+				mRosterAsset = 7,
+				mBuildingAsset = 9,
+				mLocationAsset = 8,
+			}
+		};
+		return ret
+	}
 	
 	function onSerialize( _out )
 	{

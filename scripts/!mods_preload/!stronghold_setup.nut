@@ -4,8 +4,12 @@ gt.Stronghold <- {};
 ::mods_queue("mod_stronghold", ">mod_MSU", function()
 {	
 	
+	::mods_registerJS("stronghold_screen_main_dialog_module.js");
 	::mods_registerJS("mod_stronghold.js");
+	::mods_registerJS("stronghold_screen.js");
+	::mods_registerCSS("stronghold_screen_main_dialog_module.css");
 	::mods_registerCSS("mod_stronghold.css");
+	::mods_registerCSS("stronghold_screen.css");
 	
 	this.include("stronghold_settings")
 
@@ -23,6 +27,8 @@ gt.Stronghold <- {};
 
 	gt.Stronghold.setupBuildingDefs();
 	delete gt.Stronghold.setupBuildingDefs;
+
+	::Stronghold.StrongholdScreen <- this.new("scripts/ui/screens/stronghold/stronghold_screen");
 
 	::mods_hookNewObjectOnce("states/world/asset_manager", function (o)
 	{
