@@ -487,8 +487,8 @@ gt.Stronghold.setupMainManagementOptions <- function()
 				},
 			ID = "Visual",
 			isValid = function(_contract){
-				//return _contract.isMainBase()
-				return false
+				return _contract.isMainBase()
+				// return false
 			},
 			onChosen = function(){
 				this.m.Screens.push

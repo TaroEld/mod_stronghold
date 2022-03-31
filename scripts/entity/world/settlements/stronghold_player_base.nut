@@ -29,7 +29,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function onBuild()
 	{
 		this.getFlags().set("CustomSprite", "Default")
-		this.getFlags().set("IsSouthern", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert, this.Const.World.TerrainType.Oasis]) ||  this.getTile().TacticalType == this.Const.World.TerrainTacticalType.DesertHills) // why is desertHills not just a terrain type wtf
+		this.getFlags().set("IsSouthern", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert, this.Const.World.TerrainType.Oasis]) ||  this.getTile().TacticalType == this.Const.World.TerrainTacticalType.DesertHills); // why is desertHills not just a terrain type wtf
 		this.getFlags().set("IsOnSnow", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Snow]));
 		this.getFlags().set("IsOnDesert", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert]));
 		this.getFlags().set("isPlayerBase", true);
@@ -151,11 +151,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 				foreach( h in this.m.HousesTiles )
 				{
-					//disable lights on houses
-					if (!this.m.Flags.get("BarbarianSprites") && !this.m.Flags.get("NomadSprites"))
+					// Only enable light on houses if the specified sprite has a lights version
+					if (h.Light != "")
 					{
 						local tile = this.World.getTileSquare(h.X, h.Y);
-						local d = tile.spawnDetail("world_houses_0" + this.m.HousesType + "_0" + h.V + "_light", this.Const.World.ZLevel.Object - 4, this.Const.World.DetailType.Lighting, false, insideScreen);
+						local d = tile.spawnDetail(h[1], this.Const.World.ZLevel.Object - 4, this.Const.World.DetailType.Lighting, false, insideScreen);
 						d.IgnoreAmbientColor = true;
 						d.Scale = 0.85;
 					}
@@ -198,8 +198,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		{
 			local tile = this.World.getTileSquare(h.X, h.Y);
 			tile.clear(this.Const.World.DetailType.Houses | this.Const.World.DetailType.Lighting);
-			local d = tile.spawnDetail("world_houses_0" + this.m.HousesType + "_0" + h.V + "_ruins", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
-			d.Scale = 0.85;
+			// local d = tile.spawnDetail(h.Sprite + "_ruins", this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
+			// d.Scale = 0.85;
 			this.spawnFireAndSmoke(tile.Pos);
 		}
 		foreach (unit in this.Stronghold.getPlayerFaction().m.Units)
@@ -266,7 +266,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function updateTown()
 	{
 		//updates town after upgrading and loading the game. Necessary to update the sprites, names etc.
-		this.m.troopSprites <- "figure_mercenary_01";
 		this.defineName();
 		this.getLabel("name").Text = this.getName();
 		this.getLabel("name").Visible = true;
@@ -299,6 +298,43 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Name = final_name;
 	}
 
+	function onVisualsChanged(_newSprite)
+	{
+		this.getFlags().set("CustomSprite", _newSprite);
+		local numHouses = this.m.HousesTiles.len();
+		foreach( h in this.m.HousesTiles )
+		{
+			local tile = this.World.getTileSquare(h.X, h.Y);
+			tile.clear(this.Const.World.DetailType.Houses | this.Const.World.DetailType.Lighting);
+			tile.IsOccupied = false;
+		}
+		this.m.HousesTiles = [];
+
+		this.updateLook();
+		this.buildHouses(numHouses);
+
+		foreach(unit in this.getUnitsOfThisBase())
+		{
+			if (!unit.getFlags().get("IsCaravan"))
+			{
+				unit.getSprite("body").setBrush(this.m.TroopSprites);
+			}
+		}
+	}
+
+	function getUnitsOfThisBase()
+	{
+		local units = [];
+		foreach(unit in this.Stronghold.getPlayerFaction().m.Units)
+		{
+			if (unit.getFlags().get("Stronghold_Base_ID") == this.getID())
+			{
+				units.push(this.WeakTableRef(unit));
+			}
+		}
+		return units
+	}
+
 	function updateLook()
 	{
 		// local normalSprites = ["world_luft_01", "world_luft_02", "world_luft_03"]
@@ -317,14 +353,17 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local sprites = constSprites.Levels;
 		sprites = sprites[this.getSize()-1];
 
-		this.m.Sprite = this.isUpgrading() ? sprites.Upgrading : sprites.Base;
+		this.m.Sprite = this.isUpgrading() ? sprites.Upgrading[0] : sprites.Base[0];
+		this.m.Lighting = this.isUpgrading() ? sprites.Upgrading[1] : sprites.Base[1];
 		this.getSprite("body").setBrush(this.m.Sprite);
 
 		this.m.UIBackgroundCenter = sprites.Background.UIBackgroundCenter + (isOnSnow ? "_snow" : "");
 		this.m.UIBackgroundLeft = sprites.Background.UIBackgroundLeft + (isOnSnow ? "_snow" : "");
 		this.m.UIBackgroundRight = sprites.Background.UIBackgroundRight + (isOnSnow ? "_snow" : "");
 		this.m.UIRampPathway = sprites.Background.UIRampPathway;
-		this.m.Lighting = sprites.BaseNight;
+		
+		this.m.TroopSprites <- sprites.WorldmapFigure;
+		this.m.HouseSprites <- sprites.Houses;
 		if(this.m.IsCoastal)
 		{
 			this.m.UIBackgroundLeft = "ui/settlements/water_01";
@@ -514,7 +553,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.AttachedLocations[this.m.AttachedLocations.len()-1].setActive(true)
 	}
 	
-	function buildHouses()
+	function buildHouses(_num = 2)
 	{
 		//add houses while upgrading
 		local tile = this.getTile();
@@ -544,7 +583,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			}
 		}
 
-		local houses = 2
+		local houses = _num;
 
 		for( local c; houses != 0; houses = --houses )
 		{
@@ -555,15 +594,18 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			}
 			local i = this.Math.rand(0, c.len() - 1);
 			local v = this.Math.rand(1, 2);
+			local spriteArray = this.Math.randArray(this.m.HouseSprites);
 			this.m.HousesTiles.push({
 				X = c[i].SquareCoords.X,
 				Y = c[i].SquareCoords.Y,
-				V = v
+				V = v,
+				Sprite = spriteArray[0],
+				Light = spriteArray[1]
 			});
 			c[i].clear();
 			c[i].IsOccupied = true;
 			local d;
-			d = c[i].spawnDetail("world_houses_0" + this.m.HousesType + "_0" + v, this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
+			d = c[i].spawnDetail(spriteArray[0], this.Const.World.ZLevel.Object - 3, this.Const.World.DetailType.Houses);
 
 			d.Scale = 0.85;
 			c.remove(i);
