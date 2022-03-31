@@ -839,7 +839,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function getUIData()
 	{
-		this.logInfo("this.getName() " + this.getName())
 		local playerRoster = this.World.getPlayerRoster().getAll().len();
 		local townRoster = this.getLocalRoster().getAll().len();
 		local maxBuildingSlots = this.getSize() + 4;
@@ -858,9 +857,10 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local ret = {
 			Name = this.getName(),
 			ID = this.getID(),
-			Visuals = {
-				
-			},
+			Size = this.getSize(),
+			SizeName = this.getSizeName(),
+			Upgrading = this.isUpgrading(),
+			SpriteName = this.getFlags().get("CustomSprite"),
 			Assets = {
 				mMoneyAsset = this.World.Assets.getMoney(),
 				mFoodAsset = this.World.Assets.getFood(),

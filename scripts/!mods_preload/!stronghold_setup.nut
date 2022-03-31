@@ -3,7 +3,6 @@ gt.Stronghold <- {};
 ::mods_registerMod("mod_stronghold", 1.22);
 ::mods_queue("mod_stronghold", ">mod_MSU", function()
 {	
-	
 	::mods_registerJS("stronghold_screen_main_dialog_module.js");
 	::mods_registerJS("mod_stronghold.js");
 	::mods_registerJS("stronghold_screen.js");
