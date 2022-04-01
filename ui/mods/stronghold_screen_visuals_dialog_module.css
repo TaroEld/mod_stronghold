@@ -1,0 +1,70 @@
+/*
+ *  @Project:		Battle Brothers
+ *	@Company:		Overhype Studios
+ *
+ *	@Copyright:		(c) Overhype Studios | 2013 - 2020
+ * 
+ *  @Author:		Overhype Studios
+ *  @Date:			31.10.2017
+ *  @Description:	World Town Screen JS
+ */
+.change-name-row
+{
+    justify-content: center;
+}
+
+.visuals-module .base-sprites-row
+{
+    justify-content: space-between;
+    height: 25rem;
+    border: 2px solid green;
+}
+
+.visuals-module .base-sprite-container
+{
+    width: 25.2rem;
+    height: 19.9rem;
+    /*border: 2px solid blue;*/
+} 
+
+.visuals-module .base-sprite-container .base-sprite-image
+{
+}
+
+.visuals-module .other-sprites-row
+{
+    justify-content: space-between;
+
+    border: 2px solid red;
+}
+
+
+
+.visuals-module .footer-button-bar
+{
+    position: absolute;
+    bottom: 0;
+    justify-content: center;
+}
+
+.visuals-module .footer-button-bar .apply-sprites-button
+{
+    width: 17.5rem;
+    height: 4.3rem;
+} 
+
+.visuals-module .footer-button-bar .switch-button-container
+{
+    height:  4.1rem;
+    width: 12rem;
+    display: flex;
+    justify-content: center;
+} 
+
+.visuals-module .switch-button-container .switch-image
+{
+    height:  4.1rem;
+    width: 5.2rem ;
+    background-repeat: no-repeat;
+    /*border: 2px solid green;*/
+} 

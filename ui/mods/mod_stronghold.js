@@ -63,7 +63,6 @@ var printObject = function(_object)
     }
     iterateObject(_object, iterateFunc)
 }
-printObject(StrongholdConst)
 
 $.fn.appendRow = function(_subTitle, _classes)
 {

@@ -863,13 +863,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			SpriteName = this.getFlags().get("CustomSprite"),
 			UnlockAdvantages = ::Stronghold.UnlockAdvantages,
 			Assets = {
-				mMoneyAsset = this.World.Assets.getMoney(),
-				mFoodAsset = this.World.Assets.getFood(),
-				mAmmoAsset = this.World.Assets.getArmorParts(),
-				mSuppliesAsset = this.World.Assets.getAmmo(),
-				mMedicineAsset = this.World.Assets.getMedicine(),
 				mBrothersAsset = playerRoster,
-				mBrothersAssetMax = this.World.Assets.getBrothersMax(),
 				mRosterAsset = townRoster,
 				mBuildingAsset = currentBuildings,
 				mBuildingAssetMax = maxBuildingSlots,

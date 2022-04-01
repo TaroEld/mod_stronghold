@@ -191,7 +191,7 @@ gt.Stronghold.setupVisuals <- function()
 	})
 	gt.Stronghold.Visuals.push(
 	{
-		ID = "Luft_Necromancer",
+		ID = "Luft_Necro",
 		Name = "Necromancer's Lair",
 		Author = "Luftwaffle",
 		Levels = 

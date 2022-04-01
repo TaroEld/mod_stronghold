@@ -10,23 +10,23 @@ var StrongholdScreen = function ()
             "Button" : null,
             "Module" : null
         },
-        "Test1" : {
-            "ButtonName" : "Test1",
+        "VisualsModule" : {
+            "ButtonName" : "Visuals",
             "Button" : null,
             "Module" : null
         },
-        "Test2" : {
-            "ButtonName" : "Test2",
+        "RosterModule" : {
+            "ButtonName" : "Roster",
             "Button" : null,
             "Module" : null
         },
-        "Test3" : {
-            "ButtonName" : "Test3",
+        "StructuresModule" : {
+            "ButtonName" : "Structures",
             "Button" : null,
             "Module" : null
         },
-        "Test4" : {
-            "ButtonName" : "Test4",
+        "UpgradeModule" : {
+            "ButtonName" : "Upgrade",
             "Button" : null,
             "Module" : null
         },
@@ -68,36 +68,34 @@ StrongholdScreen.prototype.onDisconnection = function ()
 	this.unregister();
 };
 
-StrongholdScreen.prototype.switchModule = function ( _module )
+
+StrongholdScreen.prototype.destroyDIV = function ()
 {
-    if(this.mActiveModule !== null)
+    this.mContainer.empty();
+    this.mContainer.remove();
+    this.mContainer = null;
+};
+
+StrongholdScreen.prototype.notifyBackendOnShown = function ()
+{
+    console.error("StrongholdScreen::notifyBackendOnShown")
+    console.error(this.mSQHandle)
+    if(this.mSQHandle !== null)
     {
-        this.mActiveModule.hide();
+        SQ.call(this.mSQHandle, 'onScreenShown');
     }
-    if (this.mActiveButton !== null)
+};
+
+StrongholdScreen.prototype.notifyBackendOnHidden = function ()
+{
+    console.error("StrongholdScreen::notifyBackendOnShown")
+    console.error(this.mSQHandle)
+    if(this.mSQHandle !== null)
     {
-        this.mActiveButton.enableButton(true);
+        SQ.call(this.mSQHandle, 'onScreenHidden');
     }
-
-	this.mActiveModule = this.getModule(_module).Module;
-    this.mActiveButton = this.getModule(_module).Button;
-    this.mActiveButton.enableButton(false);
-	this.mActiveModule.show();
 };
 
-StrongholdScreen.prototype.getModule = function ( _module )
-{
-    return this.Modules[_module];
-};
-
-StrongholdScreen.prototype.createModules = function ()
-{
-	this.Modules["MainModule"].Module = new StrongholdScreenMainDialogModule(this, "MainModule");
-    this.Modules["Test1"].Module = new StrongholdScreenMainDialogModule(this, "Test1");
-    this.Modules["Test2"].Module = new StrongholdScreenMainDialogModule(this, "Test2");
-    this.Modules["Test3"].Module = new StrongholdScreenMainDialogModule(this, "Test3");
-    this.Modules["Test4"].Module = new StrongholdScreenMainDialogModule(this, "Test4");
-};
 
 StrongholdScreen.prototype.registerModules = function ()
 {
@@ -116,39 +114,38 @@ StrongholdScreen.prototype.unregisterModules = function ()
     })
 };
 
-StrongholdScreen.prototype.createAssetDIVs = function()
+StrongholdScreen.prototype.switchModule = function ( _module )
 {
-    Asset["ICON_ASSET_ROSTER"] = 'ui/icons/asset_brothers.png';
-    Asset["ICON_ASSET_BUILDING"] = 'ui/icons/asset_brothers.png';
-    Asset["ICON_ASSET_LOCATION"] = 'ui/icons/asset_brothers.png';
-    this.mAssets.mMoneyAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_MONEY, 'is-money');
-    this.mAssets.mFoodAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_FOOD, 'is-food');
-    this.mAssets.mAmmoAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_AMMO, 'is-ammo');
-    this.mAssets.mSuppliesAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_SUPPLIES, 'is-supplies');
-    this.mAssets.mMedicineAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_MEDICINE, 'is-medicine');
-    this.mAssets.mBrothersAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_BROTHERS, 'is-brothers');
-    this.mAssets.mRosterAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_ROSTER, 'is-roster');
-    this.mAssets.mBuildingAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_BUILDING, 'is-building');
-    this.mAssets.mLocationAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_LOCATION, 'is-location');
-}
+    if(this.mActiveModule !== null)
+    {
+        this.mActiveModule.hide();
+    }
+    if (this.mActiveButton !== null)
+    {
+        this.mActiveButton.enableButton(true);
+    }
 
-StrongholdScreen.prototype.createAssetDIV = function (_parentDiv, _imagePath, _classExtra)
-{
-    var layout = $('<div class="asset"/>');
-    layout.addClass(_classExtra);
-    layout.data('value', 0);
-    _parentDiv.append(layout);
-
-    var image = $('<img/>');
-    image.attr('src', _imagePath);
-    layout.append(image);
-    var text = $('<div class="label text-font-normal font-color-assets-positive-value"/>');
-    layout.append(text);
-
-    return layout;
+    this.mActiveModule = this.getModule(_module).Module;
+    this.mActiveButton = this.getModule(_module).Button;
+    this.mActiveButton.enableButton(false);
+    this.mActiveModule.show();
 };
 
-StrongholdScreen.prototype.loadAssetData = function(_data)
+StrongholdScreen.prototype.getModule = function ( _module )
+{
+    return this.Modules[_module];
+};
+
+StrongholdScreen.prototype.createModules = function ()
+{
+    this.Modules["MainModule"].Module = new StrongholdScreenMainDialogModule(this, "MainModule");
+    this.Modules["VisualsModule"].Module = new StrongholdScreenVisualsDialogModule(this, "VisualsModule");
+    this.Modules["RosterModule"].Module = new StrongholdScreenRosterDialogModule(this, "RosterModule");
+    this.Modules["StructuresModule"].Module = new StrongholdScreenStructuresDialogModule(this, "StructuresModule");
+    this.Modules["UpgradeModule"].Module = new StrongholdScreenUpgradeDialogModule(this, "UpgradeModule");
+};
+
+StrongholdScreen.prototype.loadFromData = function(_data)
 {
     var self = this;
     this.mAllAssetData = _data;
@@ -168,7 +165,7 @@ StrongholdScreen.prototype.loadAssetData = function(_data)
         var curModule = self.Modules[_key];
         if(curModule !== undefined && curModule.Module !== null)
         {
-            curModule.Module.loadAssetData(self.mAllAssetData);
+            curModule.Module.loadFromData(self.mAllAssetData);
         }
         
     })
@@ -178,7 +175,7 @@ StrongholdScreen.prototype.show = function (_data)
 {
     if(_data !== undefined && _data !== null && typeof(_data) === 'object')
     {
-		this.loadAssetData(_data);
+		this.loadFromData(_data);
     }
     console.error("StrongholdScreen show")
     this.mContainer.removeClass('display-none').addClass('display-block');
@@ -271,6 +268,38 @@ StrongholdScreen.prototype.createDIV = function (_parentDiv)
     this.createAssetDIVs();
 }
 
+StrongholdScreen.prototype.createAssetDIV = function (_parentDiv, _imagePath, _classExtra)
+{
+    var layout = $('<div class="asset"/>');
+    layout.addClass(_classExtra);
+    layout.data('value', 0);
+    _parentDiv.append(layout);
+
+    var image = $('<img/>');
+    image.attr('src', _imagePath);
+    layout.append(image);
+    var text = $('<div class="label text-font-normal font-color-assets-positive-value"/>');
+    layout.append(text);
+
+    return layout;
+};
+
+StrongholdScreen.prototype.createAssetDIVs = function()
+{
+    Asset["ICON_ASSET_ROSTER"] = 'ui/icons/asset_brothers.png';
+    Asset["ICON_ASSET_BUILDING"] = 'ui/icons/asset_brothers.png';
+    Asset["ICON_ASSET_LOCATION"] = 'ui/icons/asset_brothers.png';
+    this.mAssets.mMoneyAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_MONEY, 'is-money');
+    this.mAssets.mFoodAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_FOOD, 'is-food');
+    this.mAssets.mAmmoAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_AMMO, 'is-ammo');
+    this.mAssets.mSuppliesAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_SUPPLIES, 'is-supplies');
+    this.mAssets.mMedicineAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_MEDICINE, 'is-medicine');
+    this.mAssets.mBrothersAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_BROTHERS, 'is-brothers');
+    this.mAssets.mRosterAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_ROSTER, 'is-roster');
+    this.mAssets.mBuildingAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_BUILDING, 'is-building');
+    this.mAssets.mLocationAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_LOCATION, 'is-location');
+}
+
 StrongholdScreen.prototype.createModuleOptionsButtons = function()
 {
     var self = this;
@@ -286,32 +315,4 @@ StrongholdScreen.prototype.createModuleOptionsButtons = function()
         }, '', 2);
     })
 }
-
-StrongholdScreen.prototype.destroyDIV = function ()
-{
-    this.mContainer.empty();
-    this.mContainer.remove();
-    this.mContainer = null;
-};
-
-StrongholdScreen.prototype.notifyBackendOnShown = function ()
-{
-    console.error("StrongholdScreen::notifyBackendOnShown")
-    console.error(this.mSQHandle)
-    if(this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onScreenShown');
-    }
-};
-
-StrongholdScreen.prototype.notifyBackendOnHidden = function ()
-{
-    console.error("StrongholdScreen::notifyBackendOnShown")
-    console.error(this.mSQHandle)
-    if(this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onScreenHidden');
-    }
-};
-
 registerScreen("StrongholdScreen", new StrongholdScreen());

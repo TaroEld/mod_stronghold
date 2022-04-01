@@ -81,7 +81,7 @@ this.stronghold_screen <- {
 				this.m.WorldTownScreen.getMainDialogModule().reload();
 				this.m.WorldTownScreen.showLastActiveDialog();
 			});
-			this.m.JSHandle.asyncCall("show", this.m.Town.getUIData());
+			this.m.JSHandle.asyncCall("show", this.getUIData());
 		}
 	}
 	
@@ -137,7 +137,63 @@ this.stronghold_screen <- {
 		this.m.Town.m.Name = _data;
 		this.m.Town.getFlags().set("CustomName", true);
 		this.m.Town.getLabel("name").Text = _data;
-		this.m.JSHandle.asyncCall("loadAssetData", this.m.Town.getUIData());
+		
 	}
+
+	function getUIData()
+	{
+		local ret = this.m.Town.getUIData();
+		this.getAssetsUIData( ret );
+		this.getUpgradeUIData( ret );
+		return ret
+	}
+
+	function getAssetsUIData( _ret )
+	{
+		_ret.Assets.mMoneyAsset <- this.World.Assets.getMoney();
+		_ret.Assets.mFoodAsset <- this.World.Assets.getFood();
+		_ret.Assets.mAmmoAsset <- this.World.Assets.getArmorParts();
+		_ret.Assets.mSuppliesAsset <- this.World.Assets.getAmmo();
+		_ret.Assets.mMedicineAsset <- this.World.Assets.getMedicine();
+		_ret.Assets.mBrothersAssetMax <- this.World.Assets.getBrothersMax();
+		_ret.Assets.mInventoryUpgrades <- this.World.Retinue.getInventoryUpgrades();
+	}
+
+	function getUpgradeUIData( _ret )
+	{
+		local price = this.Stronghold.PriceMult * this.Stronghold.BuyPrices[this.m.Town.getSize()]
+		local currentInventory = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades()]
+		local nextInventory = currentInventory;
+		if(this.World.Retinue.getInventoryUpgrades() < this.m.Town.getSize() + 1)
+		{
+			nextInventory = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades() + 1]
+		}
+		_ret.mUpgradeRequirements <- {
+		    Money  = {
+		        TextDone = "You have the required " + price + " crowns.",
+		        TextNotDone = "You don't have the required " + price + "crowns.",
+		        Done = this.World.Assets.getMoney() >= price
+		    },
+		    Cart  = {
+		        TextDone = format("You have a %s", currentInventory),
+		        TextNotDone  = format("You need to level up your %s to a %s!", currentInventory, nextInventory),
+		        Done  = this.World.Retinue.getInventoryUpgrades() >= this.m.Town.getSize() + 1
+		    },
+		    ActiveContract  = {
+		        TextDone = "You don't have an active contract.",
+		        TextNotDone = "You have an active contract.",
+		        Done = this.World.Contracts.getActiveContract() == null
+		    },
+		}
+	}
+
+	function changeSprites(_data)
+	{
+		this.logInfo("changeSprites " + _data)
+		this.m.Town.onVisualsChanged(_data);
+		this.m.JSHandle.asyncCall("loadFromData", this.getUIData());
+	}
+
+	
 };
 

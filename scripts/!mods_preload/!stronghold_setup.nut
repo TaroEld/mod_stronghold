@@ -3,10 +3,23 @@ gt.Stronghold <- {};
 ::mods_registerMod("mod_stronghold", 1.22);
 ::mods_queue("mod_stronghold", ">mod_MSU", function()
 {	
+
 	::mods_registerJS("stronghold_screen_main_dialog_module.js");
+	::mods_registerJS("stronghold_screen_visuals_dialog_module.js");
+	::mods_registerJS("stronghold_screen_roster_dialog_module.js");
+	::mods_registerJS("stronghold_screen_structures_dialog_module.js");
+	::mods_registerJS("stronghold_screen_upgrade_dialog_module.js");
+
 	::mods_registerJS("mod_stronghold.js");
 	::mods_registerJS("stronghold_screen.js");
+
+
 	::mods_registerCSS("stronghold_screen_main_dialog_module.css");
+	::mods_registerCSS("stronghold_screen_visuals_dialog_module.css");
+	::mods_registerCSS("stronghold_screen_roster_dialog_module.css");
+	::mods_registerCSS("stronghold_screen_structures_dialog_module.css");
+	::mods_registerCSS("stronghold_screen_upgrade_dialog_module.css");
+
 	::mods_registerCSS("mod_stronghold.css");
 	::mods_registerCSS("stronghold_screen.css");
 	

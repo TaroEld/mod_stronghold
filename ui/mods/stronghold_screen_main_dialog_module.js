@@ -22,16 +22,15 @@ var StrongholdScreenMainDialogModule = function(_parent, _id)
 
 StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
 {
-	this.mIsVisible = false;
     var self = this;
 
-    this.mContainer = $('<div class="stronghold-main-dialog-container display-none"/>');
+    this.mContainer = $('<div class="stronghold-module-dialog-container  display-none"/>');
     _parentDiv.append(this.mContainer)
 
-    this.mContentContainer = $('<div class="stronghold-main-content-container"/>');
+    this.mContentContainer = $('<div class="stronghold-module-content-container"/>');
     this.mContainer.append(this.mContentContainer)
     
-    this.mChangeNameContainer = this.mContentContainer.appendRow(null, "gold-line-bottom")
+    this.mChangeNameContainer = this.mContentContainer.appendRow(null, "gold-line-bottom change-name-row")
     var inputLayout = $('<div class="change-base-name-input-container"/>');
     this.mChangeNameInput = inputLayout.createInput("??", 0, 200, 1, null, 'title-font-big font-bold font-color-brother-name', function (_input)
 	{
@@ -65,7 +64,7 @@ StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
     var spriteDetailsContainer = $('<div class="base-details-container"/>');
     changeSpriteRow.append(spriteDetailsContainer)
     this.mSpriteNameLabel =  spriteDetailsContainer.appendRow("").find(".sub-title")
-    var otherSpriteImageContainers = spriteDetailsContainer.appendRow()
+    var otherSpriteImageContainers = spriteDetailsContainer.appendRow(null, "other-sprites-container")
     this.mUnitSpriteImage = $('<img class="unit-sprite-image"/>');
     otherSpriteImageContainers.append(this.mUnitSpriteImage)
     this.mHouseSpriteImage = $('<img class="house-sprite-image"/>');
@@ -200,7 +199,7 @@ StrongholdScreenMainDialogModule.prototype.show = function ()
 	console.error(this.mID + "::show")
 	var self = this;
 	this.mContainer.removeClass('display-none').addClass('display-block');
-	this.loadAssetData(this.mParent.mAllAssetData)
+	this.loadFromData(this.mParent.mAllAssetData)
 };
 
 
@@ -212,7 +211,7 @@ StrongholdScreenMainDialogModule.prototype.hide = function ()
 	this.mContainer.removeClass('display-block').addClass('display-none');
 };
 
-StrongholdScreenMainDialogModule.prototype.loadAssetData = function(_data)
+StrongholdScreenMainDialogModule.prototype.loadFromData = function(_data)
 {
 	this.mChangeNameInput.setInputText(_data.Name);
 	this.mBaseSprite = _data.SpriteName;

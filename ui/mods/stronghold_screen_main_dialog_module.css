@@ -9,14 +9,9 @@
  *  @Description:	World Town Screen JS
  */
 
-.stronghold-main-dialog-container 
+.change-name-row
 {
-    /*border: 4px solid green;*/
-}
-.stronghold-main-dialog-container .stronghold-main-content-container
-{
-    display: flex;
-    flex-direction: column;
+    justify-content: center;
 }
 
 .stronghold-main-content-container .row-base-sprite
@@ -84,41 +79,14 @@
     text-align: center;
 } 
 
-.stronghold-main-content-container .base-details-container .apply-sprites-button
+.stronghold-main-content-container .other-sprites-container
+{
+    justify-content: space-between;
+}
+
+.stronghold-main-content-container .other-sprites-container .apply-sprites-button
 {
     align-self: center;
     width: 17.5rem;
     height: 4.3rem;
-} 
-
-.stronghold-main-content-container .upgrade-base-row
-{
-    height: 19.9rem;
-}
-
-.stronghold-main-content-container .upgrade-details-container
-{
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    /*border: 1px solid green;*/
-}
-
-.stronghold-main-content-container .upgrade-details-container .sub-title
-{
-    /*border: 1px solid yellow;*/
-} 
-
-.stronghold-main-content-container .upgrade-details-container .upgrade-base-text-container
-{
-    flex: 1;
-    /*border: 1px solid red;*/
-} 
-
-.stronghold-main-content-container .upgrade-details-container .upgrade-base-button
-{
-    align-self: center;
-    width: 17.5rem;
-    height: 4.3rem;
-    /*border: 1px solid blue;*/
 } 
