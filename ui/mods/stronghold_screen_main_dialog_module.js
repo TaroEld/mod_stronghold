@@ -31,7 +31,7 @@ StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
     this.mContentContainer = $('<div class="stronghold-main-content-container"/>');
     this.mContainer.append(this.mContentContainer)
     
-    this.mChangeNameContainer = this.mContentContainer.appendRow()
+    this.mChangeNameContainer = this.mContentContainer.appendRow(null, "gold-line-bottom")
     var inputLayout = $('<div class="change-base-name-input-container"/>');
     this.mChangeNameInput = inputLayout.createInput("??", 0, 200, 1, null, 'title-font-big font-bold font-color-brother-name', function (_input)
 	{
@@ -46,7 +46,7 @@ StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
     this.mChangeNameContainer.append(buttonLayout)
 
 
-    var changeSpriteRow = this.mContentContainer.appendRow("Visuals");
+    var changeSpriteRow = this.mContentContainer.appendRow("Visuals", "gold-line-bottom");
     var changeSpriteContainer = $('<div class="base-sprite-container"/>');
     changeSpriteRow.append(changeSpriteContainer)
     this.mBaseSpriteImage = $('<img class="base-sprite-image"/>');
@@ -64,13 +64,34 @@ StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
 
     var spriteDetailsContainer = $('<div class="base-details-container"/>');
     changeSpriteRow.append(spriteDetailsContainer)
-    this.mSpriteNameLabel =  spriteDetailsContainer.appendRow("", "sprite-name-label").find(".sub-title")
-    console.error(this.mSpriteNameLabel)
+    this.mSpriteNameLabel =  spriteDetailsContainer.appendRow("").find(".sub-title")
     var otherSpriteImageContainers = spriteDetailsContainer.appendRow()
     this.mUnitSpriteImage = $('<img class="unit-sprite-image"/>');
     otherSpriteImageContainers.append(this.mUnitSpriteImage)
     this.mHouseSpriteImage = $('<img class="house-sprite-image"/>');
     otherSpriteImageContainers.append(this.mHouseSpriteImage)
+    this.mApplySpritesButton = otherSpriteImageContainers.createTextButton("Apply Sprites", function()
+    {
+    	self.changeSprites();
+    }, "apply-sprites-button", 1)
+
+
+    var upgradeRow = this.mContentContainer.appendRow(null, "upgrade-base-row");
+    var upgradeSpriteContainer = $('<div class="base-sprite-container"/>');
+    upgradeRow.append(upgradeSpriteContainer);
+    this.mBaseUpgradeSpriteImage = $('<img class="base-sprite-image"/>');
+    upgradeSpriteContainer.append(this.mBaseUpgradeSpriteImage);
+
+    var upgradeDetailsContainer = $('<div class="upgrade-details-container"/>');
+    upgradeRow.append(upgradeDetailsContainer);
+    this.mUpgradeNameLabel = upgradeDetailsContainer.appendRow("Upgrade Base").find(".sub-title");
+    var upgradeDetails = upgradeDetailsContainer.appendRow();
+    this.mUpgradeDetailsTextContainer = $('<div class="upgrade-base-text-container text-font-normal font-style-italic font-bottom-shadow font-color-subtitle"/>');
+    upgradeDetails.append(this.mUpgradeDetailsTextContainer);
+    this.mUpgradeBaseButton = upgradeDetails.createTextButton("Upgrade", function()
+    {
+    	self.changeSprites();
+    }, "upgrade-base-button", 1)
 };
 
 StrongholdScreenMainDialogModule.prototype.destroyDIV = function ()
@@ -92,7 +113,7 @@ StrongholdScreenMainDialogModule.prototype.switchSpriteImage = function( _idx )
 	if(newIdx == arrLen) newIdx = 0;
 	if(newIdx < 0) newIdx = arrLen - 1
 	this.mBaseSprite = StrongholdConst.AllSprites[newIdx];
-    this.setSpriteImage()
+    this.setSpriteImage();
 }
 
 StrongholdScreenMainDialogModule.prototype.setSpriteImage = function()
@@ -103,7 +124,15 @@ StrongholdScreenMainDialogModule.prototype.setSpriteImage = function()
 	this.mUnitSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.UnitSprite + ".png");
 	this.mHouseSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.HouseSprites[0] + ".png");
 	this.mSpriteNameLabel.text(currentArr.Name + " by " + currentArr.Author)
+
+	this.mBaseUpgradeSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.MainSprites[baseSize] + ".png");
 } 
+
+StrongholdScreenMainDialogModule.prototype.fillUpgradeDetailsText = function( _data )
+{
+	var text = _data.UnlockAdvantages[_data.Size];
+	this.mUpgradeDetailsTextContainer.text("Upgrade advantages: \n" + text);
+}
 
 StrongholdScreenMainDialogModule.prototype.bindTooltips = function ()
 {
@@ -189,6 +218,7 @@ StrongholdScreenMainDialogModule.prototype.loadAssetData = function(_data)
 	this.mBaseSprite = _data.SpriteName;
 	this.mBaseSpriteIndex = this.getSpriteIndex();
 	this.setSpriteImage()
+	this.fillUpgradeDetailsText(_data)
 }
 
 StrongholdScreenMainDialogModule.prototype.isVisible = function ()

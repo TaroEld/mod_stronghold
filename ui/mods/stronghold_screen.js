@@ -277,10 +277,10 @@ StrongholdScreen.prototype.createModuleOptionsButtons = function()
     this.mModuleOptionsList = this.mModuleOptionsContainer.createList(1.0);
     this.mModuleOptionsListScrollContainer = this.mModuleOptionsList.findListScrollContainer();
 
-    Object.keys(this.Modules).forEach(function(_key){
+    iterateObject(this.Modules, function(_key, _module){
         var row = $('<div class="l-row"/>');
         self.mModuleOptionsListScrollContainer.append(row);
-        self.Modules[_key].Button = row.createTextButton(self.Modules[_key].ButtonName, function ()
+        _module.Button = row.createTextButton(_module.ButtonName, function ()
         {
             self.switchModule(_key);
         }, '', 2);

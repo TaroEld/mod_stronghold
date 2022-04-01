@@ -81,12 +81,6 @@ $.fn.appendRow = function(_subTitle, _classes)
     return row
 }
 
-$.fn.setRowSubtitleText = function(_text)
-{
-    console.error("setRowSubtitleText")
-    onsole.error($(this).find(".sub-title"))
-    $(this).find(".sub-title").text(_text);
-}
 
 $.fn.changeDialogFooterRows = function(_rows, _big)
 {

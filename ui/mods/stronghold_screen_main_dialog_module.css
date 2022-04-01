@@ -45,7 +45,7 @@
     display: flex;
     flex-wrap: wrap;
 
-    border: 2px solid blue;
+    /*border: 2px solid blue;*/
 } 
 .stronghold-main-content-container .base-sprite-container .l-button-container
 {
@@ -74,12 +74,51 @@
     flex: 1;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
+
     /*border: 2px solid red;*/
 } 
 
 .stronghold-main-content-container .base-details-container .sprite-name-label
 {
-    width: 100%;
-    height: 5rem;
     text-align: center;
+} 
+
+.stronghold-main-content-container .base-details-container .apply-sprites-button
+{
+    align-self: center;
+    width: 17.5rem;
+    height: 4.3rem;
+} 
+
+.stronghold-main-content-container .upgrade-base-row
+{
+    height: 19.9rem;
+}
+
+.stronghold-main-content-container .upgrade-details-container
+{
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    /*border: 1px solid green;*/
+}
+
+.stronghold-main-content-container .upgrade-details-container .sub-title
+{
+    /*border: 1px solid yellow;*/
+} 
+
+.stronghold-main-content-container .upgrade-details-container .upgrade-base-text-container
+{
+    flex: 1;
+    /*border: 1px solid red;*/
+} 
+
+.stronghold-main-content-container .upgrade-details-container .upgrade-base-button
+{
+    align-self: center;
+    width: 17.5rem;
+    height: 4.3rem;
+    /*border: 1px solid blue;*/
 } 
