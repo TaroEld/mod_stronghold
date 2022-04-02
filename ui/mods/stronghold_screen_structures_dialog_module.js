@@ -87,7 +87,7 @@ StrongholdScreenStructuresDialogModule.prototype.show = function ()
     this.mIsVisible = true;
     var self = this;
     this.mContainer.removeClass('display-none').addClass('display-block');
-    this.loadFromData(this.mParent.mAllAssetData)
+    this.loadFromData(this.mParent.mData)
 };
 
 
@@ -103,7 +103,7 @@ StrongholdScreenStructuresDialogModule.prototype.isVisible = function ()
     return this.mIsVisible;
 };
 
-StrongholdScreenStructuresDialogModule.prototype.loadFromData = function(_data)
+StrongholdScreenStructuresDialogModule.prototype.loadFromData = function()
 {
 }
 

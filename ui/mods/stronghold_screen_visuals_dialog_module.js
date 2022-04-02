@@ -96,7 +96,7 @@ StrongholdScreenVisualsDialogModule.prototype.switchSpriteImage = function( _idx
 StrongholdScreenVisualsDialogModule.prototype.setSpriteImage = function()
 {
 	var currentArr = StrongholdConst.Sprites[this.mBaseSprite];
-	var baseSize = this.mParent.mAllAssetData.Size;
+	var baseSize = this.mParent.mData.Size;
 
     this.mBaseSpriteImages[0].attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.MainSprites[0] + ".png");
     this.mBaseSpriteImages[1].attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.MainSprites[1] + ".png");
@@ -178,7 +178,7 @@ StrongholdScreenVisualsDialogModule.prototype.show = function ()
 	console.error(this.mID + "::show")
 	var self = this;
 	this.mContainer.removeClass('display-none').addClass('display-block');
-	this.loadAssetData(this.mParent.mAllAssetData)
+	this.loadFromData(this.mParent.mData)
 };
 
 
@@ -190,10 +190,11 @@ StrongholdScreenVisualsDialogModule.prototype.hide = function ()
 	this.mContainer.removeClass('display-block').addClass('display-none');
 };
 
-StrongholdScreenVisualsDialogModule.prototype.loadAssetData = function(_data)
+StrongholdScreenVisualsDialogModule.prototype.loadFromData = function(_data)
 {
-	this.mBaseSprite = _data.SpriteName;
-    this.mCurrentBaseSprite = _data.SpriteName;
+    this.mData = this.mParent.getData();
+	this.mBaseSprite = this.mData.SpriteName;
+    this.mCurrentBaseSprite = this.mData.SpriteName;
 	this.mBaseSpriteIndex = this.getSpriteIndex();
 	this.setSpriteImage()
 }

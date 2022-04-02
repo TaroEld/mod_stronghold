@@ -87,7 +87,7 @@ StrongholdScreenRosterDialogModule.prototype.show = function ()
 	this.mIsVisible = true;
 	var self = this;
 	this.mContainer.removeClass('display-none').addClass('display-block');
-	this.loadFromData(this.mParent.mAllAssetData)
+	this.loadFromData(this.mParent.mData)
 };
 
 
@@ -103,8 +103,9 @@ StrongholdScreenRosterDialogModule.prototype.isVisible = function ()
     return this.mIsVisible;
 };
 
-StrongholdScreenRosterDialogModule.prototype.loadFromData = function(_data)
+StrongholdScreenRosterDialogModule.prototype.loadFromData = function()
 {
+    this.mData = this.mParent.getData();
 }
 
 StrongholdScreenRosterDialogModule.prototype.createDIV = function (_parentDiv)

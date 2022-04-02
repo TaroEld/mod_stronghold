@@ -43,12 +43,17 @@ var StrongholdScreen = function ()
         "mBuildingAsset"     : null,
         "mLocationAsset"     : null
     }
-    this.mAllAssetData = null;
+    this.mData = null;
     //left side tab container
     this.mModuleOptionsContainer = null;
     //main content container for modules
     this.mModuleContentContainer = null;
     this.createModules();
+};
+
+StrongholdScreen.prototype.getData = function ()
+{
+    return this.mData;
 };
 
 StrongholdScreen.prototype.isConnected = function ()
@@ -148,9 +153,9 @@ StrongholdScreen.prototype.createModules = function ()
 StrongholdScreen.prototype.loadFromData = function(_data)
 {
     var self = this;
-    this.mAllAssetData = _data;
-    this.mTitle.html(this.mAllAssetData.Name)
-    var assets = this.mAllAssetData['Assets']
+    this.mData = _data;
+    this.mTitle.html(this.mData.Name)
+    var assets = this.mData['Assets']
     Object.keys(this.mAssets).forEach(function(_key){
         self.mAssets[_key].data("value", assets[_key]);
         var label = self.mAssets[_key].find('.label:first');
@@ -165,7 +170,8 @@ StrongholdScreen.prototype.loadFromData = function(_data)
         var curModule = self.Modules[_key];
         if(curModule !== undefined && curModule.Module !== null)
         {
-            curModule.Module.loadFromData(self.mAllAssetData);
+            curModule.Module.mData = self.mData;
+            curModule.Module.loadFromData();
         }
         
     })

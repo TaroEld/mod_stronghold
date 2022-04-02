@@ -91,7 +91,7 @@ StrongholdScreenUpgradeDialogModule.prototype.show = function ()
     this.mIsVisible = true;
     var self = this;
     this.mContainer.removeClass('display-none').addClass('display-block');
-    this.loadAssetData(this.mParent.mAllAssetData)
+    this.loadFromData(this.mParent.mData)
 };
 
 
@@ -107,7 +107,7 @@ StrongholdScreenUpgradeDialogModule.prototype.isVisible = function ()
     return this.mIsVisible;
 };
 
-StrongholdScreenUpgradeDialogModule.prototype.loadAssetData = function(_data)
+StrongholdScreenUpgradeDialogModule.prototype.loadFromData = function(_data)
 {
 
 }
@@ -171,7 +171,7 @@ StrongholdScreenUpgradeDialogModule.prototype.switchSpriteImage = function( _idx
 StrongholdScreenUpgradeDialogModule.prototype.setSpriteImage = function()
 {
     var currentArr = StrongholdConst.Sprites[this.mBaseSprite];
-    var baseSize = this.mParent.mAllAssetData.Size;
+    var baseSize = this.mParent.mData.Size;
     this.mBaseUpgradeSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.MainSprites[baseSize] + ".png");
 } 
 
@@ -202,11 +202,12 @@ StrongholdScreenUpgradeDialogModule.prototype.fillRequirementsText = function( _
     this.mUpgradeBaseButton.enableButton(allRequirementsDone)
 }
 
-StrongholdScreenUpgradeDialogModule.prototype.loadAssetData = function(_data)
+StrongholdScreenUpgradeDialogModule.prototype.loadFromData = function()
 {
-    this.mBaseSprite = _data.SpriteName;
+    this.mData = this.mParent.getData()
+    this.mBaseSprite = data.SpriteName;
     this.mBaseSpriteIndex = this.getSpriteIndex();
     this.setSpriteImage()
-    this.fillUpgradeDetailsText(_data)
-    this.fillRequirementsText(_data);
+    this.fillUpgradeDetailsText(data)
+    this.fillRequirementsText(data);
 }
