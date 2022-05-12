@@ -34,7 +34,7 @@ this.stronghold_waterskin_location <- this.inherit("scripts/entity/world/locatio
 			}, false);
 		}
 
-		for( local i = 0; i < 9; i = ++i )
+		for( local i = 0; i < 8; i = ++i )
 		{
 			this.Const.World.Common.addTroop(this, {
 				Type = this.Const.World.Spawn.Troops.SandGolemHIGH
@@ -48,7 +48,7 @@ this.stronghold_waterskin_location <- this.inherit("scripts/entity/world/locatio
 			}, false);
 		}
 
-		for( local i = 0; i < 9; i = ++i )
+		for( local i = 0; i < 7; i = ++i )
 		{
 			this.Const.World.Common.addTroop(this, {
 				Type = this.Const.World.Spawn.Troops.SkeletonHeavyPolearm
