@@ -364,10 +364,16 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 
 	function spawnNewAttackers()
 	{
-		local playerFaction = this.Stronghold.getPlayerFaction()
-		local playerBase = this.m.Home
-		local wave =  this.m.TargetLevel / this.m.AttacksRemaining 
-		local party_difficulty =  (this.Stronghold.InitialFightBaseStrength + this.Stronghold.InitialFightStrengthPerLevel * wave) * this.getScaledDifficultyMult();
+		local playerFaction = this.Stronghold.getPlayerFaction();
+		local playerBase = this.m.Home;
+		local wave =  this.m.TargetLevel / this.m.AttacksRemaining;
+		local numBases = playerFaction.getMainBases();
+		local partyDifficulty = this.Stronghold.InitialFightBaseStrength;
+		partyDifficulty += this.Stronghold.InitialFightStrengthPerWave * wave;
+		partyDifficulty += this.Stronghold.InitialFightStrengthPerMainBase * numBases;
+		partyDifficulty = ((partyDifficulty / 2) * this.getScaledDifficultyMult()) + (partyDifficulty / 2)
+		this.logInfo("Intitial fight difficulty: " + partyDifficulty)
+		
 		this.m.Destination = this.WeakTableRef(playerBase);
 		local tile = playerBase.getTile();
 		local allSettlements = []
@@ -457,7 +463,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			Noble = true
 		}
 		local factionType = factionTypes[closest_faction.m.Type]
-		local party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, party_difficulty);
+		local party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
 		party.setDescription(factionType.Description);
 		party.setFootprintType(factionType.Footprint);
 

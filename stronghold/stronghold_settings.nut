@@ -26,10 +26,18 @@ gt.Stronghold.RenownPerLevel <- [
 ]
 
 // Base difficulty of the base defence fight
-gt.Stronghold.InitialFightBaseStrength <- 150; 
+gt.Stronghold.InitialFightBaseStrength <- 50; 
 
-// Extra difficulty added per wave of attacker, so by default first wave adds 30, second wave adds 60, third wave adds 90
-gt.Stronghold.InitialFightStrengthPerLevel <- 30; 
+// Extra difficulty added per base you already have, includes the first one
+gt.Stronghold.InitialFightStrengthPerMainBase <- 50; 
+
+// Extra difficulty based on the target level
+gt.Stronghold.InitialFightStrengthPerTargetLevel <- 30; 
+
+// Extra difficulty for waves two and three of the higher upgrade levels
+gt.Stronghold.InitialFightStrengthPerWave <- 30; 
+
+
 
 
 // Cost of each road segment
