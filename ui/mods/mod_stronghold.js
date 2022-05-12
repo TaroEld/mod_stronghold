@@ -1,5 +1,9 @@
 var StrongholdConst = {
     "SpritePath" : "ui/settlements/settlement_icons/",
+    "BuildingSpritePath" : "ui/buildings/",
+    "LocationsSpritePath" : "ui/locations/",
+    "SelectionImagePath" : "ui/selection.png",
+    "SelectionGoldImagePath" : "ui/selection-gold.png",
     "AllSprites" : ["Default", "Luft_Basic", "Luft_Brigand", "Luft_Necro", "Luft_Fishing"],
     "Sprites" : {
         "Default" : {
@@ -62,6 +66,52 @@ var printObject = function(_object)
         }
     }
     iterateObject(_object, iterateFunc)
+}
+
+$.fn.toggleDisplay = function(_bool)
+{
+    if(_bool === false)
+    {
+        this.removeClass('display-block').addClass('display-none')
+    }
+    else if (_bool === true)
+    {
+        this.removeClass('display-none').addClass('display-block')
+    }
+    else
+    {
+        if(this.hasClass('display-block'))
+        {
+            this.removeClass('display-block').addClass('display-none')
+        }
+        else
+        {
+            this.removeClass('display-none').addClass('display-block')
+        }
+    }
+}
+
+$.fn.toggleOpacity = function(_bool)
+{
+    if(_bool === false)
+    {
+        this.removeClass('opacity-full').addClass('opacity-none')
+    }
+    else if (_bool === true)
+    {
+        this.removeClass('opacity-none').addClass('opacity-full')
+    }
+    else
+    {
+        if(this.hasClass('opacity-full'))
+        {
+            this.removeClass('opacity-full').addClass('opacity-none')
+        }
+        else
+        {
+            this.removeClass('opacity-none').addClass('opacity-full')
+        }
+    }
 }
 
 $.fn.appendRow = function(_subTitle, _classes)
@@ -379,14 +429,14 @@ var hire_show = WorldCampfireScreenHireDialogModule.prototype.show
 WorldCampfireScreenHireDialogModule.prototype.show = function (_withSlideAnimation)
 {
 	hire_show.call(this, _withSlideAnimation)
-	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.removeClass("display-block").addClass("display-none")
+	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.toggleDisplay(false);
 }
 
 var hire_hide = WorldCampfireScreenHireDialogModule.prototype.hide
 WorldCampfireScreenHireDialogModule.prototype.hide = function ()
 {
 	hire_hide.call(this)
-	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.removeClass("display-none").addClass("display-block")
+	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.toggleDisplay(true);
 }
 
 WorldCampfireScreen.prototype.notifyBackendStrongholdButtonPressed = function ()

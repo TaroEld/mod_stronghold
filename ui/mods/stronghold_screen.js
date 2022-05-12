@@ -20,8 +20,13 @@ var StrongholdScreen = function ()
             "Button" : null,
             "Module" : null
         },
-        "StructuresModule" : {
-            "ButtonName" : "Structures",
+        "BuildingsModule" : {
+            "ButtonName" : "Buildings",
+            "Button" : null,
+            "Module" : null
+        },
+        "LocationsModule" : {
+            "ButtonName" : "Locations",
             "Button" : null,
             "Module" : null
         },
@@ -146,36 +151,10 @@ StrongholdScreen.prototype.createModules = function ()
     this.Modules["MainModule"].Module = new StrongholdScreenMainDialogModule(this, "MainModule");
     this.Modules["VisualsModule"].Module = new StrongholdScreenVisualsDialogModule(this, "VisualsModule");
     this.Modules["RosterModule"].Module = new StrongholdScreenRosterDialogModule(this, "RosterModule");
-    this.Modules["StructuresModule"].Module = new StrongholdScreenStructuresDialogModule(this, "StructuresModule");
+    this.Modules["BuildingsModule"].Module = new StrongholdScreenBuildingsDialogModule(this, "BuildingsModule");
+    this.Modules["LocationsModule"].Module = new StrongholdScreenLocationsDialogModule(this, "LocationsModule");
     this.Modules["UpgradeModule"].Module = new StrongholdScreenUpgradeDialogModule(this, "UpgradeModule");
 };
-
-StrongholdScreen.prototype.loadFromData = function(_data)
-{
-    var self = this;
-    this.mData = _data;
-    this.mTitle.html(this.mData.Name)
-    var assets = this.mData['Assets']
-    Object.keys(this.mAssets).forEach(function(_key){
-        self.mAssets[_key].data("value", assets[_key]);
-        var label = self.mAssets[_key].find('.label:first');
-        var labelText = assets[_key]
-        if((assets[_key + "Max"]) !== undefined)
-        {
-            labelText += " / " + assets[_key + "Max"] 
-        }
-        label.html(labelText)
-    })
-    Object.keys(this.Modules).forEach(function(_key){
-        var curModule = self.Modules[_key];
-        if(curModule !== undefined && curModule.Module !== null)
-        {
-            curModule.Module.mData = self.mData;
-            curModule.Module.loadFromData();
-        }
-        
-    })
-}
 
 StrongholdScreen.prototype.show = function (_data)
 {
@@ -313,7 +292,7 @@ StrongholdScreen.prototype.createModuleOptionsButtons = function()
     this.mModuleOptionsListScrollContainer = this.mModuleOptionsList.findListScrollContainer();
 
     iterateObject(this.Modules, function(_key, _module){
-        var row = $('<div class="l-row"/>');
+        var row = $('<div class="row"/>');
         self.mModuleOptionsListScrollContainer.append(row);
         _module.Button = row.createTextButton(_module.ButtonName, function ()
         {
@@ -321,4 +300,72 @@ StrongholdScreen.prototype.createModuleOptionsButtons = function()
         }, '', 2);
     })
 }
+
+StrongholdScreen.prototype.loadFromData = function(_data)
+{
+    var self = this;
+    this.mData = _data;
+    this.mTitle.html(this.mData.Name)
+    this.loadAssetsData();
+    this.loadModuleData()
+}
+
+StrongholdScreen.prototype.loadModuleData = function()
+{
+    var self = this;
+    iterateObject(this.Modules, function(_key){
+        var curModule = self.Modules[_key];
+        if(curModule !== undefined && curModule.Module !== null)
+        {
+            curModule.Module.mData = self.mData;
+            curModule.Module.mModuleData = self.mData[_key];
+        }
+    })
+    if(this.mActiveModule != null) this.mActiveModule.loadFromData();
+}
+
+StrongholdScreen.prototype.updateData = function(_data)
+{
+    var updateAssets = false;
+    var types = _data[0];
+    var data = _data[1]
+    if(typeof types == "string")
+    {
+        types = [types];
+    }
+    for (var i = 0; i < types.length; i++) {
+        var typeID = types[i];
+        var typeValue = data[typeID]
+        this.mData[typeID] = typeValue;
+        if(typeID == "PlayerAssets" || typeID == "TownAssets")
+        {
+            updateAssets = true;
+        }
+    }
+    if(updateAssets) this.loadAssetsData();
+    this.loadModuleData()
+}
+
+StrongholdScreen.prototype.loadAssetsData = function()
+{
+    var self = this;
+    var playerAssets = this.mData['PlayerAssets']
+    var townAssets = this.mData['TownAssets']
+    Object.keys(this.mAssets).forEach(function(_key){
+        var assets;
+        if (_key in playerAssets) assets = playerAssets;
+        else if (_key in townAssets) assets = townAssets;
+        else return
+        self.mAssets[_key].data("value", assets[_key]);
+        var label = self.mAssets[_key].find('.label:first');
+        var labelText = assets[_key]
+        if(_key + "Max" in assets)
+        {
+            labelText += " / " + assets[_key + "Max"] 
+        }
+        label.html(labelText)
+    })
+}
+
+
 registerScreen("StrongholdScreen", new StrongholdScreen());

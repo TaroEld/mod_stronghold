@@ -2,36 +2,24 @@
 "use strict";
 var StrongholdScreenVisualsDialogModule = function(_parent, _id)
 {
-	this.mParent = _parent;
-	this.mSQHandle = _parent.mSQHandle
-	this.mID = _id;
-	// main div that can be shown or hidden
-	this.mContainer = null;
-
-	// where the actual content is inside
-	this.mContentContainer = null;
-    // generics
-    this.mIsVisible = false;
-
+	StrongholdScreenModuleTemplate.call(this, _parent, _id);
     this.mCurrentBaseSprite = null;
     this.mBaseSprite = null;
     this.mBaseSpriteIndex = null;
     this.mBaseSpriteImages = [];
-    
-    console.error("StrongholdScreenMainDialogModule created")
 };
 
+StrongholdScreenVisualsDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
+Object.defineProperty(StrongholdScreenVisualsDialogModule.prototype, 'constructor', {
+    value: StrongholdScreenVisualsDialogModule,
+    enumerable: false,
+    writable: true });
 
 StrongholdScreenVisualsDialogModule.prototype.createDIV = function (_parentDiv)
 {
-	this.mIsVisible = false;
+	StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     var self = this;
-
-    this.mContainer = $('<div class="stronghold-main-dialog-container display-none"/>');
-    _parentDiv.append(this.mContainer)
-
-    this.mContentContainer = $('<div class="stronghold-main-content-container visuals-module"/>');
-    this.mContainer.append(this.mContentContainer)
+    this.mContentContainer.addClass("visuals-module");
 
     this.mTitleTextContainer = this.mContentContainer.appendRow("Change Visuals").find(".sub-title");
     
@@ -71,13 +59,6 @@ StrongholdScreenVisualsDialogModule.prototype.createDIV = function (_parentDiv)
     }, "apply-sprites-button", 1)
 };
 
-StrongholdScreenVisualsDialogModule.prototype.destroyDIV = function ()
-{
-    this.mContainer.empty();
-    this.mContainer.remove();
-    this.mContainer = null;
-};
-
 StrongholdScreenVisualsDialogModule.prototype.getSpriteIndex = function()
 {
 	return StrongholdConst.AllSprites.indexOf(this.mBaseSprite)
@@ -112,97 +93,14 @@ StrongholdScreenVisualsDialogModule.prototype.setSpriteImage = function()
 	this.mSpriteNameLabel.text(text)
 } 
 
-StrongholdScreenVisualsDialogModule.prototype.bindTooltips = function ()
-{
-};
-
-StrongholdScreenVisualsDialogModule.prototype.unbindTooltips = function ()
-{
-};
-
-
-StrongholdScreenVisualsDialogModule.prototype.create = function(_parentDiv)
-{
-    this.createDIV(_parentDiv);
-    this.bindTooltips();
-};
-
-StrongholdScreenVisualsDialogModule.prototype.destroy = function()
-{
-    this.unbindTooltips();
-    this.destroyDIV();
-};
-
-StrongholdScreenVisualsDialogModule.prototype.register = function (_parentDiv)
-{
-    console.log('WorldTownScreenMainDialogModule::REGISTER');
-
-    if (this.mContainer !== null)
-    {
-        console.error('ERROR: Failed to register StrongholdScreenVisualsDialogModule. Reason: StrongholdScreenVisualsDialogModule is already initialized.');
-        return;
-    }
-
-    if (_parentDiv !== null && typeof(_parentDiv) == 'object')
-    {
-        this.create(_parentDiv);
-    }
-};
-
-StrongholdScreenVisualsDialogModule.prototype.unregister = function ()
-{
-    console.log('StrongholdScreenVisualsDialogModule::UNREGISTER');
-
-    if (this.mContainer === null)
-    {
-        console.error('ERROR: Failed to unregister StrongholdScreenVisualsDialogModule. Reason: StrongholdScreenVisualsDialogModule is not initialized.');
-        return;
-    }
-
-    this.destroy();
-};
-
-StrongholdScreenVisualsDialogModule.prototype.isRegistered = function ()
-{
-    if (this.mContainer !== null)
-    {
-        return this.mContainer.parent().length !== 0;
-    }
-
-    return false;
-};
-
-StrongholdScreenVisualsDialogModule.prototype.show = function ()
-{
-	this.mIsVisible = true;
-	console.error(this.mID + "::show")
-	var self = this;
-	this.mContainer.removeClass('display-none').addClass('display-block');
-	this.loadFromData(this.mParent.mData)
-};
-
-
-StrongholdScreenVisualsDialogModule.prototype.hide = function ()
-{
-	this.mIsVisible = false;
-	console.error(this.mID + "::hide")
-	var self = this;
-	this.mContainer.removeClass('display-block').addClass('display-none');
-};
 
 StrongholdScreenVisualsDialogModule.prototype.loadFromData = function(_data)
 {
-    this.mData = this.mParent.getData();
-	this.mBaseSprite = this.mData.SpriteName;
-    this.mCurrentBaseSprite = this.mData.SpriteName;
+	this.mBaseSprite = this.mData.TownAssets.SpriteName;
+    this.mCurrentBaseSprite = this.mData.TownAssets.SpriteName;
 	this.mBaseSpriteIndex = this.getSpriteIndex();
 	this.setSpriteImage()
 }
-
-StrongholdScreenVisualsDialogModule.prototype.isVisible = function ()
-{
-    return this.mIsVisible;
-};
 
 StrongholdScreenVisualsDialogModule.prototype.changeSprites = function ()
 {

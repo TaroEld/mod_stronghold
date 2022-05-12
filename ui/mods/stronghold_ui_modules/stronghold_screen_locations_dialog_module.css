@@ -1,0 +1,71 @@
+.locations-module .locations-row
+{
+	height: 20rem;
+}
+
+.locations-module .structure-image-container
+{
+	height: 10rem;
+	width: 14.4rem;
+	margin-left: 0.5rem;
+	position: relative;
+
+}
+
+.structure-image-container .structure-image
+{
+	height: 8rem;
+	width: 14.4rem;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.structure-image-container .structure-selection
+{
+	height: 8rem;
+	width: 14.4rem;
+}
+
+.structure-image-container:hover .structure-selection
+{
+	display: block;
+}
+.locations-module .description-row
+{
+	height: 16rem;
+}
+.locations-module .description-row .active-location-image-container
+{
+	height: 20rem;
+	width: 28rem;
+}
+.locations-module .active-location-image-container .active-location-image
+{
+	height: 16rem;
+	width: 28rem;
+	align-self: center;
+}
+
+
+.locations-module .description-row .active-location-text-container
+{
+	height: 20rem;
+	flex: 1;
+	margin-left: 0.5rem;
+}
+
+
+.locations-module .footer-button-bar
+{
+    position: absolute;
+    bottom: 0;
+    justify-content: center;
+}
+
+.locations-module .footer-button-bar > div
+{
+    width: 17.5rem;
+    height: 4.3rem;
+    /*border: 1px solid blue;*/
+} 

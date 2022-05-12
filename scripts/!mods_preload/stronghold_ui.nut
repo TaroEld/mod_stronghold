@@ -1,4 +1,6 @@
-::Stronghold.setupBuildingDefs <- function()
+local gt = this.getroottable();
+
+gt.Stronghold.setupUI <- function()
 {
 	::Stronghold.BuildingDefs <-
 	{
@@ -130,6 +132,5 @@
 			Text = "Cost: " + ::Stronghold.BuildingPrices[buildingID] * ::Stronghold.PriceMult,
 			IsValid = @(_town) this.World.Assets.getMoney() >= ::Stronghold.BuildingPrices[buildingID] * ::Stronghold.PriceMult
 		})
-		
 	}
 }

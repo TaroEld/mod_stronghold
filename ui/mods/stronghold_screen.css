@@ -57,19 +57,28 @@
     top: 11.9rem;
     height: 58.6rem;
     width: 10rem;
-
-    /*border: 2px solid yellow;*/
 }
 
-.l-stronghold-dialog-container .vertical-tab-container .l-row
+.l-stronghold-dialog-container .vertical-tab-container .scroll-container
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 58.6rem;
+
+    border: 2px solid yellow;
+}
+
+.l-stronghold-dialog-container .vertical-tab-container .scroll-container .row
 {
     height: 5.0rem;
     line-height: 3.0rem;
     border-image: url("coui://gfx/ui/skin/line_gold.png") 0% 0% 100% 0%;
     border-image-outset: 0 0 0.5rem 0;
 
-    /*border: 2px solid blue;*/
+    border: 2px solid blue;
 }
+
 
 .l-stronghold-dialog-container .vertical-tab-container .label
 {
@@ -85,6 +94,9 @@
     left: 10rem;
     width: 92.4rem;
     height: 58.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
     overflow: hidden;
 
     /*border: 3px solid red;*/

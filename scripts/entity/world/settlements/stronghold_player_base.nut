@@ -402,6 +402,31 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			}
 		}
 	}
+
+	function removeBuilding(_buildingID)
+	{
+		foreach(i, building in this.m.Buildings)
+		{
+			if(this.m.Buildings[i] != null && this.m.Buildings[i].m.ID == _buildingID)
+			{
+				this.m.Buildings[i] = null;
+				return
+			}
+		}
+	}
+
+	function removeLocation(_locationID)
+	{
+		foreach(i, building in this.m.AttachedLocations)
+		{
+			if(this.m.AttachedLocations[i] != null && this.m.AttachedLocations[i].m.ID == _locationID)
+			{
+				this.m.AttachedLocations[i].die()
+				this.m.AttachedLocations.remove(i);
+				return
+			}
+		}
+	}
 	
 	function addImportedProduce( _p )
 	{

@@ -2,34 +2,23 @@
 "use strict";
 var StrongholdScreenMainDialogModule = function(_parent, _id)
 {
-	this.mParent = _parent;
-	this.mSQHandle = _parent.mSQHandle
-	this.mID = _id;
-	// main div that can be shown or hidden
-	this.mContainer = null;
-
-	// where the actual content is inside
-	this.mContentContainer = null;
-    // generics
-    this.mIsVisible = false;
-
+    StrongholdScreenModuleTemplate.call(this, _parent, _id);
     this.mBaseSprite = null;
     this.mBaseSpriteIndex = null;
-    
-    console.error("StrongholdScreenMainDialogModule created")
 };
 
+StrongholdScreenMainDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
+Object.defineProperty(StrongholdScreenMainDialogModule.prototype, 'constructor', {
+    value: StrongholdScreenMainDialogModule,
+    enumerable: false,
+    writable: true });
 
 StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
 {
-    var self = this;
+    StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
+    this.mContentContainer.addClass("main-module");
+    var self = this;    
 
-    this.mContainer = $('<div class="stronghold-module-dialog-container  display-none"/>');
-    _parentDiv.append(this.mContainer)
-
-    this.mContentContainer = $('<div class="stronghold-module-content-container"/>');
-    this.mContainer.append(this.mContentContainer)
-    
     this.mChangeNameContainer = this.mContentContainer.appendRow(null, "gold-line-bottom change-name-row")
     var inputLayout = $('<div class="change-base-name-input-container"/>');
     this.mChangeNameInput = inputLayout.createInput("??", 0, 200, 1, null, 'title-font-big font-bold font-color-brother-name', function (_input)
@@ -73,31 +62,6 @@ StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
     {
     	self.changeSprites();
     }, "apply-sprites-button", 1)
-
-
-    var upgradeRow = this.mContentContainer.appendRow(null, "upgrade-base-row");
-    var upgradeSpriteContainer = $('<div class="base-sprite-container"/>');
-    upgradeRow.append(upgradeSpriteContainer);
-    this.mBaseUpgradeSpriteImage = $('<img class="base-sprite-image"/>');
-    upgradeSpriteContainer.append(this.mBaseUpgradeSpriteImage);
-
-    var upgradeDetailsContainer = $('<div class="upgrade-details-container"/>');
-    upgradeRow.append(upgradeDetailsContainer);
-    this.mUpgradeNameLabel = upgradeDetailsContainer.appendRow("Upgrade Base").find(".sub-title");
-    var upgradeDetails = upgradeDetailsContainer.appendRow();
-    this.mUpgradeDetailsTextContainer = $('<div class="upgrade-base-text-container text-font-normal font-style-italic font-bottom-shadow font-color-subtitle"/>');
-    upgradeDetails.append(this.mUpgradeDetailsTextContainer);
-    this.mUpgradeBaseButton = upgradeDetails.createTextButton("Upgrade", function()
-    {
-    	self.changeSprites();
-    }, "upgrade-base-button", 1)
-};
-
-StrongholdScreenMainDialogModule.prototype.destroyDIV = function ()
-{
-    this.mContainer.empty();
-    this.mContainer.remove();
-    this.mContainer = null;
 };
 
 StrongholdScreenMainDialogModule.prototype.getSpriteIndex = function()
@@ -133,98 +97,9 @@ StrongholdScreenMainDialogModule.prototype.fillUpgradeDetailsText = function( _d
 	this.mUpgradeDetailsTextContainer.text("Upgrade advantages: \n" + text);
 }
 
-StrongholdScreenMainDialogModule.prototype.bindTooltips = function ()
-{
-};
-
-StrongholdScreenMainDialogModule.prototype.unbindTooltips = function ()
-{
-};
-
-
-StrongholdScreenMainDialogModule.prototype.create = function(_parentDiv)
-{
-    this.createDIV(_parentDiv);
-    this.bindTooltips();
-};
-
-StrongholdScreenMainDialogModule.prototype.destroy = function()
-{
-    this.unbindTooltips();
-    this.destroyDIV();
-};
-
-StrongholdScreenMainDialogModule.prototype.register = function (_parentDiv)
-{
-    console.log('WorldTownScreenMainDialogModule::REGISTER');
-
-    if (this.mContainer !== null)
-    {
-        console.error('ERROR: Failed to register StrongholdScreenMainDialogModule. Reason: StrongholdScreenMainDialogModule is already initialized.');
-        return;
-    }
-
-    if (_parentDiv !== null && typeof(_parentDiv) == 'object')
-    {
-        this.create(_parentDiv);
-    }
-};
-
-StrongholdScreenMainDialogModule.prototype.unregister = function ()
-{
-    console.log('StrongholdScreenMainDialogModule::UNREGISTER');
-
-    if (this.mContainer === null)
-    {
-        console.error('ERROR: Failed to unregister StrongholdScreenMainDialogModule. Reason: StrongholdScreenMainDialogModule is not initialized.');
-        return;
-    }
-
-    this.destroy();
-};
-
-StrongholdScreenMainDialogModule.prototype.isRegistered = function ()
-{
-    if (this.mContainer !== null)
-    {
-        return this.mContainer.parent().length !== 0;
-    }
-
-    return false;
-};
-
-StrongholdScreenMainDialogModule.prototype.show = function ()
-{
-	this.mIsVisible = true;
-	console.error(this.mID + "::show")
-	var self = this;
-	this.mContainer.removeClass('display-none').addClass('display-block');
-	this.loadFromData(this.mParent.mData)
-};
-
-
-StrongholdScreenMainDialogModule.prototype.hide = function ()
-{
-	this.mIsVisible = false;
-	console.error(this.mID + "::hide")
-	var self = this;
-	this.mContainer.removeClass('display-block').addClass('display-none');
-};
-
 StrongholdScreenMainDialogModule.prototype.loadFromData = function()
 {
-    this.mData = this.mParent.getData();
-	this.mChangeNameInput.setInputText(_data.Name);
-	this.mBaseSprite = _data.SpriteName;
-	this.mBaseSpriteIndex = this.getSpriteIndex();
-	this.setSpriteImage()
-	this.fillUpgradeDetailsText(_data)
 }
-
-StrongholdScreenMainDialogModule.prototype.isVisible = function ()
-{
-    return this.mIsVisible;
-};
 
 StrongholdScreenMainDialogModule.prototype.changeBaseName = function ()
 {
