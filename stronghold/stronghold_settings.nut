@@ -115,6 +115,7 @@ gt.Stronghold.Locations <-
 	Militia_Trainingcamp = {
 		Cost = 10,
 		MaxAmount = 3,
+		MaxBrotherExpLevel = 7, //
 		DailyIncome = 200, // Amount of Experience generated each day
 		MercenaryStrengthIncrease = 100, // Amount of strength added to new mercenary and caravan parties
 		RecruitIncrease = 2 // Amount of recruits added to the Hamlet roster

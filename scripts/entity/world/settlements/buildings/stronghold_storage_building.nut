@@ -280,7 +280,7 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 		{
 			local XpPerDay = this.Stronghold.Locations["Militia_Trainingcamp"].DailyIncome;
 			local numberOfTrainingGrounds = this.m.Settlement.countAttachedLocations("attached_location.militia_trainingcamp");
-			local validBros = this.m.Settlement.getLocalRoster().getAll().filter( @(a, b) b.getLevel() <= 7);
+			local validBros = this.m.Settlement.getLocalRoster().getAll().filter( @(a, b) b.getLevel() <= ::Stronghold.Locations["Militia_Trainingcamp"].MaxBrotherExpLevel);
 			local totalXP = XpPerDay * _daysPassed * numberOfTrainingGrounds;
 			local XpPerBro = totalXP  / validBros.len();
 			foreach (bro in validBros)
