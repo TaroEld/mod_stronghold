@@ -26,7 +26,7 @@ gt.Stronghold.RenownPerLevel <- [
 ]
 
 // Base difficulty of the base defence fight
-gt.Stronghold.InitialFightBaseStrength <- 50; 
+gt.Stronghold.InitialFightBaseStrength <- 90; 
 
 // Extra difficulty added per base you already have, includes the first one
 gt.Stronghold.InitialFightStrengthPerMainBase <- 50; 
@@ -37,6 +37,17 @@ gt.Stronghold.InitialFightStrengthPerTargetLevel <- 30;
 // Extra difficulty for waves two and three of the higher upgrade levels
 gt.Stronghold.InitialFightStrengthPerWave <- 30; 
 
+gt.Stronghold.getBaseFightDifficulty <- function(_contract)
+{
+	local wave = _contract.m.TargetLevel / _contract.m.AttacksRemaining;
+	local numBases = this.Stronghold.getPlayerFaction().getMainBases().len();
+	local difficulty = this.Stronghold.InitialFightBaseStrength;
+	difficulty += this.Stronghold.InitialFightStrengthPerTargetLevel * _contract.m.TargetLevel;
+	difficulty += this.Stronghold.InitialFightStrengthPerWave * wave;
+	difficulty += this.Stronghold.InitialFightStrengthPerMainBase * numBases;
+	difficulty = ((difficulty / 2) * _contract.getScaledDifficultyMult()) + (difficulty / 2);
+	return difficulty
+}
 
 
 

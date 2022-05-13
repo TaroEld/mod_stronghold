@@ -50,7 +50,8 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		}
 
 		local patrol_strength = 100 * (playerBase.getSize())
-		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease;
+		patrol_strength *= this.getScaledDifficultyMult();
 
 
 		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary guards of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);

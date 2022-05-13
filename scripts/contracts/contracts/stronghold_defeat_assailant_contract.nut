@@ -366,13 +366,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	{
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local playerBase = this.m.Home;
-		local wave =  this.m.TargetLevel / this.m.AttacksRemaining;
-		local numBases = playerFaction.getMainBases();
-		local partyDifficulty = this.Stronghold.InitialFightBaseStrength;
-		partyDifficulty += this.Stronghold.InitialFightStrengthPerWave * wave;
-		partyDifficulty += this.Stronghold.InitialFightStrengthPerMainBase * numBases;
-		partyDifficulty = ((partyDifficulty / 2) * this.getScaledDifficultyMult()) + (partyDifficulty / 2)
-		this.logInfo("Intitial fight difficulty: " + partyDifficulty)
+		local partyDifficulty = this.Stronghold.getBaseFightDifficulty(this);
+		local wave = this.m.TargetLevel / this.m.AttacksRemaining;
 		
 		this.m.Destination = this.WeakTableRef(playerBase);
 		local tile = playerBase.getTile();
