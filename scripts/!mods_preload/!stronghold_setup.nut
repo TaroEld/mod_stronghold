@@ -7,7 +7,7 @@ gt.Stronghold <- {};
 	::mods_registerJS("mod_stronghold.js");
 	::mods_registerCSS("mod_stronghold.css");
 	
-	this.include("stronghold_settings")
+	this.include("stronghold/stronghold_settings")
 
 	gt.Stronghold.setupVarious();
 	delete gt.Stronghold.setupVarious;
