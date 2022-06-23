@@ -26,7 +26,7 @@ gt.Stronghold.RenownPerLevel <- [
 ]
 
 // Base difficulty of the base defence fight
-gt.Stronghold.InitialFightBaseStrength <- 90; 
+gt.Stronghold.InitialFightBaseStrength <- 70; 
 
 // Extra difficulty added per base you already have, includes the first one
 gt.Stronghold.InitialFightStrengthPerMainBase <- 50; 
