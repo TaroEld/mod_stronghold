@@ -391,6 +391,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		foreach (settlement in allSettlements)
 		{
 			if( settlement == null || this.m.Flags.has(settlement.getID())) continue
+			if (playerBase.isIsolatedFromLocation(origin)) continue;
 
 			local distance = settlement.getTile().getDistanceTo(tile)
 			if (closest_settlement == null || distance < closest)
