@@ -964,9 +964,10 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	
 	function onRoadBuild()
 	{
-
 		local home = this.getHome();
 		home.buildRoad(this.m.Temp_Var.Settlement, this.m.Temp_Var.Roadmult)
+		foreach(settlement in this.World.EntityManager.getSettlements())
+			settlement.updateProperties();
 		this.clearScreens()
 		return "Task"
 	}
@@ -1015,7 +1016,6 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			local militarySettlements = [];
 			foreach (settlement in faction.getSettlements())
 			{
-				::logInfo(settlement.getName() + " " + settlement.isMilitary() + " " + settlement.isConnectedToByRoads(this.getHome()))
 				if ((faction.m.Type == this.Const.FactionType.OrientalCityState || settlement.isMilitary()) &&  
 					settlement.isConnectedToByRoads(this.getHome()))
 				{
