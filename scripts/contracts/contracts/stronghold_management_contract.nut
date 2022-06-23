@@ -801,6 +801,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function addGiftScreen(_screenVar, _idx)
 	{
+		local home = this.getHome()
 		return{
 			Text = _screenVar.Faction.getName(),
 			function getResult(_option)
@@ -815,7 +816,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				{
 					local items = []
 					items.extend(this.World.Assets.getStash().m.Items);
-					items.extend(this.getHome().getBuilding("building.storage_building").getStash().getItems())
+					items.extend(home.getBuilding("building.storage_building").getStash().getItems())
 					foreach( i, item in items )
 					{
 						if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
@@ -1014,6 +1015,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			local militarySettlements = [];
 			foreach (settlement in faction.getSettlements())
 			{
+				::logInfo(settlement.getName() + " " + settlement.isMilitary() + " " + settlement.isConnectedToByRoads(this.getHome()))
 				if ((faction.m.Type == this.Const.FactionType.OrientalCityState || settlement.isMilitary()) &&  
 					settlement.isConnectedToByRoads(this.getHome()))
 				{
