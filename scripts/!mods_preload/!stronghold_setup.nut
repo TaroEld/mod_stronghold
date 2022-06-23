@@ -802,4 +802,76 @@ gt.Stronghold <- {};
 			}
 		}
 	})
+
+	// don't want to be able to pick player faction
+	::mods_hookExactClass("factions/actions/send_greenskin_army_action", function(o)
+	{
+		local onExecute = o.onExecute;
+		o.onExecute = function(_faction)
+		{
+			local entityManager = this.World.EntityManager.get();
+			local old_getSettlements = entityManager.getSettlements;
+			entityManager.getSettlements = function()
+			{
+				return ::Stronghold.removeStrongholdSettlements(this.m.Settlements);
+			}
+			local result = onExecute(_faction)
+			entityManager.getSettlements = old_getSettlements;
+			return result;
+		}
+	})
+
+	::mods_hookExactClass("factions/actions/send_military_army_action", function(o)
+	{
+		local onExecute = o.onExecute;
+		o.onExecute = function(_faction)
+		{
+			local entityManager = this.World.EntityManager.get();
+			local old_getSettlements = entityManager.getSettlements;
+			entityManager.getSettlements = function()
+			{
+				return ::Stronghold.removeStrongholdSettlements(this.m.Settlements);
+			}
+			local result = onExecute(_faction)
+			entityManager.getSettlements = old_getSettlements;
+			return result;
+		}
+	})
+
+	::mods_hookExactClass("factions/actions/send_citystate_army_action", function(o)
+	{
+		local onExecute = o.onExecute;
+		o.onExecute = function(_faction)
+		{
+			local entityManager = this.World.EntityManager.get();
+			local old_getSettlements = entityManager.getSettlements;
+			entityManager.getSettlements = function()
+			{
+				return ::Stronghold.removeStrongholdSettlements(this.m.Settlements);
+			}
+			local result = onExecute(_faction)
+			entityManager.getSettlements = old_getSettlements;
+			return result;
+		}
+	})
+
+	::mods_hookExactClass("factions/actions/send_undead_army_action", function(o)
+	{
+		local onExecute = o.onExecute;
+		o.onExecute = function(_faction)
+		{
+			local entityManager = this.World.EntityManager.get();
+			local old_getSettlements = entityManager.getSettlements;
+			entityManager.getSettlements = function()
+			{
+				return ::Stronghold.removeStrongholdSettlements(this.m.Settlements);
+			}
+			local result = onExecute(_faction)
+			entityManager.getSettlements = old_getSettlements;
+			return result;
+		}
+	})
+
+	
+
 });

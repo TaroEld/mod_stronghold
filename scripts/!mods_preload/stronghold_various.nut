@@ -237,4 +237,9 @@ gt.Stronghold.setupVarious <- function()
 		}
 	]
 
+	::Stronghold.removeStrongholdSettlements <- function(_array)
+	{
+		return _array.filter(@(a, b) !("isPlayerBase" in b.m));
+	}
+
 }
