@@ -475,7 +475,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		party.getLoot().Money = this.Math.rand(200, 300) * wave;
 		party.getSprite("banner").setBrush(closest_settlement.getBanner());
 		party.getSprite("selection").Visible = true
-		party.setMovementSpeed(70);
+		party.setMovementSpeed(70.0);
 		party.setAttackableByAI(false);
 		party.setVisibleInFogOfWar(true);
 		party.setImportant(true);
