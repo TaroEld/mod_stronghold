@@ -243,11 +243,11 @@ this.stronghold_storage_building <- this.inherit("scripts/entity/world/settlemen
 		foreach(itemToAdd in itemsToAdd)
 		{
 			// can't add more than storage max of each item in total
-			itemToAdd.ToAdd = this.Math.min(itemToAdd.ToAdd, itemToAdd.Max);
+			itemToAdd.ToAdd = ::Math.min(itemToAdd.ToAdd, itemToAdd.Max);
 			while (itemToAdd.ToAdd > 0)
 			{
 				item = this.new(itemToAdd.Script);
-				amount = this.Math.min(itemToAdd.MaxPerStack, itemToAdd.ToAdd).tointeger();
+				amount = ::Math.min(itemToAdd.MaxPerStack, itemToAdd.ToAdd).tointeger();
 				item.setAmount(amount);
 				itemToAdd.ToAdd -= amount;
 				item.m.PriceMult = 0;

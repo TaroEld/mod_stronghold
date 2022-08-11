@@ -42,13 +42,13 @@
 			this.World.Flags.set("ReforgeNamedItemSeed", this.World.State.getCurrentTown().getFlags().get("RosterSeed"));
 		}
 		this.World.Flags.increment("ReforgeNamedItemSeed");
-		this.Math.seedRandom(this.World.Flags.get("ReforgeNamedItemSeed"));
+		::Math.seedRandom(this.World.Flags.get("ReforgeNamedItemSeed"));
 
 		local replacementItem = this.new(this.IO.scriptFilenameByHash(type));
 		replacementItem.setName(name);
 		this.World.Assets.addMoney(-price);
 		this.m.Shop.getStash().add(replacementItem);
-		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + this.Math.rand(0, 6) + ".wav", 1.0);
+		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + ::Math.rand(0, 6) + ".wav", 1.0);
 		local result = {
 			Item = this.UIDataHelper.convertItemToUIData(replacementItem, true, null),
 			Assets = this.m.Parent.queryAssetsInformation()
@@ -79,7 +79,7 @@
 
 		local price = (item.getConditionMax() - item.getCondition()) * this.Const.World.Assets.CostToRepairPerPoint;
 		local value = item.m.Value * (1.0 - item.getCondition() / item.getConditionMax()) * 0.2 * this.World.State.getCurrentTown().getPriceMult() * this.Const.Difficulty.SellPriceMult[this.World.Assets.getEconomicDifficulty()];
-		price = this.Math.max(price, value) * this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier;
+		price = ::Math.max(price, value) * this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier;
 		price = price.tointeger();
 
 		if (this.World.Assets.getMoney() < price)
@@ -90,7 +90,7 @@
 		this.World.Assets.addMoney(-price);
 		item.setCondition(item.getConditionMax());
 		item.setToBeRepaired(false);
-		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + this.Math.rand(0, 6) + ".wav", 1.0);
+		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + ::Math.rand(0, 6) + ".wav", 1.0);
 		local result = {
 			Item = this.UIDataHelper.convertItemToUIData(item, true, this.Const.UI.ItemOwner.Stash),
 			Assets = this.m.Parent.queryAssetsInformation()

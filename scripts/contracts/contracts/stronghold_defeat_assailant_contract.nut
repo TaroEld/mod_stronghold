@@ -30,7 +30,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		//looks for closest settlement. Nobles and southern nobles have multiple options, so loop through and select the closest one
 		this.m.IsStarted = true;
 		this.m.AttacksRemaining = this.m.TargetLevel
-		this.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  this.Math.rand(12, 24) * this.World.getTime().SecondsPerHour
+		this.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  ::Math.rand(12, 24) * this.World.getTime().SecondsPerHour
 		this.m.Name = format("Defend your %s", this.getHome().getSizeName());
 		this.World.Contracts.setActiveContract(this);
 		this.setState("Running")
@@ -241,7 +241,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					function getResult()
 					{
 
-						this.Contract.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  (this.Math.rand(12, 24) * this.World.getTime().SecondsPerHour)
+						this.Contract.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  (::Math.rand(12, 24) * this.World.getTime().SecondsPerHour)
 						return 0;
 					}
 
@@ -470,10 +470,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		//can't get the same location twice
 		this.m.Flags.set(closest_settlement.getID(), true)
 		//spawn the party, assign AI controller, give the order to intercept the player. switches contract state to running straight away, no offer here
-		party.getLoot().ArmorParts = this.Math.rand(10, 30) * wave;
-		party.getLoot().Medicine = this.Math.rand(1, 3) * wave;
-		party.getLoot().Ammo = this.Math.rand(0, 30) * wave ;
-		party.getLoot().Money = this.Math.rand(200, 300) * wave;
+		party.getLoot().ArmorParts = ::Math.rand(10, 30) * wave;
+		party.getLoot().Medicine = ::Math.rand(1, 3) * wave;
+		party.getLoot().Ammo = ::Math.rand(0, 30) * wave ;
+		party.getLoot().Money = ::Math.rand(200, 300) * wave;
 		party.getSprite("banner").setBrush(closest_settlement.getBanner());
 		party.getSprite("selection").Visible = true
 		party.setMovementSpeed(70.0);

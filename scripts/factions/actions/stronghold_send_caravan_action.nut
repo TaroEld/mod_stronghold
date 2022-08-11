@@ -19,7 +19,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 			}
 		}
 		if (basesRequiringCaravan.len() == 0) return
-		this.m.PlayerBase = this.Math.randArray(basesRequiringCaravan);
+		this.m.PlayerBase = ::Math.randArray(basesRequiringCaravan);
 		//only works with level 2+ base
 		this.m.Score = 100;
 	}
@@ -47,7 +47,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 					closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
 					closest = settlement
 				}
-				if (settlement.getTile().getDistanceTo(playerBase.getTile()) < closest_dist && this.Math.rand(0, 10) > 5)
+				if (settlement.getTile().getDistanceTo(playerBase.getTile()) < closest_dist && ::Math.rand(0, 10) > 5)
 				{
 					{
 						closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())

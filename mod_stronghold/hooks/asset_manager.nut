@@ -57,7 +57,7 @@
 				{
 					foreach(bro in playerBase.getLocalRoster().getAll())
 					{
-						this.m.Money -= this.Math.floor(bro.getDailyCost()/2);
+						this.m.Money -= ::Math.floor(bro.getDailyCost()/2);
 					}
 				}
 				
@@ -79,7 +79,7 @@
 			{
 				foreach(bro in playerBase.getLocalRoster().getAll())
 				{
-					money += this.Math.floor(bro.getDailyCost()/2);
+					money += ::Math.floor(bro.getDailyCost()/2);
 				}
 			}
 		}

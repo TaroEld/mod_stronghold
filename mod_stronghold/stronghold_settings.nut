@@ -1,19 +1,18 @@
-local gt = this.getroottable();
 
 // General multiplier for crown values of prices
-gt.Stronghold.PriceMult <- 1000; 
+::Stronghold.PriceMult <- 1000; 
 
 // Base price to build / upgrade / upgrade
-gt.Stronghold.BuyPrices <- [10, 20, 20]; 
+::Stronghold.BuyPrices <- [10, 20, 20]; 
 
 // Maximum amount of attachments per level
-gt.Stronghold.MaxAttachments <- [3, 6, 9]; 
+::Stronghold.MaxAttachments <- [3, 6, 9]; 
 
 // Max amount of main bases, essentially infinite at the moment
-gt.Stronghold.MaxStrongholdNumber <- 999; 
+::Stronghold.MaxStrongholdNumber <- 999; 
 
 // How much renown is required to build the next main base, maxes out at 15000 
-gt.Stronghold.RenownPerLevel <- [
+::Stronghold.RenownPerLevel <- [
 		500,
 		1500,
 		3000,
@@ -26,18 +25,18 @@ gt.Stronghold.RenownPerLevel <- [
 ]
 
 // Base difficulty of the base defence fight
-gt.Stronghold.InitialFightBaseStrength <- 70; 
+::Stronghold.InitialFightBaseStrength <- 70; 
 
 // Extra difficulty added per base you already have, includes the first one
-gt.Stronghold.InitialFightStrengthPerMainBase <- 50; 
+::Stronghold.InitialFightStrengthPerMainBase <- 50; 
 
 // Extra difficulty based on the target level
-gt.Stronghold.InitialFightStrengthPerTargetLevel <- 30; 
+::Stronghold.InitialFightStrengthPerTargetLevel <- 30; 
 
 // Extra difficulty for waves two and three of the higher upgrade levels
-gt.Stronghold.InitialFightStrengthPerWave <- 30; 
+::Stronghold.InitialFightStrengthPerWave <- 30; 
 
-gt.Stronghold.getBaseFightDifficulty <- function(_contract)
+::Stronghold.getBaseFightDifficulty <- function(_contract)
 {
 	local wave = _contract.m.TargetLevel / _contract.m.AttacksRemaining;
 	local numBases = this.Stronghold.getPlayerFaction().getMainBases().len();
@@ -52,31 +51,31 @@ gt.Stronghold.getBaseFightDifficulty <- function(_contract)
 
 
 // Cost of each road segment
-gt.Stronghold.RoadCost <- 0.5; 
+::Stronghold.RoadCost <- 0.5; 
 
 // Daily production of each item. Note that this is the 'amount' value; one item of tools has an amount of 25, medicine 20, and ammo 50.
-gt.Stronghold.ToolsPerDay <- 9;
-gt.Stronghold.MedicinePerDay <- 7;
-gt.Stronghold.AmmoPerDay <- 20;
+::Stronghold.ToolsPerDay <- 9;
+::Stronghold.MedicinePerDay <- 7;
+::Stronghold.AmmoPerDay <- 20;
 
 // Maximum amount of each item that can be stored in the warehouse. Also the 'amount' value.
-gt.Stronghold.MaxAmountOfStoredTools <- 150;
-gt.Stronghold.MaxAmountOfStoredMedicine <- 100;
-gt.Stronghold.MaxAmountOfStoredAmmo <- 300;
+::Stronghold.MaxAmountOfStoredTools <- 150;
+::Stronghold.MaxAmountOfStoredMedicine <- 100;
+::Stronghold.MaxAmountOfStoredAmmo <- 300;
 
 
 // Base name for each tier, used in descriptions
-gt.Stronghold.BaseNames <- [
+::Stronghold.BaseNames <- [
 	"Fort",
 	"Castle",
 	"Stronghold"
 ]
 
 // Name of the hamlet used in descriptions
-gt.Stronghold.HamletName <- "Hamlet" 
+::Stronghold.HamletName <- "Hamlet" 
 
 // Cost for each building, multiplied by PriceMult (1000 by default)
-gt.Stronghold.BuildingPrices <- 
+::Stronghold.BuildingPrices <- 
 {
 	Tavern = 5,
 	Kennel = 5,
@@ -93,7 +92,7 @@ gt.Stronghold.BuildingPrices <-
 
 
 // Change settings related to attached locations
-gt.Stronghold.Locations <-
+::Stronghold.Locations <-
 {
 	Workshop = {
 		Cost = 10, // Cost for each attached location, multiplied by PriceMult (1000 by default)

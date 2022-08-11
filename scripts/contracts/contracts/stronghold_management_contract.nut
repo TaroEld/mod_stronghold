@@ -1081,7 +1081,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		{
 			if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
 			{
-				totalReputation += this.Math.abs(item.m.Value / 200)
+				totalReputation += ::Math.abs(item.m.Value / 200)
 				toRemovePlayer.push(item)
 			}
 		}
@@ -1091,7 +1091,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		{
 			if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
 			{
-				totalReputation += this.Math.abs(item.m.Value / 200)
+				totalReputation += ::Math.abs(item.m.Value / 200)
 				toRemoveStorage.push(item)
 			}
 		}
@@ -1190,7 +1190,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				continue;
 			}
 
-			local type = candidates[this.Math.rand(0, candidates.len() - 1)];
+			local type = candidates[::Math.rand(0, candidates.len() - 1)];
 
 			if ((terrain.Region[this.Const.World.TerrainType.Ocean] >= 3 || terrain.Region[this.Const.World.TerrainType.Shore] >= 3) && !("IsCoastal" in type) && !("IsFlexible" in type))
 			{

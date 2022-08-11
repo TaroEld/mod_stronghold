@@ -12,7 +12,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	},
 	function create()
 	{
-		this.m.DifficultyMult = this.Math.rand(116, 130) * 0.01;
+		this.m.DifficultyMult = ::Math.rand(116, 130) * 0.01;
 		this.m.Flags = this.new("scripts/tools/tag_collection");
 		this.m.TempFlags = this.new("scripts/tools/tag_collection");
 		this.createStates();
