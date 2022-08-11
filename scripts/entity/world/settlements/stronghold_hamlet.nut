@@ -186,34 +186,22 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 
 		foreach( loc in this.m.AttachedLocations )
 		{
-			if("LegendMod" in this.Const){
-				b.onUpdateDraftList(draftList, false)
-			}
-			else loc.onUpdateDraftList(draftList);
+			loc.onUpdateDraftList(draftList);
 		}
 
 		foreach( b in this.m.Buildings )
 		{
 			if (b != null)
 			{
-				if("LegendMod" in this.Const){
-					b.onUpdateDraftList(draftList, false)
-				}
-				else b.onUpdateDraftList(draftList);
+				b.onUpdateDraftList(draftList);
 			}
 		}
 
 		foreach( s in this.m.Situations )
 		{
-			if("LegendMod" in this.Const){
-				b.onUpdateDraftList(draftList, false)
-			}
-			else b.onUpdateDraftList(draftList)
+			s.onUpdateDraftList(draftList)
 		}
-		if("LegendMod" in this.Const){
-			this.World.Assets.getOrigin().onUpdateDraftList(draftList, false);
-		}
-		else this.World.Assets.getOrigin().onUpdateDraftList(draftList);
+		this.World.Assets.getOrigin().onUpdateDraftList(draftList);
 
 		while (maxRecruits > current.len())
 		{
