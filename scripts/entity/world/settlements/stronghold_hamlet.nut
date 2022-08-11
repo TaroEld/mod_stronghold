@@ -61,7 +61,8 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		return this.Stronghold.getPlayerFaction()
 	}
 	
-	function isMainBase(){
+	function isMainBase()
+	{
 		return false;
 	}
 	

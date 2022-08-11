@@ -48,7 +48,26 @@
 	return difficulty
 }
 
-
+// Effect of the well supplied buff that is activated by default
+// Rarity dictates the amount of items that spawn in shops, including named items
+::Stronghold.WellSupplied <-
+[
+	{
+		Rarity = 1.04,
+		BuyPrice = 1.00,
+		SellPrice = 1.00
+	},
+	{
+		Rarity = 1.08,
+		BuyPrice = 0.95,
+		SellPrice = 1.05
+	},
+	{
+		Rarity = 1.12,
+		BuyPrice = 0.9,
+		SellPrice = 1.1
+	}
+]
 
 // Cost of each road segment
 ::Stronghold.RoadCost <- 0.5; 

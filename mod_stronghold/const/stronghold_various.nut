@@ -1,20 +1,20 @@
-::Stronghold.setupVarious <- function()
-{
 // max length of menu options, limitation of the text window size. got it at 11 so leave 2 spaces for 'back' etc
-::Stronghold.MaxMenuOptionsLen <- 9; 
+::Stronghold.MAX_MENU_OPTIONS <- 9; 
 
 ::Stronghold.MAX_BASE_SIZE <- 3;
 
-::Stronghold.UnlockAdvantages <- [
+::Stronghold.UnlockAdvantages <- 
+[
 	"You can leave items and brothers behind, to retrieve them later as you need them.\n You can construct up to three settlement buildings.\nYou can construct up to three locations, granting various advantages.\n You will be able to upgrade your base, unlocking more features.",
 	"Bands of mercenaries will join your base and guard it against aggressors.\nYou can construct an additional building and three additional locations.\nYou can construct roads to other settlements, connecting your base to the world.",
 	"You can construct an additional building, including an arena, and three additional locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold."
 ]
 
-::Stronghold.PlayerFactionActions <- [
-"scripts/factions/actions/stronghold_guard_base_action", 
-"scripts/factions/actions/stronghold_send_caravan_action", 
-"scripts/factions/actions/stronghold_patrol_roads_action"
+::Stronghold.PlayerFactionActions <- 
+[
+	"scripts/factions/actions/stronghold_guard_base_action", 
+	"scripts/factions/actions/stronghold_send_caravan_action", 
+	"scripts/factions/actions/stronghold_patrol_roads_action"
 ];
 
 
@@ -101,7 +101,8 @@
 	return null
 }
 
-::Stronghold.getMaxStrongholdNumber <- function(){
+::Stronghold.getMaxStrongholdNumber <- function()
+{
 	local renown = this.World.Assets.getBusinessReputation();
 	local level = 0;
 	foreach(lvl in this.RenownPerLevel){
@@ -145,15 +146,14 @@
 //modded from vanilla to allow for longer range
 ::Stronghold.isOnTile <- function(_tile, _tileTypes)
 {
-	foreach(tileType in _tileTypes){
-		if (_tile.Type == tileType){
-			return true
-		}
+	foreach(tileType in _tileTypes)
+	{
+		if (_tile.Type == tileType)
+			return true;
 		for( local i = 0; i != 6; i = ++i )
 		{
-			if (_tile.hasNextTile(i) && _tile.getNextTile(i).Type == tileType){
+			if (_tile.hasNextTile(i) && _tile.getNextTile(i).Type == tileType)
 				return true;
-			}
 		}
 	}
 	return false
@@ -202,27 +202,6 @@
 	this.World.Contracts.addContract(contract);
 	contract.start();
 }
-
-// Effect of the well supplied buff that is activated by default
-// Rarity dictates the amount of items that spawn in shops, including named items
-::Stronghold.WellSupplied <-
-[
-	{
-		Rarity = 1.04,
-		BuyPrice = 1.00,
-		SellPrice = 1.00
-	},
-	{
-		Rarity = 1.08,
-		BuyPrice = 0.95,
-		SellPrice = 1.05
-	},
-	{
-		Rarity = 1.12,
-		BuyPrice = 0.9,
-		SellPrice = 1.1
-	}
-]
 
 ::Stronghold.assignTroops <- function ( _party, _partyList, _resources, _weightMode = 1)
 {

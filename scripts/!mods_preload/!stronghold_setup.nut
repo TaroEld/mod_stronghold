@@ -6,7 +6,6 @@
 ::mods_registerMod(::Stronghold.ID, ::Stronghold.Version, ::Stronghold.Name);
 ::mods_queue(::Stronghold.ID, "mod_msu", function()
 {	
-	
 	::mods_registerJS("mod_stronghold.js");
 	::mods_registerCSS("mod_stronghold.css");
 	
