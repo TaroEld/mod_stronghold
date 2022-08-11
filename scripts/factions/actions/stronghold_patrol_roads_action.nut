@@ -38,7 +38,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 			}
 		}
 		if (nonIsolatedBases.len() == 0) return
-		this.m.Settlements <- ::Math.randArray(nonIsolatedBases);
+		this.m.Settlements <- ::MSU.Array.rand(nonIsolatedBases);
 		//the more friendlies, the more patrols spawn
 		//this.m.Cooldown = (this.World.getTime().SecondsPerDay * 7) / (friendly_factions.len()+1);
 		this.m.Score = 100;

@@ -28,7 +28,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 			}
 		}
 		if (basesRequiringMercs.len() == 0) return
-		this.m.PlayerBase = ::Math.randArray(basesRequiringMercs);
+		this.m.PlayerBase = ::MSU.Array.rand(basesRequiringMercs);
 		//only works with level 2+ base
 		this.m.Score = 100;
 	}
