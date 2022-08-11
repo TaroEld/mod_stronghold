@@ -459,7 +459,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			Noble = true
 		}
 		local factionType = factionTypes[closest_faction.m.Type]
-		local party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
+		local party = ::Stronghold.spawnEntity(closest_faction, closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
 		party.setDescription(factionType.Description);
 		party.setFootprintType(factionType.Footprint);
 
