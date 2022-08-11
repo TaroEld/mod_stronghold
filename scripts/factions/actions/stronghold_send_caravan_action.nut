@@ -40,19 +40,25 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		local closest_dist = 9999;
 		foreach (settlement in settlements)
 		{
-			if (settlement.getOwner().m.Type != this.Const.FactionType.Player &&  playerBase.isConnectedToByRoads(settlement) && (settlement.getOwner() == null || settlement.getOwner().isAlliedWith(playerFaction.getID())))
+			if (settlement.getFlags().get("isPlayerBase"))
+				continue;
+			if ((settlement.isMilitary() || this.isKindOf(settlement, "city_state")) && !settlement.getOwner().isAlliedWith(playerFaction.getID()))
+				continue;
+			else if (!settlement.getFactionOfType(this.Const.FactionType.Settlement).isAlliedWith(playerFaction.getID()))
+				continue;
+			if (!playerBase.isConnectedToByRoads(settlement))
+				continue;
+
+			if (!closest)
 			{
-				if (!closest)
+				closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
+				closest = settlement
+			}
+			if (settlement.getTile().getDistanceTo(playerBase.getTile()) < closest_dist && ::Math.rand(0, 10) > 5)
+			{
 				{
 					closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
 					closest = settlement
-				}
-				if (settlement.getTile().getDistanceTo(playerBase.getTile()) < closest_dist && this.Math.rand(0, 10) > 5)
-				{
-					{
-						closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
-						closest = settlement
-					}
 				}
 			}
 		}
