@@ -94,14 +94,15 @@
 ::Stronghold.HamletName <- "Hamlet" 
 
 // Cost for each building, multiplied by PriceMult (1000 by default)
-::Stronghold.BuildingPrices <- 
+::Stronghold.BuildingPrices <-
 {
 	Tavern = 5,
 	Kennel = 5,
 	Taxidermist = 5,
-	Temple = 5, 
-	Training = 5,
+	Temple = 5,
+	Training_Hall = 5,
 	Alchemist = 5,
+	Barber = 1,
 	Weaponsmith = 10,
 	Armorsmith = 10,
 	Fletcher = 10,
