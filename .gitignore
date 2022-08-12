@@ -1,6 +1,8 @@
 *.sublime-workspace
 *.sublime-project
+.vscode/
 brushes/
 gfx/mods/brushes/
-mod_stronghold.zip
+*.zip
+.editorconfig
 .utils/
