@@ -61,27 +61,13 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		return this.Stronghold.getPlayerFaction()
 	}
 	
-	function isMainBase(){
+	function isMainBase()
+	{
 		return false;
 	}
 	
-	/*function defineName()
+	function getSizeName()
 	{
-		if (this.getFlags().get("CustomName")) return;
-		//dynamic name to add distinction for size, also adds the company name
-		local name_by_size = ["Hamlet", "Hamlet", "Hamlet"]
-		local company_name = this.World.Assets.getName();
-		local final_name = "";
-		if (company_name.slice(company_name.len()-1, company_name.len()) == "s")
-		{
-			company_name = company_name.slice(0, company_name.len()-1);
-		}
-		final_name += company_name + "'s " + name_by_size[this.m.Size -1];
-		this.logDebug("Name is now: " +final_name);
-		this.m.Name = final_name;
-	}*/
-
-	function getSizeName(){
 		return this.Stronghold.HamletName
 	}
 	
@@ -213,9 +199,6 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.World.Assets.getOrigin().onUpdateHiringRoster(roster);
 	}
 
-
-
-	
 	function onSerialize( _out )
 	{
 		this.settlement.onSerialize(_out);
@@ -243,9 +226,5 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.m.Lighting = _in.readString()
 		this.updateTown()
 	}
-	
-
-	
-
 });
 
