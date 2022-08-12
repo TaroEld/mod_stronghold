@@ -13,8 +13,10 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 	function onUpdate( _faction )
 	{
 		local basesRequiringCaravan = [];
-		foreach(playerBase in _faction.getDevelopedBases()){
-			if (this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextCaravan") && !playerBase.isUpgrading()){
+		foreach(playerBase in _faction.getDevelopedBases())
+		{
+			if (this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextCaravan") && !playerBase.isUpgrading())
+			{
 				basesRequiringCaravan.push(playerBase)
 			}
 		}
@@ -42,10 +44,13 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		{
 			if (settlement.getFlags().get("isPlayerBase"))
 				continue;
-			if ((settlement.isMilitary() || this.isKindOf(settlement, "city_state")) && !settlement.getOwner().isAlliedWith(playerFaction.getID()))
+			local settlementFaction = settlement.getFactionOfType(this.Const.FactionType.Settlement);
+			if (settlement.isMilitary() || this.isKindOf(settlement, "city_state"))
+				settlementFaction = settlement.getOwner();
+
+			if (!settlementFaction.isAlliedWith(playerFaction.getID()))
 				continue;
-			else if (!settlement.getFactionOfType(this.Const.FactionType.Settlement).isAlliedWith(playerFaction.getID()))
-				continue;
+
 			if (!playerBase.isConnectedToByRoads(settlement))
 				continue;
 
@@ -54,12 +59,10 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 				closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
 				closest = settlement
 			}
-			if (settlement.getTile().getDistanceTo(playerBase.getTile()) < closest_dist && ::Math.rand(0, 10) > 5)
+			else if (settlement.getTile().getDistanceTo(playerBase.getTile()) < closest_dist && ::Math.rand(0, 10) > 5)
 			{
-				{
-					closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
-					closest = settlement
-				}
+				closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
+				closest = settlement
 			}
 		}
 		if (!closest) return
