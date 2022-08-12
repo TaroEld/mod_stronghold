@@ -1,0 +1,92 @@
+/*
+ *  @Project:		Battle Brothers
+ *	@Company:		Overhype Studios
+ *
+ *	@Copyright:		(c) Overhype Studios | 2013 - 2020
+ * 
+ *  @Author:		Overhype Studios
+ *  @Date:			31.10.2017
+ *  @Description:	World Town Screen JS
+ */
+
+.change-name-row
+{
+    justify-content: center;
+}
+
+.stronghold-main-content-container .row-base-sprite
+{
+    /*border: 2px solid green;*/
+}
+
+
+.stronghold-main-content-container .change-base-name-input-container
+{
+   height: 5rem;
+}
+
+.stronghold-main-content-container .change-base-name-button-container
+{
+    height: 5rem;
+    width: 17.5rem;
+    line-height: 3.0rem;
+
+    /*border: 2px solid blue;*/
+} 
+
+.stronghold-main-content-container .base-sprite-container
+{
+    width: 28.0rem;
+    display: flex;
+    flex-wrap: wrap;
+
+    /*border: 2px solid blue;*/
+} 
+.stronghold-main-content-container .base-sprite-container .l-button-container
+{
+    height:  4.1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+} 
+.stronghold-main-content-container .base-sprite-container .l-button-container .switch-image
+{
+    height:  4.1rem;
+    width: 5.2rem ;
+    background-repeat: no-repeat;
+
+    /*border: 2px solid green;*/
+} 
+
+.stronghold-main-content-container .base-sprite-container .base-sprite-image
+{
+    width: 25.2rem;
+    height: 19.9rem;
+}
+
+.stronghold-main-content-container .base-details-container
+{
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    /*border: 2px solid red;*/
+} 
+
+.stronghold-main-content-container .base-details-container .sprite-name-label
+{
+    text-align: center;
+} 
+
+.stronghold-main-content-container .other-sprites-container
+{
+    justify-content: space-between;
+}
+
+.stronghold-main-content-container .other-sprites-container .apply-sprites-button
+{
+    align-self: center;
+    width: 17.5rem;
+    height: 4.3rem;
+} 

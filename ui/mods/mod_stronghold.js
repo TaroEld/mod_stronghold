@@ -1,3 +1,135 @@
+var StrongholdConst = {
+    "SpritePath" : "ui/settlements/settlement_icons/",
+    "BuildingSpritePath" : "ui/buildings/",
+    "LocationsSpritePath" : "ui/locations/",
+    "SelectionImagePath" : "ui/selection.png",
+    "SelectionGoldImagePath" : "ui/selection-gold.png",
+    "AllSprites" : ["Default", "Luft_Basic", "Luft_Brigand", "Luft_Necro", "Luft_Fishing"],
+    "Sprites" : {
+        "Default" : {
+            "MainSprites" : ["stronghold_01", "stronghold_02", "stronghold_03"],
+            "HouseSprites" : ["houses_03_01", "", ""],
+            "UnitSprite" : "figure_mercenary_01",
+            "Name" : "Default",
+            "Author" : "Overhype"
+        },
+        "Luft_Basic" : {
+            "MainSprites" : ["luft_basic_01", "luft_basic_02", "luft_basic_03"],
+            "HouseSprites" : ["luft_basic_houses_01", "", ""],
+            "UnitSprite" : "luft_basic_patrol",
+            "Name" : "Basic Village",
+            "Author" : "Luftwaffle"
+        },
+        "Luft_Brigand" : {
+            "MainSprites" : ["luft_fort_01", "luft_fort_02", "luft_fort_03"],
+            "HouseSprites" : ["luft_fort_houses_01", "", ""],
+            "UnitSprite" : "luft_fort_patrol",
+            "Name" : "Brigand's Hideout",
+            "Author" : "Luftwaffle"
+        },
+        "Luft_Necro" : {
+            "MainSprites" : ["luft_necro_01", "luft_necro_02", "luft_necro_03"],
+            "HouseSprites" : ["luft_necro_houses_01", "", ""],
+            "UnitSprite" : "luft_necro_patrol",
+            "Name" : "Necromancer's Lair",
+            "Author" : "Luftwaffle"
+        },
+        "Luft_Fishing" : {
+            "MainSprites" : ["luft_fishing_01", "luft_fishing_02", "luft_fishing_03"],
+            "HouseSprites" : ["luft_fishing_houses_01", "", ""],
+            "UnitSprite" : "luft_fishing_patrol",
+            "Name" : "Fishing Village",
+            "Author" : "Luftwaffle"
+        }
+    }
+}
+
+var iterateObject = function(_object, func)
+{
+    Object.keys(_object).forEach(function(_key){
+        func(_key, _object[_key])
+    })
+}
+
+var printObject = function(_object)
+{
+    var iterateFunc = function(_key, _value){
+        var toPrint = "Key: " + _key + " | Value : " + _value + " | typeof Value : " + (typeof _value)
+        if(Array.isArray(_value))
+        {
+            toPrint += " (Array)"
+        }
+        console.error(toPrint)
+        if (typeof _value === "object")
+        {
+            iterateObject(_value, iterateFunc);
+        }
+    }
+    iterateObject(_object, iterateFunc)
+}
+
+$.fn.toggleDisplay = function(_bool)
+{
+    if(_bool === false)
+    {
+        this.removeClass('display-block').addClass('display-none')
+    }
+    else if (_bool === true)
+    {
+        this.removeClass('display-none').addClass('display-block')
+    }
+    else
+    {
+        if(this.hasClass('display-block'))
+        {
+            this.removeClass('display-block').addClass('display-none')
+        }
+        else
+        {
+            this.removeClass('display-none').addClass('display-block')
+        }
+    }
+}
+
+$.fn.toggleOpacity = function(_bool)
+{
+    if(_bool === false)
+    {
+        this.removeClass('opacity-full').addClass('opacity-none')
+    }
+    else if (_bool === true)
+    {
+        this.removeClass('opacity-none').addClass('opacity-full')
+    }
+    else
+    {
+        if(this.hasClass('opacity-full'))
+        {
+            this.removeClass('opacity-full').addClass('opacity-none')
+        }
+        else
+        {
+            this.removeClass('opacity-none').addClass('opacity-full')
+        }
+    }
+}
+
+$.fn.appendRow = function(_subTitle, _classes)
+{
+    var row = $('<div class="flex-row"/>');
+    this.append(row);
+    if(_subTitle !== undefined && _subTitle !== null)
+    {
+        var subTitle = $('<div class="sub-title text-font-normal font-style-italic font-bottom-shadow font-color-subtitle">' + _subTitle + '</div>');
+        row.append(subTitle)
+    }
+    if(_classes !== undefined && _classes !== null)
+    {
+        row.addClass(_classes)
+    }
+    return row
+}
+
 
 $.fn.changeDialogFooterRows = function(_rows, _big)
 {
@@ -28,7 +160,6 @@ $.fn.changeDialogFooterRows = function(_rows, _big)
 
     return this;
 };
-
 
 var old_createItemSlot = WorldTownScreenShopDialogModule.prototype.createItemSlot
 WorldTownScreenShopDialogModule.prototype.createItemSlot = function (_owner, _index, _parentDiv, _screenDiv)
@@ -298,14 +429,14 @@ var hire_show = WorldCampfireScreenHireDialogModule.prototype.show
 WorldCampfireScreenHireDialogModule.prototype.show = function (_withSlideAnimation)
 {
 	hire_show.call(this, _withSlideAnimation)
-	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.removeClass("display-block").addClass("display-none")
+	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.toggleDisplay(false);
 }
 
 var hire_hide = WorldCampfireScreenHireDialogModule.prototype.hide
 WorldCampfireScreenHireDialogModule.prototype.hide = function ()
 {
 	hire_hide.call(this)
-	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.removeClass("display-none").addClass("display-block")
+	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.toggleDisplay(true);
 }
 
 WorldCampfireScreen.prototype.notifyBackendStrongholdButtonPressed = function ()

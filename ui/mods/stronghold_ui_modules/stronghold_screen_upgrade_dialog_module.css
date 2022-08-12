@@ -1,0 +1,68 @@
+.upgrade-module .upgrade-base-row
+{
+    height: 19.9rem;
+}
+
+.upgrade-module .upgrade-details-container
+{
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    /*border: 1px solid green;*/
+}
+
+.upgrade-module .upgrade-sprite-container
+{
+    width: 28.0rem;
+    display: flex;
+    flex-wrap: wrap;
+
+    /*border: 2px solid blue;*/
+} 
+
+.upgrade-module .upgrade-sprite-image
+{
+    width: 25.2rem;
+    height: 19.9rem;
+}
+
+
+.upgrade-module .upgrade-details-container .sub-title
+{
+    /*border: 1px solid yellow;*/
+} 
+
+.upgrade-module .upgrade-details-container .upgrade-base-text-container
+{
+    flex: 1;
+    /*border: 1px solid red;*/
+} 
+
+
+.upgrade-module .requirements-row
+{
+}
+
+.requirements-row .upgrade-requirements-container
+{
+    width: 50%;
+}
+
+.upgrade-requirements-container .upgrade-requirements-text-container
+{
+    text-align: center;
+}
+
+.upgrade-module .footer-button-bar
+{
+    position: absolute;
+    bottom: 0;
+    justify-content: center;
+}
+.upgrade-module .footer-button-bar .upgrade-base-button
+{
+    align-self: center;
+    width: 17.5rem;
+    height: 4.3rem;
+    /*border: 1px solid blue;*/
+} 

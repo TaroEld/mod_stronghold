@@ -1,0 +1,165 @@
+/*
+ *  @Project:		Battle Brothers
+ *	@Company:		Overhype Studios
+ *
+ *	@Copyright:		(c) Overhype Studios | 2013 - 2020
+ * 
+ *  @Author:		Overhype Studios
+ *  @Date:			31.10.2017
+ *  @Description:	World Town Screen JS
+ */
+
+.ui-control.dialog-stronghold-main
+{
+    background-image: url("coui://gfx/ui/skin/dialog_background_stronghold.png");
+    background-size: 102.4rem 76.8rem;
+    background-repeat: no-repeat;
+}
+
+.stronghold-screen
+{
+	top: 0;
+	left: 0;
+    width: 102.4rem;
+    height: 76.8rem;
+	position: absolute;
+    z-index: 2;
+	overflow: hidden;
+
+    /*border: 5px solid white;*/
+}
+
+.stronghold-screen > .l-stronghold-dialog-container
+{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 102.4rem;
+    height: 76.8rem;
+    position: absolute;
+    margin: auto;
+    z-index: 2;
+    display: flex;
+}
+
+.l-stronghold-dialog-container .header
+{
+    width: 100%;
+    height: 7.5rem;
+
+    /*border: 2px solid green;*/
+}
+
+.l-stronghold-dialog-container .vertical-tab-container
+{
+    position: absolute;
+    top: 11.9rem;
+    height: 58.6rem;
+    width: 10rem;
+}
+
+.l-stronghold-dialog-container .vertical-tab-container .scroll-container
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 58.6rem;
+
+    border: 2px solid yellow;
+}
+
+.l-stronghold-dialog-container .vertical-tab-container .scroll-container .row
+{
+    height: 5.0rem;
+    line-height: 3.0rem;
+    border-image: url("coui://gfx/ui/skin/line_gold.png") 0% 0% 100% 0%;
+    border-image-outset: 0 0 0.5rem 0;
+
+    border: 2px solid blue;
+}
+
+
+.l-stronghold-dialog-container .vertical-tab-container .label
+{
+    /*padding-top: 1rem;*/
+    /*border: 2px solid blue;*/
+}
+
+
+.l-stronghold-dialog-container .module-content
+{
+    position: absolute;
+    top: 11.9rem;
+    left: 10rem;
+    width: 92.4rem;
+    height: 58.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    overflow: hidden;
+
+    /*border: 3px solid red;*/
+}
+
+.l-stronghold-dialog-container .module-content > div
+{
+    width: 100%;
+    height: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    overflow: hidden;
+}
+
+.l-stronghold-dialog-container .asset-container
+{
+    width: 100%;
+    height: 4.4rem;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    top: 7.5rem;
+
+    /*border: 2px solid orange;*/
+}
+
+.l-stronghold-dialog-container .asset-container .asset
+{
+    height: 4.3rem;
+    flex: 1;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    /*border: 2px solid blue*/
+}
+
+.l-stronghold-dialog-container .asset-container .asset img
+{
+    width: 2.8rem;
+    height: 2.8rem;
+    /*border: 1px solid red;*/
+}
+
+.l-stronghold-dialog-container .asset-container .asset .label
+{
+    flex: 1;
+    height: 3.0rem;
+    line-height: 3.0rem;
+    padding-left: 0.5rem;
+
+    /*border: 1px solid green;*/
+}
+
+.l-stronghold-dialog-container .footer
+{
+    /*border: 2px solid blue;*/
+}
+
+.stronghold-module-dialog-container 
+{
+    /*border: 4px solid green;*/
+}
+.stronghold-module-dialog-container .stronghold-module-content-container
+{
+    display: flex;
+    flex-direction: column;
+}
