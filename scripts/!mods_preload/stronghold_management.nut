@@ -66,6 +66,8 @@ gt.Stronghold.setupMainManagementOptions <- function()
 			isValid = function(_contract){
 				local current_buildings = 0;
 				local free_building_slots = _contract.getHome().getSize() + 4
+				if (_contract.getHome().getFlags().get("IsSecondaryBase"))
+					free_building_slots = 7;
 				foreach (building in _contract.getHome().m.Buildings){
 					if (building != null){
 						current_buildings++
