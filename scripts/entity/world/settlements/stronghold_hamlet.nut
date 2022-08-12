@@ -26,8 +26,8 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.m.HousesMax = 3;
 		this.m.AttachedLocationsMax = 3;
 		this.m.LocationType = this.Const.World.LocationType.Settlement;
-		this.m.ShopSeed = this.Time.getRealTime() + this.Math.rand();
-		this.m.RosterSeed = this.Time.getRealTime() + this.Math.rand();
+		this.m.ShopSeed = this.Time.getRealTime() + ::Math.rand();
+		this.m.RosterSeed = this.Time.getRealTime() + ::Math.rand();
 		this.m.VisibilityMult = 2.0;
 		this.m.IsVisited = true;
 		this.m.IsUpgrading <- false;
@@ -78,7 +78,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.location.onEnter();
 		this.updateRoster();
 		this.updateShop();
-		this.Math.seedRandom(this.Time.getRealTime());
+		::Math.seedRandom(this.Time.getRealTime());
 
 		return true;
 	}
@@ -124,14 +124,14 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 
 		if (this.m.RosterSeed != 0)
 		{
-			this.Math.seedRandom(this.m.RosterSeed);
+			::Math.seedRandom(this.m.RosterSeed);
 		}
 
-		this.m.RosterSeed = this.Math.floor(this.Time.getRealTime() + this.Math.rand());
+		this.m.RosterSeed = ::Math.floor(this.Time.getRealTime() + ::Math.rand());
 		this.m.LastRosterUpdate = this.Time.getVirtualTimeF();
 		local roster = this.World.getRoster(this.getID());
 		local current = roster.getAll();
-		local iterations = this.Math.max(1, daysPassed / 2);
+		local iterations = ::Math.max(1, daysPassed / 2);
 		local activeLocations = 0;
 
 		foreach( loc in this.m.AttachedLocations )
@@ -152,9 +152,9 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		{
 			for( local i = 0; i < iterations; i = ++i )
 			{
-				for( local maxRecruits = this.Math.rand(this.Math.max(0, rosterMax / 2 - 1), rosterMax - 1); current.len() > maxRecruits;  )
+				for( local maxRecruits = ::Math.rand(::Math.max(0, rosterMax / 2 - 1), rosterMax - 1); current.len() > maxRecruits;  )
 				{
-					local n = this.Math.rand(0, current.len() - 1);
+					local n = ::Math.rand(0, current.len() - 1);
 					roster.remove(current[n]);
 					current.remove(n);
 				}
@@ -166,7 +166,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 			current = [];
 		}
 
-		local maxRecruits = this.Math.rand(rosterMin, rosterMax);
+		local maxRecruits = ::Math.rand(rosterMin, rosterMax);
 		local draftList;
 		draftList = clone this.m.DraftList;
 

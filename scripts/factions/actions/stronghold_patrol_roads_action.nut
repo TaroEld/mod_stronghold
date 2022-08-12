@@ -38,7 +38,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 			}
 		}
 		if (nonIsolatedBases.len() == 0) return
-		this.m.Settlements <- this.Math.randArray(nonIsolatedBases);
+		this.m.Settlements <- ::MSU.Array.rand(nonIsolatedBases);
 		//the more friendlies, the more patrols spawn
 		//this.m.Cooldown = (this.World.getTime().SecondsPerDay * 7) / (friendly_factions.len()+1);
 		this.m.Score = 100;
@@ -55,7 +55,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
 		
 
-		local party = _faction.stronghold_spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
+		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
 		party.m.OnCombatWithPlayerCallback = null;
 		party.getSprite("body").setBrush(playerBase.m.troopSprites);
 		party.setDescription("A band of mercenaries patrolling the roads.");
@@ -67,7 +67,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		local target_settlements = [];
 		while (valid.len() > 0 && index < 5)
 		{
-			local rng = this.Math.rand(0, valid.len() -1)
+			local rng = ::Math.rand(0, valid.len() -1)
 			target_settlements.push(valid[rng])
 			valid.remove(rng)
 			index++

@@ -412,7 +412,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		if (this.m.ActiveIdx == this.m.Temp_Options.len()) this.m.ActiveIdx = 0
 
 		local newOptions = [];
-		for (local x = 0; x < this.m.Temp_Options.len() && x < this.Stronghold.MaxMenuOptionsLen; x++){
+		for (local x = 0; x < this.m.Temp_Options.len() && x < this.Stronghold.MAX_MENU_OPTIONS; x++){
 			newOptions.push(clone this.m.Temp_Options[this.m.ActiveIdx])
 			this.m.ActiveIdx++
 			if (this.m.ActiveIdx == this.m.Temp_Options.len()){
@@ -421,7 +421,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			}
 
 		}
-		if (this.m.Temp_Options.len() > this.Stronghold.MaxMenuOptionsLen){
+		if (this.m.Temp_Options.len() > this.Stronghold.MAX_MENU_OPTIONS){
 			newOptions.push(getMoreOptionsOption())
 		}
 		newOptions.push(this.addGenericOption("Not right now."))
@@ -1081,7 +1081,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		{
 			if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
 			{
-				totalReputation += this.Math.abs(item.m.Value / 200)
+				totalReputation += ::Math.abs(item.m.Value / 200)
 				toRemovePlayer.push(item)
 			}
 		}
@@ -1091,7 +1091,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 		{
 			if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
 			{
-				totalReputation += this.Math.abs(item.m.Value / 200)
+				totalReputation += ::Math.abs(item.m.Value / 200)
 				toRemoveStorage.push(item)
 			}
 		}
@@ -1190,7 +1190,7 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 				continue;
 			}
 
-			local type = candidates[this.Math.rand(0, candidates.len() - 1)];
+			local type = candidates[::Math.rand(0, candidates.len() - 1)];
 
 			if ((terrain.Region[this.Const.World.TerrainType.Ocean] >= 3 || terrain.Region[this.Const.World.TerrainType.Shore] >= 3) && !("IsCoastal" in type) && !("IsFlexible" in type))
 			{

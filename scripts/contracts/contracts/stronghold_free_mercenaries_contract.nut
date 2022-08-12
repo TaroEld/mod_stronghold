@@ -12,7 +12,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	},
 	function create()
 	{
-		this.m.DifficultyMult = this.Math.rand(116, 130) * 0.01;
+		this.m.DifficultyMult = ::Math.rand(116, 130) * 0.01;
 		this.m.Flags = this.new("scripts/tools/tag_collection");
 		this.m.TempFlags = this.new("scripts/tools/tag_collection");
 		this.createStates();
@@ -158,7 +158,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 						this.Contract.setState("Return");
 					}
 					
-					local party = selected_faction.stronghold_spawnEntity(selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
+					local party = ::Stronghold.spawnEntity(selected_faction, selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
 					this.Const.World.Common.addTroop(party, {
 							Type = this.Const.World.Spawn.Troops.Executioner
 						}, true, 100);

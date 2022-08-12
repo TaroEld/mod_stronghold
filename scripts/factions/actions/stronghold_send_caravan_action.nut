@@ -21,7 +21,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 			}
 		}
 		if (basesRequiringCaravan.len() == 0) return
-		this.m.PlayerBase = this.Math.randArray(basesRequiringCaravan);
+		this.m.PlayerBase = ::MSU.Array.rand(basesRequiringCaravan);
 		//only works with level 2+ base
 		this.m.Score = 100;
 	}

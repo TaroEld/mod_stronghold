@@ -71,7 +71,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				this.m.Buildings[5].m.UIImageNight = "small_" + this.m.Buildings[5].m.UIImageNight;
 			}
 		}
-		this.Math.seedRandom(this.Time.getRealTime());
+		::Math.seedRandom(this.Time.getRealTime());
 		this.World.State.getTownScreen().getMainDialogModule().loadRename();
 		return true;
 	}
@@ -258,7 +258,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function getSizeName(_nextLevel = false)
 	{
 		local size = this.getSize();
-		if (this.isUpgrading()) size = this.Math.max(1, size-1);
+		if (this.isUpgrading()) size = ::Math.max(1, size-1);
 		if (_nextLevel) return this.Stronghold.BaseNames[size];
 		return this.Stronghold.BaseNames[size-1];
 	}
@@ -387,8 +387,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			if(tries % 1000 == 0){
 				_additionalDistance++;
 			}
-			local x = this.Math.rand(myTile.SquareCoords.X - 2 - _additionalDistance, myTile.SquareCoords.X + 2 + _additionalDistance);
-			local y = this.Math.rand(myTile.SquareCoords.Y - 2 - _additionalDistance, myTile.SquareCoords.Y + 2 + _additionalDistance);
+			local x = ::Math.rand(myTile.SquareCoords.X - 2 - _additionalDistance, myTile.SquareCoords.X + 2 + _additionalDistance);
+			local y = ::Math.rand(myTile.SquareCoords.Y - 2 - _additionalDistance, myTile.SquareCoords.Y + 2 + _additionalDistance);
 
 			if (!this.World.isValidTileSquare(x, y))
 			{
@@ -553,8 +553,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			{
 				break;
 			}
-			local i = this.Math.rand(0, c.len() - 1);
-			local v = this.Math.rand(1, 2);
+			local i = ::Math.rand(0, c.len() - 1);
+			local v = ::Math.rand(1, 2);
 			this.m.HousesTiles.push({
 				X = c[i].SquareCoords.X,
 				Y = c[i].SquareCoords.Y,
