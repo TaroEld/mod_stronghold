@@ -26,6 +26,16 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 	}
 
+	function showStrongholdUIDialog()
+	{
+		::Stronghold.StrongholdScreen.setTown(this);
+		if(::Stronghold.StrongholdScreen.m.JSHandle == null)
+		{
+			::Stronghold.StrongholdScreen.m.JSHandle = this.UI.connect("StrongholdScreen", ::Stronghold.StrongholdScreen);
+		}
+		::Stronghold.StrongholdScreen.show();
+	}
+
 	function onBuild()
 	{
 		this.getFlags().set("CustomSprite", "Default")
