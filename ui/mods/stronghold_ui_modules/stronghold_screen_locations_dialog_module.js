@@ -3,6 +3,7 @@
 var StrongholdScreenLocationsDialogModule = function(_parent, _id)
 {
     StrongholdScreenModuleTemplate.call(this, _parent, _id);
+    this.mTitle = "Locations";
     this.mActiveLocation = null;
 };
 
@@ -138,10 +139,10 @@ StrongholdScreenLocationsDialogModule.prototype.switchActiveLocation = function(
 
 StrongholdScreenLocationsDialogModule.prototype.addLocation = function ()
 {
-    SQ.call(this.mParent.mSQHandle, 'addLocation', [this.mActiveLocation.Path, this.mActiveLocation.Cost]);
+   SQ.call(this.mSQHandle, 'addLocation', [this.mActiveLocation.Path, this.mActiveLocation.Cost]);
 };
 
 StrongholdScreenLocationsDialogModule.prototype.removeLocation = function ()
 {
-    SQ.call(this.mParent.mSQHandle, 'removeLocation', this.mActiveLocation.ID);
+    SQ.call(this.mSQHandle, 'removeLocation', this.mActiveLocation.ID);
 };

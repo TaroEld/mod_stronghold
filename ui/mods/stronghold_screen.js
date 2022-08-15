@@ -1,5 +1,6 @@
 var StrongholdScreen = function ()
 {
+	MSUUIScreen.call(this);
 	this.mSQHandle 		 = null;
 	this.mContainer		 = null;
 	this.mActiveModule   = null;
@@ -56,54 +57,27 @@ var StrongholdScreen = function ()
     this.createModules();
 };
 
+StrongholdScreen.prototype = Object.create(MSUUIScreen.prototype);
+Object.defineProperty(StrongholdScreen.prototype, 'constructor', {
+	value: StrongholdScreen,
+	enumerable: false,
+	writable: true
+});
+
+StrongholdScreen.prototype.getModule = function ( _module )
+{
+    return this.Modules[_module].Module;
+};
+
+StrongholdScreen.prototype.getModuleObject = function ( _module )
+{
+    return this.Modules[_module];
+};
+
+
 StrongholdScreen.prototype.getData = function ()
 {
     return this.mData;
-};
-
-StrongholdScreen.prototype.isConnected = function ()
-{
-	return this.mSQHandle !== null;
-};
-
-StrongholdScreen.prototype.onConnection = function (_handle)
-{
-	this.mSQHandle = _handle;
-	this.register($('.root-screen'));
-};
-
-StrongholdScreen.prototype.onDisconnection = function ()
-{
-	this.mSQHandle = null;
-	this.unregister();
-};
-
-
-StrongholdScreen.prototype.destroyDIV = function ()
-{
-    this.mContainer.empty();
-    this.mContainer.remove();
-    this.mContainer = null;
-};
-
-StrongholdScreen.prototype.notifyBackendOnShown = function ()
-{
-    console.error("StrongholdScreen::notifyBackendOnShown")
-    console.error(this.mSQHandle)
-    if(this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onScreenShown');
-    }
-};
-
-StrongholdScreen.prototype.notifyBackendOnHidden = function ()
-{
-    console.error("StrongholdScreen::notifyBackendOnShown")
-    console.error(this.mSQHandle)
-    if(this.mSQHandle !== null)
-    {
-        SQ.call(this.mSQHandle, 'onScreenHidden');
-    }
 };
 
 
@@ -111,7 +85,6 @@ StrongholdScreen.prototype.registerModules = function ()
 {
     var self = this;
     Object.keys(this.Modules).forEach(function(_key){
-        console.error("registering module: " + _key)
         self.Modules[_key].Module.register(self.mModuleContentContainer);
     })
 };
@@ -135,15 +108,11 @@ StrongholdScreen.prototype.switchModule = function ( _module )
         this.mActiveButton.enableButton(true);
     }
 
-    this.mActiveModule = this.getModule(_module).Module;
-    this.mActiveButton = this.getModule(_module).Button;
+    this.mActiveModule = this.getModuleObject(_module).Module;
+    this.mActiveButton = this.getModuleObject(_module).Button;
     this.mActiveButton.enableButton(false);
     this.mActiveModule.show();
-};
-
-StrongholdScreen.prototype.getModule = function ( _module )
-{
-    return this.Modules[_module];
+    this.mTitle.html(this.mActiveModule.mTitle)
 };
 
 StrongholdScreen.prototype.createModules = function ()
@@ -162,7 +131,6 @@ StrongholdScreen.prototype.show = function (_data)
     {
 		this.loadFromData(_data);
     }
-    console.error("StrongholdScreen show")
     this.mContainer.removeClass('display-none').addClass('display-block');
     this.switchModule("MainModule");
     this.notifyBackendOnShown();
@@ -174,38 +142,8 @@ StrongholdScreen.prototype.hide = function ()
 
 	this.mActiveModule.hide();
     this.mActiveModule = null;
-    console.error("StrongholdScreen hide")
     this.mContainer.removeClass('display-block').addClass('display-none');
     this.notifyBackendOnHidden();
-};
-
-StrongholdScreen.prototype.register = function (_parentDiv)
-{
-    console.log('StrongholdScreen::REGISTER');
-
-    if(this.mContainer !== null)
-    {
-        console.error('ERROR: Failed to register Stronghold Screen. Reason: Stronghold Screen is already initialized.');
-        return;
-    }
-
-    if(_parentDiv !== null && typeof(_parentDiv) == 'object')
-    {
-        this.create(_parentDiv);
-    }
-};
-
-StrongholdScreen.prototype.unregister = function ()
-{
-    console.log('StrongholdScreen::UNREGISTER');
-
-    if(this.mContainer === null)
-    {
-        console.error('ERROR: Failed to unregister Stronghold Screen. Reason: Stronghold Screen is not initialized.');
-        return;
-    }
-
-    this.destroy();
 };
 
 StrongholdScreen.prototype.create = function(_parentDiv)
@@ -321,7 +259,7 @@ StrongholdScreen.prototype.loadModuleData = function()
             curModule.Module.mModuleData = self.mData[_key];
         }
     })
-    if(this.mActiveModule != null) this.mActiveModule.loadFromData();
+    if (this.mActiveModule != null) this.mActiveModule.loadFromData();
 }
 
 StrongholdScreen.prototype.updateData = function(_data)
@@ -329,11 +267,8 @@ StrongholdScreen.prototype.updateData = function(_data)
     var updateAssets = false;
     var types = _data[0];
     var data = _data[1]
-    if(typeof types == "string")
+    for (var i = 0; i < types.length; i++)
     {
-        types = [types];
-    }
-    for (var i = 0; i < types.length; i++) {
         var typeID = types[i];
         var typeValue = data[typeID]
         this.mData[typeID] = typeValue;
@@ -366,6 +301,4 @@ StrongholdScreen.prototype.loadAssetsData = function()
         label.html(labelText)
     })
 }
-
-
 registerScreen("StrongholdScreen", new StrongholdScreen());

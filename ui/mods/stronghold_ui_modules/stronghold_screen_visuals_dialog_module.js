@@ -104,5 +104,5 @@ StrongholdScreenVisualsDialogModule.prototype.loadFromData = function(_data)
 
 StrongholdScreenVisualsDialogModule.prototype.changeSprites = function ()
 {
-    SQ.call(this.mParent.mSQHandle, 'changeSprites', this.mBaseSprite);
+    SQ.call(this.mSQHandle, 'changeSprites', this.mBaseSprite);
 };

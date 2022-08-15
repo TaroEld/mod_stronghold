@@ -103,5 +103,5 @@ StrongholdScreenMainDialogModule.prototype.loadFromData = function()
 
 StrongholdScreenMainDialogModule.prototype.changeBaseName = function ()
 {
-	SQ.call(this.mParent.mSQHandle, 'changeBaseName', this.mChangeNameInput.getInputText());
+	SQ.call(this.mSQHandle, 'changeBaseName', this.mChangeNameInput.getInputText());
 };

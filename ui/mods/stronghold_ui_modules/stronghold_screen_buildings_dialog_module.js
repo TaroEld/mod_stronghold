@@ -128,10 +128,10 @@ StrongholdScreenBuildingsDialogModule.prototype.switchActiveBuilding = function(
 
 StrongholdScreenBuildingsDialogModule.prototype.addBuilding = function ()
 {
-    SQ.call(this.mParent.mSQHandle, 'addBuilding', [this.mActiveBuilding.Path, this.mActiveBuilding.Cost]);
+	SQ.call(this.mSQHandle, 'addBuilding', [this.mActiveBuilding.Path, this.mActiveBuilding.Cost])
 };
 
 StrongholdScreenBuildingsDialogModule.prototype.removeBuilding = function ()
 {
-    SQ.call(this.mParent.mSQHandle, 'removeBuilding', this.mActiveBuilding.ID);
+    SQ.call(this.mSQHandle, 'removeBuilding', this.mActiveBuilding.ID);
 };

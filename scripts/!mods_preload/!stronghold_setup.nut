@@ -18,6 +18,6 @@
 	::mods_registerCSS("mod_stronghold.css");
 	::mods_registerCSS("stronghold_screen.css");
 	::Stronghold.StrongholdScreen <- this.new("scripts/ui/screens/stronghold/stronghold_screen");
-	
+	::MSU.UI.registerConnection(::Stronghold.StrongholdScreen);
 	this.include(::Stronghold.ID + "/load.nut")
 });
