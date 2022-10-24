@@ -48,6 +48,9 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 			if (settlement.isMilitary() || this.isKindOf(settlement, "city_state"))
 				settlementFaction = settlement.getOwner();
 
+			if (settlementFaction == null)
+				continue;
+
 			if (!settlementFaction.isAlliedWith(playerFaction.getID()))
 				continue;
 
