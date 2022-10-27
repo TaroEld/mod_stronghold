@@ -374,23 +374,29 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		local allSettlements = []
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Goblins).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Orcs).getSettlements())
-		if(this.Const.DLC.Wildmen) allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Barbarians).getSettlements())
-		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.OrientalBandits).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Zombies).getSettlements())
 		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse)){
 			if(noble.getPlayerRelation() < 70 ) allSettlements.extend(noble.getSettlements())
-			
+
 		}
-		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.OrientalCityState)){
-			if(noble.getPlayerRelation() < 70 ) allSettlements.extend(noble.getSettlements())
-			
+
+		if (this.Const.DLC.Wildmen)
+			allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Barbarians).getSettlements())
+
+		if (this.Const.DLC.Desert)
+		{
+			allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.OrientalBandits).getSettlements())
+			foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.OrientalCityState)){
+				if(noble.getPlayerRelation() < 70 ) allSettlements.extend(noble.getSettlements())
+
+			}
 		}
 		
 		local closest = 9999
 		local closest_settlement;
 		foreach (settlement in allSettlements)
 		{
-			if( settlement == null || this.m.Flags.has(settlement.getID())) continue
+			if( settlement == null || this.m.Flags.has(settlement.getID())) continue //skip locations that already attacked
 			if (playerBase.isIsolatedFromLocation(settlement)) continue;
 
 			local distance = settlement.getTile().getDistanceTo(tile)
@@ -402,7 +408,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			}
 		}
 		local closest_faction = closest_settlement.getOwner() ? closest_settlement.getOwner() : this.World.FactionManager.getFaction(closest_settlement.getFaction());
-		//some kinda bug makes distance be 0 sometimes, need to figure it out but until then set to 9999 if 0
 		local party;
 		local origin;
 		local factionTypes = {}
@@ -413,7 +418,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			Footprint = this.Const.World.FootprintsType.Goblins,
 			Noble = false
 		}
-		if(this.Const.DLC.Wildmen)
+		if (this.Const.DLC.Wildmen)
 		{
 			factionTypes[this.Const.FactionType.Barbarians] <- {
 				Name = "Barbarians",
@@ -422,13 +427,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 				Footprint = this.Const.World.FootprintsType.Barbarians,
 				Noble = false
 			}
-		}
-		factionTypes[this.Const.FactionType.OrientalBandits] <- {
-			Name = "Nomads",
-			Spawnlist = this.Const.World.Spawn.NomadDefenders,
-			Description = "A warband of nomads.",
-			Footprint = this.Const.World.FootprintsType.Nomads,
-			Noble = false
 		}
 		factionTypes[this.Const.FactionType.Orcs] <- {
 			Name = "Orc Marauders",
@@ -451,13 +449,25 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			Footprint = this.Const.World.FootprintsType.Nobles,
 			Noble = true
 		}
-		factionTypes[this.Const.FactionType.OrientalCityState] <- {
-			Name = "City State Army",
-			Spawnlist = this.Const.World.Spawn.Southern,
-			Description = "An army of city state soldiers.",
-			Footprint = this.Const.World.FootprintsType.CityState,
-			Noble = true
+
+		if (this.Const.DLC.Desert)
+		{
+			factionTypes[this.Const.FactionType.OrientalCityState] <- {
+				Name = "City State Army",
+				Spawnlist = this.Const.World.Spawn.Southern,
+				Description = "An army of city state soldiers.",
+				Footprint = this.Const.World.FootprintsType.CityState,
+				Noble = true
+			}
+			factionTypes[this.Const.FactionType.OrientalBandits] <- {
+				Name = "Nomads",
+				Spawnlist = this.Const.World.Spawn.NomadDefenders,
+				Description = "A warband of nomads.",
+				Footprint = this.Const.World.FootprintsType.Nomads,
+				Noble = false
+			}
 		}
+
 		local factionType = factionTypes[closest_faction.m.Type]
 		local party = closest_faction.stronghold_spawnEntity(closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
 		party.setDescription(factionType.Description);
