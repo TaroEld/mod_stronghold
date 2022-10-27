@@ -373,7 +373,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					Text = "You can tag along you lot.",
 					function getResult()
 					{
-						this.Stronghold.getPlayerFaction().m.Flags.set("Mercenaries", true);
 						this.Stronghold.getPlayerFaction().clearContracts()
 						this.World.Contracts.finishActiveContract();
 						return 0;
@@ -389,7 +388,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 								unit.fadeOutAndDie()
 							}
 						}
-						this.Contract.m.Home.m.Flags.set("Mercenaries", true);
 						this.Stronghold.getPlayerFaction().clearContracts()
 						this.World.Contracts.finishActiveContract();
 						return 0;
@@ -399,6 +397,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			],
 			function start()
 			{
+				this.Contract.setSuccessFlag();
 				this.List.push({
 					id = 10,
 					icon = "ui/events/event_134.png",
@@ -445,7 +444,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					Text = "Damnit!",
 					function getResult()
 					{
-						this.Contract.m.Home.m.Flags.set("Mercenaries", true);
 						this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).addPlayerRelationEx( -50, "Murdered their men to free condemned criminals")
 						this.World.Contracts.finishActiveContract();
 						return 0;
@@ -455,6 +453,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			],
 			function start()
 			{
+				this.Contract.setSuccessFlag();
 				this.List.push({
 					id = 10,
 					icon = "ui/events/event_134.png",
@@ -464,9 +463,12 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			}
 		});
 	}
-	
 
-	
+	function setSuccessFlag()
+	{
+		this.Stronghold.getPlayerFaction().m.Flags.set("Mercenaries", true);
+	}
+
 	function onPrepareVariables( _vars )
 	{
 	}
