@@ -3,7 +3,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	//many of the stronghold features are handled here
 	m = {
 		isPlayerBase = true,
-		IsUpgrading = false
+		IsUpgrading = false,
+		Stash = null,
 	},
 
 	function create()
@@ -20,6 +21,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.IsVisited = true;
 		this.m.Banner = this.World.Assets.getBannerID();
 		this.m.Buildings.resize(7, null);
+		this.m.Stash = ::new("scripts/items/stash_container");
+		this.m.Stash.resize(99);
 		this.defineName();
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_storage_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/tavern_building"), 5);
@@ -74,6 +77,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		::Math.seedRandom(this.Time.getRealTime());
 		this.World.State.getTownScreen().getMainDialogModule().loadRename();
 		return true;
+	}
+
+	function getStash()
+	{
+		return this.m.Stash;
 	}
 
 	function updateProducedItems()
