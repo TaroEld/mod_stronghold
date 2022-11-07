@@ -21,6 +21,34 @@ var ToggleScroll =
         Descending : -1,
     },
 };
+// Add a utility function to create a more customized list
+$.fn.createListWithCustomOption = function(_options, _classes,_withoutFrame)
+{
+    var result = $('<div class="ui-control list has-frame"/>');
+    if (_withoutFrame !== undefined && _withoutFrame === true)
+    {
+        result.removeClass('has-frame');
+    }
+
+    if (_classes !== undefined && _classes !== null && typeof(_classes) === 'string')
+    {
+        result.addClass(_classes);
+    }
+
+    var scrollContainer = $('<div class="scroll-container"/>');
+    result.append(scrollContainer);
+
+    this.append(result);
+
+    if (_options.delta === null || _options.delta === undefined)
+    {
+        _options.delta = 8;
+    }
+
+    // NOTE: create scrollbar (must be after the list was appended to the DOM!)
+    result.aciScrollBar(_options);
+    return result;
+};
 "use strict";
 var StrongholdScreenRosterDialogModule = function(_parent, _id)
 {
@@ -178,7 +206,12 @@ var StrongholdScreenRosterDialogModule = function(_parent, _id)
             Talent: null
         },
     };
-
+    this.mItemTypes = {
+    	"all" : 0,
+    	"weapon" : 1,
+    	"armor" : 2,
+    	"bag" : 3
+    }
 };
 
 StrongholdScreenRosterDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
@@ -253,7 +286,7 @@ StrongholdScreenRosterDialogModule.prototype.createDIV = function (_parentDiv)
     panelLayout.append(layout);
     this.mStripAllButton = layout.createImageButton(Path.GFX + 'ui/buttons/filter_all.png', function ()
     {
-        self.transferItemsToStash('all');
+        self.transferItemsToStash(self.mItemTypes.all);
     }, '', 3);
     this.mStripAllButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.strippingnaked' });
 
@@ -262,7 +295,7 @@ StrongholdScreenRosterDialogModule.prototype.createDIV = function (_parentDiv)
     panelLayout.append(layout);
     this.mStripWeaponButton = layout.createImageButton(Path.GFX + 'ui/icons/item_weapon.png', function ()
     {
-        self.transferItemsToStash('weapon');
+        self.transferItemsToStash(self.mItemTypes.weapon);
     }, '', 3);
     this.mStripWeaponButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.strippingweapon' });
 
@@ -271,7 +304,7 @@ StrongholdScreenRosterDialogModule.prototype.createDIV = function (_parentDiv)
     panelLayout.append(layout);
     this.mStripArmorButton = layout.createImageButton(Path.GFX + 'ui/icons/armor_body.png', function ()
     {
-        self.transferItemsToStash('armor');
+        self.transferItemsToStash(self.mItemTypes.armor);
     }, '', 3);
     this.mStripArmorButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.strippingarmor' });
 
@@ -280,7 +313,7 @@ StrongholdScreenRosterDialogModule.prototype.createDIV = function (_parentDiv)
     panelLayout.append(layout);
     this.mStripBagButton = layout.createImageButton(Path.GFX + 'ui/icons/bag.png', function ()
     {
-        self.transferItemsToStash('bag');
+        self.transferItemsToStash(self.mItemTypes.bag);
     }, '', 3);
     this.mStripBagButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.strippingbag' });
 
@@ -453,7 +486,7 @@ StrongholdScreenRosterDialogModule.prototype.loadFromData = function ()
     this.setBrotherSelected(0, ModRosterOwner.Player, true);
 };
 
-StrongholdPokebroPcDialogModule.prototype.toggleScrollShenanigan = function(_withSlideAnimation)
+StrongholdScreenRosterDialogModule.prototype.toggleScrollShenanigan = function(_withSlideAnimation)
 {
     if (this.mToggledType !== ToggleScroll.Type.Skills)
     {
@@ -1929,7 +1962,10 @@ StrongholdScreenRosterDialogModule.prototype.notifyBackendTransferItems = functi
 
 StrongholdScreenRosterDialogModule.prototype.notifyBackendCheckCanTransferItems = function (_brotherId, _type, _tag, _callback)
 {
-    SQ.call(this.mSQHandle, 'onCheckCanTransferItems', [_brotherId, _type, _tag], _callback);
+    SQ.call(this.mSQHandle, 'onCheckCanTransferItems', {
+    	"ID"  : _brotherId,
+    	"ItemType" : _type,
+    	"RosterTag" : _tag}, _callback);
 };
 
 StrongholdScreenRosterDialogModule.prototype.notifyBackendUpdateNameAndTitle = function (_brotherId, _name, _title, _tag, _callback)
@@ -1949,37 +1985,15 @@ StrongholdScreenRosterDialogModule.prototype.notifyBackendUpdateRosterPosition =
 
 StrongholdScreenRosterDialogModule.prototype.notifyBackendMoveAtoB = function (_id, _tagA, _pos, _tagB)
 {
-    SQ.call(this.mSQHandle, 'MoveAtoB', [ _id, _tagA, _pos, _tagB ]);
+    SQ.call(this.mSQHandle, 'MoveAtoB', {
+    	"ID" : _id,
+    	"OriginTag" : _tagA,
+    	"Position" : _pos,
+    	"DestinationTag" : _tagB
+    });
 };
 //----------------------------------------------------------------------------------------
 
 
-// Add a utility function to create a more customized list
-$.fn.createListWithCustomOption = function(_options, _classes,_withoutFrame)
- {
-    var result = $('<div class="ui-control list has-frame"/>');
-    if (_withoutFrame !== undefined && _withoutFrame === true)
-    {
-        result.removeClass('has-frame');
-    }
 
-    if (_classes !== undefined && _classes !== null && typeof(_classes) === 'string')
-    {
-        result.addClass(_classes);
-    }
-
-    var scrollContainer = $('<div class="scroll-container"/>');
-    result.append(scrollContainer);
-
-    this.append(result);
-
-    if (_options.delta === null || _options.delta === undefined)
-    {
-        _options.delta = 8;
-    }
-
-    // NOTE: create scrollbar (must be after the list was appended to the DOM!)
-    result.aciScrollBar(_options);
-    return result;
-};
 

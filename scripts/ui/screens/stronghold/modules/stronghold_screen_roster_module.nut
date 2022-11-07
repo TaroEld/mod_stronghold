@@ -1,5 +1,18 @@
 this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/stronghold/modules/stronghold_screen_module" , {
-	m = {},
+	m = {
+
+		ModRosterOwner =
+		{
+		    Stronghold = "roster.stronghold",
+		    Player = "roster.player"
+		}
+		ItemTypes = {
+			All = 		0,
+	    	Weapon = 	1,
+	    	Armor = 	2,
+	    	Bag = 		3
+		}
+	},
 
 	function isUsingSimplifiedRosterTooltip()
 	{
@@ -14,7 +27,7 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 		}
 		else
 		{
-			return this.getStrongholdRoster();
+			return this.getTown().getLocalRoster();
 		}
 	}
 
@@ -98,8 +111,16 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 	{
 		_ret.SimpleTooltip <- this.isUsingSimplifiedRosterTooltip();
 		_ret.PlayerRoster <- this.queryPlayerRosterInformation();
-		_ret.TownRoster <- this.queryTownRosterInformation();
+		_ret.TownRoster <- this.queryTownRosterInformation()
 		return _ret
+	}
+
+	function onCheckCanTransferItems(_data)
+	{
+		local bro = this.getBroWithTagAndID(_data.ID, _data.RosterTag);
+		local itemLen = bro.getItems().getAllItems().len();
+		local emptyStashSlots = this.World.Assets.getStash().getNumberOfEmptySlots();
+		return emptyStashSlots >= itemLen;
 	}
 
 	function onTransferItems()
@@ -159,5 +180,13 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 		return this.UIDataHelper.convertEntityToUIData(bro, null);
 	}
 
-
+	function MoveAtoB(_data)
+	{
+		local bro = this.getBroWithTagAndID(_data.ID, _data.OriginTag);
+		::logInfo(bro.getName())
+		local originRoster = this.getRosterWithTag(_data.OriginTag);
+		local destinationRoster = this.getRosterWithTag(_data.DestinationTag);
+		destinationRoster.add(bro);
+		originRoster.remove(bro);
+	}
 })
