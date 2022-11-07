@@ -23,6 +23,23 @@
 		}
 		return result
 	}
+	local strategic_queryUIItemTooltipData = o.strategic_queryUIItemTooltipData;
+	o.strategic_queryUIItemTooltipData = function(_entityId, _itemId, _itemOwner)
+	{
+		if (_itemOwner != "world-town-screen-shop-dialog-module.shop")
+			return strategic_queryUIItemTooltipData(_entityId, _itemId, _itemOwner);
+		if (!::Stronghold.StrongholdScreen.isVisible())
+			return strategic_queryUIItemTooltipData(_entityId, _itemId, _itemOwner);
+
+		local stash = ::Stronghold.StrongholdScreen.getTown().getStash();
+		local result = stash.getItemByInstanceID(_itemId);
+		local entity = _entityId != null ? this.Tactical.getEntityByID(_entityId) : null;
+
+		if (result != null)
+		{
+			return this.tactical_helper_addHintsToTooltip(null, entity, result.item, "world-town-screen-shop-dialog-module.stash", true);
+		}
+	}
 
 	local general_queryUIElementTooltipData = o.general_queryUIElementTooltipData
 	o.general_queryUIElementTooltipData = function( _entityId, _elementId, _elementOwner )
