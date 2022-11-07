@@ -16,6 +16,10 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 				Module = null,
 				Path = "locations_module",
 			},
+			StashModule = {
+				Module = null,
+				Path = "stash_module",
+			},
 			RosterModule = {
 				Module = null,
 				Path = "roster_module",
@@ -101,6 +105,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			UpgradeModule 		= {},
 			BuildingsModule 	= {},
 			LocationsModule 	= {},
+			StashModule 		= {},
 			RosterModule 		= {},
 		};
 		return ret
@@ -117,6 +122,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		this.getTypeUIData("UpgradeModule", ret);
 		this.getTypeUIData("BuildingsModule", ret);
 		this.getTypeUIData("LocationsModule", ret);
+		this.getTypeUIData("StashModule", ret);
 		this.getTypeUIData("RosterModule", ret);
 		return ret
 	}

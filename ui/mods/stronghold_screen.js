@@ -16,6 +16,11 @@ var StrongholdScreen = function ()
             "Button" : null,
             "Module" : null
         },
+        "StashModule" : {
+            "ButtonName" : "Stash",
+            "Button" : null,
+            "Module" : null
+        },
         "RosterModule" : {
             "ButtonName" : "Roster",
             "Button" : null,
