@@ -4,6 +4,7 @@ var StrongholdScreenModuleTemplate = function(_parent, _id)
 {
 	MSUUIScreen.call(this);
 	this.mParent = _parent;
+	this.mAssets = this.mParent.mAssets;
 	this.mID = _id;
 	// main div that can be shown or hidden
 	this.mContainer = null;
@@ -56,16 +57,33 @@ StrongholdScreenModuleTemplate.prototype.destroyDIV = function ()
 StrongholdScreenModuleTemplate.prototype.show = function ()
 {
 	this.mIsVisible = true;
-	var self = this;
+	this.notifyBackendOnShown();
 	this.mContainer.removeClass('display-none').addClass('display-block');
 	this.loadFromData()
 };
 
+StrongholdScreenModuleTemplate.prototype.notifyBackendOnShown = function ()
+{
+	if (this.mSQHandle !== null)
+	{
+		console.error("notifyBackendOnShown")
+		SQ.call(this.mSQHandle, 'onScreenShown');
+	}
+};
+
+StrongholdScreenModuleTemplate.prototype.notifyBackendOnHidden = function ()
+{
+	if (this.mSQHandle !== null)
+	{
+		console.error("notifyBackendOnHidden")
+		SQ.call(this.mSQHandle, 'onScreenHidden');
+	}
+};
 
 StrongholdScreenModuleTemplate.prototype.hide = function ()
 {
 	this.mIsVisible = false;
-	var self = this;
+	this.notifyBackendOnHidden();
 	this.mContainer.removeClass('display-block').addClass('display-none');
 };
 

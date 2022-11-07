@@ -140,6 +140,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			case "UpgradeModule":
 			case "BuildingsModule":
 			case "LocationsModule":
+			case "StashModule":
 			case "RosterModule":
 				return this.getModule(_typeID).getUIData(_ret[_typeID]);
 			default:

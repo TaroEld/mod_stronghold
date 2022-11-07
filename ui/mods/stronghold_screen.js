@@ -52,7 +52,7 @@ var StrongholdScreen = function ()
         "mBrothersAsset"     : null,
         "mRosterAsset"       : null,
         "mBuildingAsset"     : null,
-        "mLocationAsset"     : null
+        "mLocationAsset"     : null,
     }
     this.mData = null;
     //left side tab container
@@ -124,6 +124,7 @@ StrongholdScreen.prototype.createModules = function ()
 {
     this.Modules["MainModule"].Module = new StrongholdScreenMainDialogModule(this, "MainModule");
     this.Modules["VisualsModule"].Module = new StrongholdScreenVisualsDialogModule(this, "VisualsModule");
+    this.Modules["StashModule"].Module = new StrongholdScreenStashDialogModule(this, "StashModule");
     this.Modules["RosterModule"].Module = new StrongholdScreenRosterDialogModule(this, "RosterModule");
     this.Modules["BuildingsModule"].Module = new StrongholdScreenBuildingsDialogModule(this, "BuildingsModule");
     this.Modules["LocationsModule"].Module = new StrongholdScreenLocationsDialogModule(this, "LocationsModule");
