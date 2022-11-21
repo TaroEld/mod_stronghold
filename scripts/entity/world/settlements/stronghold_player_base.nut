@@ -204,9 +204,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		foreach (unit in this.Stronghold.getPlayerFaction().m.Units)
 		{
-			unit.fadeOutAndDie()
+			if (unit.getFlags().get("Stronghold_Base_ID") == this.getID()){
+				unit.fadeOutAndDie();
+			}
 		}
-		
+
 		this.spawnFireAndSmoke(this.getTile().Pos)
 		foreach (location in this.m.AttachedLocations)
 		{
@@ -214,6 +216,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			location.die()
 		}
 		this.m.IsAlive = false;
+		this.Stronghold.getPlayerFaction().removeSettlement(this);
 		this.fadeAndDie();
 	}
 
