@@ -23,7 +23,7 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		local hasMoney = this.World.Assets.getMoney() >= build_cost
 		local isTileOccupied = this.World.State.getPlayer().getTile().IsOccupied
 		local hasContract = this.World.Contracts.getActiveContract() != null
-		local isCoastal = this.Stronghold.isOnTile(this.World.State.getPlayer().getTile(), [this.Const.World.TerrainType.Ocean, this.Const.World.TerrainType.Shore])
+		local isCoastal = ::Stronghold.IsCoastal(this.World.State.getPlayer().getTile());
 		local hasRenown = this.World.Assets.getBusinessReputation() > 500;
 
 		local isValid = hasRenown && hasInventoryUpgrade && hasMoney && !isTileOccupied && !hasContract

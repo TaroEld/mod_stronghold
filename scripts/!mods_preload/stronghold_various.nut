@@ -161,6 +161,116 @@ gt.Stronghold.setupVarious <- function()
 		return false
 	}
 
+	::Stronghold.IsCoastal <- function(_tile)
+	{
+		local isCoastal = false;
+		local mapSize = this.World.getMapSize();
+
+		for( local i = 0; i < 6; i = ++i )
+		{
+			if (!_tile.hasNextTile(i))
+			{
+			}
+			else if (_tile.getNextTile(i).Type == this.Const.World.TerrainType.Ocean || _tile.getNextTile(i).Type == this.Const.World.TerrainType.Shore)
+			{
+				isCoastal = true;
+				break;
+			}
+		}
+
+		if (isCoastal)
+		{
+			local function findAccessibleOceanEdge(_minX, _maxX, _minY, _maxY )
+			{
+				local myTile = _tile;
+				local navSettings = this.World.getNavigator().createSettings();
+				navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost_Ship;
+				local tiles = [];
+
+				for( local x = _minX; x < _maxX; x = ++x )
+				{
+					for( local y = _minY; y < _maxY; y = ++y )
+					{
+						if (!this.World.isValidTileSquare(x, y))
+						{
+						}
+						else
+						{
+							local tile = this.World.getTileSquare(x, y);
+
+							if (tile.Type != this.Const.World.TerrainType.Ocean || tile.IsOccupied)
+							{
+							}
+							else
+							{
+								local isDeepSea = true;
+
+								for( local i = 0; i != 6; i = ++i )
+								{
+									if (tile.hasNextTile(i) && tile.getNextTile(i).Type != this.Const.World.TerrainType.Ocean)
+									{
+										isDeepSea = false;
+										break;
+									}
+								}
+
+								if (!isDeepSea)
+								{
+								}
+								else
+								{
+									tiles.push(tile);
+								}
+							}
+						}
+					}
+				}
+
+				while (tiles.len() != 0)
+				{
+					local idx = this.Math.rand(0, tiles.len() - 1);
+					local tile = tiles[idx];
+					tiles.remove(idx);
+					local path = this.World.getNavigator().findPath(myTile, tile, navSettings, 0);
+
+					if (!path.isEmpty())
+					{
+						return tile;
+					}
+				}
+
+				return null;
+			}
+			local deepOceanTile = null;
+
+			if (deepOceanTile == null)
+			{
+				deepOceanTile = findAccessibleOceanEdge(0, mapSize.X, 0, 1);
+			}
+
+			if (deepOceanTile == null)
+			{
+				deepOceanTile = findAccessibleOceanEdge(0, 1, 0, mapSize.Y);
+			}
+
+			if (deepOceanTile == null)
+			{
+				deepOceanTile = findAccessibleOceanEdge(mapSize.X - 1, mapSize.X, 0, mapSize.Y);
+			}
+
+			if (deepOceanTile == null)
+			{
+				deepOceanTile = findAccessibleOceanEdge(0, mapSize.X, mapSize.Y - 1, mapSize.Y);
+			}
+
+			if (deepOceanTile == null)
+			{
+				isCoastal = false;
+			}
+		}
+		return isCoastal;
+	}
+
 	gt.Stronghold.buildMainBase <- function()
 	{
 		local priceMult = this.Stronghold.PriceMult
