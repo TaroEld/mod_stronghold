@@ -2,7 +2,6 @@
 local folders = 
 [
 	"/const",
-	"/systems",
 	"/hooks",
 ]
 foreach (folder in folders)
