@@ -1,0 +1,104 @@
+<brush name="gfx/stronghold_worldmap.png" version="17">
+
+<sprite id="stronghold_01u" offsetY="10" ic="FF313B3F" img="settlements\default\stronghold_01_upgrading.png"/>
+<sprite id="stronghold_02u" offsetY="10" ic="FF33434C" img="settlements\default\stronghold_02_upgrading.png"/>
+<sprite id="stronghold_03u" offsetY="15" ic="FF334246" img="settlements\default\stronghold_03_upgrading.png" bottom="112" top="-106" right="128" left="-127" height="224" width="255"/>
+
+<!-- <sprite id="world_luft_basic_01" offsetY="10" ic="FF313B3F" img="settlements\world_luft_basic_01.png"/>
+<sprite id="world_luft_basic_02" offsetY="10" ic="FF33434C" img="settlements\world_luft_basic_02.png"/>
+<sprite id="world_luft_basic_03" offsetY="15" ic="FF334246" img="settlements\world_luft_basic_03.png" bottom="112" top="-106" right="128" left="-127" height="224" width="255"/>
+<sprite id="world_luft_basic_01u" offsetY="10" ic="FF313B3F" img="settlements\world_luft_basic_01u.png"/>
+<sprite id="world_luft_basic_02u" offsetY="10" ic="FF33434C" img="settlements\world_luft_basic_02u.png"/> -->
+
+<sprite id="luft_basic_01" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_01.png" height="199" width="252"/>
+<sprite id="luft_basic_01u" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_01u.png" height="199" width="252"/>
+
+<sprite id="luft_basic_02" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_02.png" height="199" width="252"/>
+<sprite id="luft_basic_02_light" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_02_light.png" height="199" width="252"/>
+<sprite id="luft_basic_02u" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_02u.png" height="199" width="252"/>
+<sprite id="luft_basic_02u_light" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_02u_light.png" height="199" width="252"/>
+
+<sprite id="luft_basic_03" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_03.png" height="199" width="252"/>
+<sprite id="luft_basic_03_light" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_03_light.png" height="199" width="252"/>
+<sprite id="luft_basic_03u" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_03u.png" height="199" width="252"/>
+
+<sprite id="luft_basic_houses_01" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_houses_01.png"/>
+<sprite id="luft_basic_houses_02" offsetY="10" ic="FF313B3F" img="settlements\basic\luft_basic_houses_02.png"/>
+
+<sprite id="luft_basic_patrol" img="settlements\basic\luft_basic_patrol.png" ic="FF295956" offsetY="20" width="68" height="106" left="-17" right="23" top="-39" bottom="7" />
+
+
+
+<sprite id="luft_fort_01" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_01.png"/>
+<sprite id="luft_fort_01_light" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_01_light.png"/>
+<sprite id="luft_fort_01u" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_01u.png"/>
+
+<sprite id="luft_fort_02" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_02.png"/>
+<sprite id="luft_fort_02_light" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_02_light.png"/>
+<sprite id="luft_fort_02u" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_02u.png"/>
+<sprite id="luft_fort_02u_light" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_02u_light.png"/>
+
+<sprite id="luft_fort_03" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_03.png"/>
+<sprite id="luft_fort_03_light" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_03_light.png"/>
+<sprite id="luft_fort_03u" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_03u.png"/>
+<sprite id="luft_fort_03u_light" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_03u_light.png"/>
+
+<sprite id="luft_fort_houses_01" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_houses_01.png"/>
+<sprite id="luft_fort_houses_02" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_houses_02.png"/>
+<sprite id="luft_fort_houses_03" offsetY="10" ic="FF313B3F" img="settlements\fort\luft_fort_houses_03.png"/>
+
+<sprite id="luft_fort_patrol" img="settlements\fort\luft_fort_patrol.png" ic="FF295956" offsetY="20" width="135" height="148" left="-17" right="23" top="-39" bottom="7" />
+
+
+
+
+<sprite id="luft_fishing_01" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_01.png"/>
+<sprite id="luft_fishing_01_light" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_01_light.png"/>
+<sprite id="luft_fishing_01u" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_01u.png"/>
+
+<sprite id="luft_fishing_02" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_02.png"/>
+<sprite id="luft_fishing_02_light" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_02_light.png"/>
+<sprite id="luft_fishing_02u" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_02u.png"/>
+<sprite id="luft_fishing_02u_light" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_02u_light.png"/>
+
+<sprite id="luft_fishing_03" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_03.png"/>
+<sprite id="luft_fishing_03_light" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_03_light.png"/>
+<sprite id="luft_fishing_03u" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_03u.png"/>
+<sprite id="luft_fishing_03u_light" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_03u_light.png"/>
+
+<sprite id="luft_fishing_houses_01" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_houses_01.png"/>
+<sprite id="luft_fishing_houses_01_light" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_houses_01_light.png"/>
+<sprite id="luft_fishing_houses_02" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_houses_02.png"/>
+<sprite id="luft_fishing_houses_02_light" offsetY="10" ic="FF313B3F" img="settlements\fishing\luft_fishing_houses_02_light.png"/>
+
+<sprite id="luft_fishing_patrol" img="settlements\fishing\luft_fishing_patrol.png" ic="FF295956" offsetY="20" width="68" height="106" left="-17" right="23" top="-39" bottom="7" />
+
+
+
+<sprite id="luft_necro_01" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_01.png" height="199" width="252"/>
+<sprite id="luft_necro_01_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_01_light.png" height="199" width="252"/>
+<sprite id="luft_necro_01u" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_01u.png" height="199" width="252"/>
+
+<sprite id="luft_necro_02" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02.png" height="199" width="252"/>
+<sprite id="luft_necro_02_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02_light.png" height="199" width="252"/>
+<sprite id="luft_necro_02u" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02u.png" height="199" width="252"/>
+<sprite id="luft_necro_02u_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02u_light.png" height="199" width="252"/>
+
+<sprite id="luft_necro_03" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_03.png" height="199" width="252"/>
+<sprite id="luft_necro_03_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_03_light.png" height="199" width="252"/>
+<sprite id="luft_necro_03u" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_03u.png" height="199" width="252"/>
+<sprite id="luft_necro_03u_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_03u_light.png" height="199" width="252"/>
+
+<sprite id="luft_necro_houses_01" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_houses_01.png"/>
+<sprite id="luft_necro_houses_02" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_houses_02.png" />
+<sprite id="luft_necro_houses_03" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_houses_03.png" />
+
+<sprite id="luft_necro_patrol" img="settlements\necro\luft_necro_patrol.png" ic="FF295956" offsetY="20" width="68" height="106" left="-17" right="23" top="-39" bottom="7" />
+
+
+
+
+
+
+
+</brush>
