@@ -9,84 +9,33 @@
  *  @Description:	World Town Screen JS
  */
 
-.change-name-row
+.stronghold-module-dialog-container .main-module .change-name-row
 {
-    justify-content: center;
+    outline: 1px solid red;
+    height: 4.3rem;
+}
+.stronghold-module-dialog-container .main-module .change-base-name-input-container
+{
+	width: 30rem;
+	height: 4rem;
+	line-height: 3.6rem;
+}
+.stronghold-module-dialog-container .main-module .change-base-name-button-container
+{
+	width: 17.5rem;
+    height: 4.3rem;
 }
 
-.stronghold-main-content-container .row-base-sprite
-{
-    /*border: 2px solid green;*/
-}
-
-
-.stronghold-main-content-container .change-base-name-input-container
-{
-   height: 5rem;
-}
-
-.stronghold-main-content-container .change-base-name-button-container
-{
-    height: 5rem;
-    width: 17.5rem;
-    line-height: 3.0rem;
-
-    /*border: 2px solid blue;*/
-} 
-
-.stronghold-main-content-container .base-sprite-container
-{
-    width: 28.0rem;
-    display: flex;
-    flex-wrap: wrap;
-
-    /*border: 2px solid blue;*/
-} 
-.stronghold-main-content-container .base-sprite-container .l-button-container
-{
-    height:  4.1rem;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-} 
-.stronghold-main-content-container .base-sprite-container .l-button-container .switch-image
-{
-    height:  4.1rem;
-    width: 5.2rem ;
-    background-repeat: no-repeat;
-
-    /*border: 2px solid green;*/
-} 
-
-.stronghold-main-content-container .base-sprite-container .base-sprite-image
+.stronghold-module-dialog-container .main-module .base-sprite-container
 {
     width: 25.2rem;
     height: 19.9rem;
+    /*border: 2px solid blue;*/
+}
+.stronghold-module-dialog-container .main-module .other-description-container
+{
+	height: 19.9rem;
+	flex: 1;
 }
 
-.stronghold-main-content-container .base-details-container
-{
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
 
-    /*border: 2px solid red;*/
-} 
-
-.stronghold-main-content-container .base-details-container .sprite-name-label
-{
-    text-align: center;
-} 
-
-.stronghold-main-content-container .other-sprites-container
-{
-    justify-content: space-between;
-}
-
-.stronghold-main-content-container .other-sprites-container .apply-sprites-button
-{
-    align-self: center;
-    width: 17.5rem;
-    height: 4.3rem;
-} 
