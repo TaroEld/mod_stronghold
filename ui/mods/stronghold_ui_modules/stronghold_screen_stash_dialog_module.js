@@ -238,7 +238,7 @@ StrongholdScreenStashDialogModule.prototype.loadFromData = function (_data)
 	this.updateStashFreeSlotsLabel();
 };
 
-WorldTownScreenShopDialogModule.prototype.updateStashFreeSlotsLabel = function ()
+StrongholdScreenStashDialogModule.prototype.updateStashFreeSlotsLabel = function ()
 {
     var statistics = this.getStashStatistics();
     this.mStashSlotSizeLabel.html('' + this.mModuleData.StashSpaceUsed + '/' + this.mModuleData.StashSpaceMax);
@@ -364,7 +364,8 @@ StrongholdScreenStashDialogModule.prototype.updateItemPriceLabels = function (_i
 {
     return;
 };
-WorldTownScreenShopDialogModule.prototype.hasEnoughMoneyToBuy = function (_itemIdx)
+
+StrongholdScreenStashDialogModule.prototype.hasEnoughMoneyToBuy = function (_itemIdx)
 {
     return true;
 };
@@ -404,4 +405,3 @@ for (var x = 0; x < copyFunctionList.length; x++)
 	enumerable: false,
 	writable: true });
 }
-
