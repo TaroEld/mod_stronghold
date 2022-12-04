@@ -1,8 +1,10 @@
 
 "use strict";
-var StrongholdScreenBuildingsDialogModule = function(_parent, _id)
+var StrongholdScreenBuildingsDialogModule = function(_parent)
 {
-    StrongholdScreenModuleTemplate.call(this, _parent, _id);
+    StrongholdScreenModuleTemplate.call(this, _parent);
+    this.mID = "BuildingsModule"
+	this.mTitle = "Your Buildings"
     this.mActiveBuilding = null;
 };
 

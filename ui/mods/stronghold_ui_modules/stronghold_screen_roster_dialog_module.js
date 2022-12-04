@@ -50,9 +50,11 @@ $.fn.createListWithCustomOption = function(_options, _classes,_withoutFrame)
     return result;
 };
 "use strict";
-var StrongholdScreenRosterDialogModule = function(_parent, _id)
+var StrongholdScreenRosterDialogModule = function(_parent)
 {
-    StrongholdScreenModuleTemplate.call(this, _parent, _id);
+    StrongholdScreenModuleTemplate.call(this, _parent);
+    this.mID = "RosterModule"
+	this.mTitle = "Your Roster"
     this.mRoster = //for assets things
     {
         Brothers              : 0,

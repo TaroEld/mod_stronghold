@@ -1,8 +1,10 @@
 
 "use strict";
-var StrongholdScreenVisualsDialogModule = function(_parent, _id)
+var StrongholdScreenVisualsDialogModule = function(_parent)
 {
-	StrongholdScreenModuleTemplate.call(this, _parent, _id);
+	StrongholdScreenModuleTemplate.call(this, _parent);
+	this.mID = "VisualsModule"
+	this.mTitle = "Visuals"
     this.mCurrentBaseSprite = null;
     this.mBaseSprite = null;
     this.mBaseSpriteIndex = null;

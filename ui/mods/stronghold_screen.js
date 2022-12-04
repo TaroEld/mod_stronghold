@@ -119,18 +119,23 @@ StrongholdScreen.prototype.switchModule = function ( _module )
     this.mActiveButton = this.getModuleObject(_module).Button;
     this.mActiveButton.enableButton(false);
     this.mActiveModule.show();
-    this.mTitle.html(this.mActiveModule.mTitle)
+    this.updateTitle(this.mActiveModule.mTitle);
+};
+
+StrongholdScreen.prototype.updateTitle = function ( _titleText )
+{
+    this.mTitle.text(_titleText);
 };
 
 StrongholdScreen.prototype.createModules = function ()
 {
-    this.Modules["MainModule"].Module = new StrongholdScreenMainDialogModule(this, "MainModule");
-    this.Modules["VisualsModule"].Module = new StrongholdScreenVisualsDialogModule(this, "VisualsModule");
-    this.Modules["StashModule"].Module = new StrongholdScreenStashDialogModule(this, "StashModule");
-    this.Modules["RosterModule"].Module = new StrongholdScreenRosterDialogModule(this, "RosterModule");
-    this.Modules["BuildingsModule"].Module = new StrongholdScreenBuildingsDialogModule(this, "BuildingsModule");
-    this.Modules["LocationsModule"].Module = new StrongholdScreenLocationsDialogModule(this, "LocationsModule");
-    this.Modules["UpgradeModule"].Module = new StrongholdScreenUpgradeDialogModule(this, "UpgradeModule");
+    this.Modules["MainModule"].Module = new StrongholdScreenMainDialogModule(this);
+    this.Modules["VisualsModule"].Module = new StrongholdScreenVisualsDialogModule(this);
+    this.Modules["StashModule"].Module = new StrongholdScreenStashDialogModule(this);
+    this.Modules["RosterModule"].Module = new StrongholdScreenRosterDialogModule(this);
+    this.Modules["BuildingsModule"].Module = new StrongholdScreenBuildingsDialogModule(this);
+    this.Modules["LocationsModule"].Module = new StrongholdScreenLocationsDialogModule(this);
+    this.Modules["UpgradeModule"].Module = new StrongholdScreenUpgradeDialogModule(this);
 };
 
 StrongholdScreen.prototype.show = function (_data)

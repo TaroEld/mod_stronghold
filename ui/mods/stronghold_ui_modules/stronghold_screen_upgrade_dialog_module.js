@@ -1,8 +1,10 @@
 
 "use strict";
-var StrongholdScreenUpgradeDialogModule = function(_parent, _id)
+var StrongholdScreenUpgradeDialogModule = function(_parent)
 {
-    StrongholdScreenModuleTemplate.call(this, _parent, _id);
+    StrongholdScreenModuleTemplate.call(this, _parent);
+    this.mID = "UpgradeModule";
+    this.mTitle = "Upgrade your base";
     this.mBaseSprite = null;
     this.mBaseSpriteIndex = null;
     this.mTitleTextContainer = null;

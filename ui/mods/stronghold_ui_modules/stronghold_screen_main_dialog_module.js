@@ -1,8 +1,10 @@
 
 "use strict";
-var StrongholdScreenMainDialogModule = function(_parent, _id)
+var StrongholdScreenMainDialogModule = function(_parent)
 {
-    StrongholdScreenModuleTemplate.call(this, _parent, _id);
+    StrongholdScreenModuleTemplate.call(this, _parent);
+    this.mID = "MainModule";
+    this.mTitle = "Your Base"
 };
 
 StrongholdScreenMainDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);

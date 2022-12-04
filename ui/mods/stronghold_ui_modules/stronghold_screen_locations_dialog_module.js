@@ -1,9 +1,10 @@
 
 "use strict";
-var StrongholdScreenLocationsDialogModule = function(_parent, _id)
+var StrongholdScreenLocationsDialogModule = function(_parent)
 {
-    StrongholdScreenModuleTemplate.call(this, _parent, _id);
-    this.mTitle = "Locations";
+    StrongholdScreenModuleTemplate.call(this, _parent);
+    this.mID = "LocationsModule"
+	this.mTitle = "Your Locations"
     this.mActiveLocation = null;
 };
 

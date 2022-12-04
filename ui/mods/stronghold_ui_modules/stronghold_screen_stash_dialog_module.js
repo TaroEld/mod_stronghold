@@ -1,7 +1,9 @@
 "use strict";
-var StrongholdScreenStashDialogModule = function(_parent, _id)
+var StrongholdScreenStashDialogModule = function(_parent)
 {
-	StrongholdScreenModuleTemplate.call(this, _parent, _id);
+	StrongholdScreenModuleTemplate.call(this, _parent);
+	this.mID = "StashModule"
+	this.mTitle = "Your Stash"
 	this.mActiveBuilding = null;
 	    // event listener
     this.mEventListener = null;
