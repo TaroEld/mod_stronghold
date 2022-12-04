@@ -18,47 +18,44 @@ StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
     StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     this.mContentContainer.addClass("main-module");
     var self = this;    
-
-    // Top row: Base image, base name and change, upgrading?
-    this.mDescriptionRow = this.mContentContainer.appendRow(null, "gold-line-bottom description-row")
-
-
-    this.mBaseSpriteContainer = $('<div class="base-sprite-container"/>');
-    this.mDescriptionRow.append(this.mBaseSpriteContainer);
-    this.mBaseSpriteImage = $('<img class="base-sprite-image"/>');
-    this.mBaseSpriteContainer.append(this.mBaseSpriteImage);
-
-    this.mOtherDescriptionContainer = $('<div class="other-description-container"/>');
-    this.mDescriptionRow.append(this.mOtherDescriptionContainer);
-    this.mChangeNameContainer = this.mOtherDescriptionContainer.appendRow(null, "gold-line-bottom change-name-row")
-    var inputLayout = $('<div class="change-base-name-input-container"/>');
-    this.mChangeNameInput = inputLayout.createInput("", 0, 200, 1, null, 'title-font-big font-bold font-color-brother-name', function (_input)
+    this.mContentContainer.load("mods/stronghold_ui_modules/stronghold_screen_main_dialog_module.html", function()
 	{
-		self.mChangeNameButton.click()
+	    self.mBaseSpriteImage = $('#base-sprite-image');
+	    self.mChangeNameInput = $('#change-base-name-input-container').createInput("", 0, 200, 1, null, 'title-font-big font-bold font-color-brother-name', function (_input)
+		{
+			self.mChangeNameButton.click()
+		});
+		self.mChangeNameButton = $('#change-base-name-button-container').createTextButton("Change Name", function(){
+	    	self.changeBaseName();
+	    }, '', 1)
+
+
+	    self.addAssetRow($(this), "Local Roster", "");
+		self.addAssetRow($(this), "Local Stash", "");
+		self.addAssetRow($(this), "Local Recruits", "");
 	});
-
-	var buttonLayout = $('<div class="change-base-name-button-container"/>');
-    this.mChangeNameButton = buttonLayout.createTextButton("Change Name", function(){
-    	self.changeBaseName();
-    }, '', 1)
-    this.mChangeNameContainer.append(inputLayout)
-    this.mChangeNameContainer.append(buttonLayout)
-
-    // Bottom row: Assets
-    	// Stash items / Stash max
-    	// Roster bros / roster max
-    	// Locations
-    	// Buildings
-
 };
+
+StrongholdScreenMainDialogModule.prototype.addAssetRow = function(_parent, _name, _imgsrc)
+{
+	var ret = $('<div class="main-module-asset-row"/>');
+	var name = $('<div class="title-font-big font-bold font-color-brother-name main-module-asset-name"/>');
+	ret.append(name);
+	name.html(_name);
+	var img = $('<img class="main-module-asset-img">');
+	img.src = _imgsrc;
+	ret.append(img);
+	_parent.append(ret);
+	return ret;
+}
 
 StrongholdScreenMainDialogModule.prototype.loadFromData = function()
 {
+	this.mTitle = this.mData.TownAssets.Name;
+	this.mParent.updateTitle(this.mTitle);
 	this.mChangeNameInput.setInputText(this.mData.TownAssets.Name);
 	var baseSprite = this.mData.TownAssets.SpriteName;
-	var currentSprite = StrongholdConst.Sprites[baseSprite].MainSprites[this.mData.TownAssets.Size];
-	console.error(currentSprite)
-
+	var currentSprite = StrongholdConst.Sprites[baseSprite].MainSprites[this.mData.TownAssets.Size -1];
     this.mBaseSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentSprite + ".png");
 }
 
