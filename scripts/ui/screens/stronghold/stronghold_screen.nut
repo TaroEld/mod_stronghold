@@ -215,4 +215,10 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			_type = [_type];
 		this.m.JSHandle.asyncCall("updateData",  [_type, this.getUIData(_type)]);
 	}
+
+	function onLeaveButtonPressed()
+	{
+		this.World.State.m.MenuStack.pop();
+	}
+
 });

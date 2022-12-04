@@ -197,9 +197,15 @@ StrongholdScreen.prototype.createDIV = function (_parentDiv)
 
     this.mFooter = $('<div class="footer"/>');
     this.mDialogContainer.append(this.mFooter);
+    var layout = $('<div class="l-leave-button"/>');
+    this.mFooter.append(layout);
+    this.mLeaveButton = layout.createTextButton("Leave", $.proxy(function()
+	{
+        this.onLeaveButtonPressed();
+    }, this), '', 1);
 
     this.createModuleOptionsButtons();
-    this.createAssetDIVs();
+
 }
 
 StrongholdScreen.prototype.createAssetDIV = function (_parentDiv, _imagePath, _classExtra)
@@ -296,5 +302,10 @@ StrongholdScreen.prototype.loadAssetsData = function()
 	this.mAssets.loadFromData(this.mData['Assets']);
 	this.mAssetValues = this.mData['Assets'];
 }
+
+StrongholdScreen.prototype.onLeaveButtonPressed = function()
+{
+	SQ.call(this.mSQHandle, 'onLeaveButtonPressed');
 }
+
 registerScreen("StrongholdScreen", new StrongholdScreen());
