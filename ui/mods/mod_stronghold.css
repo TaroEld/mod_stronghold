@@ -9,11 +9,6 @@
     /*outline: 2px solid purple;*/
 }
 
-.no-wrap
-{
-    flex-wrap: nowrap;
-}
-
 .sub-title
 {
     width: 100%;
