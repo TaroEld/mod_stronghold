@@ -38,7 +38,7 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 		this.World.Assets.addMoney(-cost)
 		local building = this.new("scripts/entity/world/settlements/buildings/" + _data[0]);
 		this.getTown().addBuilding(building);
-		this.updateData(["TownAssets", "PlayerAssets", "BuildingsModule"]);
+		this.updateData(["TownAssets", "Assets", "BuildingsModule"]);
 	}
 
 	function removeBuilding(_data)

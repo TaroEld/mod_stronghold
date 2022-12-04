@@ -97,7 +97,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	function getUIDataObject()
 	{
 		local ret = {
-			PlayerAssets 		= {},
+			Assets 				= {},
 			TownAssets 			= {},
 			UpgradeRequirements = {},
 			MainModule 			= {},
@@ -115,7 +115,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		local ret = this.getUIDataObject();
 
-		this.getTypeUIData("PlayerAssets", ret);
+		this.getTypeUIData("Assets", ret);
 		this.getTypeUIData("TownAssets", ret);
 		this.getTypeUIData("MainModule", ret);
 		this.getTypeUIData("VisualsModule", ret);
@@ -131,8 +131,8 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		switch(_typeID)
 		{
-			case "PlayerAssets":
-				return this.getPlayerAssetsUIData(_ret.PlayerAssets);
+			case "Assets":
+				return this.queryAssetsInformation(_ret);
 			case "TownAssets":
 				return this.getTownUIData(_ret.TownAssets);
 			case "MainModule":
@@ -146,6 +146,12 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			default:
 				this.logError("No such UI data! " + _typeID)
 		}
+	}
+
+	function queryAssetsInformation(_ret)
+	{
+		_ret.Assets = this.UIDataHelper.convertAssetsInformationToUIData();
+		return _ret;
 	}
 
 	function getUIData(_types)

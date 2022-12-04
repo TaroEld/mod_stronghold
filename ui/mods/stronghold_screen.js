@@ -42,18 +42,20 @@ var StrongholdScreen = function ()
             "Module" : null
         },
 	}
-    this.mAssetContainer = null;
-    this.mAssets = {
-        "mMoneyAsset"        : null,
-        "mFoodAsset"         : null,
-        "mAmmoAsset"         : null,
-        "mSuppliesAsset"     : null,
-        "mMedicineAsset"     : null,
-        "mBrothersAsset"     : null,
-        "mRosterAsset"       : null,
-        "mBuildingAsset"     : null,
-        "mLocationAsset"     : null,
-    }
+	this.mAssetValues = null;
+	this.mAssets = new WorldTownScreenAssets(this);
+    // this.mAssetContainer = null;
+    // this.mAssets = {
+    //     "mMoneyAsset"        : null,
+    //     "mFoodAsset"         : null,
+    //     "mAmmoAsset"         : null,
+    //     "mSuppliesAsset"     : null,
+    //     "mMedicineAsset"     : null,
+    //     "mBrothersAsset"     : null,
+    //     "mRosterAsset"       : null,
+    //     "mBuildingAsset"     : null,
+    //     "mLocationAsset"     : null,
+    // }
     this.mData = null;
     //left side tab container
     this.mModuleOptionsContainer = null;
@@ -183,6 +185,9 @@ StrongholdScreen.prototype.createDIV = function (_parentDiv)
 
     this.mAssetContainer = $('<div class="asset-container"/>');
     this.mDialogContainer.append(this.mAssetContainer);
+    this.mAssets.createDIV(this.mAssetContainer);
+    this.mAssetContainer.find(".is-brothers").remove();
+    this.mAssets.bindTooltips();
 
     this.mModuleOptionsContainer = $('<div class="vertical-tab-container"/>');
     this.mDialogContainer.append(this.mModuleOptionsContainer);
@@ -249,7 +254,6 @@ StrongholdScreen.prototype.loadFromData = function(_data)
 {
     var self = this;
     this.mData = _data;
-    this.mTitle.html(this.mData.Name)
     this.loadAssetsData();
     this.loadModuleData()
 }
@@ -289,22 +293,8 @@ StrongholdScreen.prototype.updateData = function(_data)
 
 StrongholdScreen.prototype.loadAssetsData = function()
 {
-    var self = this;
-    var playerAssets = this.mData['PlayerAssets']
-    var townAssets = this.mData['TownAssets']
-    Object.keys(this.mAssets).forEach(function(_key){
-        var assets;
-        if (_key in playerAssets) assets = playerAssets;
-        else if (_key in townAssets) assets = townAssets;
-        else return
-        self.mAssets[_key].data("value", assets[_key]);
-        var label = self.mAssets[_key].find('.label:first');
-        var labelText = assets[_key]
-        if(_key + "Max" in assets)
-        {
-            labelText += " / " + assets[_key + "Max"] 
-        }
-        label.html(labelText)
-    })
+	this.mAssets.loadFromData(this.mData['Assets']);
+	this.mAssetValues = this.mData['Assets'];
+}
 }
 registerScreen("StrongholdScreen", new StrongholdScreen());

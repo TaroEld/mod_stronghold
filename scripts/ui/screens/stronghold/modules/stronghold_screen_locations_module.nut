@@ -60,12 +60,12 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 		]
 		home.buildAttachedLocation(1, script, validTerrain, [], 2)
 		home.buildRoad(home.m.AttachedLocations[home.m.AttachedLocations.len()-1])
-		this.updateData(["TownAssets", "PlayerAssets", "LocationsModule"]);
+		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
 	}
 
 	function removeLocation(_data)
 	{
 		this.getTown().removeLocation(_data);
-		this.updateData(["TownAssets", "PlayerAssets", "LocationsModule"]);
+		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
 	}
 })
