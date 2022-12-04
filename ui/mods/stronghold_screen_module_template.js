@@ -1,11 +1,10 @@
 
 "use strict";
-var StrongholdScreenModuleTemplate = function(_parent, _id)
+var StrongholdScreenModuleTemplate = function(_parent)
 {
 	MSUUIScreen.call(this);
 	this.mParent = _parent;
 	this.mAssets = this.mParent.mAssets;
-	this.mID = _id;
 	// main div that can be shown or hidden
 	this.mContainer = null;
 
