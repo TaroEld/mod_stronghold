@@ -210,7 +210,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 	function updateData(_type)
 	{
-		//either pass in a single type, like "VisualsModule", or an array of types, like  ["PlayerAssets", "TownAssets"]
+		// Either pass in a single type, like "VisualsModule", or an array of types, like  ["PlayerAssets", "TownAssets"]
 		if (typeof _type == "string")
 			_type = [_type];
 		this.m.JSHandle.asyncCall("updateData",  [_type, this.getUIData(_type)]);
