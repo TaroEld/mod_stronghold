@@ -293,7 +293,7 @@ StrongholdScreen.prototype.updateData = function(_data)
         var typeID = types[i];
         var typeValue = data[typeID]
         this.mData[typeID] = typeValue;
-        if(typeID == "PlayerAssets" || typeID == "TownAssets")
+        if(typeID == "Assets" || typeID == "TownAssets")
         {
             updateAssets = true;
         }
