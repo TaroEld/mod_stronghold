@@ -129,13 +129,10 @@ StrongholdScreen.prototype.updateTitle = function ( _titleText )
 
 StrongholdScreen.prototype.createModules = function ()
 {
-    this.Modules["MainModule"].Module = new StrongholdScreenMainDialogModule(this);
-    this.Modules["VisualsModule"].Module = new StrongholdScreenVisualsDialogModule(this);
-    this.Modules["StashModule"].Module = new StrongholdScreenStashDialogModule(this);
-    this.Modules["RosterModule"].Module = new StrongholdScreenRosterDialogModule(this);
-    this.Modules["BuildingsModule"].Module = new StrongholdScreenBuildingsDialogModule(this);
-    this.Modules["LocationsModule"].Module = new StrongholdScreenLocationsDialogModule(this);
-    this.Modules["UpgradeModule"].Module = new StrongholdScreenUpgradeDialogModule(this);
+	// Maybe I shouldn't be doing this
+	iterateObject(this.Modules, function(_key, _module){
+		_module.Module = new window["StrongholdScreen" + _key](this);
+	})
 };
 
 StrongholdScreen.prototype.show = function (_data)

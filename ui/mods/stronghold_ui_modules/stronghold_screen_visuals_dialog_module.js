@@ -1,6 +1,6 @@
 
 "use strict";
-var StrongholdScreenVisualsDialogModule = function(_parent)
+var StrongholdScreenVisualsModule = function(_parent)
 {
 	StrongholdScreenModuleTemplate.call(this, _parent);
 	this.mID = "VisualsModule"
@@ -11,13 +11,13 @@ var StrongholdScreenVisualsDialogModule = function(_parent)
     this.mBaseSpriteImages = [];
 };
 
-StrongholdScreenVisualsDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
-Object.defineProperty(StrongholdScreenVisualsDialogModule.prototype, 'constructor', {
-    value: StrongholdScreenVisualsDialogModule,
+StrongholdScreenVisualsModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
+Object.defineProperty(StrongholdScreenVisualsModule.prototype, 'constructor', {
+    value: StrongholdScreenVisualsModule,
     enumerable: false,
     writable: true });
 
-StrongholdScreenVisualsDialogModule.prototype.createDIV = function (_parentDiv)
+StrongholdScreenVisualsModule.prototype.createDIV = function (_parentDiv)
 {
 	StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     var self = this;
@@ -61,12 +61,12 @@ StrongholdScreenVisualsDialogModule.prototype.createDIV = function (_parentDiv)
     }, "apply-sprites-button", 1)
 };
 
-StrongholdScreenVisualsDialogModule.prototype.getSpriteIndex = function()
+StrongholdScreenVisualsModule.prototype.getSpriteIndex = function()
 {
 	return StrongholdConst.AllSprites.indexOf(this.mBaseSprite)
 }
 
-StrongholdScreenVisualsDialogModule.prototype.switchSpriteImage = function( _idx )
+StrongholdScreenVisualsModule.prototype.switchSpriteImage = function( _idx )
 {
 	var arrLen = StrongholdConst.AllSprites.length;
 	var newIdx = this.getSpriteIndex() + _idx;
@@ -76,7 +76,7 @@ StrongholdScreenVisualsDialogModule.prototype.switchSpriteImage = function( _idx
     this.setSpriteImage();
 }
 
-StrongholdScreenVisualsDialogModule.prototype.setSpriteImage = function()
+StrongholdScreenVisualsModule.prototype.setSpriteImage = function()
 {
 	var currentArr = StrongholdConst.Sprites[this.mBaseSprite];
 	var baseSize = this.mParent.mData.Size;
@@ -96,7 +96,7 @@ StrongholdScreenVisualsDialogModule.prototype.setSpriteImage = function()
 } 
 
 
-StrongholdScreenVisualsDialogModule.prototype.loadFromData = function(_data)
+StrongholdScreenVisualsModule.prototype.loadFromData = function(_data)
 {
 	this.mBaseSprite = this.mData.TownAssets.SpriteName;
     this.mCurrentBaseSprite = this.mData.TownAssets.SpriteName;
@@ -104,7 +104,7 @@ StrongholdScreenVisualsDialogModule.prototype.loadFromData = function(_data)
 	this.setSpriteImage()
 }
 
-StrongholdScreenVisualsDialogModule.prototype.changeSprites = function ()
+StrongholdScreenVisualsModule.prototype.changeSprites = function ()
 {
     SQ.call(this.mSQHandle, 'changeSprites', this.mBaseSprite);
 };

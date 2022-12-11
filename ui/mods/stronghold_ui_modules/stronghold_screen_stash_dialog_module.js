@@ -1,5 +1,5 @@
 "use strict";
-var StrongholdScreenStashDialogModule = function(_parent)
+var StrongholdScreenStashModule = function(_parent)
 {
 	StrongholdScreenModuleTemplate.call(this, _parent);
 	this.mID = "StashModule"
@@ -43,13 +43,13 @@ var StrongholdScreenStashDialogModule = function(_parent)
 	this.mIsVisible = false;
 };
 
-StrongholdScreenStashDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
-Object.defineProperty(StrongholdScreenStashDialogModule.prototype, 'constructor', {
-	value: StrongholdScreenStashDialogModule,
+StrongholdScreenStashModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
+Object.defineProperty(StrongholdScreenStashModule.prototype, 'constructor', {
+	value: StrongholdScreenStashModule,
 	enumerable: false,
 	writable: true });
 
-StrongholdScreenStashDialogModule.prototype.createDIV = function (_parentDiv)
+StrongholdScreenStashModule.prototype.createDIV = function (_parentDiv)
 {
 	StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
 	var self = this;
@@ -178,7 +178,7 @@ StrongholdScreenStashDialogModule.prototype.createDIV = function (_parentDiv)
     this.setupEventHandler();
 
 };
-StrongholdScreenStashDialogModule.prototype.destroyDIV = function ()
+StrongholdScreenStashModule.prototype.destroyDIV = function ()
 {
     this.mStashSlots = null;
     this.mShopSlots = null;
@@ -201,7 +201,7 @@ StrongholdScreenStashDialogModule.prototype.destroyDIV = function ()
 	//this.mAssets = null;
 };
 
-StrongholdScreenStashDialogModule.prototype.loadFromData = function (_data)
+StrongholdScreenStashModule.prototype.loadFromData = function (_data)
 {
     if(this.mModuleData === undefined || this.mModuleData === null || !(typeof(this.mModuleData) === 'object'))
 	{
@@ -238,7 +238,7 @@ StrongholdScreenStashDialogModule.prototype.loadFromData = function (_data)
 	this.updateStashFreeSlotsLabel();
 };
 
-StrongholdScreenStashDialogModule.prototype.updateStashFreeSlotsLabel = function ()
+StrongholdScreenStashModule.prototype.updateStashFreeSlotsLabel = function ()
 {
     var statistics = this.getStashStatistics();
     this.mStashSlotSizeLabel.html('' + this.mModuleData.StashSpaceUsed + '/' + this.mModuleData.StashSpaceMax);
@@ -256,7 +256,7 @@ StrongholdScreenStashDialogModule.prototype.updateStashFreeSlotsLabel = function
 };
 
 
-StrongholdScreenStashDialogModule.prototype.setupEventHandler = function ()
+StrongholdScreenStashModule.prototype.setupEventHandler = function ()
 {
     var self = this;
     var dropHandler = function (ev, dd)
@@ -320,7 +320,7 @@ StrongholdScreenStashDialogModule.prototype.setupEventHandler = function ()
     //this.mShopListContainer.drop('end', dropEndHandler);
 };
 
-StrongholdScreenStashDialogModule.prototype.swapItem = function (_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner)
+StrongholdScreenStashModule.prototype.swapItem = function (_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner)
 {
     var self = this;
     this.notifyBackendSwapItem(_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner, function (data)
@@ -349,23 +349,23 @@ StrongholdScreenStashDialogModule.prototype.swapItem = function (_sourceItemIdx,
     });
 };
 
-StrongholdScreenStashDialogModule.prototype.updateStashes = function (_data)
+StrongholdScreenStashModule.prototype.updateStashes = function (_data)
 {
 	this.updateStashList(_data.Stash);
 	this.updateShopList(_data.Shop);
     return;
 };
 
-StrongholdScreenStashDialogModule.prototype.updateItemPriceLabel = function (_slot, _item, _positiveColor)
+StrongholdScreenStashModule.prototype.updateItemPriceLabel = function (_slot, _item, _positiveColor)
 {
     return;
 };
-StrongholdScreenStashDialogModule.prototype.updateItemPriceLabels = function (_itemArray, _items, _allPositiveColors)
+StrongholdScreenStashModule.prototype.updateItemPriceLabels = function (_itemArray, _items, _allPositiveColors)
 {
     return;
 };
 
-StrongholdScreenStashDialogModule.prototype.hasEnoughMoneyToBuy = function (_itemIdx)
+StrongholdScreenStashModule.prototype.hasEnoughMoneyToBuy = function (_itemIdx)
 {
     return true;
 };
@@ -400,7 +400,7 @@ var copyFunctionList = [
 
 for (var x = 0; x < copyFunctionList.length; x++)
 {
-	Object.defineProperty(StrongholdScreenStashDialogModule.prototype, copyFunctionList[x], {
+	Object.defineProperty(StrongholdScreenStashModule.prototype, copyFunctionList[x], {
 	value: WorldTownScreenShopDialogModule.prototype[copyFunctionList[x]],
 	enumerable: false,
 	writable: true });

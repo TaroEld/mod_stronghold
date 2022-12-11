@@ -1,6 +1,6 @@
 
 "use strict";
-var StrongholdScreenBuildingsDialogModule = function(_parent)
+var StrongholdScreenBuildingsModule = function(_parent)
 {
     StrongholdScreenModuleTemplate.call(this, _parent);
     this.mID = "BuildingsModule"
@@ -8,13 +8,13 @@ var StrongholdScreenBuildingsDialogModule = function(_parent)
     this.mActiveBuilding = null;
 };
 
-StrongholdScreenBuildingsDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
-Object.defineProperty(StrongholdScreenBuildingsDialogModule.prototype, 'constructor', {
-    value: StrongholdScreenBuildingsDialogModule,
+StrongholdScreenBuildingsModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
+Object.defineProperty(StrongholdScreenBuildingsModule.prototype, 'constructor', {
+    value: StrongholdScreenBuildingsModule,
     enumerable: false,
     writable: true });
 
-StrongholdScreenBuildingsDialogModule.prototype.createDIV = function (_parentDiv)
+StrongholdScreenBuildingsModule.prototype.createDIV = function (_parentDiv)
 {
     StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     var self = this;
@@ -45,13 +45,13 @@ StrongholdScreenBuildingsDialogModule.prototype.createDIV = function (_parentDiv
     }, "remove-building-button display-none", 1)
 };
 
-StrongholdScreenBuildingsDialogModule.prototype.loadFromData = function()
+StrongholdScreenBuildingsModule.prototype.loadFromData = function()
 {
-    console.error("StrongholdScreenBuildingsDialogModule loading data")
+    console.error("StrongholdScreenBuildingsModule loading data")
     this.createBuildingContent();
 }
 
-StrongholdScreenBuildingsDialogModule.prototype.createBuildingContent = function ()
+StrongholdScreenBuildingsModule.prototype.createBuildingContent = function ()
 {
     var self = this;
     this.mBuildingsRow.empty();
@@ -79,7 +79,7 @@ StrongholdScreenBuildingsDialogModule.prototype.createBuildingContent = function
     this.switchActiveBuilding("Arena")
 };
 
-StrongholdScreenBuildingsDialogModule.prototype.switchActiveBuilding = function( _buildingID)
+StrongholdScreenBuildingsModule.prototype.switchActiveBuilding = function( _buildingID)
 {
     var self = this
     if(this.mActiveBuilding != null && this.mActiveBuilding != undefined)
@@ -128,12 +128,12 @@ StrongholdScreenBuildingsDialogModule.prototype.switchActiveBuilding = function(
     }
 }
 
-StrongholdScreenBuildingsDialogModule.prototype.addBuilding = function ()
+StrongholdScreenBuildingsModule.prototype.addBuilding = function ()
 {
 	SQ.call(this.mSQHandle, 'addBuilding', [this.mActiveBuilding.Path, this.mActiveBuilding.Cost])
 };
 
-StrongholdScreenBuildingsDialogModule.prototype.removeBuilding = function ()
+StrongholdScreenBuildingsModule.prototype.removeBuilding = function ()
 {
     SQ.call(this.mSQHandle, 'removeBuilding', this.mActiveBuilding.ID);
 };

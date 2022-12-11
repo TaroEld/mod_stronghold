@@ -50,7 +50,7 @@ $.fn.createListWithCustomOption = function(_options, _classes,_withoutFrame)
     return result;
 };
 "use strict";
-var StrongholdScreenRosterDialogModule = function(_parent)
+var StrongholdScreenRosterModule = function(_parent)
 {
     StrongholdScreenModuleTemplate.call(this, _parent);
     this.mID = "RosterModule"
@@ -216,13 +216,13 @@ var StrongholdScreenRosterDialogModule = function(_parent)
     }
 };
 
-StrongholdScreenRosterDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
-Object.defineProperty(StrongholdScreenRosterDialogModule.prototype, 'constructor', {
-    value: StrongholdScreenRosterDialogModule,
+StrongholdScreenRosterModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
+Object.defineProperty(StrongholdScreenRosterModule.prototype, 'constructor', {
+    value: StrongholdScreenRosterModule,
     enumerable: false,
     writable: true });
 
-StrongholdScreenRosterDialogModule.prototype.createDIV = function (_parentDiv)
+StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
 {
     StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     var self = this;
@@ -449,7 +449,7 @@ StrongholdScreenRosterDialogModule.prototype.createDIV = function (_parentDiv)
 
 };
 
-StrongholdScreenRosterDialogModule.prototype.loadFromData = function ()
+StrongholdScreenRosterModule.prototype.loadFromData = function ()
 {
 
 	// // stronghold
@@ -488,7 +488,7 @@ StrongholdScreenRosterDialogModule.prototype.loadFromData = function ()
     this.setBrotherSelected(0, ModRosterOwner.Player, true);
 };
 
-StrongholdScreenRosterDialogModule.prototype.toggleScrollShenanigan = function(_withSlideAnimation)
+StrongholdScreenRosterModule.prototype.toggleScrollShenanigan = function(_withSlideAnimation)
 {
     if (this.mToggledType !== ToggleScroll.Type.Skills)
     {
@@ -504,7 +504,7 @@ StrongholdScreenRosterDialogModule.prototype.toggleScrollShenanigan = function(_
     else if (this.mToggledType === ToggleScroll.Max)
         this.mToggledOrder = ToggleScroll.Order.Descending;
 };
-StrongholdScreenRosterDialogModule.prototype.hideScroll = function(_withSlideAnimation)
+StrongholdScreenRosterModule.prototype.hideScroll = function(_withSlideAnimation)
 {
     var self = this;
 
@@ -531,7 +531,7 @@ StrongholdScreenRosterDialogModule.prototype.hideScroll = function(_withSlideAni
         });
     }
 };
-StrongholdScreenRosterDialogModule.prototype.showScroll = function(_withSlideAnimation)
+StrongholdScreenRosterModule.prototype.showScroll = function(_withSlideAnimation)
 {
     var self = this;
 
@@ -589,7 +589,7 @@ StrongholdScreenRosterDialogModule.prototype.showScroll = function(_withSlideAni
 
 
 //- Skills Panel
-StrongholdScreenRosterDialogModule.prototype.addSkillsDIV = function (_parentDiv, _entityId, _data, _isSkill)
+StrongholdScreenRosterModule.prototype.addSkillsDIV = function (_parentDiv, _entityId, _data, _isSkill)
 {
     if (_data === undefined ||_data === null || !jQuery.isArray(_data))
     {
@@ -635,7 +635,7 @@ StrongholdScreenRosterDialogModule.prototype.addSkillsDIV = function (_parentDiv
 
 
 //- Popup Dialog stuffs
-StrongholdScreenRosterDialogModule.prototype.openRenamePopupDialog = function (_brotherId)
+StrongholdScreenRosterModule.prototype.openRenamePopupDialog = function (_brotherId)
 {
     var self = this;
     var data =
@@ -684,7 +684,7 @@ StrongholdScreenRosterDialogModule.prototype.openRenamePopupDialog = function (_
     var inputFields = this.mCurrentPopupDialog.findPopupDialogContentContainer().find('input');
     $(inputFields[0]).focus();
 };
-StrongholdScreenRosterDialogModule.prototype.createChangeNameAndTitleDialogContent = function (_dialog, _brother)
+StrongholdScreenRosterModule.prototype.createChangeNameAndTitleDialogContent = function (_dialog, _brother)
 {
     var data = _brother;
     var selectedBrother = CharacterScreenIdentifier.Entity.Character.Key in data ? data[CharacterScreenIdentifier.Entity.Character.Key] : null;
@@ -741,7 +741,7 @@ StrongholdScreenRosterDialogModule.prototype.createChangeNameAndTitleDialogConte
 
     return result;
 };
-StrongholdScreenRosterDialogModule.prototype.openDismissPopupDialog = function (_brotherId)
+StrongholdScreenRosterModule.prototype.openDismissPopupDialog = function (_brotherId)
 {
     var self = this;
     var data =
@@ -790,7 +790,7 @@ StrongholdScreenRosterDialogModule.prototype.openDismissPopupDialog = function (
 
     this.mCurrentPopupDialog.addPopupDialogContent(this.createDismissDialogContent(this.mCurrentPopupDialog, data.Brother));
 };
-StrongholdScreenRosterDialogModule.prototype.createDismissDialogContent = function (_dialog, _brother)
+StrongholdScreenRosterModule.prototype.createDismissDialogContent = function (_dialog, _brother)
 {
     var self = this;
     var data = _brother;
@@ -846,7 +846,7 @@ StrongholdScreenRosterDialogModule.prototype.createDismissDialogContent = functi
 
     return result;
 };
-StrongholdScreenRosterDialogModule.prototype.openTransferConfirmationPopupDialog = function (_data)
+StrongholdScreenRosterModule.prototype.openTransferConfirmationPopupDialog = function (_data)
 {
     var self = this;
 
@@ -870,7 +870,7 @@ StrongholdScreenRosterDialogModule.prototype.openTransferConfirmationPopupDialog
 
     this.mCurrentPopupDialog.addPopupDialogContent(this.createTransferConfirmationDialogContent(this.mCurrentPopupDialog, _data));
 };
-StrongholdScreenRosterDialogModule.prototype.createTransferConfirmationDialogContent = function (_dialog, _data)
+StrongholdScreenRosterModule.prototype.createTransferConfirmationDialogContent = function (_dialog, _data)
 {
     var self = this;
     var difference = _data['ItemsNum'] - _data['StashNum'];
@@ -885,7 +885,7 @@ StrongholdScreenRosterDialogModule.prototype.createTransferConfirmationDialogCon
 
     return result;
 };
-StrongholdScreenRosterDialogModule.prototype.openPerkPopupDialog = function (_brotherId)
+StrongholdScreenRosterModule.prototype.openPerkPopupDialog = function (_brotherId)
 {
     var self = this;
     var data =
@@ -925,7 +925,7 @@ StrongholdScreenRosterDialogModule.prototype.openPerkPopupDialog = function (_br
     this.mCurrentPopupDialog.findPopupDialogCancelButton().changeButtonText('Return');
     this.mCurrentPopupDialog.addPopupDialogContent(this.createPerkDialogContent(this.mCurrentPopupDialog, data.Brother));
 };
-StrongholdScreenRosterDialogModule.prototype.createPerkDialogContent = function(_definitions, _brother)
+StrongholdScreenRosterModule.prototype.createPerkDialogContent = function(_definitions, _brother)
 {
     var container = $('<div class="perk-tree-container"/>');
 
@@ -936,7 +936,7 @@ StrongholdScreenRosterDialogModule.prototype.createPerkDialogContent = function(
 
     return container;
 };
-StrongholdScreenRosterDialogModule.prototype.setupPerkTreeTooltips = function(_perkTree, _brotherId)
+StrongholdScreenRosterModule.prototype.setupPerkTreeTooltips = function(_perkTree, _brotherId)
 {
     for (var row = 0; row < _perkTree.length; ++row)
     {
@@ -948,7 +948,7 @@ StrongholdScreenRosterDialogModule.prototype.setupPerkTreeTooltips = function(_p
         }
     }
 };
-StrongholdScreenRosterDialogModule.prototype.initPerkTree = function (_perkTree, _perksUnlocked, _brother)
+StrongholdScreenRosterModule.prototype.initPerkTree = function (_perkTree, _perksUnlocked, _brother)
 {
     var perkPointsSpent = this.getBrotherPerkPointsSpent(_brother);
 
@@ -987,7 +987,7 @@ StrongholdScreenRosterDialogModule.prototype.initPerkTree = function (_perkTree,
         }
     }
 };
-StrongholdScreenRosterDialogModule.prototype.setupPerksEventHandlers = function(_perkTree)
+StrongholdScreenRosterModule.prototype.setupPerksEventHandlers = function(_perkTree)
 {
     var self = this;
 
@@ -1021,7 +1021,7 @@ StrongholdScreenRosterDialogModule.prototype.setupPerksEventHandlers = function(
         }
     }
 };
-StrongholdScreenRosterDialogModule.prototype.createPerkTreeDIV = function (_perkTree, _parentDiv)
+StrongholdScreenRosterModule.prototype.createPerkTreeDIV = function (_perkTree, _parentDiv)
 {
     this.mPerkTree = _perkTree;
     var self = this;
@@ -1066,7 +1066,7 @@ StrongholdScreenRosterDialogModule.prototype.createPerkTreeDIV = function (_perk
 
 
 //- Progress bars bah bah bah
-StrongholdScreenRosterDialogModule.prototype.createRowsDIV = function(_definitions, _parentDiv)
+StrongholdScreenRosterModule.prototype.createRowsDIV = function(_definitions, _parentDiv)
 {
     $.each(_definitions, function (_key, _value)
     {
@@ -1092,7 +1092,7 @@ StrongholdScreenRosterDialogModule.prototype.createRowsDIV = function(_definitio
         statsRowIconLayout.append(_value.Talent);
     });
 };
-StrongholdScreenRosterDialogModule.prototype.destroyRowsDIV = function(_definitions)
+StrongholdScreenRosterModule.prototype.destroyRowsDIV = function(_definitions)
 {
     $.each(_definitions, function (_key, _value)
     {
@@ -1105,7 +1105,7 @@ StrongholdScreenRosterDialogModule.prototype.destroyRowsDIV = function(_definiti
         _value.Row = null;
     });
 };
-StrongholdScreenRosterDialogModule.prototype.setProgressbarValue = function (_progressbarDiv, _data, _valueKey, _valueMaxKey, _labelKey)
+StrongholdScreenRosterModule.prototype.setProgressbarValue = function (_progressbarDiv, _data, _valueKey, _valueMaxKey, _labelKey)
 {
     if (_valueKey in _data && _data[_valueKey] !== null && _valueMaxKey in _data && _data[_valueMaxKey] !== null)
     {
@@ -1134,7 +1134,7 @@ StrongholdScreenRosterDialogModule.prototype.setProgressbarValue = function (_pr
         }
     }
 };
-StrongholdScreenRosterDialogModule.prototype.setTalentValue = function (_something, _data)
+StrongholdScreenRosterModule.prototype.setTalentValue = function (_something, _data)
 {
     _something.Talent.attr('src', Path.GFX + 'ui/icons/talent_' + _data + '.png');
     _something.Talent.css({ 'width': '3.6rem', 'height': '1.8rem' });
@@ -1143,7 +1143,7 @@ StrongholdScreenRosterDialogModule.prototype.setTalentValue = function (_somethi
 
 
 
-StrongholdScreenRosterDialogModule.prototype.getBrotherPerkPointsSpent = function (_brother)
+StrongholdScreenRosterModule.prototype.getBrotherPerkPointsSpent = function (_brother)
 {
     if (_brother === null || !(CharacterScreenIdentifier.Entity.Character.Key in _brother))
     {
@@ -1167,7 +1167,7 @@ StrongholdScreenRosterDialogModule.prototype.getBrotherPerkPointsSpent = functio
 
     return 0;
 };
-StrongholdScreenRosterDialogModule.prototype.getNumBrothers = function (_brothersList)
+StrongholdScreenRosterModule.prototype.getNumBrothers = function (_brothersList)
 {
     var num = 0;
 
@@ -1180,7 +1180,7 @@ StrongholdScreenRosterDialogModule.prototype.getNumBrothers = function (_brother
     return num;
 };
 
-StrongholdScreenRosterDialogModule.prototype.getIndexOfFirstEmptySlot = function (_slots)
+StrongholdScreenRosterModule.prototype.getIndexOfFirstEmptySlot = function (_slots)
 {
     for (var i = 0; i < _slots.length; i++)
     {
@@ -1191,7 +1191,7 @@ StrongholdScreenRosterDialogModule.prototype.getIndexOfFirstEmptySlot = function
     }
 }
 
-StrongholdScreenRosterDialogModule.prototype.setBrotherSelected = function (_rosterPosition, _rosterTag, _withoutNotify)
+StrongholdScreenRosterModule.prototype.setBrotherSelected = function (_rosterPosition, _rosterTag, _withoutNotify)
 {
     var brother = this.getBrotherByIndex(_rosterPosition, _rosterTag);
 
@@ -1212,7 +1212,7 @@ StrongholdScreenRosterDialogModule.prototype.setBrotherSelected = function (_ros
     }
 };
 
-StrongholdScreenRosterDialogModule.prototype.getBrotherByIndex = function (_index, _tag)
+StrongholdScreenRosterModule.prototype.getBrotherByIndex = function (_index, _tag)
 {
     if (_tag === ModRosterOwner.Player)
     {
@@ -1229,7 +1229,7 @@ StrongholdScreenRosterDialogModule.prototype.getBrotherByIndex = function (_inde
 };
 
 
-StrongholdScreenRosterDialogModule.prototype.getBrotherByID = function (_brotherId)
+StrongholdScreenRosterModule.prototype.getBrotherByID = function (_brotherId)
 {
     var data =
     {
@@ -1274,7 +1274,7 @@ StrongholdScreenRosterDialogModule.prototype.getBrotherByID = function (_brother
     return data;
 };
 
-StrongholdScreenRosterDialogModule.prototype.setBrotherSelectedByID = function (_brotherId)
+StrongholdScreenRosterModule.prototype.setBrotherSelectedByID = function (_brotherId)
 {
     var data = this.getBrotherByID(_brotherId);
 
@@ -1289,7 +1289,7 @@ StrongholdScreenRosterDialogModule.prototype.setBrotherSelectedByID = function (
 };
 
 
-StrongholdScreenRosterDialogModule.prototype.removeCurrentBrotherSlotSelection = function ()
+StrongholdScreenRosterModule.prototype.removeCurrentBrotherSlotSelection = function ()
 {
     this.mStronghold.ListScrollContainer.find('.is-selected').each(function (index, element)
     {
@@ -1304,7 +1304,7 @@ StrongholdScreenRosterDialogModule.prototype.removeCurrentBrotherSlotSelection =
 };
 
 
-StrongholdScreenRosterDialogModule.prototype.selectBrotherSlot = function (_brotherId)
+StrongholdScreenRosterModule.prototype.selectBrotherSlot = function (_brotherId)
 {
     var listScrollContainer = this.mSelectedBrother.Tag == ModRosterOwner.Player ? this.mPlayer.ListScrollContainer : this.mStronghold.ListScrollContainer;
     var slot = listScrollContainer.find('#slot-index_' + _brotherId + ':first');
@@ -1316,7 +1316,7 @@ StrongholdScreenRosterDialogModule.prototype.selectBrotherSlot = function (_brot
 
 
 // move brother to the other roster on right-click
-StrongholdScreenRosterDialogModule.prototype.quickMoveBrother = function (_source)
+StrongholdScreenRosterModule.prototype.quickMoveBrother = function (_source)
 {
     var _brother = _source.data('brother');
 
@@ -1373,7 +1373,7 @@ StrongholdScreenRosterDialogModule.prototype.quickMoveBrother = function (_sourc
 
 
 // swap the brother data so i don't have to update the whole roster
-StrongholdScreenRosterDialogModule.prototype.swapBrothers = function (_a, _parentA, _b, _parentB)
+StrongholdScreenRosterModule.prototype.swapBrothers = function (_a, _parentA, _b, _parentB)
 {
     var tmp = _parentA.BrothersList[_a];
     _parentA.BrothersList[_a] = _parentB.BrothersList[_b];
@@ -1381,7 +1381,7 @@ StrongholdScreenRosterDialogModule.prototype.swapBrothers = function (_a, _paren
 }
 
 
-StrongholdScreenRosterDialogModule.prototype.swapSlots = function (_a, _tagA, _b, _tagB)
+StrongholdScreenRosterModule.prototype.swapSlots = function (_a, _tagA, _b, _tagB)
 {
     var isDifferenceRoster = _tagA != _tagB;
     var parentA = _tagA == ModRosterOwner.Player ? this.mPlayer : this.mStronghold;
@@ -1475,7 +1475,7 @@ StrongholdScreenRosterDialogModule.prototype.swapSlots = function (_a, _tagA, _b
 
 
 // create empty slots
-StrongholdScreenRosterDialogModule.prototype.createBrotherSlots = function ( _parent , _tag )
+StrongholdScreenRosterModule.prototype.createBrotherSlots = function ( _parent , _tag )
 {
     var self = this;
     var isPlayer = _tag === ModRosterOwner.Player;
@@ -1548,7 +1548,7 @@ StrongholdScreenRosterDialogModule.prototype.createBrotherSlots = function ( _pa
     }
 };
 // add brother to empty slot
-StrongholdScreenRosterDialogModule.prototype.addBrotherSlotDIV = function(_parent, _data, _index, _tag)
+StrongholdScreenRosterModule.prototype.addBrotherSlotDIV = function(_parent, _data, _index, _tag)
 {
     var self = this;
     var parentDiv = _parent.Slots[_index];
@@ -1664,7 +1664,7 @@ StrongholdScreenRosterDialogModule.prototype.addBrotherSlotDIV = function(_paren
 };
 
 
-StrongholdScreenRosterDialogModule.prototype.onBrothersListLoaded = function (_parent, _tag)
+StrongholdScreenRosterModule.prototype.onBrothersListLoaded = function (_parent, _tag)
 {
     for(var i = 0; i != _parent.Slots.length; ++i)
     {
@@ -1694,7 +1694,7 @@ StrongholdScreenRosterDialogModule.prototype.onBrothersListLoaded = function (_p
 
 
 //- Update some shits
-StrongholdScreenRosterDialogModule.prototype.updateAssets = function (_data)
+StrongholdScreenRosterModule.prototype.updateAssets = function (_data)
 {
     var value = null;
     var maxValue = null;
@@ -1724,7 +1724,7 @@ StrongholdScreenRosterDialogModule.prototype.updateAssets = function (_data)
     }
 }
 
-StrongholdScreenRosterDialogModule.prototype.updateAssetValue = function (_container, _value, _valueMax, _valueDifference)
+StrongholdScreenRosterModule.prototype.updateAssetValue = function (_container, _value, _valueMax, _valueDifference)
 {
     var label = _container.find('.label:first');
 
@@ -1758,7 +1758,7 @@ StrongholdScreenRosterDialogModule.prototype.updateAssetValue = function (_conta
     }
 };
 // update a currently selected brother
-StrongholdScreenRosterDialogModule.prototype.updateSelectedBrother = function (_data)
+StrongholdScreenRosterModule.prototype.updateSelectedBrother = function (_data)
 {
     if (_data === undefined || _data === null || typeof (_data) !== 'object')
     {
@@ -1775,7 +1775,7 @@ StrongholdScreenRosterDialogModule.prototype.updateSelectedBrother = function (_
     this.addBrotherSlotDIV(parent, _data, index, tag);
     this.updateDetailsPanel(_data);
 }
-StrongholdScreenRosterDialogModule.prototype.updateDetailsPanel = function (_brother)
+StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
 {
     if (_brother === null)
     {
@@ -1825,7 +1825,7 @@ StrongholdScreenRosterDialogModule.prototype.updateDetailsPanel = function (_bro
     }
 };
 
-StrongholdScreenRosterDialogModule.prototype.setPortraitImage = function(_imagePath)
+StrongholdScreenRosterModule.prototype.setPortraitImage = function(_imagePath)
 {
     if (this.mPortrait.Image.attr('src') == Path.PROCEDURAL + _imagePath)
         return;
@@ -1834,7 +1834,7 @@ StrongholdScreenRosterDialogModule.prototype.setPortraitImage = function(_imageP
     this.mPortrait.Image.attr('src', Path.PROCEDURAL + _imagePath);
 };
 
-StrongholdScreenRosterDialogModule.prototype.addSkills = function (_parentDiv, _brotherId, _data, _isSkill)
+StrongholdScreenRosterModule.prototype.addSkills = function (_parentDiv, _brotherId, _data, _isSkill)
 {
     var self = this;
 
@@ -1848,7 +1848,7 @@ StrongholdScreenRosterDialogModule.prototype.addSkills = function (_parentDiv, _
     });
 };
 
-StrongholdScreenRosterDialogModule.prototype.setProgressbarValues = function (_data)
+StrongholdScreenRosterModule.prototype.setProgressbarValues = function (_data)
 {
     this.setProgressbarValue(this.mStatsRows.Hitpoints.Progressbar, _data, ProgressbarValueIdentifier.Hitpoints, ProgressbarValueIdentifier.HitpointsMax, ProgressbarValueIdentifier.HitpointsLabel);
     this.setProgressbarValue(this.mStatsRows.Fatigue.Progressbar, _data, ProgressbarValueIdentifier.Fatigue, ProgressbarValueIdentifier.FatigueMax, ProgressbarValueIdentifier.FatigueLabel);
@@ -1869,7 +1869,7 @@ StrongholdScreenRosterDialogModule.prototype.setProgressbarValues = function (_d
     this.setTalentValue(this.mStatsRows.RangeDefense, _data.rangeDefenseTalent);
 };
 
-StrongholdScreenRosterDialogModule.prototype.updateNameAndTitle = function(_dialog, _brotherId, _tag)
+StrongholdScreenRosterModule.prototype.updateNameAndTitle = function(_dialog, _brotherId, _tag)
 {
     var self = this;
     var contentContainer = _dialog.findPopupDialogContentContainer();
@@ -1909,7 +1909,7 @@ StrongholdScreenRosterDialogModule.prototype.updateNameAndTitle = function(_dial
 };
 
 
-StrongholdScreenRosterDialogModule.prototype.transferItemsToStash = function ( _type )
+StrongholdScreenRosterModule.prototype.transferItemsToStash = function ( _type )
 {
     var self = this;
     var brother = this.getBrotherByIndex(this.mSelectedBrother.Index, this.mSelectedBrother.Tag);
@@ -1940,29 +1940,29 @@ StrongholdScreenRosterDialogModule.prototype.transferItemsToStash = function ( _
 };
 
 
-StrongholdScreenRosterDialogModule.prototype.updateRosterLabel = function ()
+StrongholdScreenRosterModule.prototype.updateRosterLabel = function ()
 {
     //useless for now
 };
 //-----------------------------------
 
 
-StrongholdScreenRosterDialogModule.prototype.notifyBackendBrothersButtonPressed = function ()
+StrongholdScreenRosterModule.prototype.notifyBackendBrothersButtonPressed = function ()
 {
     SQ.call(this.mSQHandle, 'onBrothersButtonPressed');
 };
 
-StrongholdScreenRosterDialogModule.prototype.notifyBackendTooltipButtonPressed = function (_data)
+StrongholdScreenRosterModule.prototype.notifyBackendTooltipButtonPressed = function (_data)
 {
     SQ.call(this.mSQHandle, 'onTooltipButtonPressed', [_data]);
 };
 
-StrongholdScreenRosterDialogModule.prototype.notifyBackendTransferItems = function ()
+StrongholdScreenRosterModule.prototype.notifyBackendTransferItems = function ()
 {
     SQ.call(this.mSQHandle, 'onTransferItems');
 };
 
-StrongholdScreenRosterDialogModule.prototype.notifyBackendCheckCanTransferItems = function (_brotherId, _type, _tag, _callback)
+StrongholdScreenRosterModule.prototype.notifyBackendCheckCanTransferItems = function (_brotherId, _type, _tag, _callback)
 {
     SQ.call(this.mSQHandle, 'onCheckCanTransferItems', {
     	"ID"  : _brotherId,
@@ -1970,22 +1970,22 @@ StrongholdScreenRosterDialogModule.prototype.notifyBackendCheckCanTransferItems 
     	"RosterTag" : _tag}, _callback);
 };
 
-StrongholdScreenRosterDialogModule.prototype.notifyBackendUpdateNameAndTitle = function (_brotherId, _name, _title, _tag, _callback)
+StrongholdScreenRosterModule.prototype.notifyBackendUpdateNameAndTitle = function (_brotherId, _name, _title, _tag, _callback)
 {
     SQ.call(this.mSQHandle, 'onUpdateNameAndTitle', [_brotherId, _name, _title, _tag], _callback);
 };
 
-StrongholdScreenRosterDialogModule.prototype.notifyBackendDismissCharacter = function (_payCompensation, _brotherId, _tag)
+StrongholdScreenRosterModule.prototype.notifyBackendDismissCharacter = function (_payCompensation, _brotherId, _tag)
 {
     SQ.call(this.mSQHandle, 'onDismissCharacter', [ _brotherId, _payCompensation, _tag ]);
 };
 
-StrongholdScreenRosterDialogModule.prototype.notifyBackendUpdateRosterPosition = function (_id, _pos)
+StrongholdScreenRosterModule.prototype.notifyBackendUpdateRosterPosition = function (_id, _pos)
 {
     SQ.call(this.mSQHandle, 'onUpdateRosterPosition', [ _id, _pos ]);
 };
 
-StrongholdScreenRosterDialogModule.prototype.notifyBackendMoveAtoB = function (_id, _tagA, _pos, _tagB)
+StrongholdScreenRosterModule.prototype.notifyBackendMoveAtoB = function (_id, _tagA, _pos, _tagB)
 {
     SQ.call(this.mSQHandle, 'MoveAtoB', {
     	"ID" : _id,

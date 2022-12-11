@@ -1,6 +1,6 @@
 
 "use strict";
-var StrongholdScreenLocationsDialogModule = function(_parent)
+var StrongholdScreenLocationsModule = function(_parent)
 {
     StrongholdScreenModuleTemplate.call(this, _parent);
     this.mID = "LocationsModule"
@@ -8,13 +8,13 @@ var StrongholdScreenLocationsDialogModule = function(_parent)
     this.mActiveLocation = null;
 };
 
-StrongholdScreenLocationsDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
-Object.defineProperty(StrongholdScreenLocationsDialogModule.prototype, 'constructor', {
-    value: StrongholdScreenLocationsDialogModule,
+StrongholdScreenLocationsModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
+Object.defineProperty(StrongholdScreenLocationsModule.prototype, 'constructor', {
+    value: StrongholdScreenLocationsModule,
     enumerable: false,
     writable: true });
 
-StrongholdScreenLocationsDialogModule.prototype.createDIV = function (_parentDiv)
+StrongholdScreenLocationsModule.prototype.createDIV = function (_parentDiv)
 {
     StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     var self = this;
@@ -45,13 +45,13 @@ StrongholdScreenLocationsDialogModule.prototype.createDIV = function (_parentDiv
     }, "remove-location-button display-none", 1)
 };
 
-StrongholdScreenLocationsDialogModule.prototype.loadFromData = function()
+StrongholdScreenLocationsModule.prototype.loadFromData = function()
 {
-    console.error("StrongholdScreenLocationsDialogModule loading data")
+    console.error("StrongholdScreenLocationsModule loading data")
     this.createLocationContent();
 }
 
-StrongholdScreenLocationsDialogModule.prototype.createLocationContent = function ()
+StrongholdScreenLocationsModule.prototype.createLocationContent = function ()
 {
     var self = this;
     this.mLocationsRow.empty();
@@ -80,7 +80,7 @@ StrongholdScreenLocationsDialogModule.prototype.createLocationContent = function
     else this.switchActiveLocation(this.mActiveLocation.ConstID)
 };
 
-StrongholdScreenLocationsDialogModule.prototype.switchActiveLocation = function( _locationID)
+StrongholdScreenLocationsModule.prototype.switchActiveLocation = function( _locationID)
 {
     var self = this
     if(this.mActiveLocation != null && this.mActiveLocation != undefined)
@@ -138,12 +138,12 @@ StrongholdScreenLocationsDialogModule.prototype.switchActiveLocation = function(
     }
 }
 
-StrongholdScreenLocationsDialogModule.prototype.addLocation = function ()
+StrongholdScreenLocationsModule.prototype.addLocation = function ()
 {
    SQ.call(this.mSQHandle, 'addLocation', [this.mActiveLocation.Path, this.mActiveLocation.Cost]);
 };
 
-StrongholdScreenLocationsDialogModule.prototype.removeLocation = function ()
+StrongholdScreenLocationsModule.prototype.removeLocation = function ()
 {
     SQ.call(this.mSQHandle, 'removeLocation', this.mActiveLocation.ID);
 };

@@ -100,14 +100,11 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			Assets 				= {},
 			TownAssets 			= {},
 			UpgradeRequirements = {},
-			MainModule 			= {},
-			VisualsModule 		= {},
-			UpgradeModule 		= {},
-			BuildingsModule 	= {},
-			LocationsModule 	= {},
-			StashModule 		= {},
-			RosterModule 		= {},
 		};
+		foreach (id, module in this.m.Modules)
+		{
+			ret[id] <- {};
+		}
 		return ret
 	}
 
@@ -117,35 +114,23 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 
 		this.getTypeUIData("Assets", ret);
 		this.getTypeUIData("TownAssets", ret);
-		this.getTypeUIData("MainModule", ret);
-		this.getTypeUIData("VisualsModule", ret);
-		this.getTypeUIData("UpgradeModule", ret);
-		this.getTypeUIData("BuildingsModule", ret);
-		this.getTypeUIData("LocationsModule", ret);
-		this.getTypeUIData("StashModule", ret);
-		this.getTypeUIData("RosterModule", ret);
+		foreach (id, module in this.m.Modules)
+		{
+			this.getTypeUIData(id, ret);
+		}
 		return ret
 	}
 
 	function getTypeUIData(_typeID, _ret)
 	{
-		switch(_typeID)
-		{
-			case "Assets":
-				return this.queryAssetsInformation(_ret);
-			case "TownAssets":
-				return this.getTownUIData(_ret.TownAssets);
-			case "MainModule":
-			case "VisualsModule":
-			case "UpgradeModule":
-			case "BuildingsModule":
-			case "LocationsModule":
-			case "StashModule":
-			case "RosterModule":
-				return this.getModule(_typeID).getUIData(_ret[_typeID]);
-			default:
-				this.logError("No such UI data! " + _typeID)
-		}
+		if (_typeID == "Assets")
+			return this.queryAssetsInformation(_ret);
+		else if (_typeID == "Assets")
+			return this.getTownUIData(_ret.TownAssets);
+		else if (_typeID in this.m.Modules)
+			return this.getModule(_typeID).getUIData(_ret[_typeID]);
+		else
+			this.logError("No such UI data! " + _typeID)
 	}
 
 	function queryAssetsInformation(_ret)

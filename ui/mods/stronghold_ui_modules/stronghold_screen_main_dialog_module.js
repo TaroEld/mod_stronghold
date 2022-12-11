@@ -1,19 +1,19 @@
 
 "use strict";
-var StrongholdScreenMainDialogModule = function(_parent)
+var StrongholdScreenMainModule = function(_parent)
 {
     StrongholdScreenModuleTemplate.call(this, _parent);
     this.mID = "MainModule";
     this.mTitle = "Your Base"
 };
 
-StrongholdScreenMainDialogModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
-Object.defineProperty(StrongholdScreenMainDialogModule.prototype, 'constructor', {
-    value: StrongholdScreenMainDialogModule,
+StrongholdScreenMainModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
+Object.defineProperty(StrongholdScreenMainModule.prototype, 'constructor', {
+    value: StrongholdScreenMainModule,
     enumerable: false,
     writable: true });
 
-StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
+StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
 {
     StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     this.mContentContainer.addClass("main-module");
@@ -36,7 +36,7 @@ StrongholdScreenMainDialogModule.prototype.createDIV = function (_parentDiv)
 	});
 };
 
-StrongholdScreenMainDialogModule.prototype.addAssetRow = function(_parent, _name, _imgsrc)
+StrongholdScreenMainModule.prototype.addAssetRow = function(_parent, _name, _imgsrc)
 {
 	var ret = $('<div class="main-module-asset-row"/>');
 	var name = $('<div class="title-font-big font-bold font-color-brother-name main-module-asset-name"/>');
@@ -49,7 +49,7 @@ StrongholdScreenMainDialogModule.prototype.addAssetRow = function(_parent, _name
 	return ret;
 }
 
-StrongholdScreenMainDialogModule.prototype.loadFromData = function()
+StrongholdScreenMainModule.prototype.loadFromData = function()
 {
 	this.mTitle = this.mData.TownAssets.Name;
 	this.mParent.updateTitle(this.mTitle);
@@ -59,7 +59,7 @@ StrongholdScreenMainDialogModule.prototype.loadFromData = function()
     this.mBaseSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentSprite + ".png");
 }
 
-StrongholdScreenMainDialogModule.prototype.changeBaseName = function ()
+StrongholdScreenMainModule.prototype.changeBaseName = function ()
 {
 	SQ.call(this.mSQHandle, 'changeBaseName', this.mChangeNameInput.getInputText());
 };
