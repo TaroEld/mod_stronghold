@@ -18,7 +18,6 @@ var StrongholdScreenRosterModule = function(_parent)
     this.mPerkRows = null;
 
     // stuffs
-    this.mPayDismissalWage      = false;
     this.mSimpleRosterTooltip   = false;
     this.mSelectedBrother =
     {
@@ -769,9 +768,10 @@ StrongholdScreenRosterModule.prototype.createDismissDialogContent = function (_d
         increaseArea: '0%'
     });
 
+    _dialog.data("PayDismissalWage", false);
     checkbox.on('ifChecked ifUnchecked', null, this, function (_event)
     {
-        self.mPayDismissalWage = checkbox.prop('checked') === true;
+        _dialog.data("PayDismissalWage", checkbox.prop('checked') === true);
     });
 
     return result;
