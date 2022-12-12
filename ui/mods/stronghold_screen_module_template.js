@@ -89,3 +89,17 @@ StrongholdScreenModuleTemplate.prototype.hide = function ()
 StrongholdScreenModuleTemplate.prototype.loadFromData = function()
 {
 }
+
+// Refer popups to the parent
+StrongholdScreenModuleTemplate.prototype.createPopup = function(_title, _subTitle, _headerImagePath, _classes, _modalBackground)
+{
+	var popup = this.mParent.mContainer.createPopupDialog(_title, _subTitle, _headerImagePath, _classes, _modalBackground);
+	this.mParent.setPopupDialog(popup);
+	this.mPopupDialog = popup;
+}
+
+StrongholdScreenModuleTemplate.prototype.destroyPopup = function()
+{
+	this.mParent.destroyPopupDialog();
+	this.mPopupDialog = null;
+}

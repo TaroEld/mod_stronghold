@@ -600,28 +600,23 @@ StrongholdScreenRosterModule.prototype.openRenamePopupDialog = function (_brothe
     if (data.Index === null || data.Tag == null)
         return;
 
-    this.notifyBackendPopupDialogIsVisible(true);
-    this.mCurrentPopupDialog = $('.world-town-screen').createPopupDialog('Change Name & Title', null, null, 'change-name-and-title-popup');
+    this.createPopup('Change Name & Title', null, null, 'change-name-and-title-popup');
 
-    this.mCurrentPopupDialog.addPopupDialogOkButton(function (_dialog)
+    this.mPopupDialog.addPopupDialogOkButton(function (_dialog)
     {
         self.updateNameAndTitle(_dialog, _brotherId, data.Tag);
-        self.mCurrentPopupDialog = null;
-        _dialog.destroyPopupDialog();
-        self.notifyBackendPopupDialogIsVisible(false);
+        self.destroyPopup();
     });
 
-    this.mCurrentPopupDialog.addPopupDialogCancelButton(function (_dialog)
+    this.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
     {
-        self.mCurrentPopupDialog = null;
-        _dialog.destroyPopupDialog();
-        self.notifyBackendPopupDialogIsVisible(false);
+        self.destroyPopup();
     });
 
-    this.mCurrentPopupDialog.addPopupDialogContent(this.createChangeNameAndTitleDialogContent(this.mCurrentPopupDialog, data.Brother));
+    this.mPopupDialog.addPopupDialogContent(this.createChangeNameAndTitleDialogContent(this.mPopupDialog, data.Brother));
 
     // focus!
-    var inputFields = this.mCurrentPopupDialog.findPopupDialogContentContainer().find('input');
+    var inputFields = this.mPopupDialog.findPopupDialogContentContainer().find('input');
     $(inputFields[0]).focus();
 };
 StrongholdScreenRosterModule.prototype.createChangeNameAndTitleDialogContent = function (_dialog, _brother)
@@ -710,25 +705,20 @@ StrongholdScreenRosterModule.prototype.openDismissPopupDialog = function (_broth
         return;
 
     this.mPayDismissalWage = false;
-    this.notifyBackendPopupDialogIsVisible(true);
-    this.mCurrentPopupDialog = $('.world-town-screen').createPopupDialog('Dismiss', null, null, 'dismiss-popup');
+    this.createPopup('Dismiss', null, null, 'dismiss-popup');
 
-    this.mCurrentPopupDialog.addPopupDialogOkButton(function (_dialog)
+    this.mPopupDialog.addPopupDialogOkButton(function (_dialog)
     {
-        self.notifyBackendDismissCharacter(self.mPayDismissalWage, _brotherId, data.Tag);
-        self.mCurrentPopupDialog = null;
-        _dialog.destroyPopupDialog();
-        self.notifyBackendPopupDialogIsVisible(false);
+        self.notifyBackendDismissCharacter( self.mPopupDialog.data("PayDismissalWage"), _brotherId, data.Tag);
+        self.destroyPopup();
     });
 
-    this.mCurrentPopupDialog.addPopupDialogCancelButton(function (_dialog)
+    this.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
     {
-        self.mCurrentPopupDialog = null;
-        _dialog.destroyPopupDialog();
-        self.notifyBackendPopupDialogIsVisible(false);
+        self.destroyPopup();
     });
 
-    this.mCurrentPopupDialog.addPopupDialogContent(this.createDismissDialogContent(this.mCurrentPopupDialog, data.Brother));
+    this.mPopupDialog.addPopupDialogContent(this.createDismissDialogContent(this.mPopupDialog, data.Brother));
 };
 StrongholdScreenRosterModule.prototype.createDismissDialogContent = function (_dialog, _brother)
 {
@@ -789,26 +779,20 @@ StrongholdScreenRosterModule.prototype.createDismissDialogContent = function (_d
 StrongholdScreenRosterModule.prototype.openTransferConfirmationPopupDialog = function (_data)
 {
     var self = this;
+    this.createPopup('Warning', null, null, 'dismiss-popup');
 
-    this.notifyBackendPopupDialogIsVisible(true);
-    this.mCurrentPopupDialog = $('.world-town-screen').createPopupDialog('Warning', null, null, 'dismiss-popup');
-
-    this.mCurrentPopupDialog.addPopupDialogOkButton(function (_dialog)
+    this.mPopupDialog.addPopupDialogOkButton(function (_dialog)
     {
         self.notifyBackendTransferItems();
-        self.mCurrentPopupDialog = null;
-        _dialog.destroyPopupDialog();
-        self.notifyBackendPopupDialogIsVisible(false);
+        self.destroyPopup();
     });
 
-    this.mCurrentPopupDialog.addPopupDialogCancelButton(function (_dialog)
+    this.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
     {
-        self.mCurrentPopupDialog = null;
-        _dialog.destroyPopupDialog();
-        self.notifyBackendPopupDialogIsVisible(false);
+        self.destroyPopup();
     });
 
-    this.mCurrentPopupDialog.addPopupDialogContent(this.createTransferConfirmationDialogContent(this.mCurrentPopupDialog, _data));
+    this.mPopupDialog.addPopupDialogContent(this.createTransferConfirmationDialogContent(this.mPopupDialog, _data));
 };
 StrongholdScreenRosterModule.prototype.createTransferConfirmationDialogContent = function (_dialog, _data)
 {
@@ -849,21 +833,18 @@ StrongholdScreenRosterModule.prototype.openPerkPopupDialog = function (_brotherI
     if (data.Index === null || data.Tag == null)
         return;
 
-    this.notifyBackendPopupDialogIsVisible(true);
     this.mPerkTree = null;
     this.mPerkRows = [];
-    this.mCurrentPopupDialog = $('.world-town-screen').createPopupDialog('Perk Tree', null, null, 'perk-popup');
+    this.createPopup('Perk Tree', null, null, 'perk-popup');
 
-    this.mCurrentPopupDialog.addPopupDialogCancelButton(function (_dialog)
+    this.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
     {
         self.mPerkTree = null;
         self.mPerkRows = [];
-        self.mCurrentPopupDialog = null;
-        _dialog.destroyPopupDialog();
-        self.notifyBackendPopupDialogIsVisible(false);
+        self.destroyPopup();
     });
-    this.mCurrentPopupDialog.findPopupDialogCancelButton().changeButtonText('Return');
-    this.mCurrentPopupDialog.addPopupDialogContent(this.createPerkDialogContent(this.mCurrentPopupDialog, data.Brother));
+    this.mPopupDialog.findPopupDialogCancelButton().changeButtonText('Return');
+    this.mPopupDialog.addPopupDialogContent(this.createPerkDialogContent(this.mPopupDialog, data.Brother));
 };
 StrongholdScreenRosterModule.prototype.createPerkDialogContent = function(_definitions, _brother)
 {
