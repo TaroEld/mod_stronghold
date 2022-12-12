@@ -1861,12 +1861,6 @@ StrongholdScreenRosterModule.prototype.transferItemsToStash = function ( _type )
 };
 
 
-StrongholdScreenRosterModule.prototype.updateRosterLabel = function ()
-{
-    //useless for now
-};
-//-----------------------------------
-
 
 StrongholdScreenRosterModule.prototype.notifyBackendBrothersButtonPressed = function ()
 {
