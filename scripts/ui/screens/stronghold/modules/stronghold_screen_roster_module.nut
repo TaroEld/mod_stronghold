@@ -189,4 +189,9 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 		destinationRoster.add(bro);
 		originRoster.remove(bro);
 	}
+
+	function onBrothersButtonPressed()
+	{
+		::MSU.Utils.getState("world_state").toggleCharacterScreen()
+	}
 })
