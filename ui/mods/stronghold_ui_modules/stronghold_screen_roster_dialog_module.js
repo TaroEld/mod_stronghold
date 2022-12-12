@@ -218,7 +218,7 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     row.append(this.mDetailsScrollHeaderContainer);
     this.mDetailsScrollHeaderContainer.click(function()
     {
-        self.toggleScrollShenanigan(true);
+        self.toggleScrollDiv(true);
     });
     var titleContainer = $('<div class="title-container"/>');
     this.mDetailsScrollHeaderContainer.append(titleContainer);
@@ -465,34 +465,9 @@ StrongholdScreenRosterModule.prototype.loadFromData = function ()
     this.setBrotherSelected(0, Stronghold.Roster.RosterOwner.Player, true);
 };
 
-StrongholdScreenRosterModule.prototype.toggleScrollShenanigan = function(_withSlideAnimation)
+StrongholdScreenRosterModule.prototype.toggleScrollDiv = function(_withSlideAnimation)
 {
-    if (this.mToggledType !== ToggleScroll.Type.Skills)
-    {
-        this.hideScroll(_withSlideAnimation);
-    }
-    else
-    {
-        this.showScroll(_withSlideAnimation);
-    }
-
-    if (this.mToggledType === ToggleScroll.Min)
-        this.mToggledOrder = ToggleScroll.Order.Ascending;
-    else if (this.mToggledType === ToggleScroll.Max)
-        this.mToggledOrder = ToggleScroll.Order.Descending;
-};
-StrongholdScreenRosterModule.prototype.hideScroll = function(_withSlideAnimation)
-{
-    var self = this;
-
-    if (_withSlideAnimation === false)
-    {
-        this.mScrollBackgroundContainer.css({ height: '', right: 0 });
-        this.mScrollBackgroundContainer.removeClass('display-block').addClass('display-none');
-        this.mSkills.Container.removeClass('display-none').addClass('display-block');
-        this.updateDetailsPanel(null);
-    }
-    else
+	var self = this;
     if (this.mToggledType !== Stronghold.Roster.ToggleScroll.Type.Skills)
     {
         this.mToggledType = this.mToggledType + this.mToggledOrder;
@@ -507,22 +482,6 @@ StrongholdScreenRosterModule.prototype.hideScroll = function(_withSlideAnimation
                 self.updateDetailsPanel(null);
             }
         });
-    }
-};
-StrongholdScreenRosterModule.prototype.showScroll = function(_withSlideAnimation)
-{
-    var self = this;
-
-    if (_withSlideAnimation === false)
-    {
-        this.mScrollBackgroundContainer.css({ right: 0 });
-        this.mScrollBackgroundContainer.removeClass('display-none').addClass('display-block');
-        this.mScrollBackgroundContainer.css({ height: '' });
-        this.mScrollBackgroundContainer.removeClass('display-none').addClass('display-block');
-        this.mStatsContainer.removeClass('display-none').addClass('display-block');
-        this.mPortrait.Container.removeClass('display-block').addClass('display-none');
-        this.mSkills.Container.removeClass('display-block').addClass('display-none');
-        this.updateDetailsPanel(null);
     }
     else
     {
