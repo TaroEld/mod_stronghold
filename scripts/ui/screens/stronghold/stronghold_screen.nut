@@ -125,7 +125,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		if (_typeID == "Assets")
 			return this.queryAssetsInformation(_ret);
-		else if (_typeID == "Assets")
+		else if (_typeID == "TownAssets")
 			return this.getTownUIData(_ret.TownAssets);
 		else if (_typeID in this.m.Modules)
 			return this.getModule(_typeID).getUIData(_ret[_typeID]);
