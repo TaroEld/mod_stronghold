@@ -58,24 +58,24 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
 
 StrongholdScreenUpgradeModule.prototype.getSpriteIndex = function()
 {
-    return StrongholdConst.AllSprites.indexOf(this.mBaseSprite)
+    return Stronghold.Visuals.BaseSpriteTypes.indexOf(this.mBaseSprite)
 }
 
 StrongholdScreenUpgradeModule.prototype.switchSpriteImage = function( _idx )
 {
-    var arrLen = StrongholdConst.AllSprites.length;
+    var arrLen = Stronghold.Visuals.BaseSpriteTypes.length;
     var newIdx = this.getSpriteIndex() + _idx;
     if(newIdx == arrLen) newIdx = 0;
     if(newIdx < 0) newIdx = arrLen - 1
-    this.mBaseSprite = StrongholdConst.AllSprites[newIdx];
+    this.mBaseSprite = Stronghold.Visuals.BaseSpriteTypes[newIdx];
     this.setSpriteImage();
 }
 
 StrongholdScreenUpgradeModule.prototype.setSpriteImage = function()
 {
-    var currentArr = StrongholdConst.Sprites[this.mBaseSprite];
+    var currentArr = Stronghold.Visuals.Sprites[this.mBaseSprite];
     var baseSize = this.mData.TownAssets.Size;
-    this.mBaseUpgradeSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.MainSprites[baseSize] + ".png");
+    this.mBaseUpgradeSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[baseSize] + ".png");
 } 
 
 StrongholdScreenUpgradeModule.prototype.fillUpgradeDetailsText = function()

@@ -62,10 +62,10 @@ StrongholdScreenLocationsModule.prototype.createLocationContent = function ()
             self.switchActiveLocation(_locationID)
         })
         var locationImage = $('<img class="structure-image"/>');
-        locationImage.attr('src', Path.GFX + StrongholdConst.LocationsSpritePath + _location.ImagePath);
+        locationImage.attr('src', Path.GFX + Stronghold.Visuals.LocationsSpritePath + _location.ImagePath);
         locationImageContainer.append(locationImage)
         var locationSelection = $('<img class="structure-selection display-none"/>');
-        locationSelection.attr('src', Path.GFX + StrongholdConst.SelectionGoldImagePath);
+        locationSelection.attr('src', Path.GFX + Stronghold.Visuals.SelectionGoldImagePath);
         locationImageContainer.append(locationSelection)
         _location.Selection = locationSelection;
 
@@ -90,7 +90,7 @@ StrongholdScreenLocationsModule.prototype.switchActiveLocation = function( _loca
     this.mActiveLocation = this.mModuleData[_locationID];
     this.mActiveLocationTitle.html(this.mActiveLocation.Name);
     this.mActiveLocation.Selection.toggleDisplay(true)
-    this.mActiveLocationImage.attr('src', Path.GFX + StrongholdConst.LocationsSpritePath + this.mActiveLocation.ImagePath);
+    this.mActiveLocationImage.attr('src', Path.GFX + Stronghold.Visuals.LocationsSpritePath + this.mActiveLocation.ImagePath);
     this.mActiveLocationDescription.html(this.mActiveLocation.Description)
     if (this.mActiveLocation.Description.length > 240)
     {

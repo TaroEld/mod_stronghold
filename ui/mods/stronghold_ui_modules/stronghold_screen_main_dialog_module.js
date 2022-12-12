@@ -55,8 +55,8 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
 	this.mParent.updateTitle(this.mTitle);
 	this.mChangeNameInput.setInputText(this.mData.TownAssets.Name);
 	var baseSprite = this.mData.TownAssets.SpriteName;
-	var currentSprite = StrongholdConst.Sprites[baseSprite].MainSprites[this.mData.TownAssets.Size -1];
-    this.mBaseSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentSprite + ".png");
+	var currentSprite = Stronghold.Visuals.Sprites[baseSprite].MainSprites[this.mData.TownAssets.Size -1];
+    this.mBaseSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentSprite + ".png");
 }
 
 StrongholdScreenMainModule.prototype.changeBaseName = function ()

@@ -1,69 +1,72 @@
-var StrongholdConst = {
-    "SpritePath" : "ui/settlements/settlement_icons/",
-    "BuildingSpritePath" : "ui/buildings/",
-    "LocationsSpritePath" : "ui/locations/",
-    "SelectionImagePath" : "ui/selection.png",
-    "SelectionGoldImagePath" : "ui/selection-gold.png",
-    "AllSprites" : ["Default", "Luft_Basic", "Luft_Brigand", "Luft_Necro", "Luft_Fishing"],
-    "Sprites" : {
-        "Default" : {
-            "MainSprites" : ["stronghold_01", "stronghold_02", "stronghold_03"],
-            "HouseSprites" : ["houses_03_01", "", ""],
-            "UnitSprite" : "figure_mercenary_01",
-            "Name" : "Default",
-            "Author" : "Overhype"
-        },
-        "Luft_Basic" : {
-            "MainSprites" : ["luft_basic_01", "luft_basic_02", "luft_basic_03"],
-            "HouseSprites" : ["luft_basic_houses_01", "", ""],
-            "UnitSprite" : "luft_basic_patrol",
-            "Name" : "Basic Village",
-            "Author" : "Luftwaffle"
-        },
-        "Luft_Brigand" : {
-            "MainSprites" : ["luft_fort_01", "luft_fort_02", "luft_fort_03"],
-            "HouseSprites" : ["luft_fort_houses_01", "", ""],
-            "UnitSprite" : "luft_fort_patrol",
-            "Name" : "Brigand's Hideout",
-            "Author" : "Luftwaffle"
-        },
-        "Luft_Necro" : {
-            "MainSprites" : ["luft_necro_01", "luft_necro_02", "luft_necro_03"],
-            "HouseSprites" : ["luft_necro_houses_01", "", ""],
-            "UnitSprite" : "luft_necro_patrol",
-            "Name" : "Necromancer's Lair",
-            "Author" : "Luftwaffle"
-        },
-        "Luft_Fishing" : {
-            "MainSprites" : ["luft_fishing_01", "luft_fishing_02", "luft_fishing_03"],
-            "HouseSprites" : ["luft_fishing_houses_01", "", ""],
-            "UnitSprite" : "luft_fishing_patrol",
-            "Name" : "Fishing Village",
-            "Author" : "Luftwaffle"
-        }
-    }
-}
-
-var iterateObject = function(_object, func)
-{
-    Object.keys(_object).forEach(function(_key){
-        func(_key, _object[_key])
-    })
-}
-
-var printObject = function(_object)
-{
-    var iterateFunc = function(_key, _value){
-        var toPrint = "Key: " + _key + " | Value : " + _value + " | typeof Value : " + (typeof _value)
-        if(Array.isArray(_value))
-        {
-            toPrint += " (Array)"
-        }
-        console.error(toPrint)
-        if (typeof _value === "object")
-        {
-            iterateObject(_value, iterateFunc);
-        }
+var Stronghold = {
+	Visuals :
+	{
+	    SpritePath : "ui/settlements/settlement_icons/",
+	    BuildingSpritePath : "ui/buildings/",
+	    LocationsSpritePath : "ui/locations/",
+	    SelectionImagePath : "ui/selection.png",
+	    SelectionGoldImagePath : "ui/selection-gold.png",
+	    BaseSpriteTypes : ["Default", "Luft_Basic", "Luft_Brigand", "Luft_Necro", "Luft_Fishing"],
+	    Sprites : {
+	        Default : {
+	            "MainSprites" : ["stronghold_01", "stronghold_02", "stronghold_03"],
+	            "HouseSprites" : ["houses_03_01", "", ""],
+	            "UnitSprite" : "figure_mercenary_01",
+	            "Name" : "Default",
+	            "Author" : "Overhype"
+	        },
+	        Luft_Basic : {
+	            "MainSprites" : ["luft_basic_01", "luft_basic_02", "luft_basic_03"],
+	            "HouseSprites" : ["luft_basic_houses_01", "", ""],
+	            "UnitSprite" : "luft_basic_patrol",
+	            "Name" : "Basic Village",
+	            "Author" : "Luftwaffle"
+	        },
+	        Luft_Brigand : {
+	            "MainSprites" : ["luft_fort_01", "luft_fort_02", "luft_fort_03"],
+	            "HouseSprites" : ["luft_fort_houses_01", "", ""],
+	            "UnitSprite" : "luft_fort_patrol",
+	            "Name" : "Brigand's Hideout",
+	            "Author" : "Luftwaffle"
+	        },
+	        Luft_Necro : {
+	            "MainSprites" : ["luft_necro_01", "luft_necro_02", "luft_necro_03"],
+	            "HouseSprites" : ["luft_necro_houses_01", "", ""],
+	            "UnitSprite" : "luft_necro_patrol",
+	            "Name" : "Necromancer's Lair",
+	            "Author" : "Luftwaffle"
+	        },
+	        Luft_Fishing : {
+	            "MainSprites" : ["luft_fishing_01", "luft_fishing_02", "luft_fishing_03"],
+	            "HouseSprites" : ["luft_fishing_houses_01", "", ""],
+	            "UnitSprite" : "luft_fishing_patrol",
+	            "Name" : "Fishing Village",
+	            "Author" : "Luftwaffle"
+	        }
+	    },
+	},
+    Roster : {
+    	ToggleScroll :
+    	{
+    	    Max   : 3,
+    	    Min   : 1,
+    	    Type  :
+    	    {
+    	        Stats    : 1,
+    	        Skills   : 2,
+    	        Portrait : 3,
+    	    },
+    	    Order :
+    	    {
+    	        Ascending  :  1,
+    	        Descending : -1,
+    	    },
+    	},
+    	RosterOwner :
+    	{
+    	    Stronghold: 'roster.stronghold',
+    	    Player: 'roster.player'
+    	}
     }
 }
 

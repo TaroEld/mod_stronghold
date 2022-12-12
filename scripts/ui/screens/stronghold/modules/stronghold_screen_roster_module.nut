@@ -1,11 +1,10 @@
 this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/stronghold/modules/stronghold_screen_module" , {
 	m = {
-
-		ModRosterOwner =
+		RosterOwner =
 		{
 		    Stronghold = "roster.stronghold",
 		    Player = "roster.player"
-		}
+		},
 		ItemTypes = {
 			All = 		0,
 	    	Weapon = 	1,

@@ -205,5 +205,4 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		this.World.State.m.MenuStack.pop();
 	}
-
 });

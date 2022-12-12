@@ -62,10 +62,10 @@ StrongholdScreenBuildingsModule.prototype.createBuildingContent = function ()
             self.switchActiveBuilding(_buildingID)
         })
         var buildingImage = $('<img class="structure-image"/>');
-        buildingImage.attr('src', Path.GFX + StrongholdConst.BuildingSpritePath + _building.ImagePath);
+        buildingImage.attr('src', Path.GFX + Stronghold.Visuals.BuildingSpritePath + _building.ImagePath);
         buildingImageContainer.append(buildingImage)
         var buildingSelection = $('<img class="structure-selection display-none"/>');
-        buildingSelection.attr('src', Path.GFX + StrongholdConst.SelectionGoldImagePath);
+        buildingSelection.attr('src', Path.GFX + Stronghold.Visuals.SelectionGoldImagePath);
         buildingImageContainer.append(buildingSelection)
         _building.Selection = buildingSelection;
 
@@ -89,7 +89,7 @@ StrongholdScreenBuildingsModule.prototype.switchActiveBuilding = function( _buil
     this.mActiveBuilding = this.mModuleData[_buildingID];
     this.mActiveBuildingTitle.html(this.mActiveBuilding.Name);
     this.mActiveBuilding.Selection.toggleDisplay(true)
-    this.mActiveBuildingImage.attr('src', Path.GFX + StrongholdConst.BuildingSpritePath + this.mActiveBuilding.ImagePath);
+    this.mActiveBuildingImage.attr('src', Path.GFX + Stronghold.Visuals.BuildingSpritePath + this.mActiveBuilding.ImagePath);
     this.mActiveBuildingDescription.html(this.mActiveBuilding.Description)
 
     if(this.mActiveBuilding.HasBuilding)

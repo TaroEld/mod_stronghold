@@ -1,26 +1,3 @@
-var ModRosterOwner =
-{
-    Stronghold: 'roster.stronghold',
-    Player: 'roster.player'
-};
-
-// identifier for the fancy scroll-like shenanigans
-var ToggleScroll =
-{
-    Max   : 3,
-    Min   : 1,
-    Type  :
-    {
-        Stats    : 1,
-        Skills   : 2,
-        Portrait : 3,
-    },
-    Order :
-    {
-        Ascending  :  1,
-        Descending : -1,
-    },
-};
 // Add a utility function to create a more customized list
 $.fn.createListWithCustomOption = function(_options, _classes,_withoutFrame)
 {
@@ -78,8 +55,8 @@ var StrongholdScreenRosterModule = function(_parent)
     };
 
     // some shenanigans
-    this.mToggledType                  = ToggleScroll.Type.Stats;
-    this.mToggledOrder                 = ToggleScroll.Order.Ascending;
+    this.mToggledType                  = Stronghold.Roster.ToggleScroll.Type.Stats;
+    this.mToggledOrder                 = Stronghold.Roster.ToggleScroll.Order.Ascending;
     this.mDetailsContainer             = null;
     this.mScrollBackgroundContainer    = null;
     this.mDetailsScrollHeaderContainer = null;
@@ -256,7 +233,7 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
         horizontalBar: 'none', // to hide the horizontal scroll
     });
     this.mStronghold.ListScrollContainer = this.mStronghold.ListContainer.findListScrollContainer();
-    this.createBrotherSlots(this.mStronghold, ModRosterOwner.Stronghold);
+    this.createBrotherSlots(this.mStronghold, Stronghold.Roster.RosterOwner.Stronghold);
 
 
 
@@ -445,7 +422,7 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     row.append(detailFrame);
     this.mPlayer.ListScrollContainer = $('<div class="l-list-container"/>');
     detailFrame.append(this.mPlayer.ListScrollContainer);
-    this.createBrotherSlots(this.mPlayer, ModRosterOwner.Player);
+    this.createBrotherSlots(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
 
 };
 
@@ -479,13 +456,13 @@ StrongholdScreenRosterModule.prototype.loadFromData = function ()
 	this.mStronghold.NumActive = this.mData.mRosterAsset;
     this.mStronghold.NumActiveMax = this.mData.mRosterAssetMax;
     this.mStronghold.BrothersList = this.mModuleData.TownRoster;
-    this.onBrothersListLoaded(this.mStronghold, ModRosterOwner.Stronghold);
+    this.onBrothersListLoaded(this.mStronghold, Stronghold.Roster.RosterOwner.Stronghold);
 
     this.mPlayer.NumActive = this.mData.mBrothersAsset;
     this.mPlayer.NumActiveMax = this.mData.mBrothersAssetMax;
     this.mPlayer.BrothersList = this.mModuleData.PlayerRoster;
-    this.onBrothersListLoaded(this.mPlayer, ModRosterOwner.Player);
-    this.setBrotherSelected(0, ModRosterOwner.Player, true);
+    this.onBrothersListLoaded(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
+    this.setBrotherSelected(0, Stronghold.Roster.RosterOwner.Player, true);
 };
 
 StrongholdScreenRosterModule.prototype.toggleScrollShenanigan = function(_withSlideAnimation)
@@ -516,6 +493,7 @@ StrongholdScreenRosterModule.prototype.hideScroll = function(_withSlideAnimation
         this.updateDetailsPanel(null);
     }
     else
+    if (this.mToggledType !== Stronghold.Roster.ToggleScroll.Type.Skills)
     {
         this.mToggledType = this.mToggledType + this.mToggledOrder;
         this.mScrollBackgroundContainer.velocity("finish", true).velocity({ height: 0 },
@@ -549,7 +527,7 @@ StrongholdScreenRosterModule.prototype.showScroll = function(_withSlideAnimation
     else
     {
         this.mToggledType = this.mToggledType + this.mToggledOrder;
-        var isStats = this.mToggledType == ToggleScroll.Type.Stats;
+        var isStats = this.mToggledType == Stronghold.Roster.ToggleScroll.Type.Stats;
         // compute content height
         this.mScrollBackgroundContainer.css({ height: '' });
         this.mScrollBackgroundContainer.removeClass('display-none').addClass('display-block');
@@ -583,9 +561,12 @@ StrongholdScreenRosterModule.prototype.showScroll = function(_withSlideAnimation
             }
         });
     }
-};
-//---------------------------------
 
+    if (this.mToggledType === Stronghold.Roster.ToggleScroll.Min)
+        this.mToggledOrder = Stronghold.Roster.ToggleScroll.Order.Ascending;
+    else if (this.mToggledType === Stronghold.Roster.ToggleScroll.Max)
+        this.mToggledOrder = Stronghold.Roster.ToggleScroll.Order.Descending;
+};
 
 
 //- Skills Panel
@@ -1207,14 +1188,14 @@ StrongholdScreenRosterModule.prototype.setBrotherSelected = function (_rosterPos
     // notify update
     if (_withoutNotify === undefined || _withoutNotify !== true)
     {
-        var parent = _rosterTag == ModRosterOwner.Player ? this.mPlayer : this.mStronghold;
+        var parent = _rosterTag == Stronghold.Roster.RosterOwner.Player ? this.mPlayer : this.mStronghold;
         this.onBrothersListLoaded(parent, _rosterTag);
     }
 };
 
 StrongholdScreenRosterModule.prototype.getBrotherByIndex = function (_index, _tag)
 {
-    if (_tag === ModRosterOwner.Player)
+    if (_tag === Stronghold.Roster.RosterOwner.Player)
     {
         if (_index < this.mPlayer.BrothersList.length)
             return this.mPlayer.BrothersList[_index];
@@ -1248,7 +1229,7 @@ StrongholdScreenRosterModule.prototype.getBrotherByID = function (_brotherId)
             if (brother != null && CharacterScreenIdentifier.Entity.Id in brother && brother[CharacterScreenIdentifier.Entity.Id] === _brotherId)
             {
                 data.Index = i;
-                data.Tag = ModRosterOwner.Player;
+                data.Tag = Stronghold.Roster.RosterOwner.Player;
                 data.Brother = brother;
                 return data;
             }
@@ -1264,7 +1245,7 @@ StrongholdScreenRosterModule.prototype.getBrotherByID = function (_brotherId)
             if (brother !== null && CharacterScreenIdentifier.Entity.Id in brother && brother[CharacterScreenIdentifier.Entity.Id] === _brotherId)
             {
                 data.Index = i;
-                data.Tag = ModRosterOwner.Stronghold;
+                data.Tag = Stronghold.Roster.RosterOwner.Stronghold;
                 data.Brother = brother;
                 return data;
             }
@@ -1306,7 +1287,7 @@ StrongholdScreenRosterModule.prototype.removeCurrentBrotherSlotSelection = funct
 
 StrongholdScreenRosterModule.prototype.selectBrotherSlot = function (_brotherId)
 {
-    var listScrollContainer = this.mSelectedBrother.Tag == ModRosterOwner.Player ? this.mPlayer.ListScrollContainer : this.mStronghold.ListScrollContainer;
+    var listScrollContainer = this.mSelectedBrother.Tag == Stronghold.Roster.RosterOwner.Player ? this.mPlayer.ListScrollContainer : this.mStronghold.ListScrollContainer;
     var slot = listScrollContainer.find('#slot-index_' + _brotherId + ':first');
     if (slot.length > 0)
     {
@@ -1334,7 +1315,7 @@ StrongholdScreenRosterModule.prototype.quickMoveBrother = function (_source)
     }
 
     // selected brother is in player roster
-    if (data.Tag === ModRosterOwner.Player)
+    if (data.Tag === Stronghold.Roster.RosterOwner.Player)
     {
         // deny when the selected brother is a player character
         if (_source.data('player') === true)
@@ -1350,7 +1331,7 @@ StrongholdScreenRosterModule.prototype.quickMoveBrother = function (_source)
 
         // transfer brother from player roster to stronghold roster
         var firstEmptySlot = this.getIndexOfFirstEmptySlot(this.mStronghold.Slots);
-        this.swapSlots(data.Index, ModRosterOwner.Player, firstEmptySlot, ModRosterOwner.Stronghold);
+        this.swapSlots(data.Index, Stronghold.Roster.RosterOwner.Player, firstEmptySlot, Stronghold.Roster.RosterOwner.Stronghold);
     }
     // selected brother is in stronghold roster
     else
@@ -1365,7 +1346,7 @@ StrongholdScreenRosterModule.prototype.quickMoveBrother = function (_source)
 
         // transfer brother from stronghold roster to player roster
         var firstEmptySlot = this.getIndexOfFirstEmptySlot(this.mPlayer.Slots);
-        this.swapSlots(data.Index, ModRosterOwner.Stronghold, firstEmptySlot, ModRosterOwner.Player);
+        this.swapSlots(data.Index, Stronghold.Roster.RosterOwner.Stronghold, firstEmptySlot, Stronghold.Roster.RosterOwner.Player);
     }
 
     return true;
@@ -1384,8 +1365,8 @@ StrongholdScreenRosterModule.prototype.swapBrothers = function (_a, _parentA, _b
 StrongholdScreenRosterModule.prototype.swapSlots = function (_a, _tagA, _b, _tagB)
 {
     var isDifferenceRoster = _tagA != _tagB;
-    var parentA = _tagA == ModRosterOwner.Player ? this.mPlayer : this.mStronghold;
-    var parentB = _tagB == ModRosterOwner.Player ? this.mPlayer : this.mStronghold;
+    var parentA = _tagA == Stronghold.Roster.RosterOwner.Player ? this.mPlayer : this.mStronghold;
+    var parentB = _tagB == Stronghold.Roster.RosterOwner.Player ? this.mPlayer : this.mStronghold;
     var slotA = parentA.Slots[_a];
     var slotB = parentB.Slots[_b];
 
@@ -1478,7 +1459,7 @@ StrongholdScreenRosterModule.prototype.swapSlots = function (_a, _tagA, _b, _tag
 StrongholdScreenRosterModule.prototype.createBrotherSlots = function ( _parent , _tag )
 {
     var self = this;
-    var isPlayer = _tag === ModRosterOwner.Player;
+    var isPlayer = _tag === Stronghold.Roster.RosterOwner.Player;
     _parent.Slots = [];
 
     for (var i = 0 ; i < _parent.NumActiveMax; i++)
@@ -1512,7 +1493,7 @@ StrongholdScreenRosterModule.prototype.createBrotherSlots = function ( _parent ,
                 return false;
 
             // deny when the player roster has reached brothers max
-            if (drag.data('tag') === ModRosterOwner.Stronghold && self.mPlayer.NumActive >= self.mPlayerRosterLimit)
+            if (drag.data('tag') === Stronghold.Roster.RosterOwner.Stronghold && self.mPlayer.NumActive >= self.mPlayerRosterLimit)
                 return false;
         }
 
@@ -1768,7 +1749,7 @@ StrongholdScreenRosterModule.prototype.updateSelectedBrother = function (_data)
 
     var index = this.mSelectedBrother.Index;
     var tag = this.mSelectedBrother.Tag;
-    var parent = tag == ModRosterOwner.Player ? this.mPlayer : this.mStronghold;
+    var parent = tag == Stronghold.Roster.RosterOwner.Player ? this.mPlayer : this.mStronghold;
     parent.BrothersList[index] = _data;
     parent.Slots[index].empty();
     parent.Slots[index].data('child', null);
@@ -1789,7 +1770,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
 
     switch(this.mToggledType)
     {
-    case ToggleScroll.Type.Portrait:
+    case Stronghold.Roster.ToggleScroll.Type.Portrait:
         this.mTitleContainer.html('Portrait');
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Character.Key in _brother)
         {
@@ -1803,7 +1784,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
         }
         break;
 
-    case ToggleScroll.Type.Skills:
+    case Stronghold.Roster.ToggleScroll.Type.Skills:
         this.mTitleContainer.html('Skills');
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Id in _brother)
         {
@@ -1873,7 +1854,7 @@ StrongholdScreenRosterModule.prototype.updateNameAndTitle = function(_dialog, _b
 {
     var self = this;
     var contentContainer = _dialog.findPopupDialogContentContainer();
-    var parent = _tag === ModRosterOwner.Player ? this.mPlayer : this.mStronghold;
+    var parent = _tag === Stronghold.Roster.RosterOwner.Player ? this.mPlayer : this.mStronghold;
     var inputFields = contentContainer.find('input');
     var name = $(inputFields[0]).getInputText();
     var title = $(inputFields[1]).getInputText();
@@ -1898,7 +1879,7 @@ StrongholdScreenRosterModule.prototype.updateNameAndTitle = function(_dialog, _b
         {
             parent.BrothersList[find.Index] = data;
 
-            if (self.mToggledType === ToggleScroll.Type.Portrait)
+            if (self.mToggledType === Stronghold.Roster.ToggleScroll.Type.Portrait)
                 self.updateDetailsPanel(data);
         }
         else

@@ -63,30 +63,30 @@ StrongholdScreenVisualsModule.prototype.createDIV = function (_parentDiv)
 
 StrongholdScreenVisualsModule.prototype.getSpriteIndex = function()
 {
-	return StrongholdConst.AllSprites.indexOf(this.mBaseSprite)
+	return Stronghold.Visuals.BaseSpriteTypes.indexOf(this.mBaseSprite)
 }
 
 StrongholdScreenVisualsModule.prototype.switchSpriteImage = function( _idx )
 {
-	var arrLen = StrongholdConst.AllSprites.length;
+	var arrLen = Stronghold.Visuals.BaseSpriteTypes.length;
 	var newIdx = this.getSpriteIndex() + _idx;
 	if(newIdx == arrLen) newIdx = 0;
 	if(newIdx < 0) newIdx = arrLen - 1
-	this.mBaseSprite = StrongholdConst.AllSprites[newIdx];
+	this.mBaseSprite = Stronghold.Visuals.BaseSpriteTypes[newIdx];
     this.setSpriteImage();
 }
 
 StrongholdScreenVisualsModule.prototype.setSpriteImage = function()
 {
-	var currentArr = StrongholdConst.Sprites[this.mBaseSprite];
+	var currentArr = Stronghold.Visuals.Sprites[this.mBaseSprite];
 	var baseSize = this.mParent.mData.Size;
 
-    this.mBaseSpriteImages[0].attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.MainSprites[0] + ".png");
-    this.mBaseSpriteImages[1].attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.MainSprites[1] + ".png");
-    this.mBaseSpriteImages[2].attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.MainSprites[2] + ".png");
+    this.mBaseSpriteImages[0].attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[0] + ".png");
+    this.mBaseSpriteImages[1].attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[1] + ".png");
+    this.mBaseSpriteImages[2].attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[2] + ".png");
 
-	this.mUnitSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.UnitSprite + ".png");
-	this.mHouseSpriteImage.attr('src', Path.GFX + StrongholdConst.SpritePath + currentArr.HouseSprites[0] + ".png");
+	this.mUnitSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.UnitSprite + ".png");
+	this.mHouseSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.HouseSprites[0] + ".png");
     var text = currentArr.Name + " by " + currentArr.Author
     if(this.mCurrentBaseSprite == this.mBaseSprite)
     {
