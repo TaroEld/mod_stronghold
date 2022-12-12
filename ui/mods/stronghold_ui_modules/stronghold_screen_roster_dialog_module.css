@@ -314,7 +314,7 @@
 	margin-bottom: 0.5rem;
 }
 
-.world-town-screen .l-skill-groups-container > img
+.stronghold-screen .l-skill-groups-container > img
 {
 	width: 4.0rem;
 	height: 4.0rem;
@@ -498,7 +498,7 @@
 }
 
 
-.world-town-screen > .l-stronghold-pokebro-pc-dialog-container .footer .l-button-bar
+.stronghold-screen > .l-stronghold-pokebro-pc-dialog-container .footer .l-button-bar
 {
 	top: 0;
 	left: 0;
@@ -510,7 +510,7 @@
 	margin: auto;
 }
 
-.world-town-screen > .l-stronghold-pokebro-pc-dialog-container .footer .l-leave-button
+.stronghold-screen > .l-stronghold-pokebro-pc-dialog-container .footer .l-leave-button
 {
 	top: 0;
 	right: 0;
@@ -521,7 +521,7 @@
 	line-height: 3.0rem;
 }
 
-.world-town-screen > .l-stronghold-pokebro-pc-dialog-container .ui-control.brother > .mood-layer img
+.stronghold-screen > .l-stronghold-pokebro-pc-dialog-container .ui-control.brother > .mood-layer img
 {
 	right: -0.6rem;
 	top: 0.3rem;
@@ -541,7 +541,7 @@
 	position: relative;
 }
 
-.world-town-screen .ui-control.popup-dialog.perk-popup
+.stronghold-screen .ui-control.popup-dialog.perk-popup
 {
 	width: 69.8rem;
 	height: 54.3rem;
@@ -551,7 +551,7 @@
 	background-repeat: no-repeat;
 }
 
-.world-town-screen .ui-control.popup-dialog.perk-popup .perk-tree-container
+.stronghold-screen .ui-control.popup-dialog.perk-popup .perk-tree-container
 {
 	top: 3.5rem;
 	left: 1.0rem;
@@ -563,7 +563,7 @@
 	overflow: hidden;
 }
 
-.world-town-screen .ui-control.popup-dialog.perk-popup .perk-tree-container .column
+.stronghold-screen .ui-control.popup-dialog.perk-popup .perk-tree-container .column
 {
 	position: absolute;
 
@@ -576,14 +576,14 @@
 	height: 100%;
 }
 
-.world-town-screen .ui-control.popup-dialog.perk-popup .column .row
+.stronghold-screen .ui-control.popup-dialog.perk-popup .column .row
 {
 	width: 100%;
 	height: 5.0rem;
 	position: absolute;
 }
 
-.world-town-screen .ui-control.popup-dialog.perk-popup .column .row .center
+.stronghold-screen .ui-control.popup-dialog.perk-popup .column .row .center
 {
    position: absolute;
 
@@ -592,18 +592,18 @@
    transform: translate(-50%, -50%);
 }
 
-.world-town-screen .ui-control.popup-dialog.perk-popup .is-unlocked
+.stronghold-screen .ui-control.popup-dialog.perk-popup .is-unlocked
 {
 	opacity: 1;
 }
 
-.world-town-screen .ui-control.popup-dialog.perk-popup .is-locked
+.stronghold-screen .ui-control.popup-dialog.perk-popup .is-locked
 {
 	opacity: 0.33;
 }
 
 
-.world-town-screen .ui-control.popup-dialog.perk-popup .row .l-perk-container
+.stronghold-screen .ui-control.popup-dialog.perk-popup .row .l-perk-container
 {
 	width: 5.0rem;
 	height: 5.0rem;
@@ -611,7 +611,7 @@
 	float: left;
 }
 
-.world-town-screen .ui-control.popup-dialog.perk-popup .l-perk-container .selection-image-layer
+.stronghold-screen .ui-control.popup-dialog.perk-popup .l-perk-container .selection-image-layer
 {
 	top: 0;
 	left: 0;
@@ -625,7 +625,7 @@
 	z-index: 1;
 }
 
-.world-town-screen .ui-control.popup-dialog.perk-popup .l-perk-container .perk-image-layer
+.stronghold-screen .ui-control.popup-dialog.perk-popup .l-perk-container .perk-image-layer
 {
 	top: 0;
 	left: 0;
@@ -641,7 +641,7 @@
 
 
 /* Dismiss Dialog Container */
-.world-town-screen .ui-control.popup-dialog.dismiss-popup
+.stronghold-screen .ui-control.popup-dialog.dismiss-popup
 {
 	width: 44.9rem;
 	height: 25.0rem;
@@ -651,7 +651,7 @@
 	background-repeat: no-repeat;
 }
 
-.world-town-screen .ui-control.popup-dialog .dismiss-character-container
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container
 {
 	margin-top: -3.5rem;
 	margin-bottom: -0.5rem;
@@ -662,7 +662,7 @@
 	float: left;
 }
 
-.world-town-screen .ui-control.popup-dialog .dismiss-character-container .title-label
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container .title-label
 {
 	width: 100%;
 	height: 3.6rem;
@@ -674,7 +674,7 @@
 	line-height: 4.4rem;
 }
 
-.world-town-screen .ui-control.popup-dialog .dismiss-character-container .label
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container .label
 {
 	width: 100%;
 	position: relative;
@@ -683,7 +683,7 @@
 	text-align: left;
 }
 
-.world-town-screen .ui-control.popup-dialog .dismiss-character-container .retirement-package
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container .retirement-package
 {
 	width: 100%;
 	position: relative;
@@ -700,7 +700,7 @@
 	line-height: 3.0rem;
 }
 
-.world-town-screen .ui-control.popup-dialog .dismiss-character-container .retirement-package .blub
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container .retirement-package .blub
 {
 	position: absolute;
 	left: 3.2rem;
@@ -709,7 +709,7 @@
 
 
 /* Change Name & Title Dialog Container */
-.world-town-screen .ui-control.popup-dialog.change-name-and-title-popup
+.stronghold-screen .ui-control.popup-dialog.change-name-and-title-popup
 {
 	width: 44.9rem;
 	height: 25.0rem;
@@ -719,7 +719,7 @@
 	background-repeat: no-repeat;
 }
 
-.world-town-screen .ui-control.popup-dialog .change-name-and-title-container
+.stronghold-screen .ui-control.popup-dialog .change-name-and-title-container
 {
 	width: 100%;
 	padding: 0.6rem;
@@ -727,7 +727,7 @@
 	float: left;
 }
 
-.world-town-screen .ui-control.popup-dialog .change-name-and-title-container .row
+.stronghold-screen .ui-control.popup-dialog .change-name-and-title-container .row
 {
 	width: 100%;
 	height: 5.9rem;
@@ -735,7 +735,7 @@
 	float: left;
 }
 
-.world-town-screen .ui-control.popup-dialog .change-name-and-title-container .row .label
+.stronghold-screen .ui-control.popup-dialog .change-name-and-title-container .row .label
 {
 	width: 9.0rem;
 	height: 5.9rem;
@@ -747,7 +747,7 @@
 	text-align: right;
 }
 
-.world-town-screen .ui-control.popup-dialog .change-name-and-title-container .row .l-input
+.stronghold-screen .ui-control.popup-dialog .change-name-and-title-container .row .l-input
 {
 	width: 30.0rem;
 	height: 4.0rem;
