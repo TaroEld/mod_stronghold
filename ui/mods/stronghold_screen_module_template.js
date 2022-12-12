@@ -61,24 +61,6 @@ StrongholdScreenModuleTemplate.prototype.show = function ()
 	this.loadFromData()
 };
 
-StrongholdScreenModuleTemplate.prototype.notifyBackendOnShown = function ()
-{
-	if (this.mSQHandle !== null)
-	{
-		console.error("notifyBackendOnShown")
-		SQ.call(this.mSQHandle, 'onScreenShown');
-	}
-};
-
-StrongholdScreenModuleTemplate.prototype.notifyBackendOnHidden = function ()
-{
-	if (this.mSQHandle !== null)
-	{
-		console.error("notifyBackendOnHidden")
-		SQ.call(this.mSQHandle, 'onScreenHidden');
-	}
-};
-
 StrongholdScreenModuleTemplate.prototype.hide = function ()
 {
 	this.mIsVisible = false;
