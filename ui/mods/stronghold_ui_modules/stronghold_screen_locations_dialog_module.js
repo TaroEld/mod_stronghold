@@ -55,7 +55,7 @@ StrongholdScreenLocationsModule.prototype.createLocationContent = function ()
 {
     var self = this;
     this.mLocationsRow.empty();
-    iterateObject(this.mModuleData, function(_locationID, _location){
+    MSU.iterateObject(this.mModuleData, function(_locationID, _location){
         var locationImageContainer = $('<div class="structure-image-container"/>');
         self.mLocationsRow.append(locationImageContainer);
         locationImageContainer.click(function(){
@@ -124,7 +124,7 @@ StrongholdScreenLocationsModule.prototype.switchActiveLocation = function( _loca
             requirements += '<li style="color:Green;">' + maxLocationsText + '</li>'
         }
         requirements += '<li style="color:Green;">Maximum amount of locations of this type: ' + this.mActiveLocation.CurrentAmount + " / " + this.mActiveLocation.MaxAmount  + '</li>';
-        iterateObject(this.mActiveLocation.Requirements, function(_, _requirement){
+        MSU.iterateObject(this.mActiveLocation.Requirements, function(_, _requirement){
             if(_requirement.IsValid) requirements += '<li style="color:Green;">' + _requirement.Text + '</li>'
             else
             {

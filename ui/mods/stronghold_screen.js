@@ -129,9 +129,10 @@ StrongholdScreen.prototype.updateTitle = function ( _titleText )
 
 StrongholdScreen.prototype.createModules = function ()
 {
+	var self = this;
 	// Maybe I shouldn't be doing this
-	iterateObject(this.Modules, function(_key, _module){
-		_module.Module = new window["StrongholdScreen" + _key](this);
+	MSU.iterateObject(this.Modules, function(_key, _module){
+		_module.Module = new window["StrongholdScreen" + _key](self);
 	})
 };
 
@@ -248,7 +249,7 @@ StrongholdScreen.prototype.createModuleOptionsButtons = function()
     this.mModuleOptionsList = this.mModuleOptionsContainer.createList(1.0);
     this.mModuleOptionsListScrollContainer = this.mModuleOptionsList.findListScrollContainer();
 
-    iterateObject(this.Modules, function(_key, _module){
+    MSU.iterateObject(this.Modules, function(_key, _module){
         var row = $('<div class="row"/>');
         self.mModuleOptionsListScrollContainer.append(row);
         _module.Button = row.createTextButton(_module.ButtonName, function ()
@@ -269,7 +270,7 @@ StrongholdScreen.prototype.loadFromData = function(_data)
 StrongholdScreen.prototype.loadModuleData = function()
 {
     var self = this;
-    iterateObject(this.Modules, function(_key){
+    MSU.iterateObject(this.Modules, function(_key){
         var curModule = self.Modules[_key];
         if(curModule !== undefined && curModule.Module !== null)
         {

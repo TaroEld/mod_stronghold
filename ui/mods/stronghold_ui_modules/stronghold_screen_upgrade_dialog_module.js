@@ -89,7 +89,7 @@ StrongholdScreenUpgradeModule.prototype.fillRequirementsText = function()
     var TextDone = "";
     var TextNotDone = "";
     var allRequirementsDone = true;
-    iterateObject(this.mModuleData.UpgradeRequirements, function(_key, _value){
+    MSU.iterateObject(this.mModuleData.UpgradeRequirements, function(_key, _value){
         if(_value.Done === true)
         {
             TextDone += _value.TextDone + "<br>"

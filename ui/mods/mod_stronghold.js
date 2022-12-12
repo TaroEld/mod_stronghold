@@ -65,7 +65,6 @@ var printObject = function(_object)
             iterateObject(_value, iterateFunc);
         }
     }
-    iterateObject(_object, iterateFunc)
 }
 
 $.fn.toggleDisplay = function(_bool)

@@ -55,7 +55,7 @@ StrongholdScreenBuildingsModule.prototype.createBuildingContent = function ()
 {
     var self = this;
     this.mBuildingsRow.empty();
-    iterateObject(this.mModuleData, function(_buildingID, _building){
+    MSU.iterateObject(this.mModuleData, function(_buildingID, _building){
         var buildingImageContainer = $('<div class="structure-image-container"/>');
         self.mBuildingsRow.append(buildingImageContainer);
         buildingImageContainer.click(function(){
@@ -114,7 +114,7 @@ StrongholdScreenBuildingsModule.prototype.switchActiveBuilding = function( _buil
         {
             requirements += '<li style="color:Green;">' + maxBuildingsText + '</li>'
         }
-        iterateObject(this.mActiveBuilding.Requirements, function(_, _requirement){
+        MSU.iterateObject(this.mActiveBuilding.Requirements, function(_, _requirement){
             if(_requirement.IsValid) requirements += '<li style="color:Green;">' + _requirement.Text + '</li>'
             else
             {
