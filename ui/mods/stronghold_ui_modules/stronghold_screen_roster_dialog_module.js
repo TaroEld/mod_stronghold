@@ -1,31 +1,3 @@
-// Add a utility function to create a more customized list
-$.fn.createListWithCustomOption = function(_options, _classes,_withoutFrame)
-{
-    var result = $('<div class="ui-control list has-frame"/>');
-    if (_withoutFrame !== undefined && _withoutFrame === true)
-    {
-        result.removeClass('has-frame');
-    }
-
-    if (_classes !== undefined && _classes !== null && typeof(_classes) === 'string')
-    {
-        result.addClass(_classes);
-    }
-
-    var scrollContainer = $('<div class="scroll-container"/>');
-    result.append(scrollContainer);
-
-    this.append(result);
-
-    if (_options.delta === null || _options.delta === undefined)
-    {
-        _options.delta = 8;
-    }
-
-    // NOTE: create scrollbar (must be after the list was appended to the DOM!)
-    result.aciScrollBar(_options);
-    return result;
-};
 "use strict";
 var StrongholdScreenRosterModule = function(_parent)
 {
@@ -221,7 +193,7 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     var listContainerLayout = $('<div class="l-list-container"/>');
     row.append(listContainerLayout);
     // the normal way to create the list fails me, so i make a cusom function so i can add the option i want easily
-    this.mStronghold.ListContainer = listContainerLayout.createListWithCustomOption({
+    this.mStronghold.ListContainer = this.createListWithCustomOption(listContainerLayout, {
         delta: 1.24,
         lineDelay: 0,
         lineTimer: 0,
@@ -424,6 +396,34 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     detailFrame.append(this.mPlayer.ListScrollContainer);
     this.createBrotherSlots(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
 
+};
+
+StrongholdScreenRosterModule.prototype.createListWithCustomOption = function(_target, _options, _classes, _withoutFrame)
+{
+    var result = $('<div class="ui-control list has-frame"/>');
+    if (_withoutFrame !== undefined && _withoutFrame === true)
+    {
+        result.removeClass('has-frame');
+    }
+
+    if (_classes !== undefined && _classes !== null && typeof(_classes) === 'string')
+    {
+        result.addClass(_classes);
+    }
+
+    var scrollContainer = $('<div class="scroll-container"/>');
+    result.append(scrollContainer);
+
+    _target.append(result);
+
+    if (_options.delta === null || _options.delta === undefined)
+    {
+        _options.delta = 8;
+    }
+
+    // NOTE: create scrollbar (must be after the list was appended to the DOM!)
+    result.aciScrollBar(_options);
+    return result;
 };
 
 StrongholdScreenRosterModule.prototype.loadFromData = function ()
