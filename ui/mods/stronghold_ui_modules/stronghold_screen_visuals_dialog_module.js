@@ -4,7 +4,7 @@ var StrongholdScreenVisualsModule = function(_parent)
 {
 	StrongholdScreenModuleTemplate.call(this, _parent);
 	this.mID = "VisualsModule"
-	this.mTitle = "Visuals"
+	this.mTitle = "Change Visuals"
     this.mCurrentBaseSprite = null;
     this.mBaseSprite = null;
     this.mBaseSpriteIndex = null;
