@@ -22,9 +22,6 @@ StrongholdScreenVisualsModule.prototype.createDIV = function (_parentDiv)
 	StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     var self = this;
     this.mContentContainer.addClass("visuals-module");
-
-    this.mTitleTextContainer = this.mContentContainer.appendRow("Change Visuals").find(".sub-title");
-    
     
     var baseSpriteRow = this.mContentContainer.appendRow("", "base-sprites-row gold-line-bottom");
     this.mSpriteNameLabel = baseSpriteRow.find(".sub-title");
