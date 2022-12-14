@@ -1,9 +1,9 @@
-.locations-module .locations-row
+.structures-module .structure-row
 {
 	height: 20rem;
 }
 
-.locations-module .structure-image-container
+.structures-module .structure-image-container
 {
 	height: 10rem;
 	width: 14.4rem;
@@ -31,16 +31,16 @@
 {
 	display: block;
 }
-.locations-module .description-row
+.structures-module .description-row
 {
 	height: 16rem;
 }
-.locations-module .description-row .active-location-image-container
+.structures-module .description-row .active-structure-image-container
 {
 	height: 20rem;
 	width: 28rem;
 }
-.locations-module .active-location-image-container .active-location-image
+.structures-module .active-structure-image-container .active-structure-image
 {
 	height: 16rem;
 	width: 28rem;
@@ -48,7 +48,7 @@
 }
 
 
-.locations-module .description-row .active-location-text-container
+.structures-module .description-row .active-structure-text-container
 {
 	height: 20rem;
 	flex: 1;
@@ -56,14 +56,14 @@
 }
 
 
-.locations-module .footer-button-bar
+.structures-module .footer-button-bar
 {
     position: absolute;
     bottom: 0;
     justify-content: center;
 }
 
-.locations-module .footer-button-bar > div
+.structures-module .footer-button-bar > div
 {
     width: 17.5rem;
     height: 4.3rem;

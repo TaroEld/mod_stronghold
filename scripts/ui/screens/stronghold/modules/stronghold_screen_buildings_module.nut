@@ -3,29 +3,31 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 
 	function getUIData( _ret )
 	{
-		::logInfo("getBuildingsUIData runs")
 		foreach(buildingID, building in ::Stronghold.BuildingDefs)
 		{
 			local hasBuilding = this.getTown().hasBuilding(building.ID) || ("SouthID" in building && this.getTown().hasBuilding(building.SouthID))
-			local requirements = []
-			if ("Requirements" in building)
-			{
-				foreach(requirement in building.Requirements)
+			local requirements = [
 				{
-					requirements.push({
-						Text = requirement.Text,
-						IsValid = requirement.IsValid(this.getTown())
-					})
+					Text = "Maximum amount of buildings for this base level: " + this.getTown().getActiveBuildings().len() + " / " + this.getTown().getMaxBuildings(),
+					IsValid = this.getTown().getActiveBuildings().len() < this.getTown().getMaxBuildings()
 				}
+			]
+			foreach(requirement in building.Requirements)
+			{
+				requirements.push({
+					Text = requirement.Text,
+					IsValid = requirement.IsValid(this.getTown())
+				})
 			}
 			_ret[buildingID] <- {
 				Name = building.Name,
 				ID = building.ID,
+				ConstID = buildingID,
 				Description = building.Description,
 				Cost = building.Cost,
 				Path = building.Path,
 				ImagePath = building.Path + ".png",
-				HasBuilding = hasBuilding,
+				HasStructure = hasBuilding,
 				Requirements = requirements
 			}
 		}

@@ -5,27 +5,34 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 	{
 		foreach(locationID, location in ::Stronghold.LocationDefs)
 		{
-			local hasLocation = this.getTown().countAttachedLocations(location.ID)
-			local requirements = []
-			if ("Requirements" in location)
-			{
-				foreach(requirement in location.Requirements)
+			local countLocation = this.getTown().countAttachedLocations(location.ID)
+			local requirements = [
 				{
-					requirements.push({
-						Text = requirement.Text,
-						IsValid = requirement.IsValid(this.getTown())
-					})
+					Text = "Maximum amount of locations for this base level: " + this.getTown().countAttachedLocations() + " / " + this.getTown().getMaxLocations(),
+					IsValid = this.getTown().countAttachedLocations() < this.getTown().getMaxLocations()
+				},
+				{
+					Text = "Maximum amount of locations of this type: " + countLocation + " / " + location.MaxAmount,
+					IsValid = countLocation < location.MaxAmount,
 				}
+			]
+			foreach(requirement in location.Requirements)
+			{
+				requirements.push({
+					Text = requirement.Text,
+					IsValid = requirement.IsValid(this.getTown())
+				})
 			}
 			_ret[locationID] <- {
 				Name = location.Name,
 				ID = location.ID,
-				ConstID = location.ConstID,
+				ConstID = locationID,
 				Description = location.Description,
 				Cost = location.Cost,
 				Path = location.Path,
 				ImagePath = location.Path + ".png",
-				CurrentAmount = hasLocation,
+				HasStructure = countLocation > 0,
+				CurrentAmount = countLocation,
 				MaxAmount = location.MaxAmount,
 				Requirements = requirements
 			}
