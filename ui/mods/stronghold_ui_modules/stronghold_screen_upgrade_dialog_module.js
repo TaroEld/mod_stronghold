@@ -6,8 +6,6 @@ var StrongholdScreenUpgradeModule = function(_parent)
     this.mID = "UpgradeModule";
     this.mTitle = "Upgrade your base";
     this.mBaseSprite = null;
-    this.mBaseSpriteIndex = null;
-    this.mTitleTextContainer = null;
     this.UpgradeRequirements = {}
 };
 
@@ -23,9 +21,6 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
     StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     var self = this;
     this.mContentContainer.addClass("upgrade-module");
-
-    this.mTitleTextContainer = this.mContentContainer.appendRow("Upgrade your Base").find(".sub-title");
-
     var upgradeRow = this.mContentContainer.appendRow(null, "upgrade-base-row");
 
     var upgradeDetailsContainer = $('<div class="upgrade-details-container"/>');
@@ -38,15 +33,15 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
     upgradeRow.append(upgradeSpriteContainer);
     this.mBaseUpgradeSpriteImage = $('<img class="upgrade-sprite-image"/>');
     upgradeSpriteContainer.append(this.mBaseUpgradeSpriteImage);
-
-    var upgradeRequirements = this.mContainer.appendRow("Requirements", "requirements-row");
+    this.mContainer.appendRow("Requirements", "custom-header-background");
+    var upgradeRequirements = this.mContainer.appendRow(null, "requirements-row");
     var requirementsDone = upgradeRequirements.appendRow("Fulfilled", "upgrade-requirements-container");
-    this.mRequirementsDoneTextContainer = $('<div class="upgrade-requirements-text-container text-font-normal font-style-italic font-bottom-shadow font-color-positive-value"/>');
-    requirementsDone.append(this.mRequirementsDoneTextContainer);
+    this.mRequirementsDoneTable = $('<table/>');
+    requirementsDone.append(this.mRequirementsDoneTable);
 
     var requirementsNotDone = upgradeRequirements.appendRow("Unfulfilled", "upgrade-requirements-container");
-    this.mRequirementsNotDoneTextContainer = $('<div class="upgrade-requirements-text-container text-font-normal font-style-italic font-bottom-shadow font-color-negative-value"/>');
-    requirementsNotDone.append(this.mRequirementsNotDoneTextContainer);
+    this.mRequirementsNotDoneTable = $('<table/>');
+    requirementsNotDone.append(this.mRequirementsNotDoneTable);
 
 
     var footerRow = this.mContentContainer.appendRow(null, "footer-button-bar");
@@ -55,21 +50,6 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
         self.changeSprites();
     }, "upgrade-base-button", 1)
 };
-
-StrongholdScreenUpgradeModule.prototype.getSpriteIndex = function()
-{
-    return Stronghold.Visuals.BaseSpriteTypes.indexOf(this.mBaseSprite)
-}
-
-StrongholdScreenUpgradeModule.prototype.switchSpriteImage = function( _idx )
-{
-    var arrLen = Stronghold.Visuals.BaseSpriteTypes.length;
-    var newIdx = this.getSpriteIndex() + _idx;
-    if(newIdx == arrLen) newIdx = 0;
-    if(newIdx < 0) newIdx = arrLen - 1
-    this.mBaseSprite = Stronghold.Visuals.BaseSpriteTypes[newIdx];
-    this.setSpriteImage();
-}
 
 StrongholdScreenUpgradeModule.prototype.setSpriteImage = function()
 {
@@ -86,29 +66,40 @@ StrongholdScreenUpgradeModule.prototype.fillUpgradeDetailsText = function()
 
 StrongholdScreenUpgradeModule.prototype.fillRequirementsText = function()
 {
-    var TextDone = "";
-    var TextNotDone = "";
+	this.mRequirementsDoneTable.empty();
+	this.mRequirementsNotDoneTable.empty();
+	var self = this;
+
     var allRequirementsDone = true;
-    MSU.iterateObject(this.mModuleData.UpgradeRequirements, function(_key, _value){
-        if(_value.Done === true)
-        {
-            TextDone += _value.TextDone + "<br>"
-        }
-        else
-        {
-            TextNotDone += _value.TextNotDone
-            allRequirementsDone = false;
-        }
+    MSU.iterateObject(this.mModuleData.UpgradeRequirements, function(_key, _requirement){
+        self.addRequirementRow(_requirement);
+        if (!_requirement.Done)
+        	allRequirementsDone = false;
     })
-    this.mRequirementsDoneTextContainer.html(TextDone);
-    this.mRequirementsNotDoneTextContainer.html(TextNotDone);
     this.mUpgradeBaseButton.enableButton(allRequirementsDone)
+}
+
+StrongholdScreenUpgradeModule.prototype.addRequirementRow = function(_requirement)
+{
+	if(_requirement.Done)
+    {
+    	var container = this.mRequirementsDoneTable;
+    	var tr = $("<tr/>").appendTo(container);
+        tr.append("<td><img src='" + Path.GFX + "ui/icons/unlocked_small.png" + "'/></td>");
+        tr.append("<td><div class='text-font-medium font-color-label'>" + _requirement.TextDone + "</div></td>");
+    }
+    else
+    {
+    	var container = this.mRequirementsNotDoneTable;
+    	var tr = $("<tr/>").appendTo(container);
+       	tr.append("<td><img src='" + Path.GFX + "ui/icons/locked_small.png" + "'/></td>");
+        tr.append("<td><div class='text-font-medium font-color-disabled'>" + _requirement.TextNotDone + "</div></td>");
+    }
 }
 
 StrongholdScreenUpgradeModule.prototype.loadFromData = function()
 {
     this.mBaseSprite = this.mData.TownAssets.SpriteName;
-    this.mBaseSpriteIndex = this.getSpriteIndex();
     this.setSpriteImage();
     this.fillUpgradeDetailsText();
     this.fillRequirementsText();
