@@ -3,7 +3,7 @@ var Stronghold = {
 	{
 	    SpritePath : "ui/settlements/settlement_icons/",
 	    BuildingSpritePath : "ui/buildings/",
-	    LocationsSpritePath : "ui/locations/",
+	    LocationSpritePath : "ui/locations/",
 	    SelectionImagePath : "ui/selection.png",
 	    SelectionGoldImagePath : "ui/selection-gold.png",
 	    BaseSpriteTypes : ["Default", "Luft_Basic", "Luft_Brigand", "Luft_Necro", "Luft_Fishing"],
