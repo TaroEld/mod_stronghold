@@ -893,43 +893,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	}
 
-	function getUIData()
-	{
-		local playerRoster = this.World.getPlayerRoster().getAll().len();
-		local townRoster = this.getLocalRoster().getAll().len();
-		local maxBuildingSlots = this.getSize() + 4;
-		local currentBuildings = 0
-		foreach (building in this.m.Buildings){
-			if (building != null){
-				currentBuildings++
-			}
-		}
-		local currentLocations = 0;
-		foreach (location in this.m.AttachedLocations){
-			if (location != null && location.m.ID != "attached_location.harbor"){
-				currentLocations++
-			}
-		}
-		local ret = {
-			Name = this.getName(),
-			ID = this.getID(),
-			Size = this.getSize(),
-			SizeName = this.getSizeName(),
-			Upgrading = this.isUpgrading(),
-			SpriteName = this.getFlags().get("CustomSprite"),
-			UnlockAdvantages = ::Stronghold.UnlockAdvantages,
-			Assets = {
-				mBrothersAsset = playerRoster,
-				mRosterAsset = townRoster,
-				mBuildingAsset = currentBuildings,
-				mBuildingAssetMax = maxBuildingSlots,
-				mLocationAsset = currentLocations,
-				mLocationAssetMax = this.m.AttachedLocationsMax,
-			}
-		};
-		return ret
-	}
-	
 	function onSerialize( _out )
 	{
 		this.settlement.onSerialize(_out);
