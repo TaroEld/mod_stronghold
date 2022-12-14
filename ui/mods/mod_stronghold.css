@@ -16,8 +16,11 @@
     line-height: 4rem;;
     text-align: center;
     vertical-align: middle;
-    border-image: url("coui://gfx/ui/skin/line_gold.png") 0% 0% 100% 0%;
-    border-image-outset: 0 0 0.5rem 0;
+/*    border-image: url("coui://gfx/ui/skin/line_gold.png") 0% 0% 100% 0%;
+    border-image-outset: 0 0 0.5rem 0;*/
+   	background-image: url("coui://gfx/ui/skin/custom_background_698_40.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
 
     /*border: 2px solid yellow;*/
 }
