@@ -173,9 +173,9 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		_ret.SpriteName <- town.getFlags().get("CustomSprite");
 		_ret.mRosterAsset <- townRoster;
 		_ret.mRosterAssetMax <- 16;
-		_ret.mBuildingAsset <- currentBuildings;
+		_ret.mBuildingAsset <- town.getActiveBuildings().len();
 		_ret.mBuildingAssetMax <- maxBuildingSlots;
-		_ret.mLocationAsset <- currentLocations;
+		_ret.mLocationAsset <- town.m.AttachedLocations.len() - town.countAttachedLocations("attached_location.harbor");
 		_ret.mLocationAssetMax <- town.m.AttachedLocationsMax;
 		return _ret
 	}
