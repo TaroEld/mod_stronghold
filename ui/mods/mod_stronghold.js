@@ -122,7 +122,7 @@ $.fn.appendRow = function(_subTitle, _classes)
     this.append(row);
     if(_subTitle !== undefined && _subTitle !== null)
     {
-        var subTitle = $('<div class="sub-title text-font-normal font-style-italic font-bottom-shadow font-color-subtitle">' + _subTitle + '</div>');
+        var subTitle = $('<div class="sub-title title-font-big font-bold font-bottom-shadow font-color-title">' + _subTitle + '</div>');
         row.append(subTitle)
     }
     if(_classes !== undefined && _classes !== null)
@@ -396,8 +396,6 @@ WorldTownScreenMainDialogModule.prototype.notifyBackendPopupDialogIsVisible = fu
     this.mIsPopupOpen = _visible;
     SQ.call(this.mSQHandle, 'onRenameTownVisible', _visible);
 };
-
-
 
 
 WorldCampfireScreenAssets.prototype.createStrongholdDIV = function (_parentDiv)
