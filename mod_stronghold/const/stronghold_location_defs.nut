@@ -84,14 +84,7 @@ foreach(locationID, location in ::Stronghold.LocationDefs)
 	location.Cost = ::Stronghold.Locations[locationID].Cost;
 	location.MaxAmount <- ::Stronghold.Locations[locationID].MaxAmount;
 	location.Requirements.push({
-		Text = "Cost: " + location.Cost * ::Stronghold.PriceMult,
+		Text = "Price: " + location.Cost * ::Stronghold.PriceMult,
 		IsValid = @(_town) this.World.Assets.getMoney() >= ::Stronghold.Locations[locationID].Cost * ::Stronghold.PriceMult
 	})
-	// if(location.isValid == null)
-	// {
-	// 	location.isValid = function(_town)
-	// 	{
-	// 		return ::Stronghold.Locations[this.ConstID].MaxAmount > _town.countAttachedLocations(this.ID)
-	// 	}
-	// }
 }

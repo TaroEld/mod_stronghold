@@ -107,7 +107,7 @@
 		SouthPath = false,
 		Requirements =
 		[{
-			Text = "Upgrade your base to a Stronghold.",
+			Text = "Required base size: Stronghold (3/3).",
 			IsValid = @(_town) _town.getSize() == 3
 		}]
 
@@ -125,7 +125,7 @@
 foreach(buildingID, building in ::Stronghold.BuildingDefs)
 {
 	building.Requirements.push({
-		Text = "Cost: " + ::Stronghold.BuildingPrices[buildingID] * ::Stronghold.PriceMult,
+		Text = "Price: " + ::Stronghold.BuildingPrices[buildingID] * ::Stronghold.PriceMult,
 		IsValid = @(_town) this.World.Assets.getMoney() >= ::Stronghold.BuildingPrices[buildingID] * ::Stronghold.PriceMult
 	})
 
