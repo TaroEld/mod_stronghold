@@ -48,9 +48,9 @@
     width: 50%;
 }
 
-.upgrade-requirements-container .upgrade-requirements-text-container
+.requirements-row .upgrade-requirements-container img
 {
-    text-align: center;
+    top: 3rem;
 }
 
 .upgrade-module .footer-button-bar
