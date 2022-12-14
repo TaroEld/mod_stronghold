@@ -239,19 +239,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return ret;
 	}
 
-	function countAttachedLocations( _id )
-	{
-		local count = 0;
-		foreach( a in this.getActiveAttachedLocations() )
-		{
-			if (a.isActive() && a.getTypeID() == _id)
-			{
-				count = count + 1;
-			}
-		}
-
-		return count;
-	}
 
 	function setUpgrading(_bool)
 	{
@@ -421,6 +408,42 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				return
 			}
 		}
+	}
+
+	function getActiveBuildings()
+	{
+		return this.m.Buildings.filter(@(a, b) b != null);
+	}
+
+	function getMaxBuildings()
+	{
+		return this.getSize() + 4;
+	}
+
+	function getMaxLocations()
+	{
+		return this.m.AttachedLocationsMax;
+	}
+
+	function getActiveBuildings()
+	{
+		return this.m.Buildings.filter(@(a, b) b != null);
+	}
+
+	function countAttachedLocations( _id = null )
+	{
+		if (_id == null)
+			return this.m.AttachedLocations.len();
+		local count = 0;
+		foreach( a in this.getActiveAttachedLocations() )
+		{
+			if (a.isActive() && a.getTypeID() == _id)
+			{
+				count = count + 1;
+			}
+		}
+
+		return count;
 	}
 
 	function removeLocation(_locationID)
