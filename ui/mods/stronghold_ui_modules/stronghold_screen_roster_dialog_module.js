@@ -1138,7 +1138,6 @@ StrongholdScreenRosterModule.prototype.createSlotDragHandler = function ( _slot 
 	{
 		if ($(this).data("child") === null)
 		{
-			console.error("returning")
 			return false;
 		}
 		dd.brother = $(this).data("child");
@@ -1199,7 +1198,6 @@ StrongholdScreenRosterModule.prototype.createSlotDropHandler = function ( _slot 
 	    var proxy = $(dd.proxy);
 	    var brother = dd.brother;
 	    brother.removeClass('is-dragged');
-	    console.error("brother " +brother)
 
 	    if (proxy === undefined || proxy.data('idx') === undefined || drop === undefined || drop.data('idx') === undefined)
 	    {
