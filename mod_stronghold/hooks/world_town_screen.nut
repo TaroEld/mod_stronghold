@@ -3,7 +3,10 @@
 	o.showLastActiveDialog = function()
 	{
 		if (::Stronghold.StrongholdScreen.isVisible())
+		{
+			::Stronghold.StrongholdScreen.updateData(["StashModule", "RosterModule"])
 			return;
+		}
 		return showLastActiveDialog();
 	}
 })
