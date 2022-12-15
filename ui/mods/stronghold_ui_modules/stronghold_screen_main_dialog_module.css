@@ -32,7 +32,11 @@
 {
     width: 25.2rem;
     height: 19.9rem;
-    /*border: 2px solid blue;*/
+}
+.stronghold-module-dialog-container .base-sprite-container .base-sprite-image
+{
+	width: 25.2rem;
+	height: 19.9rem;
 }
 .stronghold-module-dialog-container .main-module .other-description-container
 {
