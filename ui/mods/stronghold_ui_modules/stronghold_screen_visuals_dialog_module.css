@@ -9,27 +9,27 @@
  *  @Description:	World Town Screen JS
  */
 
-.visuals-module .base-sprites-row
+.stronghold-screen .visuals-module .base-sprites-row
 {
     justify-content: space-between;
     height: 25rem;
     border: 2px solid green;
 }
 
-.visuals-module .base-sprite-container
+.stronghold-screen .visuals-module .base-sprite-container
 {
     width: 25.2rem;
     height: 19.9rem;
     /*border: 2px solid blue;*/
 } 
 
-.visuals-module .base-sprite-container .base-sprite-image
+.stronghold-screen .visuals-module .base-sprite-container .base-sprite-image
 {
 	width: 25.2rem;
 	height: 19.9rem;
 }
 
-.visuals-module .other-sprites-row
+.stronghold-screen .visuals-module .other-sprites-row
 {
     justify-content: space-between;
 
@@ -38,20 +38,20 @@
 
 
 
-.visuals-module .footer-button-bar
+.stronghold-screen .visuals-module .footer-button-bar
 {
     position: absolute;
     bottom: 0;
     justify-content: center;
 }
 
-.visuals-module .footer-button-bar .apply-sprites-button
+.stronghold-screen .visuals-module .footer-button-bar .apply-sprites-button
 {
     width: 17.5rem;
     height: 4.3rem;
 } 
 
-.visuals-module .footer-button-bar .switch-button-container
+.stronghold-screen .visuals-module .footer-button-bar .switch-button-container
 {
     height:  4.1rem;
     width: 12rem;
@@ -59,7 +59,7 @@
     justify-content: center;
 } 
 
-.visuals-module .switch-button-container .switch-image
+.stronghold-screen .visuals-module .switch-button-container .switch-image
 {
     height:  4.1rem;
     width: 5.2rem ;

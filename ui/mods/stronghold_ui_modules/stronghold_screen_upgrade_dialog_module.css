@@ -1,9 +1,9 @@
-.upgrade-module .upgrade-base-row
+.stronghold-screen .upgrade-module .upgrade-base-row
 {
     height: 19.9rem;
 }
 
-.upgrade-module .upgrade-details-container
+.stronghold-screen .upgrade-module .upgrade-details-container
 {
     flex: 1;
     display: flex;
@@ -11,7 +11,7 @@
     /*border: 1px solid green;*/
 }
 
-.upgrade-module .upgrade-sprite-container
+.stronghold-screen .upgrade-module .upgrade-sprite-container
 {
     width: 28.0rem;
     display: flex;
@@ -20,26 +20,26 @@
     /*border: 2px solid blue;*/
 } 
 
-.upgrade-module .upgrade-sprite-image
+.stronghold-screen .upgrade-module .upgrade-sprite-image
 {
     width: 25.2rem;
     height: 19.9rem;
 }
 
 
-.upgrade-module .upgrade-details-container .sub-title
+.stronghold-screen .upgrade-module .upgrade-details-container .sub-title
 {
     /*border: 1px solid yellow;*/
 } 
 
-.upgrade-module .upgrade-details-container .upgrade-base-text-container
+.stronghold-screen .upgrade-module .upgrade-details-container .upgrade-base-text-container
 {
     flex: 1;
     /*border: 1px solid red;*/
 } 
 
 
-.upgrade-module .requirements-row
+.stronghold-screen .upgrade-module .requirements-row
 {
 }
 
@@ -53,13 +53,13 @@
     top: 3rem;
 }
 
-.upgrade-module .footer-button-bar
+.stronghold-screen .upgrade-module .footer-button-bar
 {
     position: absolute;
     bottom: 0;
     justify-content: center;
 }
-.upgrade-module .footer-button-bar .upgrade-base-button
+.stronghold-screen .upgrade-module .footer-button-bar .upgrade-base-button
 {
     align-self: center;
     width: 17.5rem;

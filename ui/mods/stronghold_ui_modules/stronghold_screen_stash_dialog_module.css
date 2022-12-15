@@ -1,8 +1,8 @@
-.stash-module
+.stronghold-screen .stash-module
 {
 	display: block !important;
 }
-.stash-module .l-tab-container
+.stronghold-screen .stash-module .l-tab-container
 {
     top: -1.0rem;
     left: 0;
@@ -14,15 +14,15 @@
     margin: auto;
 }
 
-.stash-module  .column
+.stronghold-screen .stash-module  .column
 {
     height: 100%;
     position: relative;
     float : left;
 }
 
-.stash-module  .column.is-left,
-.stash-module  .column.is-right
+.stronghold-screen .stash-module  .column.is-left,
+.stronghold-screen .stash-module  .column.is-right
 {
     width: 40.0rem;
     background-image: url("coui://gfx/ui/skin/dialog_panel_02.png");
@@ -30,19 +30,19 @@
     background-repeat: no-repeat;
 }
 
-.stash-module  .column.is-middle
+.stronghold-screen .stash-module  .column.is-middle
 {
     width: 6.4rem;
 }
 
-.stash-module  .row
+.stronghold-screen .stash-module  .row
 {
     left: 0;
     right: 0;
     position: absolute;
 }
 
-.stash-module  .row.is-header
+.stronghold-screen .stash-module  .row.is-header
 {
     top: -0.1rem;
     height: 3.0rem;
@@ -51,19 +51,19 @@
     text-align: center;
 }
 
-.stash-module  .row.is-content
+.stronghold-screen .stash-module  .row.is-content
 {
     top: 3.4rem;
     bottom: 3.0rem;
 }
 
-.stash-module  .row.is-footer
+.stronghold-screen .stash-module  .row.is-footer
 {
     bottom: 0;
     height: 3.0rem;
 }
 
-.stash-module  .row.is-content .button-container
+.stronghold-screen .stash-module  .row.is-content .button-container
 {
     position: absolute;
 
@@ -72,13 +72,13 @@
     height: 55.0rem;
 }
 
-.stash-module  .row.is-content .l-button.is-sort
+.stronghold-screen .stash-module  .row.is-content .l-button.is-sort
 {
     width: 5.2rem;
     height: 4.1rem;
 }
 
-.stash-module  .row.is-content .l-button.is-all-filter
+.stronghold-screen .stash-module  .row.is-content .l-button.is-all-filter
 {
     position: absolute;
 
@@ -87,7 +87,7 @@
     top: 4.0rem;
 }
 
-.stash-module  .row.is-content .l-button.is-weapons-filter
+.stronghold-screen .stash-module  .row.is-content .l-button.is-weapons-filter
 {
     position: absolute;
 
@@ -96,7 +96,7 @@
     top: 8.0rem;
 }
 
-.stash-module  .row.is-content .l-button.is-armor-filter
+.stronghold-screen .stash-module  .row.is-content .l-button.is-armor-filter
 {
     position: absolute;
 
@@ -105,7 +105,7 @@
     top: 12.0rem;
 }
 
-.stash-module  .row.is-content .l-button.is-usable-filter
+.stronghold-screen .stash-module  .row.is-content .l-button.is-usable-filter
 {
     position: absolute;
 
@@ -114,7 +114,7 @@
     top: 16.0rem;
 }
 
-.stash-module  .row.is-content .l-button.is-misc-filter
+.stronghold-screen .stash-module  .row.is-content .l-button.is-misc-filter
 {
     position: absolute;
 
@@ -123,7 +123,7 @@
     top: 20.0rem;
 }
 
-.stash-module  .row.is-content .slot-count-container
+.stronghold-screen .stash-module  .row.is-content .slot-count-container
 {
     position: absolute;
 
@@ -133,25 +133,25 @@
     left: -1.0rem;
 }
 
-.stash-module  .row.is-content .slot-count-container.town
+.stronghold-screen .stash-module  .row.is-content .slot-count-container.town
 {
 	top: 45rem;
 }
-.stash-module  .row.is-content .slot-count-container .slot-count-header
+.stronghold-screen .stash-module  .row.is-content .slot-count-container .slot-count-header
 {
 	width:6.4rem;
 	height:2rem;
 	text-align: center;
 }
 
-.stash-module  .row.is-content .slot-count-container img
+.stronghold-screen .stash-module  .row.is-content .slot-count-container img
 {
     width: 2.0rem;
     height: 2.0rem;
     position: absolute;
 }
 
-.stash-module  .row.is-content .slot-count-container .label
+.stronghold-screen .stash-module  .row.is-content .slot-count-container .label
 {
     width: 5.4rem;
     height: 2.0rem;
@@ -161,7 +161,7 @@
     line-height: 2.0rem;
 }
 
-.stash-module  .l-list-container
+.stronghold-screen .stash-module  .l-list-container
 {
     top: -0.1rem;
     bottom: 0;
@@ -169,25 +169,25 @@
     height: 51.8rem;
 }
 
-.stash-module  .l-list-container.is-left
+.stronghold-screen .stash-module  .l-list-container.is-left
 {
     left: 5.0rem;
     right: 1.6rem;
 }
 
-.stash-module  .l-list-container.is-right
+.stronghold-screen .stash-module  .l-list-container.is-right
 {
     left: 5.0rem;
     right: 1.6rem;
 }
 
-.stash-module  .l-list-container .scroll-container
+.stronghold-screen .stash-module  .l-list-container .scroll-container
 {
     margin-bottom: 0.0rem;
 }
 
 
-.stash-module .ui-control.item.is-proxy
+.stronghold-screen .stash-module .ui-control.item.is-proxy
 {
     z-index: 100;
 }

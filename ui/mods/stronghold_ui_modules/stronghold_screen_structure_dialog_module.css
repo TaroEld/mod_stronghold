@@ -1,9 +1,9 @@
-.structures-module .structure-row
+.stronghold-screen .structures-module .structure-row
 {
 	height: 20rem;
 }
 
-.structures-module .structure-image-container
+.stronghold-screen .structures-module .structure-image-container
 {
 	height: 10rem;
 	width: 14.4rem;
@@ -12,7 +12,7 @@
 
 }
 
-.structure-image-container .structure-image
+.stronghold-screen .structures-module .structure-image-container .structure-image
 {
 	height: 8rem;
 	width: 14.4rem;
@@ -21,26 +21,26 @@
 	left: 0;
 }
 
-.structure-image-container .structure-selection
+.stronghold-screen .structures-module .structure-image-container .structure-selection
 {
 	height: 8rem;
 	width: 14.4rem;
 }
 
-.structure-image-container:hover .structure-selection
+.stronghold-screen .structures-module .structure-image-container:hover .structure-selection
 {
 	display: block;
 }
-.structures-module .description-row
+.stronghold-screen .structures-module .description-row
 {
 	height: 16rem;
 }
-.structures-module .description-row .active-structure-image-container
+.stronghold-screen .structures-module .description-row .active-structure-image-container
 {
 	height: 20rem;
 	width: 28rem;
 }
-.structures-module .active-structure-image-container .active-structure-image
+.stronghold-screen .structures-module .active-structure-image-container .active-structure-image
 {
 	height: 16rem;
 	width: 28rem;
@@ -48,7 +48,7 @@
 }
 
 
-.structures-module .description-row .active-structure-text-container
+.stronghold-screen .structures-module .description-row .active-structure-text-container
 {
 	height: 20rem;
 	flex: 1;
@@ -56,14 +56,14 @@
 }
 
 
-.structures-module .footer-button-bar
+.stronghold-screen .structures-module .footer-button-bar
 {
     position: absolute;
     bottom: 0;
     justify-content: center;
 }
 
-.structures-module .footer-button-bar > div
+.stronghold-screen .structures-module .footer-button-bar > div
 {
     width: 17.5rem;
     height: 4.3rem;
