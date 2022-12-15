@@ -1240,12 +1240,12 @@ StrongholdScreenRosterModule.prototype.createSlotDropHandler = function ( _slot 
 StrongholdScreenRosterModule.prototype.createSlotClickHandler = function ( _slot )
 {
 	var self = this;
-	_slot.mousedown(function (event)
+	_slot.mousedown(function (_event)
 	{
 		if ($(this).data("child") === null)
 			return;
 
-		if (event.which === 1)
+		if (_event.which === 1)
 		{
 		    var data = $(this).data("child").data('brother')[CharacterScreenIdentifier.Entity.Id];
 		    var dismissBrother = (KeyModiferConstants.CtrlKey in _event && _event[KeyModiferConstants.CtrlKey] === true);
@@ -1256,7 +1256,7 @@ StrongholdScreenRosterModule.prototype.createSlotClickHandler = function ( _slot
 		        return self.setBrotherSelectedByID(data);
 		}
 
-	    if (event.which === 3)
+	    if (_event.which === 3)
 	    {
 	        return self.quickMoveBrother($(this).data("child"));
 	    }
