@@ -26,7 +26,7 @@
 {
     width: 40.0rem;
     background-image: url("coui://gfx/ui/skin/dialog_panel_02.png");
-    background-size: 48.0rem 56.8rem;
+    background-size: 100% 100%;
     background-repeat: no-repeat;
 }
 
@@ -132,33 +132,33 @@
     top: 40.0rem;
     left: -1.0rem;
 }
+
 .stash-module  .row.is-content .slot-count-container.town
 {
 	top: 45rem;
 }
+.stash-module  .row.is-content .slot-count-container .slot-count-header
+{
+	width:6.4rem;
+	height:2rem;
+	text-align: center;
+}
+
 .stash-module  .row.is-content .slot-count-container img
 {
-    top: -4.0rem;
-    left: 2.3rem;
-    bottom: 0;
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 2.0rem;
+    height: 2.0rem;
     position: absolute;
-    margin: auto;
 }
 
 .stash-module  .row.is-content .slot-count-container .label
 {
-    top: 0;
-    left: 0.0rem;
-    bottom: 0;
-    width: 7.2rem;
+    width: 5.4rem;
     height: 2.0rem;
     position: absolute;
-    margin: auto;
+    left: 1.8rem;
 
     line-height: 2.0rem;
-    text-align: center;
 }
 
 .stash-module  .l-list-container

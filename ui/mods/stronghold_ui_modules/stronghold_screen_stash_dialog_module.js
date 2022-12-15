@@ -132,19 +132,16 @@ StrongholdScreenStashModule.prototype.createDIV = function (_parentDiv)
         self.notifyBackendFilterUsableButtonClicked();
     }, 'stash-module-filter-button', 3);
 
-    this.mStashSlotSizeContainer = $('<div class="slot-count-container"/>');
-    buttonContainer.append(this.mStashSlotSizeContainer);
-    var slotSizeImage = $('<img/>');
-    slotSizeImage.attr('src', Path.GFX + Asset.ICON_BAG);
-    this.mStashSlotSizeContainer.append(slotSizeImage);
+    var slotSizeImage = '<img src=" ' + Path.GFX + Asset.ICON_BAG +'"/>';
+    this.mStashSlotSizeContainer = $('<div class="slot-count-container"/>').appendTo(buttonContainer);
+    $('<div class="slot-count-header text-font-small font-color-title">Player</div>').appendTo(this.mStashSlotSizeContainer);
+    this.mStashSlotSizeContainer.append($(slotSizeImage));
     this.mStashSlotSizeLabel = $('<div class="label text-font-small font-bold font-color-value"/>');
     this.mStashSlotSizeContainer.append(this.mStashSlotSizeLabel);
 
-    this.mTownStashSlotSizeContainer = $('<div class="slot-count-container town"/>');
-    buttonContainer.append(this.mTownStashSlotSizeContainer);
-    var slotSizeImage = $('<img/>');
-    slotSizeImage.attr('src', Path.GFX + Asset.ICON_BAG);
-    this.mTownStashSlotSizeContainer.append(slotSizeImage);
+    this.mTownStashSlotSizeContainer = $('<div class="slot-count-container town"/>').appendTo(buttonContainer);
+    $('<div class="slot-count-header text-font-small font-color-title">Town</div>').appendTo(this.mTownStashSlotSizeContainer);
+    this.mTownStashSlotSizeContainer.append($(slotSizeImage));
     this.mTownStashSlotSizeLabel = $('<div class="label text-font-small font-bold font-color-value"/>');
     this.mTownStashSlotSizeContainer.append(this.mTownStashSlotSizeLabel);
 
@@ -203,12 +200,12 @@ StrongholdScreenStashModule.prototype.loadFromData = function (_data)
 	}
 	if ('TownStashSpaceUsed' in this.mModuleData)
 	{
-	    this.mTownStashSpaceUsed = this.mModuleData.StashSpaceUsed;
+	    this.mTownStashSpaceUsed = this.mModuleData.TownStashSpaceUsed;
 	}
 
 	if ('TownStashSpaceMax' in this.mModuleData)
 	{
-	    this.mTownStashSpaceMax = this.mModuleData.StashSpaceMax;
+	    this.mTownStashSpaceMax = this.mModuleData.TownStashSpaceMax;
 	}
 
 	if('Stash' in this.mModuleData && this.mModuleData.Stash !== null)
@@ -227,7 +224,7 @@ StrongholdScreenStashModule.prototype.updateStashFreeSlotsLabel = function ()
 {
     var statistics = this.getStashStatistics();
     this.mStashSlotSizeLabel.html('' + this.mModuleData.StashSpaceUsed + '/' + this.mModuleData.StashSpaceMax);
-    this.mTownStashSlotSizeLabel.html('' + this.mModuleData.TownStashSpaceUsed + '/' + this.mModuleData.TownStashSpaceMax);
+    this.mTownStashSlotSizeLabel.html('' + this.mTownStashSpaceUsed + '/' + this.mTownStashSpaceMax);
 
     if(this.mModuleData.StashSpaceUsed >= this.mModuleData.StashSpaceMax)
 	     this.mStashSlotSizeLabel.removeClass('font-color-value').addClass('font-color-negative-value');
@@ -371,7 +368,6 @@ var copyFunctionList = [
 	"updateStashList",
 	"updateShopList",
 	"updateSlotItem",
-	"updateStashFreeSlotsLabel",
 	"isStashSpaceLeft",
 	"getStashStatistics",
 	"notifyBackendSwapItem",
