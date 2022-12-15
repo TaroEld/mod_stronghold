@@ -1408,51 +1408,6 @@ StrongholdScreenRosterModule.prototype.createBrotherSlots = function ( _parent ,
     }
 
     // event listener when dragging then drop bro to an empty slot
-    var dropHandler = function (ev, dd)
-    {
-        var drag = $(dd.drag);
-        var drop = $(dd.drop);
-        var proxy = $(dd.proxy);
-
-        if (proxy === undefined || proxy.data('idx') === undefined || drop === undefined || drop.data('idx') === undefined)
-        {
-            return false;
-        }
-
-        drag.removeClass('is-dragged');
-
-        if (drag.data('tag') == drop.data('tag'))
-        {
-            if (drag.data('idx') == drop.data('idx'))
-                return false;
-        }
-        else
-        {
-            // deny when the dragged brother is a player character
-            if (drag.data('player') === true)
-                return false;
-
-            // deny when the player roster has reached brothers max
-            if (drag.data('tag') === Stronghold.Roster.RosterOwner.Stronghold && self.mPlayer.NumActive >= self.mPlayerRosterLimit)
-                return false;
-        }
-
-        // number in formation is limited
-        if (_parent.NumActive >= _parent.NumActiveMax && drag.data('idx') > _parent.NumActiveMax && drop.data('idx') <= _parent.NumActiveMax && _parent.Slots[drop.data('idx')].data('child') == null)
-        {
-            return false;
-        }
-
-        // always keep at least 1 in formation
-        if (_parent.NumActive == _parent.NumActiveMin && drag.data('idx') <= _parent.NumActiveMax && drop.data('idx') > _parent.NumActiveMax && _parent.Slots[drop.data('idx')].data('child') == null)
-        {
-            return false;
-        }
-
-        // do the swapping
-        self.swapSlots(drag.data('idx'), drag.data('tag'), drop.data('idx'), drop.data('tag'));
-    };
-
     for (var i = 0; i < _parent.Slots.length; ++i)
     {
         if (isPlayer)
@@ -1460,14 +1415,150 @@ StrongholdScreenRosterModule.prototype.createBrotherSlots = function ( _parent ,
         else
             _parent.Slots[i] = $('<div class="ui-control is-brother-slot is-reserve-slot"/>');
 
-        _parent.ListScrollContainer.append(_parent.Slots[i]);
+        var slot = _parent.Slots[i];
+        _parent.ListScrollContainer.append(slot);
 
-        _parent.Slots[i].data('idx', i);
-        _parent.Slots[i].data('tag', _tag);
-        _parent.Slots[i].data('child', null);
-        _parent.Slots[i].drop("end", dropHandler);
+        slot.data('idx', i);
+        slot.data('tag', _tag);
+        slot.data('child', null);
+        this.createSlotDragHandler(slot);
+        this.createSlotDropHandler(slot);
+        this.createSlotClickHandler(slot)
+        // event listener when left-click the brother
     }
 };
+
+StrongholdScreenRosterModule.prototype.createSlotDragHandler = function ( _slot )
+{
+	_slot.drag("init", function (ev, dd)
+	{
+		if ($(this).data("child") === null)
+		{
+			console.error("returning")
+			return false;
+		}
+		dd.brother = $(this).data("child");
+	})
+
+	_slot.drag("start", function (ev, dd)
+	{
+	    // build proxy
+	    var proxy = $('<div class="ui-control brother is-proxy"/>');
+	    proxy.appendTo(document.body);
+	    proxy.data('idx', $(this).data("idx"));
+
+	    var imageLayer =  dd.brother.find('.image-layer:first');
+	    if (imageLayer.length > 0)
+	    {
+	        imageLayer = imageLayer.clone();
+	        proxy.append(imageLayer);
+	    }
+
+	    dd.brother.addClass('is-dragged');
+
+	    return proxy;
+	}, { distance: 3 });
+	_slot.drag(function (ev, dd)
+	{
+	    $(dd.proxy).css({ top: dd.offsetY, left: dd.offsetX });
+	}, { relative: false, distance: 3 });
+	_slot.drag("end", function (ev, dd)
+	{
+	    var proxy = $(dd.proxy);
+	    // not dropped into anything?
+	    if ($(dd.drop).length === 0)
+	    {
+	        proxy.velocity("finish", true).velocity({ top: dd.originalY, left: dd.originalX },
+	        {
+	            duration: 300,
+	            complete: function ()
+	            {
+	                proxy.remove();
+	                dd.brother.removeClass('is-dragged');
+	            }
+	        });
+	    }
+	    else
+	    {
+	        proxy.remove();
+	    }
+	}, { drop: '.is-brother-slot' });
+}
+
+StrongholdScreenRosterModule.prototype.createSlotDropHandler = function ( _slot )
+{
+	var self = this;
+	var dropHandler = function (ev, dd)
+	{
+	    var drag = $(dd.drag);
+	    var drop = $(dd.drop);
+	    var proxy = $(dd.proxy);
+	    var brother = dd.brother;
+	    brother.removeClass('is-dragged');
+	    console.error("brother " +brother)
+
+	    if (proxy === undefined || proxy.data('idx') === undefined || drop === undefined || drop.data('idx') === undefined)
+	    {
+	        return false;
+	    }
+
+	    if (drag.data('tag') == drop.data('tag'))
+	    {
+	        if (drag.data('idx') == drop.data('idx'))
+	            return false;
+	    }
+	    else
+	    {
+	        // deny when the player roster has reached brothers max
+	        if (drag.data('tag') === Stronghold.Roster.RosterOwner.Stronghold && self.mPlayer.NumActive >= self.mPlayerRosterLimit)
+	            return false;
+	    }
+	    var parent = drag.data('tag') == Stronghold.Roster.RosterOwner.Player ? self.mPlayer : self.mStronghold;
+
+	    // number in formation is limited
+	    if (parent.NumActive >= parent.NumActiveMax && drag.data('idx') > parent.NumActiveMax && drop.data('idx') <= parent.NumActiveMax && $(this).data('child') == null)
+	    {
+	        return false;
+	    }
+
+	    // always keep at least 1 in formation
+	    if (parent.NumActive == parent.NumActiveMin && drag.data('idx') <= parent.NumActiveMax && drop.data('idx') > parent.NumActiveMax && $(this).data('child') == null)
+	    {
+	        return false;
+	    }
+
+	    // do the swapping
+	    self.swapSlots(drag.data('idx'), drag.data('tag'), drop.data('idx'), drop.data('tag'));
+	};
+	_slot.drop(dropHandler);
+}
+
+StrongholdScreenRosterModule.prototype.createSlotClickHandler = function ( _slot )
+{
+	var self = this;
+	_slot.mousedown(function (event)
+	{
+		if ($(this).data("child") === null)
+			return;
+
+		if (event.which === 1)
+		{
+		    var data = $(this).data("child").data('brother')[CharacterScreenIdentifier.Entity.Id];
+		    var dismissBrother = (KeyModiferConstants.CtrlKey in _event && _event[KeyModiferConstants.CtrlKey] === true);
+
+		    if (dismissBrother)
+		        return self.openDismissPopupDialog(data);
+		    else
+		        return self.setBrotherSelectedByID(data);
+		}
+
+	    if (event.which === 3)
+	    {
+	        return self.quickMoveBrother($(this).data("child"));
+	    }
+	});
+}
+
 // add brother to empty slot
 StrongholdScreenRosterModule.prototype.addBrotherSlotDIV = function(_parent, _data, _index, _tag)
 {
@@ -1483,60 +1574,11 @@ StrongholdScreenRosterModule.prototype.addBrotherSlotDIV = function(_parent, _da
     result.data('player', (CharacterScreenIdentifier.Entity.Character.IsPlayerCharacter in character ? character[CharacterScreenIdentifier.Entity.Character.IsPlayerCharacter] : false));
     result.data('idx', _index);
     result.data('tag', _tag);
+
     result.unbindTooltip();
     result.bindTooltip({ contentType: 'ui-element', entityId: id, elementId: 'pokebro.roster' });
     parentDiv.data('child', result);
     ++_parent.NumActive;
-
-    // some event listener for brother slot to drag and drop
-    result.drag("start", function (ev, dd)
-    {
-        // build proxy
-        var proxy = $('<div class="ui-control brother is-proxy"/>');
-        proxy.appendTo(document.body);
-        proxy.data('idx', _index);
-
-        var imageLayer = result.find('.image-layer:first');
-        if (imageLayer.length > 0)
-        {
-            imageLayer = imageLayer.clone();
-            proxy.append(imageLayer);
-        }
-
-        $(dd.drag).addClass('is-dragged');
-
-        return proxy;
-    }, { distance: 3 });
-    result.drag(function (ev, dd)
-    {
-        $(dd.proxy).css({ top: dd.offsetY, left: dd.offsetX });
-    }, { relative: false, distance: 3 });
-    result.drag("end", function (ev, dd)
-    {
-        var drag = $(dd.drag);
-        var drop = $(dd.drop);
-        var proxy = $(dd.proxy);
-
-        var allowDragEnd = true; // TODO: check what we're dropping onto
-
-        // not dropped into anything?
-        if (drop.length === 0 || allowDragEnd === false)
-        {
-            proxy.velocity("finish", true).velocity({ top: dd.originalY, left: dd.originalX },
-            {
-                duration: 300,
-                complete: function ()
-                {
-                    proxy.remove();
-                    drag.removeClass('is-dragged');
-                }
-            });
-        }
-        else
-        {
-            proxy.remove();
-        }
-    }, { drop: '.is-brother-slot' });
 
     // update image & name
     var imageOffsetX = (CharacterScreenIdentifier.Entity.Character.ImageOffsetX in character ? character[CharacterScreenIdentifier.Entity.Character.ImageOffsetX] : 0);
@@ -1556,32 +1598,6 @@ StrongholdScreenRosterModule.prototype.addBrotherSlotDIV = function(_parent, _da
     {
         result.assignListBrotherDaysWounded();
     }
-
-    // event listener when left-click the brother
-    result.assignListBrotherClickHandler(function (_brother, _event)
-    {
-        var data = _brother.data('brother')[CharacterScreenIdentifier.Entity.Id];
-        var openPerkTree = (KeyModiferConstants.AltKey in _event && _event[KeyModiferConstants.AltKey] === true);
-        var dismissBrother = (KeyModiferConstants.CtrlKey in _event && _event[KeyModiferConstants.CtrlKey] === true);
-
-        if (openPerkTree)
-            self.openPerkPopupDialog(data);
-        else if (dismissBrother)
-            self.openDismissPopupDialog(data);
-        else
-            self.setBrotherSelectedByID(data);
-    });
-
-    // event listener when right-click the brother
-    result.mousedown(function (event)
-    {
-        if (event.which === 3)
-        {
-            //var data = $(this).data('brother');
-            //var data = $(this);
-            return self.quickMoveBrother($(this));
-        }
-    });
 };
 
 
