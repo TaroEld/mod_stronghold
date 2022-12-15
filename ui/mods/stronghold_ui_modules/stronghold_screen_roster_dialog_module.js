@@ -36,9 +36,6 @@ var StrongholdScreenRosterModule = function(_parent)
     // button bar
     this.mButtonBarContainer           = null;
     this.mStripAllButton               = null;
-    this.mStripWeaponButton            = null;
-    this.mStripArmorButton             = null;
-    this.mStripBagButton               = null;
     this.mRenameButton                 = null;
     this.mDismissButton                = null;
     this.mTooltipButton                = null;
@@ -77,6 +74,7 @@ var StrongholdScreenRosterModule = function(_parent)
         ActiveSkillsRow     : null,
         PassiveSkillsRow    : null,
         StatusEffectsRow    : null,
+        PerksRow 			: null,
     };
 
     // portrait panel
@@ -236,36 +234,9 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     panelLayout.append(layout);
     this.mStripAllButton = layout.createImageButton(Path.GFX + 'ui/buttons/filter_all.png', function ()
     {
-        self.transferItemsToStash(self.mItemTypes.all);
+        self.transferItemsToStash();
     }, '', 3);
     this.mStripAllButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.strippingnaked' });
-
-    // button 2 - to strip arms
-    var layout = $('<div class="l-button is-stripping-weapon"/>');
-    panelLayout.append(layout);
-    this.mStripWeaponButton = layout.createImageButton(Path.GFX + 'ui/icons/item_weapon.png', function ()
-    {
-        self.transferItemsToStash(self.mItemTypes.weapon);
-    }, '', 3);
-    this.mStripWeaponButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.strippingweapon' });
-
-    // button 3 - to strip cloth only
-    var layout = $('<div class="l-button is-stripping-armor"/>');
-    panelLayout.append(layout);
-    this.mStripArmorButton = layout.createImageButton(Path.GFX + 'ui/icons/armor_body.png', function ()
-    {
-        self.transferItemsToStash(self.mItemTypes.armor);
-    }, '', 3);
-    this.mStripArmorButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.strippingarmor' });
-
-    // button 4 - to steal all stuffs in bag
-    var layout = $('<div class="l-button is-stripping-bag"/>');
-    panelLayout.append(layout);
-    this.mStripBagButton = layout.createImageButton(Path.GFX + 'ui/icons/bag.png', function ()
-    {
-        self.transferItemsToStash(self.mItemTypes.bag);
-    }, '', 3);
-    this.mStripBagButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.strippingbag' });
 
     // button 5 - to rename bro
     var layout = $('<div class="l-button is-rename"/>');
@@ -384,6 +355,8 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
         this.mSkills.ListScrollContainer.append(this.mSkills.PassiveSkillsRow);
         this.mSkills.StatusEffectsRow = $('<div class="skills-row"/>');
         this.mSkills.ListScrollContainer.append(this.mSkills.StatusEffectsRow);
+        this.mSkills.PerksRow = $('<div class="skills-row"/>');
+        this.mSkills.ListScrollContainer.append(this.mSkills.PerksRow);
     }
 
 
@@ -797,7 +770,7 @@ StrongholdScreenRosterModule.prototype.openTransferConfirmationPopupDialog = fun
 StrongholdScreenRosterModule.prototype.createTransferConfirmationDialogContent = function (_dialog, _data)
 {
     var self = this;
-    var difference = _data['ItemsNum'] - _data['StashNum'];
+    var difference = _data['NumItems'] - _data['NumEmptySlots'];
 
     var result = $('<div class="dismiss-character-container"/>');
     var titleLabel = $('<div class="title-label title-font-normal font-bold font-color-title">Insufficient Stash Slot</div>');
@@ -835,6 +808,7 @@ StrongholdScreenRosterModule.prototype.createRowsDIV = function(_definitions, _p
 
         _value.Talent = $('<img class="talent"/>');
         statsRowIconLayout.append(_value.Talent);
+        _value.Row.bindTooltip({ contentType: 'ui-element', elementId: _value.TooltipId });
     });
 };
 StrongholdScreenRosterModule.prototype.destroyRowsDIV = function(_definitions)
@@ -1600,14 +1574,65 @@ StrongholdScreenRosterModule.prototype.addSkills = function (_parentDiv, _brothe
     var self = this;
 
     _parentDiv.empty();
-    jQuery.each(CharacterScreenIdentifier.ItemSlot, function (_index, _value)
+    jQuery.each(_data, function (_index, _value)
     {
-        if (_value in _data)
-        {
-            self.addSkillsDIV(_parentDiv, _brotherId, _data[_value], _isSkill);
-        }
+        self.addSkillsDIV(_parentDiv, _brotherId, _value, _isSkill);
     });
 };
+
+//- Skills Panel
+StrongholdScreenRosterModule.prototype.addSkillsDIV = function (_parentDiv, _entityId, _data, _isSkill, _isPerk)
+{
+    if (_data === undefined ||_data === null || !jQuery.isArray(_data))
+    {
+        console.error('ERROR: Failed to add Skills. Reason: Invalid data.');
+        return;
+    }
+
+    if (_data.length > 0)
+    {
+        var containerLayout = $('<div class="l-skills-group-container"/>');
+        var container = $('<div class="l-skill-groups-container"/>');
+        containerLayout.append(container);
+
+        for (var i = 0; i < _data.length; ++i)
+        {
+            if (!(CharacterScreenIdentifier.Skill.Id in _data[i]) || !(CharacterScreenIdentifier.Skill.ImagePath in _data[i]))
+            {
+                continue;
+            }
+
+            var image = $('<img/>');
+            image.attr('src', Path.GFX + _data[i].imagePath);
+            container.append(image);
+
+            if (_isSkill === true)
+            {
+                image.bindTooltip({ contentType: 'skill', entityId: _entityId, skillId: _data[i].id });
+            }
+            else
+            {
+                image.bindTooltip({ contentType: 'status-effect', entityId: _entityId, statusEffectId: _data[i].id });
+            }
+            if (_isPerk === true)
+            {
+            		// image.css("outline", "1px solid gold");
+            		// image.css("border-radius", "50%");
+            	    // image.css("-webkit-border-radius", "50%");
+            	    // image.css("-moz-border-radius", "50%");
+            	// var perkSelectionImage = $('<img class="selection-image-layer"/>');
+            	// perkSelectionImage.attr('src', Path.GFX + Asset.PERK_SELECTION_FRAME);
+            	// image.append(perkSelectionImage);
+            }
+        }
+
+        if (container.children().length > 0)
+        {
+            _parentDiv.append(containerLayout);
+        }
+    }
+};
+//---------------------------------------
 
 StrongholdScreenRosterModule.prototype.setProgressbarValues = function (_data)
 {
@@ -1669,8 +1694,7 @@ StrongholdScreenRosterModule.prototype.updateNameAndTitle = function(_dialog, _b
     });
 };
 
-
-StrongholdScreenRosterModule.prototype.transferItemsToStash = function ( _type )
+StrongholdScreenRosterModule.prototype.transferItemsToStash = function ()
 {
     var self = this;
     var brother = this.getBrotherByIndex(this.mSelectedBrother.Index, this.mSelectedBrother.Tag);
@@ -1678,18 +1702,9 @@ StrongholdScreenRosterModule.prototype.transferItemsToStash = function ( _type )
     if (brother === null || brother === undefined)
         return;
 
-    this.notifyBackendCheckCanTransferItems(brother[CharacterScreenIdentifier.Entity.Id], _type, this.mSelectedBrother.Tag, function(data)
+    this.notifyBackendCheckCanTransferItems(function(data)
     {
-        if (data === undefined || data === null || typeof (data) !== 'object')
-        {
-            console.error('ERROR: Failed to find the brother to transferItemsToStash. Invalid data result.');
-            return;
-        }
-
-        if ('NoItem' in data)
-            return;
-
-        if (data.Result === true)
+        if (data.NumItems < data.NumEmptySlots)
         {
             self.notifyBackendTransferItems();
         }
@@ -1699,8 +1714,6 @@ StrongholdScreenRosterModule.prototype.transferItemsToStash = function ( _type )
         }
     });
 };
-
-
 
 StrongholdScreenRosterModule.prototype.notifyBackendBrothersButtonPressed = function ()
 {
@@ -1712,17 +1725,22 @@ StrongholdScreenRosterModule.prototype.notifyBackendTooltipButtonPressed = funct
     SQ.call(this.mSQHandle, 'onTooltipButtonPressed', [_data]);
 };
 
-StrongholdScreenRosterModule.prototype.notifyBackendTransferItems = function ()
+StrongholdScreenRosterModule.prototype.notifyBackendCheckCanTransferItems = function (_callback)
 {
-    SQ.call(this.mSQHandle, 'onTransferItems');
+	var brother = this.getBrotherByIndex(this.mSelectedBrother.Index, this.mSelectedBrother.Tag);
+    SQ.call(this.mSQHandle, 'onCheckCanTransferItems', {
+    	"ID"  : brother[CharacterScreenIdentifier.Entity.Id],
+    	"RosterTag" : this.mSelectedBrother.Tag
+    }, _callback);
 };
 
-StrongholdScreenRosterModule.prototype.notifyBackendCheckCanTransferItems = function (_brotherId, _type, _tag, _callback)
+StrongholdScreenRosterModule.prototype.notifyBackendTransferItems = function ()
 {
-    SQ.call(this.mSQHandle, 'onCheckCanTransferItems', {
-    	"ID"  : _brotherId,
-    	"ItemType" : _type,
-    	"RosterTag" : _tag}, _callback);
+	var brother = this.getBrotherByIndex(this.mSelectedBrother.Index, this.mSelectedBrother.Tag);
+    SQ.call(this.mSQHandle, 'onTransferItems', {
+    	"ID"  : brother[CharacterScreenIdentifier.Entity.Id],
+    	"RosterTag" : this.mSelectedBrother.Tag
+    });
 };
 
 StrongholdScreenRosterModule.prototype.notifyBackendUpdateNameAndTitle = function (_brotherId, _name, _title, _tag, _callback)
@@ -1732,7 +1750,11 @@ StrongholdScreenRosterModule.prototype.notifyBackendUpdateNameAndTitle = functio
 
 StrongholdScreenRosterModule.prototype.notifyBackendDismissCharacter = function (_payCompensation, _brotherId, _tag)
 {
-    SQ.call(this.mSQHandle, 'onDismissCharacter', [ _brotherId, _payCompensation, _tag ]);
+    SQ.call(this.mSQHandle, 'onDismissCharacter', {
+    	"ID"  : _brotherId,
+    	"RosterTag" : _tag,
+    	"Compensation" : _payCompensation
+    });
 };
 
 StrongholdScreenRosterModule.prototype.notifyBackendUpdateRosterPosition = function (_id, _pos)
