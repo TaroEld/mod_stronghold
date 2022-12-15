@@ -82,7 +82,9 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 		foreach (i, b in brothers)
 		{
 			b.setPlaceInFormation(i);
-			roster.push(this.UIDataHelper.convertEntityToUIData(b, null));
+			local brotherUIData = this.UIDataHelper.convertEntityToUIData(b, null);
+			brotherUIData.perkuidata <- this.getPerkUIData(brotherUIData.perks);
+			roster.push(brotherUIData);
 		}
 
 		while (roster.len() < num)
@@ -94,23 +96,36 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 
 	function queryPlayerRosterInformation()
 	{
+		this.World.Assets.updateFormation();
 		local roster = this.World.Assets.getFormation();
 
 		for( local i = 0; i != roster.len(); i = ++i )
 		{
 			if (roster[i] != null)
 			{
-				roster[i] = this.UIDataHelper.convertEntityToUIData(roster[i], null);
+				local brotherUIData = this.UIDataHelper.convertEntityToUIData(roster[i], null);
+				brotherUIData.perkuidata <- this.getPerkUIData(brotherUIData.perks);
+				roster[i] = brotherUIData;
 			}
 		}
 		return roster;
+	}
+
+	function getPerkUIData(_perks)
+	{
+		local ret = [];
+		foreach (perkID in _perks)
+		{
+			ret.push(this.UIDataHelper.convertPerkToUIData(perkID));
+		}
+		return ret;
 	}
 
 	function getUIData( _ret )
 	{
 		_ret.SimpleTooltip <- this.isUsingSimplifiedRosterTooltip();
 		_ret.PlayerRoster <- this.queryPlayerRosterInformation();
-		_ret.TownRoster <- this.queryTownRosterInformation()
+		_ret.TownRoster <- this.queryTownRosterInformation();
 		return _ret
 	}
 
@@ -119,24 +134,27 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 		local bro = this.getBroWithTagAndID(_data.ID, _data.RosterTag);
 		local itemLen = bro.getItems().getAllItems().len();
 		local emptyStashSlots = this.World.Assets.getStash().getNumberOfEmptySlots();
-		return emptyStashSlots >= itemLen;
+		return {
+			NumEmptySlots = emptyStashSlots
+			NumItems = itemLen
+		}
 	}
 
-	function onTransferItems()
+	function onTransferItems(_data)
 	{
 		local toTransfer = [];
 		local stash = this.World.Assets.getStash();
-		local bro = this.m.ItemsContainerToTransfer.getActor();
-
-		foreach( item in this.m.ItemsToTransfer)
+		local bro = this.getBroWithTagAndID(_data.ID, _data.RosterTag);
+		local items = bro.getItems().getAllItems();
+		foreach( item in items)
 		{
 			if (item.isEquipped())
 			{
-				this.m.ItemsContainerToTransfer.unequip(item);
+				bro.getItems().unequip(item);
 			}
 			else
 			{
-				this.m.ItemsContainerToTransfer.removeFromBag(item);
+				bro.getItems().removeFromBag(item);
 			}
 
 			toTransfer.push(item);
@@ -155,8 +173,6 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 			bro = bro.get();
 		}
 
-		this.m.ItemsToTransfer = [];
-		this.m.ItemsContainerToTransfer = null;
 		this.m.JSHandle.asyncCall("updateSelectedBrother", this.UIDataHelper.convertEntityToUIData(bro, null));
 	}
 
@@ -192,5 +208,13 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 	function onBrothersButtonPressed()
 	{
 		::MSU.Utils.getState("world_state").toggleCharacterScreen()
+	}
+
+	function onDismissCharacter( _data )
+	{
+		this.World.State.m.CharacterScreen.onDismissCharacter([_data.ID, _data.Compensation])
+		if(_data.RosterTag != "roster.player")
+			this.getTown().getLocalRoster().remove(this.getBroWithTagAndID(_data.ID, _data.RosterTag))
+		this.updateData(["StashModule", "RosterModule", "TownAssets", "Assets"])
 	}
 })
