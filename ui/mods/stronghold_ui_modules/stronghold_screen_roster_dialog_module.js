@@ -434,117 +434,23 @@ StrongholdScreenRosterModule.prototype.loadFromData = function ()
     this.mPlayer.NumActiveMax = this.mData.mBrothersAssetMax;
     this.mPlayer.BrothersList = this.mModuleData.PlayerRoster;
     this.onBrothersListLoaded(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
-    this.setBrotherSelected(0, Stronghold.Roster.RosterOwner.Player, true);
+    for (var i = 0; i < this.mPlayer.BrothersList.length; i++) {
+    	if (this.mPlayer.BrothersList[i] !== undefined && this.mPlayer.BrothersList[i] !== null)
+    	{
+    		console.error("i: " + i + " " + this.mPlayer.BrothersList[i])
+    		this.setBrotherSelected(i, Stronghold.Roster.RosterOwner.Player, true);
+    		return;
+    	}
+    }
 };
 
 StrongholdScreenRosterModule.prototype.toggleScrollDiv = function(_withSlideAnimation)
 {
-	var self = this;
-    if (this.mToggledType !== Stronghold.Roster.ToggleScroll.Type.Skills)
-    {
-        this.mToggledType = this.mToggledType + this.mToggledOrder;
-        this.mScrollBackgroundContainer.velocity("finish", true).velocity({ height: 0 },
-        {
-            duration: Constants.CONTENT_ROLL_IN_OUT_DELAY,
-            easing: 'swing',
-            complete: function ()
-            {
-                $(this).removeClass('display-block').addClass('display-none');
-                self.mSkills.Container.removeClass('display-none').addClass('display-block');
-                self.updateDetailsPanel(null);
-            }
-        });
-    }
-    else
-    {
-        this.mToggledType = this.mToggledType + this.mToggledOrder;
-        var isStats = this.mToggledType == Stronghold.Roster.ToggleScroll.Type.Stats;
-        // compute content height
-        this.mScrollBackgroundContainer.css({ height: '' });
-        this.mScrollBackgroundContainer.removeClass('display-none').addClass('display-block');
-        var contentHeight = this.mScrollBackgroundContainer.height();
-        this.mScrollBackgroundContainer.removeClass('display-block').addClass('display-none');
-        this.mScrollBackgroundContainer.css({ height: 0 });
-
-        this.mScrollBackgroundContainer.velocity("finish", true).velocity({ height: contentHeight },
-        {
-            duration: Constants.CONTENT_ROLL_IN_OUT_DELAY,
-            easing: 'swing',
-            begin: function ()
-            {
-                $(this).removeClass('display-none').addClass('display-block');
-                self.mSkills.Container.removeClass('display-block').addClass('display-none');
-            },
-            complete: function ()
-            {
-                if (isStats)
-                {
-                    self.mStatsContainer.removeClass('display-none').addClass('display-block');
-                    self.mPortrait.Container.removeClass('display-block').addClass('display-none');
-                }
-                else
-                {
-                    self.mStatsContainer.removeClass('display-block').addClass('display-none');
-                    self.mPortrait.Container.removeClass('display-none').addClass('display-block');
-                }
-
-                self.updateDetailsPanel(null);
-            }
-        });
-    }
-
-    if (this.mToggledType === Stronghold.Roster.ToggleScroll.Min)
-        this.mToggledOrder = Stronghold.Roster.ToggleScroll.Order.Ascending;
-    else if (this.mToggledType === Stronghold.Roster.ToggleScroll.Max)
-        this.mToggledOrder = Stronghold.Roster.ToggleScroll.Order.Descending;
+	this.mToggledType++;
+	if (this.mToggledType > Stronghold.Roster.ToggleScroll.Max)
+		this.mToggledType = Stronghold.Roster.ToggleScroll.Min
+	this.updateDetailsPanel(null);
 };
-
-
-//- Skills Panel
-StrongholdScreenRosterModule.prototype.addSkillsDIV = function (_parentDiv, _entityId, _data, _isSkill)
-{
-    if (_data === undefined ||_data === null || !jQuery.isArray(_data))
-    {
-        console.log('ERROR: Failed to add Skills. Reason: Invalid data.');
-        return;
-    }
-
-    if (_data.length > 0)
-    {
-        var containerLayout = $('<div class="l-skills-group-container"/>');
-        var container = $('<div class="l-skill-groups-container"/>');
-        containerLayout.append(container);
-
-        for (var i = 0; i < _data.length; ++i)
-        {
-            if (!(CharacterScreenIdentifier.Skill.Id in _data[i]) || !(CharacterScreenIdentifier.Skill.ImagePath in _data[i]))
-            {
-                continue;
-            }
-
-            var image = $('<img/>');
-            image.attr('src', Path.GFX + _data[i].imagePath);
-            container.append(image);
-
-            if (_isSkill === true)
-            {
-                image.bindTooltip({ contentType: 'skill', entityId: _entityId, skillId: _data[i].id });
-            }
-            else
-            {
-                image.bindTooltip({ contentType: 'status-effect', entityId: _entityId, statusEffectId: _data[i].id });
-            }
-        }
-
-        if (container.children().length > 0)
-        {
-            _parentDiv.append(containerLayout);
-        }
-    }
-};
-//---------------------------------------
-
-
 
 //- Popup Dialog stuffs
 StrongholdScreenRosterModule.prototype.openRenamePopupDialog = function (_brotherId)
@@ -1510,14 +1416,22 @@ StrongholdScreenRosterModule.prototype.updateSelectedBrother = function (_data)
     this.addBrotherSlotDIV(parent, _data, index, tag);
     this.updateDetailsPanel(_data);
 }
+
 StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
 {
+	this.mPortrait.Container.removeClass('display-block').addClass('display-none');
+    this.mSkills.Container.removeClass('display-block').addClass('display-none');
+    this.mStatsContainer.removeClass('display-block').addClass('display-none');
+
     if (_brother === null)
     {
         var find = this.getBrotherByIndex(this.mSelectedBrother.Index, this.mSelectedBrother.Tag);
 
         if (find === null)
+        {
+        	this.rollUpScrollDiv();
             return;
+        }
         else
             _brother = find;
     }
@@ -1525,6 +1439,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
     switch(this.mToggledType)
     {
     case Stronghold.Roster.ToggleScroll.Type.Portrait:
+    	this.mPortrait.Container.addClass('display-block').removeClass('display-none');
         this.mTitleContainer.html('Portrait');
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Character.Key in _brother)
         {
@@ -1539,6 +1454,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
         break;
 
     case Stronghold.Roster.ToggleScroll.Type.Skills:
+    	this.mSkills.Container.addClass('display-block').removeClass('display-none');
         this.mTitleContainer.html('Skills');
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Id in _brother)
         {
@@ -1550,10 +1466,13 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
 
             if (CharacterScreenIdentifier.SkillTypes.StatusEffects in _brother)
                 this.addSkills(this.mSkills.StatusEffectsRow, _brother[CharacterScreenIdentifier.Entity.Id], _brother[CharacterScreenIdentifier.SkillTypes.StatusEffects], false);
+            this.mSkills.PerksRow.empty();
+            this.addSkillsDIV(this.mSkills.PerksRow, _brother[CharacterScreenIdentifier.Entity.Id], _brother.perkuidata, false, true);
         }
         break;
 
     default:
+    	this.mStatsContainer.addClass('display-block').removeClass('display-none');
         this.mTitleContainer.html('Stats');
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Stats in _brother)
             this.setProgressbarValues(_brother[CharacterScreenIdentifier.Entity.Stats]);
