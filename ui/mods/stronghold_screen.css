@@ -87,7 +87,7 @@
 }
 
 
-.l-stronghold-dialog-container .module-content
+.l-stronghold-dialog-container .module-container
 {
     position: absolute;
     top: 11.9rem;
@@ -102,7 +102,7 @@
     /*border: 3px solid red;*/
 }
 
-.l-stronghold-dialog-container .module-content > div
+.l-stronghold-dialog-container .module-container > div
 {
     width: 100%;
     height: 100%;

@@ -197,6 +197,7 @@ StrongholdScreen.prototype.createDIV = function (_parentDiv)
 
     this.mModuleContentContainer  = $('<div class="module-content"/>');
     this.mDialogContainer.append(this.mModuleContentContainer)
+    this.mModuleContainer  = $('<div class="module-container"/>');
 
     this.mFooter = $('<div class="footer"/>');
     this.mDialogContainer.append(this.mFooter);
