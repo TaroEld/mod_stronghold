@@ -60,7 +60,7 @@ var StrongholdScreen = function ()
     //left side tab container
     this.mModuleOptionsContainer = null;
     //main content container for modules
-    this.mModuleContentContainer = null;
+    this.mModuleContainer = null;
     this.createModules();
 };
 
@@ -92,7 +92,7 @@ StrongholdScreen.prototype.registerModules = function ()
 {
     var self = this;
     Object.keys(this.Modules).forEach(function(_key){
-        self.Modules[_key].Module.register(self.mModuleContentContainer);
+        self.Modules[_key].Module.register(self.mModuleContainer);
     })
 };
 
@@ -195,9 +195,8 @@ StrongholdScreen.prototype.createDIV = function (_parentDiv)
     this.mModuleOptionsContainer = $('<div class="vertical-tab-container"/>');
     this.mDialogContainer.append(this.mModuleOptionsContainer);
 
-    this.mModuleContentContainer  = $('<div class="module-content"/>');
-    this.mDialogContainer.append(this.mModuleContentContainer)
     this.mModuleContainer  = $('<div class="module-container"/>');
+    this.mDialogContainer.append(this.mModuleContainer)
 
     this.mFooter = $('<div class="footer"/>');
     this.mDialogContainer.append(this.mFooter);
