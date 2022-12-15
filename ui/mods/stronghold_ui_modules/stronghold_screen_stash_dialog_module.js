@@ -90,62 +90,47 @@ StrongholdScreenStashModule.prototype.createDIV = function (_parentDiv)
     buttonContainer.append(layout);
     this.mFilterAllButton = layout.createImageButton(Path.GFX + Asset.BUTTON_ALL_FILTER, function()
 	{
+		$(".stash-module-filter-button").removeClass('is-active');
 		self.mFilterAllButton.addClass('is-active');
-		self.mFilterWeaponsButton.removeClass('is-active');
-		self.mFilterArmorButton.removeClass('is-active');
-        self.mFilterMiscButton.removeClass('is-active');
-        self.mFilterUsableButton.removeClass('is-active');
 		self.notifyBackendFilterAllButtonClicked();
-    }, '', 3);
+    }, 'stash-module-filter-button', 3);
 	self.mFilterAllButton.addClass('is-active');
 
 	var layout = $('<div class="l-button is-weapons-filter"/>');
     buttonContainer.append(layout);
     this.mFilterWeaponsButton = layout.createImageButton(Path.GFX + Asset.BUTTON_WEAPONS_FILTER, function()
 	{
-		self.mFilterAllButton.removeClass('is-active');
+		$(".stash-module-filter-button").removeClass('is-active');
 		self.mFilterWeaponsButton.addClass('is-active');
-		self.mFilterArmorButton.removeClass('is-active');
-        self.mFilterMiscButton.removeClass('is-active');
-        self.mFilterUsableButton.removeClass('is-active');
 		self.notifyBackendFilterWeaponsButtonClicked();
-    }, '', 3);
+    }, 'stash-module-filter-button', 3);
 
 	var layout = $('<div class="l-button is-armor-filter"/>');
     buttonContainer.append(layout);
     this.mFilterArmorButton = layout.createImageButton(Path.GFX + Asset.BUTTON_ARMOR_FILTER, function()
 	{
-		self.mFilterAllButton.removeClass('is-active');
-		self.mFilterWeaponsButton.removeClass('is-active');
+		$(".stash-module-filter-button").removeClass('is-active');
 		self.mFilterArmorButton.addClass('is-active');
-        self.mFilterMiscButton.removeClass('is-active');
-        self.mFilterUsableButton.removeClass('is-active');
 		self.notifyBackendFilterArmorButtonClicked();
-    }, '', 3);
+    }, 'stash-module-filter-button', 3);
 
 	var layout = $('<div class="l-button is-misc-filter"/>');
     buttonContainer.append(layout);
     this.mFilterMiscButton = layout.createImageButton(Path.GFX + Asset.BUTTON_MISC_FILTER, function()
 	{
-		self.mFilterAllButton.removeClass('is-active');
-		self.mFilterWeaponsButton.removeClass('is-active');
-		self.mFilterArmorButton.removeClass('is-active');
+		$(".stash-module-filter-button").removeClass('is-active');
         self.mFilterMiscButton.addClass('is-active');
-        self.mFilterUsableButton.removeClass('is-active');
         self.notifyBackendFilterMiscButtonClicked();
-    }, '', 3);
+    }, 'stash-module-filter-button', 3);
 
     var layout = $('<div class="l-button is-usable-filter"/>');
     buttonContainer.append(layout);
     this.mFilterUsableButton = layout.createImageButton(Path.GFX + Asset.BUTTON_USABLE_FILTER, function ()
     {
-        self.mFilterAllButton.removeClass('is-active');
-        self.mFilterWeaponsButton.removeClass('is-active');
-        self.mFilterArmorButton.removeClass('is-active');
-        self.mFilterMiscButton.removeClass('is-active');
+    	$(".stash-module-filter-button").removeClass('is-active');
         self.mFilterUsableButton.addClass('is-active');
         self.notifyBackendFilterUsableButtonClicked();
-    }, '', 3);
+    }, 'stash-module-filter-button', 3);
 
     this.mStashSlotSizeContainer = $('<div class="slot-count-container"/>');
     buttonContainer.append(this.mStashSlotSizeContainer);
