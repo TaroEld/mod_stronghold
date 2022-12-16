@@ -148,26 +148,26 @@
 ::Stronghold.Locations <-
 {
 	Workshop = {
-		Cost = 10, // Cost for each attached location, multiplied by PriceMult (1000 by default)
+		Price = 10, // Price for each attached location, multiplied by PriceMult (1000 by default)
 		MaxAmount = 1, // Maximum amount allowed per base
 		DailyIncome = 20, // Amount of tools generated every day
 		MaxItemSlots = 40 // Amount added to the maximum amount of stored items of this type
 	},
 
 	Ore_Smelter = {
-		Cost = 10,
+		Price = 10,
 		MaxAmount = 1,
 		ReforgeMultiplier = 1.5 // Price multiplier applied on the base value of the item being reforged
 	},
 
 	Blast_Furnace = {
-		Cost = 5,
+		Price = 5,
 		MaxAmount = 1,
 		RepairMultiplier = 0.7 // Value by which instant repair will be multiplied
 	},
 
 	Stone_Watchtower = {
-		Cost = 10,
+		Price = 10,
 		MaxAmount = 1,
 		VisionInFogOfWarRange = 15, // Range in which you can see enemies in fog of war
 		EffectRange = 25, // Distance in tiles for which the next two effects work
@@ -176,7 +176,7 @@
 	},
 
 	Militia_Trainingcamp = {
-		Cost = 10,
+		Price = 10,
 		MaxAmount = 3,
 		MaxBrotherExpLevel = 7, //
 		DailyIncome = 200, // Amount of Experience generated each day
@@ -185,13 +185,13 @@
 	},
 
 	Wheat_Fields = {
-		Cost = 5,
+		Price = 5,
 		MaxAmount = 1,
 		EffectRange = 25, // Distance in tiles for which the effect works
 	},
 
 	Herbalists_Grove = {
-		Cost = 5,
+		Price = 5,
 		MaxAmount = 1,
 		DailyIncome = 20, // Amount of extra medicine generated every day
 		MaxItemSlots = 40, // Amount added to the maximum amount of stored items of this type
@@ -199,7 +199,7 @@
 	},
 
 	Gold_Mine = {
-		Cost = 10,
+		Price = 10,
 		MaxAmount = 1,
 		DailyIncome = 150,
 		AddGoldDirectlyToAssets = false // Add gold generated in base directly to the asset crowns on base enter instead of creating a crowns item
