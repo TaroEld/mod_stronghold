@@ -28,7 +28,7 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 				ID = location.ID,
 				ConstID = locationID,
 				Description = location.Description,
-				Cost = location.Cost,
+				Price = location.Price,
 				Path = location.Path,
 				ImagePath = location.Path + ".png",
 				HasStructure = countLocation > 0,
@@ -43,8 +43,8 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 	function addLocation(_data)
 	{
 		local home = this.getTown();
-		local cost = _data[1].tointeger() * ::Stronghold.PriceMult
-		this.World.Assets.addMoney(-cost)
+		local price = _data[1].tointeger() * ::Stronghold.PriceMult
+		this.World.Assets.addMoney(-price)
 		local script = "scripts/entity/world/attached_location/" + _data[0]
 		local validTerrain =
 		[

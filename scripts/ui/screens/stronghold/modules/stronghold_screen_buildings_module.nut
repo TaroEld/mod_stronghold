@@ -24,7 +24,7 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 				ID = building.ID,
 				ConstID = buildingID,
 				Description = building.Description,
-				Cost = building.Cost,
+				Price = building.Price,
 				Path = building.Path,
 				ImagePath = building.Path + ".png",
 				HasStructure = hasBuilding,
@@ -36,8 +36,8 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 
 	function addBuilding(_data)
 	{
-		local cost = _data[1].tointeger() * ::Stronghold.PriceMult
-		this.World.Assets.addMoney(-cost)
+		local price = _data[1].tointeger() * ::Stronghold.PriceMult
+		this.World.Assets.addMoney(-price)
 		local building = this.new("scripts/entity/world/settlements/buildings/" + _data[0]);
 		this.getTown().addBuilding(building);
 		this.updateData(["TownAssets", "Assets", "BuildingsModule"]);

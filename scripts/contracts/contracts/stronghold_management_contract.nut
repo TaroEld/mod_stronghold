@@ -44,11 +44,11 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	}
 
 	function setCost(_cost){
-		this.m.Cost = _cost
+		this.m.Price = _cost
 	}
 
 	function getCost(){
-		return this.m.Cost
+		return this.m.Price
 	}
 
 	//disable some options for hamlet
@@ -663,12 +663,12 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 	function addBuildingScreen(_screenVar, _idx)
 	{
 		return {
-			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Cost * this.Stronghold.PriceMult) + " crowns)",
+			Text = "Build a" + (_screenVar.Name[0] == "A" ? "n ":" ") + _screenVar.Name + " (" +  (_screenVar.Price * this.Stronghold.PriceMult) + " crowns)",
 			function getResult(_option)
 			{
 				local building = this.Option
 				this.Contract.m.Temp_Var <- (this.Contract.m.IsSouthern &&  building.SouthPath) ? building.SouthPath : building.Path
-				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	
+				this.Contract.setCost(building.Price * this.Stronghold.PriceMult)
 				this.Contract.addOverviewScreen(
 					format("Build a %s", building.Name), 
 					format("You selected a %s. This will cost %i. Do you wish to build this?", building.Name, this.Contract.getCost())
@@ -716,14 +716,14 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 			_char = _char.tochar().tolower();
 			return vocals.find(_char) != null;
 		}
-		local title = format("Build %s %s (%i crowns)", isInVocals(_screenVar.Name[0]) ? "an " : "a ", _screenVar.Name, _screenVar.Cost * this.Stronghold.PriceMult);
+		local title = format("Build %s %s (%i crowns)", isInVocals(_screenVar.Name[0]) ? "an " : "a ", _screenVar.Name, _screenVar.Price * this.Stronghold.PriceMult);
 		return {
 			Text = title,
 			function getResult(_option)
 			{
 				local building = this.Option;
 				this.Contract.m.Temp_Var <- building.Path;
-				this.Contract.setCost(building.Cost * this.Stronghold.PriceMult)	;
+				this.Contract.setCost(building.Price * this.Stronghold.PriceMult)	;
 				local text = format("You selected %s %s. This will cost %i crowns.\n", isInVocals(building.Name[0]) ? "an" : "a", building.Name, this.Contract.getCost());
 				text += building.Text;
 				if(this.Stronghold.Locations[building.ConstID].MaxAmount != 1){
@@ -747,13 +747,13 @@ this.stronghold_management_contract <- this.inherit("scripts/contracts/contract"
 
 	function addRoadScreen(_screenVar, _idx)
 	{
-		local price = _screenVar.Cost * this.Stronghold.RoadCost * this.Stronghold.PriceMult
+		local price = _screenVar.Price * this.Stronghold.RoadCost * this.Stronghold.PriceMult
 		return{
 			Text = format("Road to %s (%i Crowns)", _screenVar.Name, price)
 			function getResult(_option)
 			{
 				this.Contract.m.Temp_Var <- this.Option;
-				this.Contract.setCost(this.Option.Cost * this.Stronghold.RoadCost * this.Stronghold.PriceMult)
+				this.Contract.setCost(this.Option.Price * this.Stronghold.RoadCost * this.Stronghold.PriceMult)
 				this.Contract.addOverviewScreen(
 					format("Build a road"), 
 					format("You will try to build a road to %s. This will cost %i crowns. Do you wish to do this?", this.Option.Name, this.Contract.getCost())

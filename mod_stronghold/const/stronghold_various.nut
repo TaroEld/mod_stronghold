@@ -161,10 +161,9 @@
 
 ::Stronghold.buildMainBase <- function()
 {
-	local priceMult = this.Stronghold.PriceMult
-	local build_cost = this.Stronghold.BuyPrices[0] * priceMult
+	local buildPrice = ::Stronghold.Tiers[1].Price * ::Stronghold.PriceMult
 	//called from retinue menu
-	this.World.Assets.addMoney(-build_cost);
+	this.World.Assets.addMoney(-buildPrice);
 	local tile = this.World.State.getPlayer().getTile(); 
 	tile.IsOccupied = true;
 	tile.TacticalType = this.Const.World.TerrainTacticalType.Urban;

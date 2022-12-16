@@ -52,7 +52,7 @@ StrongholdScreenBuildingsModule.prototype.switchActiveStructure = function( _str
 
 StrongholdScreenBuildingsModule.prototype.addStructure = function ()
 {
-	SQ.call(this.mSQHandle, 'addBuilding', [this.mActiveStructure.Path, this.mActiveStructure.Cost])
+	SQ.call(this.mSQHandle, 'addBuilding', [this.mActiveStructure.Path, this.mActiveStructure.Price])
 };
 
 StrongholdScreenBuildingsModule.prototype.removeStructure = function ()

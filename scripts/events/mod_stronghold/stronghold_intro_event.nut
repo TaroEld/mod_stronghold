@@ -16,11 +16,11 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		}
 		
 		local priceMult = this.Stronghold.PriceMult;
-		local build_cost = this.Stronghold.BuyPrices[0] * priceMult;
 		local levelOneName = this.Stronghold.BaseNames[0]
+		local buildPrice = tier.Price * priceMult;
 
 		local hasInventoryUpgrade = this.World.Retinue.getInventoryUpgrades() > 0
-		local hasMoney = this.World.Assets.getMoney() >= build_cost
+		local hasMoney = this.World.Assets.getMoney() >= buildPrice
 		local isTileOccupied = this.World.State.getPlayer().getTile().IsOccupied
 		local hasContract = this.World.Contracts.getActiveContract() != null
 		local isCoastal = this.Stronghold.isOnTile(this.World.State.getPlayer().getTile(), [this.Const.World.TerrainType.Ocean, this.Const.World.TerrainType.Shore])

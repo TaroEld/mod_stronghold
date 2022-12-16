@@ -51,7 +51,7 @@ StrongholdScreenLocationsModule.prototype.switchActiveStructure = function( _str
 
 StrongholdScreenLocationsModule.prototype.addStructure = function ()
 {
-   SQ.call(this.mSQHandle, 'addLocation', [this.mActiveStructure.Path, this.mActiveStructure.Cost]);
+   SQ.call(this.mSQHandle, 'addLocation', [this.mActiveStructure.Path, this.mActiveStructure.Price]);
 };
 
 StrongholdScreenLocationsModule.prototype.removeStructure = function ()
