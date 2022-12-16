@@ -1,4 +1,15 @@
 .stronghold-screen .misc-module
 {
+}
 
+.stronghold-screen .misc-module .l-list-container
+{
+
+}
+
+.stronghold-screen .misc-module .misc-option
+{
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
 }

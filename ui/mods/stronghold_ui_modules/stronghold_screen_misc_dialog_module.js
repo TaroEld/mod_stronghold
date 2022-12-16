@@ -18,7 +18,53 @@ StrongholdScreenMiscModule.prototype.createDIV = function (_parentDiv)
 	StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
 	var self = this;
 	this.mContentContainer.addClass("misc-module");
+	this.mListContainerLayout = $('<div class="l-list-container"/>');
+    this.mContentContainer.append(this.mListContainerLayout);
+    this.mListContainer = this.mListContainerLayout.createList(5, null, true);
+    this.mListScrollContainer = this.mListContainer.findListScrollContainer();
+    this.mBuildRoadContainer 	= $('<div class="misc-option build-road-container"/>').appendTo(this.mListScrollContainer);
+    this.mSendGiftsContainer 	= $('<div class="misc-option send-gifts-container"/>').appendTo(this.mListScrollContainer);
+    this.mTrainBrotherContainer = $('<div class="misc-option train-brother-container"/>').appendTo(this.mListScrollContainer);
+    this.mBuyWaterContainer 	= $('<div class="misc-option buy-water-container"/>').appendTo(this.mListScrollContainer);
+    this.mRemoveBaseContainer 	= $('<div class="misc-option remove-base-container"/>').appendTo(this.mListScrollContainer);
+    this.createBuildRoadContent();
+    this.createSendGiftsContent();
+    this.createTrainBrotherContent();
+    this.createBuyWaterContent();
+    this.createRemoveBaseContent();
 };
+
+StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
+{
+	this.mBuildRoadContentContainer = this.mBuildRoadContainer.appendRow("Build a road");
+	var subtitle = this.mBuildRoadContentContainer.find(".sub-title");
+	var content = this.mBuildRoadContentContainer;
+	var dropdown = createDropDownMenu(["a", "b", "c", "d", "e", "f", "g", "a", "b", "c", "d", "e", "f", "g"], "a", function(_value)
+	{
+		subtitle.text(_value);
+	})
+	content.append(dropdown);
+}
+
+StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
+{
+	this.mSendGiftsContentContainer = this.mSendGiftsContainer.appendRow("Send Gifts");
+}
+
+StrongholdScreenMiscModule.prototype.createTrainBrotherContent = function ()
+{
+
+}
+
+StrongholdScreenMiscModule.prototype.createBuyWaterContent = function ()
+{
+
+}
+
+StrongholdScreenMiscModule.prototype.createRemoveBaseContent = function ()
+{
+
+}
 
 StrongholdScreenMiscModule.prototype.loadFromData = function()
 {
