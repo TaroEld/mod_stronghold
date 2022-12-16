@@ -9,39 +9,44 @@ var Stronghold = {
 	    BaseSpriteTypes : ["Default", "Luft_Basic", "Luft_Brigand", "Luft_Necro", "Luft_Fishing"],
 	    Sprites : {
 	        Default : {
-	            "MainSprites" : ["stronghold_01", "stronghold_02", "stronghold_03"],
-	            "HouseSprites" : ["houses_03_01", "", ""],
-	            "UnitSprite" : "figure_mercenary_01",
-	            "Name" : "Default",
-	            "Author" : "Overhype"
+	            "MainSprites" 		: ["stronghold_01", "stronghold_02", "stronghold_03"],
+	            "HouseSprites" 		: ["houses_03_01", "", ""],
+	            "UnitSprite" 		: "figure_mercenary_01",
+	            "HamletSprite" 		: "townhall_01",
+	            "Name" 				: "Default",
+	            "Author" 			: "Overhype"
 	        },
 	        Luft_Basic : {
-	            "MainSprites" : ["luft_basic_01", "luft_basic_02", "luft_basic_03"],
-	            "HouseSprites" : ["luft_basic_houses_01", "", ""],
-	            "UnitSprite" : "luft_basic_patrol",
-	            "Name" : "Basic Village",
-	            "Author" : "Luftwaffle"
+	            "MainSprites" 		: ["luft_basic_01", "luft_basic_02", "luft_basic_03"],
+	            "HouseSprites" 		: ["luft_basic_houses_01", "", ""],
+	            "UnitSprite" 		: "luft_basic_patrol",
+	            "HamletSprite" 		: "townhall_01",
+	            "Name" 				: "Basic Village",
+	            "Author" 			: "Luftwaffle"
 	        },
 	        Luft_Brigand : {
-	            "MainSprites" : ["luft_fort_01", "luft_fort_02", "luft_fort_03"],
-	            "HouseSprites" : ["luft_fort_houses_01", "", ""],
-	            "UnitSprite" : "luft_fort_patrol",
-	            "Name" : "Brigand's Hideout",
-	            "Author" : "Luftwaffle"
+	            "MainSprites" 		: ["luft_fort_01", "luft_fort_02", "luft_fort_03"],
+	            "HouseSprites" 		: ["luft_fort_houses_01", "", ""],
+	            "UnitSprite" 		: "luft_fort_patrol",
+	            "HamletSprite" 		: "townhall_01",
+	            "Name" 				: "Brigand's Hideout",
+	            "Author" 			: "Luftwaffle"
 	        },
 	        Luft_Necro : {
-	            "MainSprites" : ["luft_necro_01", "luft_necro_02", "luft_necro_03"],
-	            "HouseSprites" : ["luft_necro_houses_01", "", ""],
-	            "UnitSprite" : "luft_necro_patrol",
-	            "Name" : "Necromancer's Lair",
-	            "Author" : "Luftwaffle"
+	            "MainSprites" 		: ["luft_necro_01", "luft_necro_02", "luft_necro_03"],
+	            "HouseSprites" 		: ["luft_necro_houses_01", "", ""],
+	            "UnitSprite" 		: "luft_necro_patrol",
+	            "HamletSprite" 		: "townhall_01",
+	            "Name" 				: "Necromancer's Lair",
+	            "Author" 			: "Luftwaffle"
 	        },
 	        Luft_Fishing : {
-	            "MainSprites" : ["luft_fishing_01", "luft_fishing_02", "luft_fishing_03"],
-	            "HouseSprites" : ["luft_fishing_houses_01", "", ""],
-	            "UnitSprite" : "luft_fishing_patrol",
-	            "Name" : "Fishing Village",
-	            "Author" : "Luftwaffle"
+	            "MainSprites" 		: ["luft_fishing_01", "luft_fishing_02", "luft_fishing_03"],
+	            "HouseSprites" 		: ["luft_fishing_houses_01", "", ""],
+	            "UnitSprite" 		: "luft_fishing_patrol",
+	            "HamletSprite" 		: "townhall_01",
+	            "Name" 				: "Fishing Village",
+	            "Author" 			: "Luftwaffle"
 	        }
 	    },
 	},

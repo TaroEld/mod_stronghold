@@ -5,6 +5,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		isPlayerBase = true,
 		IsUpgrading = false,
 		Stash = null,
+		TroopSprites = [],
+		HouseSprites = [],
 	},
 
 	function create()
@@ -315,6 +317,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				unit.getSprite("body").setBrush(this.m.TroopSprites);
 			}
 		}
+		if (this.getHamlet() != false)
+			this.getHamlet().onVisualsChanged(_newSprite)
 	}
 
 	function getUnitsOfThisBase()

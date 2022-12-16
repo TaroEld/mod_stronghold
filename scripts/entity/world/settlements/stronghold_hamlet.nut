@@ -94,7 +94,8 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		return [];
 	}
 	
-	function updateTown(){
+	function updateTown()
+	{
 		//updates town after upgrading and loading the game. Necessary to update the sprites, names etc.
 		
 		//different looks
@@ -109,7 +110,20 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.getLabel("name").Text = this.getName();
 		this.getLabel("name").Visible = true;
 		this.m.Buildings[6].updateSprite()
-		
+	}
+
+	function updateLook()
+	{
+		//backward compatibility
+		if (!this.getFlags().has("CustomSprite"))
+		{
+			this.getFlags().set("CustomSprite", "Default");
+		}
+		local spriteID = this.getFlags().get("CustomSprite");
+		local constSprites = this.Stronghold.Visuals[this.Stronghold.VisualsMap[spriteID]];
+		local sprites = constSprites.Levels[2];
+		this.m.TroopSprites = sprites.WorldmapFigure;
+		this.m.HouseSprites = sprites.Houses;
 	}
 	
 	

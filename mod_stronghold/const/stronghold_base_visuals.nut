@@ -47,7 +47,7 @@
 				UIRampPathway = "ui/settlements/ramp_01_cobblestone",
 			}
 		}
-	]
+	],
 })
 ::Stronghold.Visuals.push(
 {
