@@ -103,9 +103,9 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	function getUIDataObject()
 	{
 		local ret = {
-			Assets 				= {},
-			TownAssets 			= {},
-			Requirements = {},
+			Assets 			= {},
+			TownAssets 		= {},
+			Requirements 	= {},
 		};
 		foreach (id, module in this.m.Modules)
 		{
