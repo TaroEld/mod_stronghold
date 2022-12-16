@@ -2,9 +2,6 @@
 // General multiplier for crown values of prices
 ::Stronghold.PriceMult <- 1000; 
 
-// Maximum amount of attachments per level
-::Stronghold.MaxAttachments <- [3, 6, 9]; 
-
 // Max amount of main bases, essentially infinite at the moment
 ::Stronghold.MaxStrongholdNumber <- 999; 
 
