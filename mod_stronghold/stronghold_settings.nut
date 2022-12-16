@@ -104,15 +104,15 @@
 {
 	Name = "Hamlet",
 	Price = 20,
-	UnlockDescription = "A hamlet serves as additional living space for your retainers. You will be able to construct additional buildings, buy goods, and hire from a variety of recruits. Each base can only have one hamlet.",
+	Description = "A hamlet serves as additional living space for your retainers. You will be able to construct additional buildings, buy goods, and hire from a variety of recruits. Each base can only have one hamlet.",
 	Requirements = [
 		{
 			Text = @(_town) format("Have a max level base. (%s)", ::Stronghold.Tiers[3].Name),
 			IsValid = @(_town) _town.isMaxLevel()
 		},
 		{
-			Text = @(_town) format("Price: %s", (::Stronghold.BuildingPrices[buildingID] * ::Stronghold.PriceMult).tostring()),
-			IsValid = @(_town) this.World.Assets.getMoney() >= ::Stronghold.BuildingPrices[buildingID] * ::Stronghold.PriceMult
+			Text = @(_town) format("Price: %s", (::Stronghold.Hamlet.Price * ::Stronghold.PriceMult).tostring()),
+			IsValid = @(_town) this.World.Assets.getMoney() >= ::Stronghold.Hamlet.Price * ::Stronghold.PriceMult
 		},
 		{
 			Text = @(_town) "Don't already have a hamlet",
