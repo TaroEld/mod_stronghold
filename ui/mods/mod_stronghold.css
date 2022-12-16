@@ -46,10 +46,12 @@
 {
 	display: none;
 	width: 100%;
-	position: absolute;
+	position: absolute !important;
 	box-shadow: 0px 0px 16px black;
+
+	height: 15rem;
 	overflow: auto;
-	outline:hidden;
+	outline: hidden;
 }
 
 .dropdown:hover .dropdown-container

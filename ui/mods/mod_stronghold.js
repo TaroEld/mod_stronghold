@@ -137,8 +137,11 @@ $.fn.appendRow = function(_subTitle, _classes)
     return row
 }
 
-var createDropDownMenu = function(_childrenArray, _default, _onChangeCallback)
+var createDropDownMenu = function(_parentDiv, _childrenArray, _default, _onChangeCallback)
 {
+	// NOTE: you need to pass the _parentDiv that the dropdown gets attached to
+	// This is due do aciScrollBar
+	// the _parentDiv needs to be attached to the DOM!!!
 	var result = $('<div class="dropdown"/>');
 
 	var text = $('<div class="dropdown-text text-font-normal font-color-label"/>');
@@ -167,6 +170,7 @@ var createDropDownMenu = function(_childrenArray, _default, _onChangeCallback)
 				return false;
 			})
 		})
+		container.css("height", (Math.min(20, container.children().length * 3) + "rem"));
 	})
 
 	if (_childrenArray !== undefined && _childrenArray !== null)
@@ -192,6 +196,13 @@ var createDropDownMenu = function(_childrenArray, _default, _onChangeCallback)
 	{
 		$(this).find(".dropdown-container").empty();
 	})
+
+	// These must be last!
+	_parentDiv.append(result);
+	container.aciScrollBar({
+		delta : 1
+	});
+
 	return result;
 }
 
