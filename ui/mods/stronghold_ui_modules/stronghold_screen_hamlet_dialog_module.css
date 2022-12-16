@@ -1,0 +1,58 @@
+.stronghold-screen .hamlet-module .build-hamlet-row
+{
+    height: 19.9rem;
+}
+
+.stronghold-screen .hamlet-module .hamlet-details-container
+{
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    /*border: 1px solid green;*/
+}
+
+.stronghold-screen .hamlet-module .hamlet-details-container .hamlet-details-text-container
+{
+    flex: 1;
+    /*border: 1px solid red;*/
+}
+
+.stronghold-screen .hamlet-module .hamlet-sprite-container
+{
+    width: 28.0rem;
+    display: flex;
+    flex-wrap: wrap;
+
+    /*border: 2px solid blue;*/
+}
+
+.stronghold-screen .hamlet-module .hamlet-sprite-image
+{
+    width: 25.2rem;
+    height: 19.9rem;
+}
+
+.stronghold-screen .hamlet-module .requirements-row .hamlet-requirements-container
+{
+    width: 50%;
+}
+
+.stronghold-screen .hamlet-module .requirements-row .hamlet-requirements-container img
+{
+    top: 3rem;
+}
+
+.stronghold-screen .hamlet-module .footer-button-bar
+{
+    position: absolute;
+    bottom: 0;
+    justify-content: center;
+}
+
+.stronghold-screen .hamlet-module .footer-button-bar .build-hamlet-button
+{
+    align-self: center;
+    width: 17.5rem;
+    height: 4.3rem;
+    /*border: 1px solid blue;*/
+} 
