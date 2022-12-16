@@ -46,6 +46,11 @@ var StrongholdScreen = function ()
             "Button" : null,
             "Module" : null
         },
+        "MiscModule" : {
+            "ButtonName" : "Misc",
+            "Button" : null,
+            "Module" : null
+        },
 	}
 	this.mAssetValues = null;
 	this.mAssets = new WorldTownScreenAssets(this);
