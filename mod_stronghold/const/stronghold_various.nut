@@ -205,7 +205,7 @@
 		selected_party = this.Const.World.Common.assignTroops( _party, _partyList, _resources, _weightMode = 1)
 		foreach (t in _party.m.Troops)
 		{
-			_resources -= t.Cost
+			_resources -= t.Cost;
 		}
 	}
 	_party.updateStrength();
