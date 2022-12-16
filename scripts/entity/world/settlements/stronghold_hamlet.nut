@@ -68,7 +68,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 	
 	function getSizeName()
 	{
-		return this.Stronghold.HamletName
+		return this.Stronghold.Hamlet.Name
 	}
 	
 	function onEnter()
