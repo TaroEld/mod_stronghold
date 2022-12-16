@@ -101,7 +101,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		local ret = {
 			Assets 				= {},
 			TownAssets 			= {},
-			UpgradeRequirements = {},
+			Requirements = {},
 		};
 		foreach (id, module in this.m.Modules)
 		{
