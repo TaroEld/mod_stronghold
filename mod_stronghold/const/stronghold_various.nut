@@ -3,13 +3,6 @@
 
 ::Stronghold.MAX_BASE_SIZE <- 3;
 
-::Stronghold.UnlockAdvantages <- 
-[
-	"You can leave items and brothers behind, to retrieve them later as you need them.\n You can construct up to three settlement buildings.\nYou can construct up to three locations, granting various advantages.\n You will be able to upgrade your base, unlocking more features.",
-	"Bands of mercenaries will join your base and guard it against aggressors.\nYou can construct an additional building and three additional locations.\nYou can construct roads to other settlements, connecting your base to the world.",
-	"You can construct an additional building, including an arena, and three additional locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold."
-]
-
 ::Stronghold.PlayerFactionActions <- 
 [
 	"scripts/factions/actions/stronghold_guard_base_action", 

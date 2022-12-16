@@ -2,9 +2,6 @@
 // General multiplier for crown values of prices
 ::Stronghold.PriceMult <- 1000; 
 
-// Base price to build / upgrade / upgrade
-::Stronghold.BuyPrices <- [10, 20, 20]; 
-
 // Maximum amount of attachments per level
 ::Stronghold.MaxAttachments <- [3, 6, 9]; 
 
@@ -82,13 +79,30 @@
 ::Stronghold.MaxAmountOfStoredMedicine <- 100;
 ::Stronghold.MaxAmountOfStoredAmmo <- 300;
 
-
-// Base name for each tier, used in descriptions
-::Stronghold.BaseNames <- [
-	"Fort",
-	"Castle",
-	"Stronghold"
-]
+::Stronghold.Tiers <-
+{
+	1 = {
+		Name = "Fort",
+		Size = 1,
+		Price = 10,
+		MaxAttachments = 3,
+		UnlockDescription = "You can leave items and brothers behind, to retrieve them later as you need them.\n You can construct up to three settlement buildings.\nYou can construct up to three locations, granting various advantages.\n You will be able to upgrade your base, unlocking more features.",
+	},
+	2 = {
+		Name = "Castle",
+		Size = 2,
+		Price = 20,
+		MaxAttachments = 6,
+		UnlockDescription = "Bands of mercenaries will join your base and guard it against aggressors.\nYou can construct an additional building and three additional locations.\nYou can construct roads to other settlements, connecting your base to the world.",
+	},
+	3 = {
+		Name = "Stronghold",
+		Size = 3,
+		Price = 30,
+		MaxAttachments = 9,
+		UnlockDescription = "You can construct an additional building, including an arena, and three additional locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold.",
+	},
+}
 
 // Name of the hamlet used in descriptions
 ::Stronghold.HamletName <- "Hamlet" 

@@ -3,15 +3,22 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 
 	function getUIData( _ret )
 	{
-		local price = ::Stronghold.PriceMult * ::Stronghold.BuyPrices[this.getTown().getSize()]
+		if (this.getTown().getSize() == 3)
+		{
+			return {
+				MaxSize = true;
+			}
+		}
+		local tier = ::Stronghold.Tiers[this.getTown().getSize() + 1];
+		local price = ::Stronghold.PriceMult * tier.Price;
 		local currentInventory = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades()]
 		local nextInventory = currentInventory;
 		if(this.World.Retinue.getInventoryUpgrades() < this.getTown().getSize() + 1)
 		{
 			nextInventory = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades() + 1]
 		}
-		_ret.UpgradeAdvantages <- ::Stronghold.UnlockAdvantages;
-		_ret.UpgradeRequirements <- {
+		_ret.Description <- tier.UnlockDescription;
+		_ret.Requirements <- {
 		    Money  = {
 		        TextDone = "You have the required " + price + " crowns.",
 		        TextNotDone = "You don't have the required " + price + "crowns.",

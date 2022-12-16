@@ -254,8 +254,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		local size = this.getSize();
 		if (this.isUpgrading()) size = ::Math.max(1, size-1);
-		if (_nextLevel) return this.Stronghold.BaseNames[size];
-		return this.Stronghold.BaseNames[size-1];
+		if (_nextLevel) return this.Stronghold.Tiers[size + 1].Name;
+		return this.Stronghold.Tiers[size].Name;
 	}
 	
 	function updateTown()
@@ -278,7 +278,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
 		//need to update building size since it's changed to 9 during serialisation
 
-		this.m.AttachedLocationsMax = this.Stronghold.MaxAttachments[this.getSize()-1];
+		this.m.AttachedLocationsMax = this.Stronghold.Tiers[this.getSize()].MaxAttachments;
 	}
 
 	function defineName()

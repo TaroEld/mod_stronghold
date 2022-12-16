@@ -39,8 +39,8 @@
 				})
 				return "Upgrade_Contract_Active";
 			}
-			local advantages = this.Stronghold.UnlockAdvantages[this.getHome().getSize()]
-			this.setCost(this.Stronghold.PriceMult * this.Stronghold.BuyPrices[this.getHome().getSize()])
+			local advantages = this.Stronghold.Tiers[this.getHome().getSize()].UnlockDescription;
+			this.setCost(this.Stronghold.PriceMult * this.Stronghold.Tiers[this.getHome().getSize() + 1].Price)
 			local text =  "You can upgrade your " + this.getHome().getSizeName() + " to a " + this.getHome().getSizeName(true) + ". This would add these options: \n" + advantages +"\nThis costs " + this.getCost() + " crowns.\nWhile upgrading, you won't be able to access most of the management options. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
 			this.addOverviewScreen(
 				format("Upgrade your %s", this.getHome().getSizeName()),

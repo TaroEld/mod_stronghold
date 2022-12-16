@@ -16,8 +16,9 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		}
 		
 		local priceMult = this.Stronghold.PriceMult;
-		local levelOneName = this.Stronghold.BaseNames[0]
+		local tier = this.Stronghold.Tiers[1];
 		local buildPrice = tier.Price * priceMult;
+		local name = tier.Name;
 
 		local hasInventoryUpgrade = this.World.Retinue.getInventoryUpgrades() > 0
 		local hasMoney = this.World.Assets.getMoney() >= buildPrice
@@ -35,22 +36,22 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		local contractText = coloredText("\n-Not having an active contract.", !hasContract)
 		local coastalText = isCoastal ? coloredText("you will be able to build a port here.") : coloredText("you won't be able to build a port here, as you're not close enough to the sea.", false);
 
-		local requirementsText = "Welcome to Stronghold. Here you can see what you need to build your base. You will start with a small " + levelOneName + ", which can later be upgraded to unlock more features."
-		requirementsText += format("\n\nBuilding a %s requires: ", levelOneName)
+		local requirementsText = "Welcome to Stronghold. Here you can see what you need to build your base. You will start with a small " + name + ", which can later be upgraded to unlock more features."
+		requirementsText += format("\n\nBuilding a %s requires: ", name)
 		requirementsText += renownText + inventoryText + moneyText + tileText + contractText
 
 
-		requirementsText += format("\n\n Building a %s will unlock these features: \n%s", levelOneName, this.Stronghold.UnlockAdvantages[0])
+		requirementsText += format("\n\n Building a %s will unlock these features: \n%s", name, tier.UnlockDescription)
 		requirementsText += format("\n\n Also, you %s", coastalText)
 
-		requirementsText += format("\n\n Once you've built the %s, click the large fortification in the background to open the management menu. You can rename it by clicking on the name.", levelOneName)
+		requirementsText += format("\n\n Once you've built the %s, click the large fortification in the background to open the management menu. You can rename it by clicking on the name.", name)
 
 		local A_options;
 		if (isValid){
-			requirementsText += coloredText(format("\n\nYou CAN build a %s!", levelOneName)) + " Do you wish to proceed?"
+			requirementsText += coloredText(format("\n\nYou CAN build a %s!", name)) + " Do you wish to proceed?"
 		 	A_options = 
 		 	[{
-				Text = "Yes, build a "+ this.Stronghold.BaseNames[0] + " here",
+				Text = format("Yes, build a %s here", name),
 				function getResult( _event )
 				{
 					return "Base_Option";
@@ -68,7 +69,7 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 			}]
 		}
 		else{
-			requirementsText += coloredText("\n\nYou CANNOT build a " + levelOneName + "!", false) + " Return when you have fulfilled all the requirements."
+			requirementsText += coloredText("\n\nYou CANNOT build a " + name + "!", false) + " Return when you have fulfilled all the requirements."
 	 	 	A_options = 
 	 	 	[{
  				Text = "Alright.",
