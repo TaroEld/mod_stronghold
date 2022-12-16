@@ -37,7 +37,6 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 				Path = "hamlet_module",
 			},
 		},
-		ModuleIDs = {},
 	},
 
 	function create()
@@ -48,7 +47,6 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			module.Module = this.new(this.m.ModulePath + module.Path);
 			module.Module.setID(id);
 			module.Module.setParent(this);
-			this.m.ModuleIDs[id] <- id;
 		}
 	}
 
