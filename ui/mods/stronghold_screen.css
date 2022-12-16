@@ -116,7 +116,7 @@
     height: 4.4rem;
     position: absolute;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     top: 7.5rem;
 
     /*border: 2px solid orange;*/
@@ -127,26 +127,21 @@
     height: 4.3rem;
     flex: 1;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
-    /*border: 2px solid blue*/
 }
 
 .l-stronghold-dialog-container .asset-container .l-tab-asset img
 {
     width: 2.8rem;
     height: 2.8rem;
-    /*border: 1px solid red;*/
 }
 
 .l-stronghold-dialog-container .asset-container .l-tab-asset .label
 {
-    flex: 1;
     height: 3.0rem;
     line-height: 3.0rem;
     padding-left: 0.5rem;
-
-    /*border: 1px solid green;*/
 }
 
 .l-stronghold-dialog-container .footer
