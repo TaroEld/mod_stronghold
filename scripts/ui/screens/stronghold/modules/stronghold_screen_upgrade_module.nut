@@ -6,7 +6,7 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 		if (this.getTown().getSize() == 3)
 		{
 			return {
-				MaxSize = true;
+				MaxSize = true
 			}
 		}
 		local tier = ::Stronghold.Tiers[this.getTown().getSize() + 1];
