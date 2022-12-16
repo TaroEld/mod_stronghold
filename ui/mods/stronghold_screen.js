@@ -71,69 +71,14 @@ Object.defineProperty(StrongholdScreen.prototype, 'constructor', {
 	writable: true
 });
 
-StrongholdScreen.prototype.getModule = function ( _module )
-{
-    return this.Modules[_module].Module;
-};
-
-StrongholdScreen.prototype.getModuleObject = function ( _module )
-{
-    return this.Modules[_module];
-};
-
-
 StrongholdScreen.prototype.getData = function ()
 {
     return this.mData;
 };
 
-
-StrongholdScreen.prototype.registerModules = function ()
-{
-    var self = this;
-    Object.keys(this.Modules).forEach(function(_key){
-        self.Modules[_key].Module.register(self.mModuleContainer);
-    })
-};
-
-StrongholdScreen.prototype.unregisterModules = function ()
-{
-    var self = this;
-    Object.keys(this.Modules).forEach(function(_key){
-        self.Modules[_key].Module.unregister();
-    })
-};
-
-StrongholdScreen.prototype.switchModule = function ( _module )
-{
-    if(this.mActiveModule !== null)
-    {
-        this.mActiveModule.hide();
-    }
-    if (this.mActiveButton !== null)
-    {
-        this.mActiveButton.enableButton(true);
-    }
-
-    this.mActiveModule = this.getModuleObject(_module).Module;
-    this.mActiveButton = this.getModuleObject(_module).Button;
-    this.mActiveButton.enableButton(false);
-    this.mActiveModule.show();
-    this.updateTitle(this.mActiveModule.mTitle);
-};
-
 StrongholdScreen.prototype.updateTitle = function ( _titleText )
 {
     this.mTitle.text(_titleText);
-};
-
-StrongholdScreen.prototype.createModules = function ()
-{
-	var self = this;
-	// Maybe I shouldn't be doing this
-	MSU.iterateObject(this.Modules, function(_key, _module){
-		_module.Module = new window["StrongholdScreen" + _key](self);
-	})
 };
 
 StrongholdScreen.prototype.show = function (_data)
@@ -243,6 +188,16 @@ StrongholdScreen.prototype.createAssetDIVs = function()
     this.mAssets.mLocationAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_LOCATION, 'is-location');
 }
 
+
+StrongholdScreen.prototype.createModules = function ()
+{
+	var self = this;
+	// Maybe I shouldn't be doing this
+	MSU.iterateObject(this.Modules, function(_key, _module){
+		_module.Module = new window["StrongholdScreen" + _key](self);
+	})
+};
+
 StrongholdScreen.prototype.createModuleOptionsButtons = function()
 {
     var self = this;
@@ -258,6 +213,50 @@ StrongholdScreen.prototype.createModuleOptionsButtons = function()
         }, '', 2);
     })
 }
+
+StrongholdScreen.prototype.registerModules = function ()
+{
+    var self = this;
+    Object.keys(this.Modules).forEach(function(_key){
+        self.Modules[_key].Module.register(self.mModuleContainer);
+    })
+};
+
+StrongholdScreen.prototype.unregisterModules = function ()
+{
+    var self = this;
+    Object.keys(this.Modules).forEach(function(_key){
+        self.Modules[_key].Module.unregister();
+    })
+};
+
+StrongholdScreen.prototype.getModule = function ( _module )
+{
+    return this.Modules[_module].Module;
+};
+
+StrongholdScreen.prototype.getModuleObject = function ( _module )
+{
+    return this.Modules[_module];
+};
+
+StrongholdScreen.prototype.switchModule = function ( _module )
+{
+    if(this.mActiveModule !== null)
+    {
+        this.mActiveModule.hide();
+    }
+    if (this.mActiveButton !== null)
+    {
+        this.mActiveButton.enableButton(true);
+    }
+
+    this.mActiveModule = this.getModuleObject(_module).Module;
+    this.mActiveButton = this.getModuleObject(_module).Button;
+    this.mActiveButton.enableButton(false);
+    this.mActiveModule.show();
+    this.updateTitle(this.mActiveModule.mTitle);
+};
 
 StrongholdScreen.prototype.loadFromData = function(_data)
 {

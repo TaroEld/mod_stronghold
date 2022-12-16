@@ -62,11 +62,6 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		}
 	}
 
-	function getModule(_id)
-	{
-		return this.m.Modules[_id].Module;
-	}
-
 	function setTown( _t )
 	{
 		this.m.Town = _t;
@@ -92,6 +87,11 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			});
 			this.m.JSHandle.asyncCall("show", this.getFullUIData());
 		}
+	}
+
+	function getModule(_id)
+	{
+		return this.m.Modules[_id].Module;
 	}
 
 	function getUIDataObject()
