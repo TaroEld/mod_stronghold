@@ -6,7 +6,6 @@ var StrongholdScreenUpgradeModule = function(_parent)
     this.mID = "UpgradeModule";
     this.mTitle = "Upgrade your base";
     this.mBaseSprite = null;
-    this.UpgradeRequirements = {}
 };
 
 StrongholdScreenUpgradeModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
@@ -27,19 +26,19 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
     upgradeRow.append(upgradeDetailsContainer);
     this.mUpgradeNameLabel = upgradeDetailsContainer.appendRow("Advantages").find(".sub-title");
     var upgradeDetails = upgradeDetailsContainer.appendRow();
-    this.mUpgradeAdvantagesTextContainer = $('<div class="upgrade-base-text-container text-font-normal font-style-italic font-bottom-shadow font-color-subtitle"/>');
-    upgradeDetails.append(this.mUpgradeAdvantagesTextContainer);
+    this.mDescriptionTextContainer = $('<div class="upgrade-base-text-container text-font-normal font-style-italic font-bottom-shadow font-color-subtitle"/>');
+    upgradeDetails.append(this.mDescriptionTextContainer);
     var upgradeSpriteContainer = $('<div class="upgrade-sprite-container"/>');
     upgradeRow.append(upgradeSpriteContainer);
     this.mBaseUpgradeSpriteImage = $('<img class="upgrade-sprite-image"/>');
     upgradeSpriteContainer.append(this.mBaseUpgradeSpriteImage);
     this.mContentContainer.appendRow("Requirements", "custom-header-background");
-    var upgradeRequirements = this.mContainer.appendRow(null, "requirements-row");
-    var requirementsDone = upgradeRequirements.appendRow("Fulfilled", "upgrade-requirements-container");
+    var requirements = this.mContainer.appendRow(null, "requirements-row");
+    var requirementsDone = requirements.appendRow("Fulfilled", "upgrade-requirements-container");
     this.mRequirementsDoneTable = $('<table/>');
     requirementsDone.append(this.mRequirementsDoneTable);
 
-    var requirementsNotDone = upgradeRequirements.appendRow("Unfulfilled", "upgrade-requirements-container");
+    var requirementsNotDone = requirements.appendRow("Unfulfilled", "upgrade-requirements-container");
     this.mRequirementsNotDoneTable = $('<table/>');
     requirementsNotDone.append(this.mRequirementsNotDoneTable);
 
@@ -60,8 +59,8 @@ StrongholdScreenUpgradeModule.prototype.setSpriteImage = function()
 
 StrongholdScreenUpgradeModule.prototype.fillUpgradeDetailsText = function()
 {
-    var text = this.mModuleData.UpgradeAdvantages[this.mData.TownAssets.Size];
-    this.mUpgradeAdvantagesTextContainer.html(text.replace("/n", "<br>"));
+    var text = this.mModuleData.Description[this.mData.TownAssets.Size];
+    this.mDescriptionTextContainer.html(text.replace("/n", "<br>"));
 }
 
 StrongholdScreenUpgradeModule.prototype.fillRequirementsText = function()
@@ -71,7 +70,7 @@ StrongholdScreenUpgradeModule.prototype.fillRequirementsText = function()
 	var self = this;
 
     var allRequirementsDone = true;
-    MSU.iterateObject(this.mModuleData.UpgradeRequirements, function(_key, _requirement){
+    MSU.iterateObject(this.mModuleData.Requirements, function(_key, _requirement){
         self.addRequirementRow(_requirement);
         if (!_requirement.Done)
         	allRequirementsDone = false;
