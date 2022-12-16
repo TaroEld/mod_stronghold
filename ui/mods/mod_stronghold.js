@@ -137,6 +137,63 @@ $.fn.appendRow = function(_subTitle, _classes)
     return row
 }
 
+var createDropDownMenu = function(_childrenArray, _default, _onChangeCallback)
+{
+	var result = $('<div class="dropdown"/>');
+
+	var text = $('<div class="dropdown-text text-font-normal font-color-label"/>');
+	result.append(text);
+
+	var container = $('<div class="dropdown-container"/>');
+	result.append(container);
+
+	result.on("addChildren", function(_event, _children)
+	{
+		var container = $(this).find(".dropdown-container");
+		$.each(_children, function(_idx, _element)
+		{
+			var child = $('<div class="dropdown-child text-font-normal font-color-label">' + _element + '</div>');
+			container.append(child);
+			child.on("click", function(_event)
+			{
+				$(this).parent().find(".dropdown-child").removeClass("is-selected");
+				$(this).addClass("is-selected");
+				$(this).closest(".dropdown").find(".dropdown-text").text($(this).text());
+				if (_onChangeCallback !== undefined && _onChangeCallback !== null)
+				{
+					_onChangeCallback($(this).text());
+				}
+				// result.click();
+				return false;
+			})
+		})
+	})
+
+	if (_childrenArray !== undefined && _childrenArray !== null)
+		result.trigger("addChildren", [_childrenArray])
+
+	result.on("setDefault", function(_event, _default)
+	{
+		$(this).find(".dropdown-container").children().each(function()
+		{
+			if($(this).text() == _default)
+			{
+				$(this).click();
+			}
+		})
+	})
+
+	if (_default !== undefined && _default !== null)
+	{
+		result.trigger("setDefault", _default)
+	}
+
+	result.on("removeChildren", function()
+	{
+		$(this).find(".dropdown-container").empty();
+	})
+	return result;
+}
 
 $.fn.changeDialogFooterRows = function(_rows, _big)
 {
