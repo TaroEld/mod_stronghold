@@ -336,9 +336,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function updateLook()
 	{
-		// local normalSprites = ["world_luft_01", "world_luft_02", "world_luft_03"]
-		// local upgradingSprites = ["world_luft_01u", "world_luft_02_u"]
-
 		//backward compatibility
 		if (!this.getFlags().has("CustomSprite"))
 		{
@@ -361,8 +358,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.UIBackgroundRight = sprites.Background.UIBackgroundRight + (isOnSnow ? "_snow" : "");
 		this.m.UIRampPathway = sprites.Background.UIRampPathway;
 		
-		this.m.TroopSprites <- sprites.WorldmapFigure;
-		this.m.HouseSprites <- sprites.Houses;
+		this.m.TroopSprites = sprites.WorldmapFigure;
+		this.m.HouseSprites = sprites.Houses;
 		if(this.m.IsCoastal)
 		{
 			this.m.UIBackgroundLeft = "ui/settlements/water_01";
