@@ -623,23 +623,20 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		for( local i = 0; i < 6; i = ++i )
 		{
 			if (!tile.hasNextTile(i))
-			{
-			}
-			else
-			{
-				local nextTile = tile.getNextTile(i);
+				continue;
 
-				if (nextTile.IsOccupied)
-				{
-				}
-				else if (nextTile.Type == this.Const.World.TerrainType.Oasis || nextTile.Type == this.Const.World.TerrainType.Plains || nextTile.Type == this.Const.World.TerrainType.Tundra || nextTile.Type == this.Const.World.TerrainType.Steppe || nextTile.Type == this.Const.World.TerrainType.Snow)
-				{
-					candidates.push(nextTile);
-				}
-				else if (nextTile.Type == this.Const.World.TerrainType.Desert || nextTile.Type == this.Const.World.TerrainType.Hills || nextTile.Type == this.Const.World.TerrainType.Forest || nextTile.Type == this.Const.World.TerrainType.SnowyForest || nextTile.Type == this.Const.World.TerrainType.LeaveForest || nextTile.Type == this.Const.World.TerrainType.AutumnForest || nextTile.Type == this.Const.World.TerrainType.Swamp)
-				{
-					poorCandidates.push(nextTile);
-				}
+			local nextTile = tile.getNextTile(i);
+
+			if (nextTile.IsOccupied)
+				continue;
+
+			if (nextTile.Type == this.Const.World.TerrainType.Oasis || nextTile.Type == this.Const.World.TerrainType.Plains || nextTile.Type == this.Const.World.TerrainType.Tundra || nextTile.Type == this.Const.World.TerrainType.Steppe || nextTile.Type == this.Const.World.TerrainType.Snow)
+			{
+				candidates.push(nextTile);
+			}
+			if (nextTile.Type == this.Const.World.TerrainType.Desert || nextTile.Type == this.Const.World.TerrainType.Hills || nextTile.Type == this.Const.World.TerrainType.Forest || nextTile.Type == this.Const.World.TerrainType.SnowyForest || nextTile.Type == this.Const.World.TerrainType.LeaveForest || nextTile.Type == this.Const.World.TerrainType.AutumnForest || nextTile.Type == this.Const.World.TerrainType.Swamp)
+			{
+				poorCandidates.push(nextTile);
 			}
 		}
 
