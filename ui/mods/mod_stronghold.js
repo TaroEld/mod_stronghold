@@ -142,6 +142,8 @@ var createDropDownMenu = function(_parentDiv, _childrenArray, _default, _onChang
 	// NOTE: you need to pass the _parentDiv that the dropdown gets attached to
 	// This is due do aciScrollBar
 	// the _parentDiv needs to be attached to the DOM!!!
+	// Wrap the array passed to addChildren in another array, like so : trigger("addChildren", [["a", "b", "c"]]);
+	// trigger("set") is a shorthand function. Pass the arguments wrapped into an array
 	var result = $('<div class="dropdown"/>');
 
 	var text = $('<div class="dropdown-text text-font-normal font-color-label"/>');
@@ -150,13 +152,19 @@ var createDropDownMenu = function(_parentDiv, _childrenArray, _default, _onChang
 	var container = $('<div class="dropdown-container"/>');
 	result.append(container);
 
+	var scroll = $('<div class="dropdown-container-scroll"/>');
+	container.append(scroll);
+
 	result.on("addChildren", function(_event, _children)
 	{
-		var container = $(this).find(".dropdown-container");
+		var innerContainer = $(this).find(".dropdown-container-scroll");
+		var outerContainer = $(this).find(".dropdown-container");
+		console.error(JSON.stringify(_children))
 		$.each(_children, function(_idx, _element)
 		{
+			console.error("new child: " + _element)
 			var child = $('<div class="dropdown-child text-font-normal font-color-label">' + _element + '</div>');
-			container.append(child);
+			innerContainer.append(child);
 			child.on("click", function(_event)
 			{
 				$(this).parent().find(".dropdown-child").removeClass("is-selected");
@@ -170,7 +178,8 @@ var createDropDownMenu = function(_parentDiv, _childrenArray, _default, _onChang
 				return false;
 			})
 		})
-		container.css("height", (Math.min(20, container.children().length * 3) + "rem"));
+		var newheight = Math.min(20, innerContainer.children().length * 3) + "rem";
+		outerContainer.css("height", newheight);
 	})
 
 	if (_childrenArray !== undefined && _childrenArray !== null)
@@ -178,13 +187,20 @@ var createDropDownMenu = function(_parentDiv, _childrenArray, _default, _onChang
 
 	result.on("setDefault", function(_event, _default)
 	{
-		$(this).find(".dropdown-container").children().each(function()
+		$(this).find(".dropdown-child").each(function()
 		{
 			if($(this).text() == _default)
 			{
 				$(this).click();
 			}
 		})
+	})
+
+	result.on("set", function(_event, _children, _default)
+	{
+		$(this).trigger("removeChildren");
+		$(this).trigger("addChildren", [_children]);
+		$(this).trigger("setDefault", _default);
 	})
 
 	if (_default !== undefined && _default !== null)
@@ -194,14 +210,21 @@ var createDropDownMenu = function(_parentDiv, _childrenArray, _default, _onChang
 
 	result.on("removeChildren", function()
 	{
-		$(this).find(".dropdown-container").empty();
+		$(this).find(".dropdown-container-scroll").empty();
 	})
 
 	// These must be last!
 	_parentDiv.append(result);
 	container.aciScrollBar({
-		delta : 1
-	});
+         delta: 1,
+         lineDelay: 0,
+         lineTimer: 0,
+         pageDelay: 0,
+         pageTimer: 0,
+         bindKeyboard: false,
+         resizable: false,
+         smoothScroll: false
+     });
 
 	return result;
 }
