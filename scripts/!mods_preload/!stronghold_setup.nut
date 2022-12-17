@@ -6,6 +6,8 @@
 ::mods_registerMod(::Stronghold.ID, ::Stronghold.Version, ::Stronghold.Name);
 ::mods_queue(::Stronghold.ID, "mod_msu", function()
 {	
+	::mods_registerJS("dropdown.js");
+	::mods_registerCSS("dropdown.css");
 	::mods_registerJS("mod_stronghold.js");
 	::mods_registerCSS("mod_stronghold.css");
 	::mods_registerJS("stronghold_screen_module_template.js");

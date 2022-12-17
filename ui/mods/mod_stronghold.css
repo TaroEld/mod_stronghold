@@ -25,60 +25,6 @@
     /*border: 2px solid yellow;*/
 }
 
-.dropdown
-{
-    width: 17.5rem;
-	position: relative;
-	display: inline-block;
-}
-
-.dropdown-text
-{
-    background-image: url("coui://gfx/ui/skin/custom_background_698_40_selected.png");
-	background-size: 100% 100%;
-    text-shadow: 1px 1px 1px #000;
-	width: 100%;
-	height: 4.3rem;
-	text-align: center;
-}
-
-.dropdown-container
-{
-	display: none;
-	overflow: auto;
-	width: 100%;
-	position: absolute !important;
-}
-
-.dropdown-container-scroll
-{
-	width: 100%;
-	position: absolute !important;
-	box-shadow: 0px 0px 16px black;
-}
-
-.dropdown:hover .dropdown-container
-{
-   display: block;
-}
-
-.dropdown-child
-{
-	width: 100%;
-	height: 3rem;
-	text-align: center;
-   	background-image: url("coui://gfx/ui/skin/custom_background_698_40.png");
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
-	box-shadow: 0px 0px 16px black;
-}
-
-.dropdown-child:hover,
-.dropdown-child.is-selected
-{
-   	background-image: url("coui://gfx/ui/skin/custom_background_698_40_selected.png");
-}
-
 .gold-line-bottom
 {
     border-image: url("coui://gfx/ui/skin/line_gold.png") 0% 0% 100% 0%;
