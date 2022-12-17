@@ -39,11 +39,15 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 	this.mBuildRoadContentContainer = this.mBuildRoadContainer.appendRow("Build a road");
 	var subtitle = this.mBuildRoadContentContainer.find(".sub-title");
 	var content = this.mBuildRoadContentContainer;
-	var dropdown = createDropDownMenu(["a", "b", "c", "d", "e", "f", "g", "a", "b", "c", "d", "e", "f", "g"], "a", function(_value)
+	this.dropdown = createDropDownMenu(content, null, null, function(_value)
 	{
 		subtitle.text(_value);
 	})
-	content.append(dropdown);
+	var idx = 0;
+	this.dropdown.on("click", function()
+	{
+		$(this).trigger("addChildren", [idx++]);
+	})
 }
 
 StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
@@ -68,4 +72,5 @@ StrongholdScreenMiscModule.prototype.createRemoveBaseContent = function ()
 
 StrongholdScreenMiscModule.prototype.loadFromData = function()
 {
+	this.dropdown.trigger("set", [["a", "b", "c"], "a"]);
 }
