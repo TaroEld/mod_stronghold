@@ -95,6 +95,8 @@ StrongholdScreenVisualsModule.prototype.setSpriteImage = function()
 
 StrongholdScreenVisualsModule.prototype.loadFromData = function(_data)
 {
+	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
+		return;
 	this.mBaseSprite = this.mData.TownAssets.SpriteName;
     this.mCurrentBaseSprite = this.mData.TownAssets.SpriteName;
 	this.mBaseSpriteIndex = this.getSpriteIndex();

@@ -98,6 +98,8 @@ StrongholdScreenUpgradeModule.prototype.addRequirementRow = function(_requiremen
 
 StrongholdScreenUpgradeModule.prototype.loadFromData = function()
 {
+	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
+		return;
     this.mBaseSprite = this.mData.TownAssets.SpriteName;
     this.setSpriteImage();
     this.fillUpgradeDetailsText();
