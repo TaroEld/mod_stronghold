@@ -26,22 +26,24 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
     upgradeRow.append(upgradeDetailsContainer);
     this.mUpgradeNameLabel = upgradeDetailsContainer.appendRow("Advantages").find(".sub-title");
     var upgradeDetails = upgradeDetailsContainer.appendRow();
-    this.mDescriptionTextContainer = $('<div class="upgrade-base-text-container text-font-normal font-style-italic font-bottom-shadow font-color-subtitle"/>');
-    upgradeDetails.append(this.mDescriptionTextContainer);
-    var upgradeSpriteContainer = $('<div class="upgrade-sprite-container"/>');
-    upgradeRow.append(upgradeSpriteContainer);
-    this.mBaseUpgradeSpriteImage = $('<img class="upgrade-sprite-image"/>');
-    upgradeSpriteContainer.append(this.mBaseUpgradeSpriteImage);
+    this.mDescriptionTextContainer = $(Stronghold.Style.TextFont)
+    	.addClass("upgrade-base-text-container")
+    	.appendTo(upgradeDetails)
+
+    var upgradeSpriteContainer = $('<div class="upgrade-sprite-container"/>')
+    	.appendTo(upgradeRow)
+    this.mBaseUpgradeSpriteImage = $('<img class="upgrade-sprite-image"/>')
+    	.appendTo(upgradeSpriteContainer)
+
     this.mContentContainer.appendRow("Requirements", "custom-header-background");
     var requirements = this.mContainer.appendRow(null, "requirements-row");
-    var requirementsDone = requirements.appendRow("Fulfilled", "upgrade-requirements-container");
-    this.mRequirementsDoneTable = $('<table/>');
-    requirementsDone.append(this.mRequirementsDoneTable);
+    var requirementsDone = requirements.appendRow("Fulfilled", "stronghold-half-width");
+    this.mRequirementsDoneTable = $('<table/>')
+    	.appendTo(requirementsDone)
 
-    var requirementsNotDone = requirements.appendRow("Unfulfilled", "upgrade-requirements-container");
-    this.mRequirementsNotDoneTable = $('<table/>');
-    requirementsNotDone.append(this.mRequirementsNotDoneTable);
-
+    var requirementsNotDone = requirements.appendRow("Unfulfilled", "stronghold-half-width");
+    this.mRequirementsNotDoneTable = $('<table/>')
+    	.appendTo(requirementsNotDone)
 
     var footerRow = this.mContentContainer.appendRow(null, "footer-button-bar");
     this.mUpgradeBaseButton = footerRow.createTextButton("Upgrade", function()
