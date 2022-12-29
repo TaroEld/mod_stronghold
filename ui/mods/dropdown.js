@@ -91,14 +91,14 @@ var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default
 	{
 		var $this = $(this);
 		$this.trigger("removeChildren");
+		if (_callback !== undefined && _callback !== null)
+			$this.trigger("setCallback", _callback)
+
 		if (_children !== undefined && _children !== null)
 			$this.trigger("addChildren", [_children])
 
 		if (_default !== undefined && _default !== null)
 			$this.trigger("setDefault", _default)
-
-		if (_callback !== undefined && _callback !== null)
-			$this.trigger("setCallback", _callback)
 	})
 
 	result.trigger("set", [_childrenArray, _default, _onChangeCallback]);
