@@ -9,6 +9,11 @@
  *  @Description:	World Town Screen JS
  */
 
+.stronghold-half-width
+{
+	flex: 1;
+	padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
 .ui-control.dialog-stronghold-main
 {
     background-image: url("coui://gfx/ui/skin/dialog_background_stronghold.png");

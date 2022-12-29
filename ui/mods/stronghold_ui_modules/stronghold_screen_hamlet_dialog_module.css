@@ -32,12 +32,7 @@
     height: 19.9rem;
 }
 
-.stronghold-screen .hamlet-module .requirements-row .hamlet-requirements-container
-{
-    width: 50%;
-}
-
-.stronghold-screen .hamlet-module .requirements-row .hamlet-requirements-container img
+.stronghold-screen .hamlet-module .requirements-row .stronghold-half-width img
 {
     top: 3rem;
 }

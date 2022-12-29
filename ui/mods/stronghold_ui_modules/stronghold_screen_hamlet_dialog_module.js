@@ -34,11 +34,11 @@ StrongholdScreenHamletModule.prototype.createDIV = function (_parentDiv)
 	hamletSpriteContainer.append(this.mBaseHamletSpriteImage);
 	this.mContentContainer.appendRow("Requirements", "custom-header-background");
 	var requirements = this.mContentContainer.appendRow(null, "requirements-row");
-	var requirementsDone = requirements.appendRow("Fulfilled", "hamlet-requirements-container");
+	var requirementsDone = requirements.appendRow("Fulfilled", "stronghold-half-width");
 	this.mRequirementsDoneTable = $('<table/>');
 	requirementsDone.append(this.mRequirementsDoneTable);
 
-	var requirementsNotDone = requirements.appendRow("Unfulfilled", "hamlet-requirements-container");
+	var requirementsNotDone = requirements.appendRow("Unfulfilled", "stronghold-half-width");
 	this.mRequirementsNotDoneTable = $('<table/>');
 	requirementsNotDone.append(this.mRequirementsNotDoneTable);
 
