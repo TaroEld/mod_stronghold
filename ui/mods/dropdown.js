@@ -17,16 +17,14 @@ var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default
 	// Wrap the array passed to addChildren in another array, like so : trigger("addChildren", [["a", "b", "c"]]);
 	// trigger("set") is a shorthand function. Pass the arguments wrapped into an array
 	// The maximum height of the element container is 20rem, but this can be changed via setting data("maxHeight") on the result
-	var result = $('<div class="dropdown"/>');
+	var result = $('<div class="dropdown"/>')
+		.addClass(_classes || "")
+		.data("activeElement", null)
+		.append($('<div class="dropdown-text text-font-normal font-color-label"/>'))
 
-	var text = $('<div class="dropdown-text text-font-normal font-color-label"/>');
-	result.append(text);
-
-	var container = $('<div class="dropdown-container"/>');
-	result.append(container);
-
-	var scroll = $('<div class="dropdown-container-scroll"/>');
-	container.append(scroll);
+	var container = $('<div class="dropdown-container"/>')
+		.append($('<div class="dropdown-container-scroll"/>'))
+		.appendTo(result)
 
 	result.on("addChildren", function(_event, _children)
 	{
