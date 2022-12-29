@@ -1,4 +1,15 @@
-var createDropDownMenu = function(_parentDiv, _childrenArray, _default, _onChangeCallback)
+var widthTester = $('<div id="WidthTester"/>')
+	.css({'position': 'absolute', 'float': 'left', 'white-space': 'nowrap', 'visibility': 'hidden'})
+	.addClass("text-font-normal")
+	.appendTo($('body'))
+
+var getWidthOfDropdownChild = function(_text)
+{
+    widthTester.text(_text);
+	return widthTester.width();
+}
+
+var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default, _onChangeCallback)
 {
 	// NOTE: you need to pass the _parentDiv that the dropdown gets attached to
 	// This is due do aciScrollBar
@@ -21,6 +32,7 @@ var createDropDownMenu = function(_parentDiv, _childrenArray, _default, _onChang
 	{
 		var innerContainer = $(this).find(".dropdown-container-scroll");
 		var outerContainer = $(this).find(".dropdown-container");
+		var width = 175;
 		$.each(_children, function(_idx, _element)
 		{
 			var child = $('<div class="dropdown-child text-font-normal font-color-label">' + _element + '</div>');
@@ -37,9 +49,11 @@ var createDropDownMenu = function(_parentDiv, _childrenArray, _default, _onChang
 				}
 				return false;
 			})
+			width = Math.max(width, getWidthOfDropdownChild(_element.Name))
 		})
 		var newheight = Math.min($(this).data("maxHeight") || 20, innerContainer.children().length * 3) + "rem";
 		outerContainer.css("height", newheight);
+		$this.width(width);
 	})
 
 	result.on("setDefault", function(_event, _default)
