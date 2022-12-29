@@ -91,9 +91,10 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 				this.m.WorldTownScreen.getMainDialogModule().reload();
 				this.m.WorldTownScreen.showLastActiveDialog();
 			});
-			this.m.JSHandle.asyncCall("show", this.getFullUIData());
+			this.m.JSHandle.asyncCall("show", this.getAssetsUIData());
 		}
 	}
+
 
 	function getModule(_id)
 	{
@@ -114,16 +115,12 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		return ret
 	}
 
-	function getFullUIData()
+	function getAssetsUIData()
 	{
 		local ret = this.getUIDataObject();
 
 		this.getTypeUIData("Assets", ret);
 		this.getTypeUIData("TownAssets", ret);
-		foreach (id, module in this.m.Modules)
-		{
-			this.getTypeUIData(id, ret);
-		}
 		return ret
 	}
 
