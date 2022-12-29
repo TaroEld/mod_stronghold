@@ -28,8 +28,9 @@ var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default
 
 	result.on("addChildren", function(_event, _children)
 	{
-		var innerContainer = $(this).find(".dropdown-container-scroll");
-		var outerContainer = $(this).find(".dropdown-container");
+		var $this = $(this);
+		var innerContainer = $this.find(".dropdown-container-scroll");
+		var outerContainer = $this.find(".dropdown-container");
 		var width = 175;
 		$.each(_children, function(_idx, _element)
 		{
