@@ -5,7 +5,7 @@ var StrongholdScreen = function ()
 	this.mContainer		 = null;
 	this.mActiveModule   = null;
     this.mActiveButton   = null;
-	this.Modules = {
+	this.mModules = {
 		"MainModule" : {
             "ButtonName" : "Main",
             "Button" : null,
@@ -52,6 +52,13 @@ var StrongholdScreen = function ()
             "Module" : null
         },
 	}
+	$.each(this.mModules, function(_id, _module)
+	{
+		_module.Id = _id;
+		_module.Button = null;
+		_module.Module = null;
+		_module.IsLoaded = false;
+	})
 	this.mAssetValues = null;
 	this.mAssets = new WorldTownScreenAssets(this);
     // this.mAssetContainer = null;
@@ -209,7 +216,7 @@ StrongholdScreen.prototype.createModules = function ()
 {
 	var self = this;
 	// Maybe I shouldn't be doing this
-	MSU.iterateObject(this.Modules, function(_key, _module){
+	MSU.iterateObject(this.mModules, function(_key, _module){
 		_module.Module = new window["StrongholdScreen" + _key](self);
 	})
 };
@@ -220,7 +227,7 @@ StrongholdScreen.prototype.createModuleOptionsButtons = function()
     this.mModuleOptionsList = this.mModuleOptionsContainer.createList(1.0);
     this.mModuleOptionsListScrollContainer = this.mModuleOptionsList.findListScrollContainer();
 
-    MSU.iterateObject(this.Modules, function(_key, _module){
+    MSU.iterateObject(this.mModules, function(_key, _module){
         var row = $('<div class="row"/>');
         self.mModuleOptionsListScrollContainer.append(row);
         _module.Button = row.createTextButton(_module.ButtonName, function ()
@@ -233,27 +240,27 @@ StrongholdScreen.prototype.createModuleOptionsButtons = function()
 StrongholdScreen.prototype.registerModules = function ()
 {
     var self = this;
-    Object.keys(this.Modules).forEach(function(_key){
-        self.Modules[_key].Module.register(self.mModuleContainer);
+    Object.keys(this.mModules).forEach(function(_key){
+        self.mModules[_key].Module.register(self.mModuleContainer);
     })
 };
 
 StrongholdScreen.prototype.unregisterModules = function ()
 {
     var self = this;
-    Object.keys(this.Modules).forEach(function(_key){
-        self.Modules[_key].Module.unregister();
+    Object.keys(this.mModules).forEach(function(_key){
+        self.mModules[_key].Module.unregister();
     })
 };
 
 StrongholdScreen.prototype.getModule = function ( _module )
 {
-    return this.Modules[_module].Module;
+    return this.mModules[_module].Module;
 };
 
 StrongholdScreen.prototype.getModuleObject = function ( _module )
 {
-    return this.Modules[_module];
+    return this.mModules[_module];
 };
 
 StrongholdScreen.prototype.switchModule = function ( _module )
