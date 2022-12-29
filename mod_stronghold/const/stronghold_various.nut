@@ -104,36 +104,24 @@
 	return level
 }
 
-::Stronghold.getClosestDistance <- function(_destination, _list, _tiles = false)
+::Stronghold.getClosestDistance <- function(_destination, _list)
 {
 	local chosen = null;
 	local closestDist = 9999;
-	if(!_tiles)
+	foreach (obj in _list)
 	{
-		foreach (obj in _list)
+		if (obj == null) continue
+		local dist = obj.getTile().getDistanceTo(_destination.getTile())
+		if (chosen == null || dist < closestDist)
 		{
-			if (obj == null) continue
-			local dist = obj.getTile().getDistanceTo(_destination.getTile())
-			if (chosen == null || dist < closestDist)
-			{
-				chosen = obj;
-				closestDist = dist;
-			}
+			chosen = obj;
+			closestDist = dist;
 		}
 	}
-	else {
-	    foreach (obj in _list)
-		{
-			if (obj == null) continue
-			local dist = obj.getDistanceTo(_destination)
-			if (chosen == null || dist < closestDist)
-			{
-				chosen = obj;
-				closestDist = dist;
-			}
-		}
+	return
+	{
+		settlement = obj
 	}
-	return chosen
 }
 
 //modded from vanilla to allow for longer range
