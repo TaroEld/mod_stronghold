@@ -33,17 +33,28 @@ var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default
 		var width = 175;
 		$.each(_children, function(_idx, _element)
 		{
-			var child = $('<div class="dropdown-child text-font-normal font-color-label">' + _element + '</div>');
-			innerContainer.append(child);
+			var child = $('<div class="dropdown-child text-font-normal font-color-label"/>')
+				.data("Element", _element)
+				.appendTo(innerContainer)
+
+			if (typeof _element == "object")
+			{
+				if(_element.Name === undefined)
+					console.error("Passed an object as dropdown member but it does not have a .Name member to use as label!")
+				child.text(_element.Name)
+			}
+			else child.text(_element)
+
 			child.on("click", function(_event)
 			{
 				var dropDown = $(this).closest(".dropdown");
 				dropDown.find(".dropdown-child").removeClass("is-selected");
 				$(this).addClass("is-selected");
 				dropDown.find(".dropdown-text").text($(this).text());
+				dropDown.data("activeElement", $(this).data("Element"));
 				if (dropDown.data("callback") !== undefined && dropDown.data("callback") !== null)
 				{
-					dropDown.data("callback")($(this).text());
+					dropDown.data("callback")($(this).data("Element"));
 				}
 				return false;
 			})
@@ -58,7 +69,7 @@ var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default
 	{
 		$(this).find(".dropdown-child").each(function()
 		{
-			if($(this).text() == _default)
+			if($(this).data("Element") == _default)
 			{
 				$(this).click();
 			}
