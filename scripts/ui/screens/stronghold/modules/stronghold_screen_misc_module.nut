@@ -12,10 +12,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		_ret.BuildRoad <- this.getRoadOptions();
 
 		// Send Gifts
-		_ret.Gifts <-
-		{
-
-		}
+		_ret.Gifts <- this.getGiftOptions();
 		// Hire Mercenaries
 		_ret.HireMercenaries <-
 		{
@@ -67,8 +64,12 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 				option = {
 					Score = dist,
 					Name = settlement.getName(),
-					Cost = cost,
-					Roadmult = roadmult
+					ID = settlement.getID(),
+					Segments = cost,
+					Cost = cost * ::Stronghold.PriceMult,
+					Roadmult = roadmult * 100,
+					IsValid = cost * ::Stronghold.PriceMult < this.World.Assets.getMoney(),
+					UISprite = settlement.m.UISprite
 				}
 				settlementOptions.push(option);
 				this.m.Road.Map[settlement.getName()] <- option;
@@ -78,11 +79,11 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		}
 
 		local roadSort = function(_d1, _d2){
-			if (_d1.Score < _d2.Score)
+			if (_d1.Cost < _d2.Cost)
 			{
 				return -1;
 			}
-			else if (_d1.Score > _d2.Score)
+			else if (_d1.Cost > _d2.Cost)
 			{
 				return 1;
 			}
@@ -94,20 +95,163 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		return settlementOptions;
 	}
 
-	// function getTrainerOptions()
-	// {
-	// 	local roster = this.World.getPlayerRoster().getAll().filter(function(idx, bro){
-	// 		return bro.getLevel() < 11 && !bro.getSkills().hasSkill("effects.trained")});
-	// 	this.buildActiveOptions(roster, this.addTrainerScreen)
-	// 	return this.getActiveOptions()
-	// }
+	function onBuildRoad(_target)
+	{
+		local targetSettlement = this.World.getEntityByID(_target.ID);
+		this.World.Assets.addMoney(-_target.Cost);
+		this.getTown().buildRoad(targetSettlement, _target.Roadmult * 0.01);
+		this.m.Road.Map = {};
+		this.updateConnectedToByRoad();
+		this.updateData(["Assets", "MiscModule"]);
+	}
 
-	// function getGiftOptions()
-	// {
-	// 	local gift_options = clone this.m.Temp_Variable_List
-	// 	this.m.Temp_Variable_List = []
-	// 	this.buildActiveOptions(gift_options, this.addGiftScreen)
-	// 	return this.getActiveOptions()
-	// }
+	function updateConnectedToByRoad()
+	{
+		local settlements = this.World.EntityManager.getSettlements();
+		local navSettings = this.World.getNavigator().createSettings();
+		foreach (settlement in settlements)
+		{
+			local myTile = settlement.getTile();
+			foreach( s in settlements )
+			{
+				if (s.getID() == settlement.getID() || settlement.isConnectedTo(s))
+				{
+					continue;
+				}
 
+				navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost_Flat;
+				local path = this.World.getNavigator().findPath(myTile, s.getTile(), navSettings, 0);
+
+				if (!path.isEmpty())
+				{
+					settlement.m.ConnectedTo.push(s.getID());
+					s.m.ConnectedTo.push(settlement.getID());
+				}
+			}
+
+			if (!settlement.isIsolated())
+			{
+				foreach( s in settlements )
+				{
+					if (s.getID() == settlement.getID() || settlement.isConnectedToByRoads(s))
+					{
+						continue;
+					}
+
+					navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost;
+					navSettings.RoadOnly = true;
+					local path = this.World.getNavigator().findPath(myTile, s.getTile(), navSettings, 0);
+
+					if (!path.isEmpty())
+					{
+						settlement.m.ConnectedToByRoads.push(s.getID());
+						s.m.ConnectedToByRoads.push(settlement.getID());
+					}
+				}
+			}
+		}
+	}
+
+
+	function getGiftOptions()
+	{
+		local ret =
+		{
+			Gifts = [],
+			Factions = []
+		}
+
+		foreach (i, item in this.getTown().getStash().getItems())
+		{
+			if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
+			{
+				ret.Gifts.push({
+					Name = item.m.Name,
+					Icon = item.m.Icon
+				});
+			}
+		}
+
+		local factions = [];
+		factions.extend(this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse));
+		factions.extend(this.World.FactionManager.getFactionsOfType(this.Const.FactionType.OrientalCityState));
+		foreach (faction in factions)
+		{
+			::logInfo(faction.getName())
+			if (faction.getPlayerRelation() > 80)
+			{
+				continue
+			}
+			local militarySettlements = [];
+			foreach (settlement in faction.getSettlements())
+			{
+				::logInfo(faction.m.Type == this.Const.FactionType.OrientalCityState || settlement.isMilitary())
+				::logInfo(settlement.isConnectedToByRoads(this.getTown()))
+				::MSU.Log.printData(this.getTown().m.ConnectedToByRoads)
+				if ((faction.m.Type == this.Const.FactionType.OrientalCityState || settlement.isMilitary()) &&
+					settlement.isConnectedToByRoads(this.getTown()))
+				{
+					::logInfo(settlement.getName())
+					militarySettlements.push(settlement);
+				}
+			}
+			if (militarySettlements.len() > 0)
+			{
+				local chosenSettlement = this.getDistanceToTowns(this.getTown(), militarySettlements)
+				::logInfo(chosenSettlement)
+				ret.Factions.push
+				({
+					ID = faction.getID(),
+					Name = faction.getName(),
+					ImagePath = faction.getUIBanner(),
+					Relation = faction.getPlayerRelationAsText(),
+					RelationNum = this.Math.round(faction.getPlayerRelation()),
+					IsHostile = !faction.isAlliedWithPlayer(),
+					FactionName = faction.getName(),
+					Distance = chosenSettlement.Distance,
+					SettlementName = chosenSettlement.Settlement.getName(),
+
+				})
+			}
+		}
+		ret.Factions.sort(function(_d1, _d2){
+			if (_d1.RelationNum < _d2.RelationNum)
+			{
+				return -1;
+			}
+			else if (_d1.RelationNum > _d2.RelationNum)
+			{
+				return 1;
+			}
+
+			return 0;
+		});
+		return ret;
+	}
+
+	function getDistanceToTowns(_origin, _destinations)
+	{
+		local chosenSettlement = null;
+		local closestDist = 9999;
+
+		foreach (settlement in _destinations)
+		{
+			if (settlement == null) continue
+			local distance = settlement.getTile().getDistanceTo(_origin.getTile())
+			if (chosenSettlement == null || distance < closestDist)
+			{
+				chosenSettlement = settlement;
+				closestDist = distance;
+			}
+		}
+		return {
+			Settlement = chosenSettlement,
+			Distance = closestDist
+		}
+	}
+
+	function onZoomToTargetCity(_townID)
+	{
+		this.World.getCamera().moveTo(this.World.getEntityByID(_townID));
+	}
 })
