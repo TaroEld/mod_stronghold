@@ -72,6 +72,9 @@ var Stronghold = {
     	    Stronghold: 'roster.stronghold',
     	    Player: 'roster.player'
     	}
+    },
+    Style : {
+    	TextFont : '<div class="text-font-normal font-style-italic font-bottom-shadow font-color-subtitle"/>'
     }
 }
 
