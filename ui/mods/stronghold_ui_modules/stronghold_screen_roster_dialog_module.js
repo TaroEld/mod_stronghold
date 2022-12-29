@@ -424,7 +424,8 @@ StrongholdScreenRosterModule.prototype.loadFromData = function ()
 	//     ListContainer       : null,
 	//     ListScrollContainer : null,
 	// };
-
+	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
+		return;
 	this.mStronghold.NumActive = this.mData.mRosterAsset;
     this.mStronghold.NumActiveMax = this.mData.mRosterAssetMax;
     this.mStronghold.BrothersList = this.mModuleData.TownRoster;

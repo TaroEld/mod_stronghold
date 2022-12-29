@@ -108,6 +108,12 @@ StrongholdScreen.prototype.hide = function ()
 
 	this.mActiveModule.hide();
     this.mActiveModule = null;
+
+    $.each(this.mModules, function(_id, _module)
+    {
+    	_module.mIsLoaded = false;
+    	//_module.mHasChangedData = true;
+    })
     this.mContainer.removeClass('display-block').addClass('display-none');
     this.notifyBackendOnHidden();
 };
@@ -273,21 +279,6 @@ StrongholdScreen.prototype.loadFromData = function(_data)
     var self = this;
     this.mData = _data;
     this.loadAssetsData();
-    this.loadModuleData()
-}
-
-StrongholdScreen.prototype.loadModuleData = function()
-{
-    var self = this;
-    MSU.iterateObject(this.Modules, function(_key){
-        var curModule = self.Modules[_key];
-        if(curModule !== undefined && curModule.Module !== null)
-        {
-            curModule.Module.mData = self.mData;
-            curModule.Module.mModuleData = self.mData[_key];
-        }
-    })
-    if (this.mActiveModule != null) this.mActiveModule.loadFromData();
 }
 
 StrongholdScreen.prototype.updateData = function(_data)
@@ -304,9 +295,12 @@ StrongholdScreen.prototype.updateData = function(_data)
         {
             updateAssets = true;
         }
+        else
+        {
+        	this.mModules[typeID].Module.setModuleData(data);
+        }
     }
     if(updateAssets) this.loadAssetsData();
-    this.loadModuleData()
 }
 
 StrongholdScreen.prototype.loadAssetsData = function()

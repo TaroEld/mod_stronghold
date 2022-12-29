@@ -68,6 +68,8 @@ StrongholdScreenMiscModule.prototype.createRemoveBaseContent = function ()
 
 StrongholdScreenMiscModule.prototype.loadFromData = function()
 {
+	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
+		return;
 	var roadOptions = [];
 	$.each(this.mModuleData.BuildRoad, function(_idx, _element)
 	{

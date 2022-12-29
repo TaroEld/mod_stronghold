@@ -5,6 +5,8 @@ var StrongholdScreenModuleTemplate = function(_parent)
 	MSUUIScreen.call(this);
 	this.mParent = _parent;
 	this.mAssets = this.mParent.mAssets;
+	this.mIsLoaded = false;
+	this.mHasChangedData = false;
 	// main div that can be shown or hidden
 	this.mContainer = null;
 
@@ -55,11 +57,38 @@ StrongholdScreenModuleTemplate.prototype.destroyDIV = function ()
 
 StrongholdScreenModuleTemplate.prototype.show = function ()
 {
+	var self = this;
+	if (!this.mIsLoaded)
+	{
+		SQ.call(this.mParent.mSQHandle, 'getUIData', [this.mID], function(_data)
+		{
+			self.setModuleData(_data);
+			self.onShow();
+		});
+	}
+	else
+	{
+		this.onShow();
+	}
+};
+
+StrongholdScreenModuleTemplate.prototype.onShow = function ()
+{
 	this.mIsVisible = true;
 	this.notifyBackendOnShown();
+	this.loadFromData();
 	this.mContainer.removeClass('display-none').addClass('display-block');
-	this.loadFromData()
 };
+
+StrongholdScreenModuleTemplate.prototype.setModuleData = function(_data)
+{
+	this.mData = this.mParent.mData;
+	this.mModuleData = _data[this.mID];
+	this.mIsLoaded = true;
+	this.mHasChangedData = true;
+	if (this.mIsVisible)
+		this.loadFromData();
+}
 
 StrongholdScreenModuleTemplate.prototype.hide = function ()
 {
@@ -70,6 +99,12 @@ StrongholdScreenModuleTemplate.prototype.hide = function ()
 
 StrongholdScreenModuleTemplate.prototype.loadFromData = function()
 {
+	if (!this.mHasChangedData)
+	{
+		return false;
+	}
+	this.mHasChangedData = false;
+	return true;
 }
 
 // Refer popups to the parent

@@ -47,6 +47,8 @@ StrongholdScreenStructuresModule.prototype.createDIV = function (_parentDiv)
 
 StrongholdScreenStructuresModule.prototype.loadFromData = function()
 {
+	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
+		return;
     this.createStructureContent();
 }
 

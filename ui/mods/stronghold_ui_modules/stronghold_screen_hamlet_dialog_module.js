@@ -88,6 +88,8 @@ StrongholdScreenHamletModule.prototype.addRequirementRow = function(_requirement
 
 StrongholdScreenHamletModule.prototype.loadFromData = function()
 {
+	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
+		return;
     this.mBaseSprite = this.mData.TownAssets.SpriteName;
     this.setSpriteImage();
     this.fillHamletDetailsText();

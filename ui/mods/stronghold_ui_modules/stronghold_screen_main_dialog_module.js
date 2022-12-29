@@ -51,6 +51,8 @@ StrongholdScreenMainModule.prototype.addAssetRow = function(_parent, _name, _img
 
 StrongholdScreenMainModule.prototype.loadFromData = function()
 {
+	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
+		return;
 	this.mTitle = this.mData.TownAssets.Name;
 	this.mParent.updateTitle(this.mTitle);
 	this.mChangeNameInput.setInputText(this.mData.TownAssets.Name);

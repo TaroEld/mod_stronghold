@@ -185,6 +185,9 @@ StrongholdScreenStashModule.prototype.destroyDIV = function ()
 
 StrongholdScreenStashModule.prototype.loadFromData = function (_data)
 {
+	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
+		return;
+
     if(this.mModuleData === undefined || this.mModuleData === null || !(typeof(this.mModuleData) === 'object'))
 	{
         return;
