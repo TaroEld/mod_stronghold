@@ -13,3 +13,23 @@
 	flex-direction: column;
 	flex-wrap: nowrap;
 }
+
+
+.stronghold-screen .misc-module .build-road-container .road-cost img
+{
+	width: 3rem;
+	height: 3rem;
+}
+
+.stronghold-screen .misc-module .road-town-img
+{
+	outline: 1px solid red;
+	width: 25.2rem;
+	height: 19.9rem;
+}
+
+.stronghold-screen .misc-module .gifts-image-container > img
+{
+	width: 8.9rem;
+	height: 12rem;
+}
