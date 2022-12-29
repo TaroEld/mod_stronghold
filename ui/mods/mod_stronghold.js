@@ -123,17 +123,12 @@ $.fn.toggleOpacity = function(_bool)
 
 $.fn.appendRow = function(_subTitle, _classes)
 {
-    var row = $('<div class="flex-row"/>');
-    this.append(row);
-    if(_subTitle !== undefined && _subTitle !== null)
-    {
-        var subTitle = $('<div class="sub-title title-font-big font-bold font-bottom-shadow font-color-title">' + _subTitle + '</div>');
-        row.append(subTitle)
-    }
-    if(_classes !== undefined && _classes !== null)
-    {
-        row.addClass(_classes)
-    }
+    var row = $('<div class="flex-row"/>')
+    	.appendTo(this)
+    	.addClass(_classes || "")
+
+    if (_subTitle !== undefined && _subTitle !== null)
+        row.append($('<div class="sub-title title-font-big font-bold font-bottom-shadow font-color-title">' + _subTitle + '</div>'))
     return row
 }
 
