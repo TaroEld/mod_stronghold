@@ -31,7 +31,7 @@ StrongholdScreenStructuresModule.prototype.createDIV = function (_parentDiv)
     this.mDescriptionRow.append(this.mActiveStructureTextContainer)
     this.mActiveStructureDescription = this.mActiveStructureTextContainer.appendRow(null, "text-font-normal font-style-italic font-bottom-shadow font-color-subtitle")
 
-    var activeStructureRequirements = this.mActiveStructureTextContainer.appendRow();
+    var activeStructureRequirements = this.mActiveStructureTextContainer.appendRow("Requirements");
     this.mActiveStructureRequirementsTable = $("<table>").appendTo(activeStructureRequirements);
 
     this.mFooterRow = this.mContentContainer.appendRow(null, "footer-button-bar");
