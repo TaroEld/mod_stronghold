@@ -116,8 +116,20 @@ var Stronghold = {
     	VisualsModule : {},
     	UpgradeModule : {},
     },
+    getTextDiv : function(_text)
+    {
+    	return $("<div/>")
+    		.addClass(Stronghold.Style.TextFont)
+    		.text(_text || "")
+    },
+    getTextSpan : function(_text)
+    {
+    	return $("<span/>")
+    		.addClass(Stronghold.Style.TextFont)
+    		.text(_text || "")
     }
 }
+
 
 $.fn.toggleDisplay = function(_bool)
 {
