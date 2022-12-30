@@ -295,14 +295,10 @@ StrongholdScreenStashModule.prototype.setupEventHandler = function ()
     $.drop({ mode: 'middle' });
 
     this.mStashListContainer.data('item', { owner: WorldTownScreenShop.ItemOwner.Stash });
-    //this.mStashListContainer.drop('start', dropStartHandler);
     this.mStashListContainer.drop(dropHandler);
-    //this.mStashListContainer.drop('end', dropEndHandler);
 
     this.mShopListContainer.data('item', { owner: WorldTownScreenShop.ItemOwner.Shop });
-    //this.mShopListContainer.drop('start', dropStartHandler);
     this.mShopListContainer.drop(dropHandler);
-    //this.mShopListContainer.drop('end', dropEndHandler);
 };
 
 StrongholdScreenStashModule.prototype.swapItem = function (_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner)
