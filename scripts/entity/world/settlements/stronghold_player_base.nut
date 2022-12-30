@@ -894,14 +894,15 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function onSerialize( _out )
 	{
 		this.settlement.onSerialize(_out);
+		this.m.Stash.onSerialize(_out);
 		_out.writeU8(this.m.Size);
 		_out.writeBool(this.m.IsUpgrading);
-		
 	}
 	
 	function onDeserialize( _in )
 	{
 		this.settlement.onDeserialize(_in);
+		this.m.Stash.onDeserialize(_in);
 		this.m.Size  = _in.readU8();
 		this.m.IsUpgrading = _in.readBool();
 		this.updateTown();
