@@ -240,6 +240,66 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		}
 	}
 
+	function getTrainingUIData()
+	{
+		// TrainBrother
+		local ret = {
+			IsUnlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Teacher"),
+			ValidBrothers = [],
+			Price = ::Stronghold.TrainerPrice * ::Stronghold.PriceMult,
+		};
+		if (!ret.IsUnlocked)
+			return ret;
+
+		local roster = [];
+		roster.extend(this.World.getPlayerRoster().getAll());
+		roster.extend(this.getTown().getLocalRoster());
+		roster = roster.filter(function(idx, bro){
+			return bro != null && bro.getLevel() < 11 && !bro.getSkills().hasSkill("effects.trained")
+		});
+		foreach (bro in roster)
+		{
+			ret.ValidBrothers.push(
+			{
+				Name = bro.getName(),
+				ID = bro.getID()
+			})
+		}
+
+		return ret;
+	}
+
+	function getWaterUIData()
+	{
+		local ret = {
+			IsUnlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Waterskin"),
+			Price = ::Stronghold.WaterPrice * ::Stronghold.PriceMult,
+		};
+		if (!ret.IsUnlocked)
+			return ret;
+		return ret;
+	}
+
+	function getMercenariesUIData()
+	{
+		local ret = {
+			IsUnlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Mercenaries"),
+			AlreadyHasMercenaries = false,
+			Price = ::Stronghold.MercenaryPrice * ::Stronghold.PriceMult,
+		};
+		if (!ret.IsUnlocked)
+			return ret;
+
+		return ret;
+	}
+
+	function getRemoveBaseUIData()
+	{
+		local ret = {};
+		return ret;
+	}
+
+
 	function onZoomToTargetCity(_townID)
 	{
 		this.World.getCamera().moveTo(this.World.getEntityByID(_townID));
