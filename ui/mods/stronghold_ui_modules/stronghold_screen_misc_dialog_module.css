@@ -15,7 +15,7 @@
 }
 
 
-.stronghold-screen .misc-module .build-road-container .road-cost img
+.stronghold-screen .misc-module .build-road-container .road-cost
 {
 	width: 3rem;
 	height: 3rem;
@@ -23,13 +23,32 @@
 
 .stronghold-screen .misc-module .road-town-img
 {
-	outline: 1px solid red;
 	width: 25.2rem;
 	height: 19.9rem;
 }
-
+.stronghold-screen .misc-module .gifts-image-container
+{
+	width: 14rem;
+}
 .stronghold-screen .misc-module .gifts-image-container > img
 {
 	width: 8.9rem;
 	height: 12rem;
+}
+.misc-gift
+{
+	width:4.5rem;
+	height:4.5rem;
+}
+.gifts-details-container
+{
+	display: flex;
+}
+.gifts-details
+{
+	flex:1;
+}
+.gifts-details > span
+{
+	display: block;
 }
