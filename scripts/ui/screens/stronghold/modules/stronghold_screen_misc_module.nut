@@ -3,6 +3,10 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		Road = {
 			// Cache it, reload it only after a road was build
 			Map = {}
+		},
+		Gifts = {
+			FactionMap = {},
+			DistanceMap = {},
 		}
 	},
 
@@ -138,11 +142,12 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 	}
 
 
-	function getGiftOptions()
 	function getGiftUIData()
 	{
+		// SendGifts = main key
 		local ret =
 		{
+			Price = 3000,
 			Gifts = [],
 			Factions = []
 		}
@@ -153,6 +158,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			{
 				ret.Gifts.push({
 					Name = item.m.Name,
+					ID = item.getID(),
 					Icon = item.m.Icon
 				});
 			}
@@ -163,30 +169,26 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		factions.extend(this.World.FactionManager.getFactionsOfType(this.Const.FactionType.OrientalCityState));
 		foreach (faction in factions)
 		{
-			::logInfo(faction.getName())
-			if (faction.getPlayerRelation() > 80)
+			if (faction.getID() in this.m.Gifts.FactionMap)
 			{
-				continue
+				ret.Factions.push(this.m.Gifts.FactionMap[faction.getID()]);
+				continue;
 			}
+			if (faction.getPlayerRelation() > 80)
+				continue
 			local militarySettlements = [];
 			foreach (settlement in faction.getSettlements())
 			{
-				::logInfo(faction.m.Type == this.Const.FactionType.OrientalCityState || settlement.isMilitary())
-				::logInfo(settlement.isConnectedToByRoads(this.getTown()))
-				::MSU.Log.printData(this.getTown().m.ConnectedToByRoads)
 				if ((faction.m.Type == this.Const.FactionType.OrientalCityState || settlement.isMilitary()) &&
 					settlement.isConnectedToByRoads(this.getTown()))
 				{
-					::logInfo(settlement.getName())
 					militarySettlements.push(settlement);
 				}
 			}
 			if (militarySettlements.len() > 0)
 			{
 				local chosenSettlement = this.getDistanceToTowns(this.getTown(), militarySettlements)
-				::logInfo(chosenSettlement)
-				ret.Factions.push
-				({
+				local innerRet = {
 					ID = faction.getID(),
 					Name = faction.getName(),
 					ImagePath = faction.getUIBanner(),
@@ -196,8 +198,10 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 					FactionName = faction.getName(),
 					Distance = chosenSettlement.Distance,
 					SettlementName = chosenSettlement.Settlement.getName(),
-
-				})
+					SettlementID = chosenSettlement.Settlement.getID()
+				}
+				ret.Factions.push(innerRet);
+				this.m.Gifts.FactionMap[faction.getID()] <- innerRet;
 			}
 		}
 		ret.Factions.sort(function(_d1, _d2){
