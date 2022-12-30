@@ -8,27 +8,12 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 
 	function getUIData( _ret )
 	{
-		// Build Road
-		_ret.BuildRoad <- this.getRoadOptions();
-
-		// Send Gifts
-		_ret.Gifts <- this.getGiftOptions();
-		// Hire Mercenaries
-		_ret.HireMercenaries <-
-		{
-
-		}
-		// Focused Training
-		_ret.Training <-
-		{
-
-		}
-
-		// Remove Base
-		_ret.RemoveBase <-
-		{
-
-		}
+		_ret.BuildRoad 			<- this.getRoadUIData();
+		_ret.SendGifts 			<- this.getGiftUIData();
+		_ret.TrainBrother 		<- this.getTrainingUIData();
+		_ret.BuyWater 			<- this.getWaterUIData();
+		_ret.HireMercenaries 	<- this.getMercenariesUIData();
+		_ret.RemoveBase 		<- this.getRemoveBaseUIData();
 		return _ret
 	}
 
