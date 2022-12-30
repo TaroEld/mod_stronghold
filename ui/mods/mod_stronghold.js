@@ -74,7 +74,8 @@ var Stronghold = {
     	}
     },
     Style : {
-    	TextFont : '<div class="text-font-normal font-style-italic font-bottom-shadow font-color-subtitle"/>'
+    	TextFont : 'text-font-normal font-style-italic font-bottom-shadow font-color-subtitle'
+    },
     Text : {
     	Requirements : "Requirements",
     	HamletModule : {},
