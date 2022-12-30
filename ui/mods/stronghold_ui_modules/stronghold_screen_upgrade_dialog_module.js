@@ -26,7 +26,7 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
     upgradeRow.append(upgradeDetailsContainer);
     this.mUpgradeNameLabel = upgradeDetailsContainer.appendRow("Advantages").find(".sub-title");
     var upgradeDetails = upgradeDetailsContainer.appendRow();
-    this.mDescriptionTextContainer = $(Stronghold.Style.TextFont)
+    this.mDescriptionTextContainer = Stronghold.getTextSpan()
     	.addClass("upgrade-base-text-container")
     	.appendTo(upgradeDetails)
 
@@ -35,7 +35,7 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
     this.mBaseUpgradeSpriteImage = $('<img class="upgrade-sprite-image"/>')
     	.appendTo(upgradeSpriteContainer)
 
-    this.mContentContainer.appendRow("Requirements", "custom-header-background");
+    this.mContentContainer.appendRow(Stronghold.Text.Requirements, "custom-header-background");
     var requirements = this.mContainer.appendRow(null, "requirements-row");
     var requirementsDone = requirements.appendRow("Fulfilled", "stronghold-half-width");
     this.mRequirementsDoneTable = $('<table/>')
