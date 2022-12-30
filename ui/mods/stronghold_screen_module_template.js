@@ -126,3 +126,41 @@ StrongholdScreenModuleTemplate.prototype.destroyPopup = function()
 	this.mParent.destroyPopupDialog();
 	this.mPopupDialog = null;
 }
+
+StrongholdScreenModuleTemplate.prototype.addRequirementRow = function(_table, _requirement, _isValid)
+{
+	var icon = _isValid ? "ui/icons/unlocked_small.png" : "ui/icons/locked_small.png";
+	var font = _isValid ? "" : "font-color-disabled"
+	var tr = $("<tr/>")
+		.appendTo(_table)
+    	.append($("<td><img src='" + Path.GFX + icon + "'/></td>"))
+    var container = $("<td/>")
+    	.appendTo(tr)
+    tr.data("IsValid", _isValid)
+
+    if (_requirement)
+    {
+    	_requirement
+    		.appendTo(container)
+    		.addClass(font)
+    		.children()
+    			.addClass(font)
+    }
+    return {
+    	Row : tr,
+    	Img : tr.find("img"),
+    	Container : container
+    }
+}
+
+StrongholdScreenModuleTemplate.prototype.areRequirementsFulfilled = function(_table)
+{
+	var fulfilled = true;
+	_table.find("tr").each(function(_idx)
+	{
+		console.error($(this).data("IsValid"))
+		if ($(this).data("IsValid") === false)
+			fulfilled = false;
+	})
+	return fulfilled;
+}
