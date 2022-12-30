@@ -40,7 +40,7 @@
    display: block;
 }
 
-.dropdown > .dropdown-container > .dropdown-container-scroll  .dropdown-child
+.dropdown-child
 {
 	height: auto;
 	text-align: center;
@@ -50,8 +50,8 @@
 	box-shadow: 0px 0px 16px black;
 }
 
-.dropdown > .dropdown-container > .dropdown-container-scroll  .dropdown-child:hover,
-.dropdown > .dropdown-container > .dropdown-container-scroll  .dropdown-child.is-selected
+.dropdown-child:hover,
+.dropdown-child.is-selected
 {
    	background-image: url("coui://gfx/ui/skin/custom_background_698_40_selected.png");
 }
