@@ -5,39 +5,30 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		ModulePath = "scripts/ui/screens/stronghold/modules/stronghold_screen_"
 		Modules = {
 			MainModule = {
-				Module = null,
 				Path = "main_module",
 			},
 			BuildingsModule = {
-				Module = null,
 				Path = "buildings_module",
 			},
 			LocationsModule = {
-				Module = null,
 				Path = "locations_module",
 			},
 			StashModule = {
-				Module = null,
 				Path = "stash_module",
 			},
 			RosterModule = {
-				Module = null,
 				Path = "roster_module",
 			},
 			VisualsModule = {
-				Module = null,
 				Path = "visuals_module",
 			},
 			UpgradeModule = {
-				Module = null,
 				Path = "upgrade_module",
 			},
 			HamletModule = {
-				Module = null,
 				Path = "hamlet_module",
 			},
 			MiscModule = {
-				Module = null,
 				Path = "misc_module",
 			},
 		},
@@ -48,7 +39,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		this.m.Visible = false;
 		foreach (id, module in this.m.Modules)
 		{
-			module.Module = this.new(this.m.ModulePath + module.Path);
+			module.Module <- this.new(this.m.ModulePath + module.Path);
 			module.Module.setID(id);
 			module.Module.setParent(this);
 		}
