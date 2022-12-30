@@ -32,7 +32,7 @@ StrongholdScreenHamletModule.prototype.createDIV = function (_parentDiv)
 	hamletRow.append(hamletSpriteContainer);
 	this.mBaseHamletSpriteImage = $('<img class="hamlet-sprite-image"/>');
 	hamletSpriteContainer.append(this.mBaseHamletSpriteImage);
-	this.mContentContainer.appendRow("Requirements", "custom-header-background");
+	this.mContentContainer.appendRow(Stronghold.Text.Requirements, "custom-header-background");
 	var requirements = this.mContentContainer.appendRow(null, "requirements-row");
 	var requirementsDone = requirements.appendRow("Fulfilled", "stronghold-half-width");
 	this.mRequirementsDoneTable = $('<table/>');
