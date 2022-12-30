@@ -290,7 +290,7 @@ StrongholdScreen.prototype.loadFromData = function(_data)
 
 StrongholdScreen.prototype.updateData = function(_data)
 {
-    var updateAssets = false;
+    var updatedAssets = false;
     var types = _data[0];
     var data = _data[1]
     for (var i = 0; i < types.length; i++)
@@ -298,16 +298,23 @@ StrongholdScreen.prototype.updateData = function(_data)
         var typeID = types[i];
         var typeValue = data[typeID]
         this.mData[typeID] = typeValue;
-        if(typeID == "Assets" || typeID == "TownAssets")
+        if ((typeID == "Assets" || typeID == "TownAssets") && !updatedAssets)
         {
-            updateAssets = true;
+        	this.loadAssetsData();
+            updatedAssets = true;
         }
         else
         {
         	this.mModules[typeID].Module.setModuleData(data);
         }
+        $.each(this.mModules, function(_key, _module)
+        {
+        	if ($.inArray(typeID, _module.Module.mUpdateOn) != -1)
+        	{
+        		_module.Module.reloadData();
+        	}
+        })
     }
-    if(updateAssets) this.loadAssetsData();
 }
 
 StrongholdScreen.prototype.loadAssetsData = function()

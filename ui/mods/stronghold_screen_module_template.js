@@ -17,6 +17,7 @@ var StrongholdScreenModuleTemplate = function(_parent)
 
     this.mData = null;
     this.mModuleData = null;
+    this.mUpdateOn = [];
 };
 
 StrongholdScreenModuleTemplate.prototype = Object.create(MSUUIScreen.prototype);
@@ -105,6 +106,11 @@ StrongholdScreenModuleTemplate.prototype.loadFromData = function()
 	}
 	this.mHasChangedData = false;
 	return true;
+}
+
+StrongholdScreenModuleTemplate.prototype.reloadData = function()
+{
+	SQ.call(this.mSQHandle, 'updateData');
 }
 
 // Refer popups to the parent
