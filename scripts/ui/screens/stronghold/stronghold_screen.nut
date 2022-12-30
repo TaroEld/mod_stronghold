@@ -174,19 +174,6 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		return _ret
 	}
 
-	function getPlayerAssetsUIData( _ret )
-	{
-		_ret.mMoneyAsset <- this.World.Assets.getMoney();
-		_ret.mFoodAsset <- this.World.Assets.getFood();
-		_ret.mAmmoAsset <- this.World.Assets.getArmorParts();
-		_ret.mSuppliesAsset <- this.World.Assets.getAmmo();
-		_ret.mMedicineAsset <- this.World.Assets.getMedicine();
-		_ret.mBrothersAsset <-this.World.getPlayerRoster().getAll().len();
-		_ret.mBrothersAssetMax <- this.World.Assets.getBrothersMax();
-		_ret.mInventoryUpgrades <- this.World.Retinue.getInventoryUpgrades();
-		return _ret
-	}
-
 	function updateData(_type)
 	{
 		// Either pass in a single type, like "VisualsModule", or an array of types, like  ["PlayerAssets", "TownAssets"]
