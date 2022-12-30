@@ -18,7 +18,6 @@
 {
 	width: 17.5rem;
     height: 4.3rem;
-    border: 2px solid red;
 }
 .stronghold-half-width
 {
@@ -82,8 +81,6 @@
     flex-direction: column;
     justify-content: space-between;
     height: 58.6rem;
-
-    border: 2px solid yellow;
 }
 
 .l-stronghold-dialog-container .vertical-tab-container .scroll-container .row
@@ -92,8 +89,6 @@
     line-height: 3.0rem;
     border-image: url("coui://gfx/ui/skin/line_gold.png") 0% 0% 100% 0%;
     border-image-outset: 0 0 0.5rem 0;
-
-    border: 2px solid blue;
 }
 
 
