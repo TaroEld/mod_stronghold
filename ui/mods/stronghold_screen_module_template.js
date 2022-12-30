@@ -164,3 +164,8 @@ StrongholdScreenModuleTemplate.prototype.areRequirementsFulfilled = function(_ta
 	})
 	return fulfilled;
 }
+
+StrongholdScreenModuleTemplate.prototype.getModuleText = function()
+{
+	return Stronghold.Text[this.mID];
+}
