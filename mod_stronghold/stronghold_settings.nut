@@ -99,6 +99,10 @@
 	UnlockDescription = "You can construct an additional building, including an arena, and three additional locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold.",
 };
 
+::Stronghold.TrainerPrice <- 5;
+::Stronghold.WaterPrice <- 5;
+::Stronghold.MercenaryPrice <- 5;
+
 // Hamlet defs
 ::Stronghold.Hamlet <-
 {
