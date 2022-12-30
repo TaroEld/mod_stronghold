@@ -17,10 +17,10 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		return _ret
 	}
 
-	function getRoadOptions()
+	function getRoadUIData()
 	{
-		local town = this.getTown()
-		local tile = town.getTile()
+		local town = this.getTown();
+		local tile = town.getTile();
 		local settlements = this.World.EntityManager.getSettlements();
 		local distances = [];
 		local longestAllowedDistance = 0;
@@ -139,6 +139,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 
 
 	function getGiftOptions()
+	function getGiftUIData()
 	{
 		local ret =
 		{
