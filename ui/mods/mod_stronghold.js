@@ -74,7 +74,8 @@ var Stronghold = {
     	}
     },
     Style : {
-    	TextFont : 'text-font-normal font-style-italic font-bottom-shadow font-color-subtitle'
+    	TextFont : 'text-font-normal font-style-italic font-bottom-shadow font-color-subtitle',
+    	TextFontSmall : 'text-font-medium font-style-italic font-bottom-shadow font-color-subtitle'
     },
     Text : {
     	Requirements : "Requirements",
@@ -123,10 +124,22 @@ var Stronghold = {
     		.addClass(Stronghold.Style.TextFont)
     		.text(_text || "")
     },
+    getTextDivSmall : function(_text)
+    {
+    	return $("<div/>")
+    		.addClass(Stronghold.Style.TextFontSmall)
+    		.text(_text || "")
+    },
     getTextSpan : function(_text)
     {
     	return $("<span/>")
     		.addClass(Stronghold.Style.TextFont)
+    		.text(_text || "")
+    },
+    getTextSpanSmall : function(_text)
+    {
+    	return $("<span/>")
+    		.addClass(Stronghold.Style.TextFontSmall)
     		.text(_text || "")
     }
 }
