@@ -23,7 +23,6 @@ StrongholdScreenLocationsModule.prototype.switchActiveStructure = function( _str
     {
         this.mActiveStructure.Selection.toggleDisplay(false)
     }
-    console.error("_structureID" + _structureID)
     this.mActiveStructure = this.mModuleData[_structureID];
     this.mActiveStructureTitle.html(this.mActiveStructure.Name);
     this.mActiveStructure.Selection.toggleDisplay(true)
@@ -39,13 +38,10 @@ StrongholdScreenLocationsModule.prototype.switchActiveStructure = function( _str
     {
         this.mAddStructureButton.toggleDisplay(true)
         this.mRemoveStructureButton.toggleDisplay(false)
-        var requirementsDone = true;
-        MSU.iterateObject(this.mActiveStructure.Requirements, function(_, _requirement){
-            self.addRequirementRow(_requirement);
-            if (!_requirement.IsValid)
-            	requirementsDone = false;
-        })
-        this.mAddStructureButton.enableButton(requirementsDone);
+        $.each(this.mActiveStructure.Requirements, $.proxy(function(_, _requirement){
+            this.addRequirementRow(this.mActiveStructureRequirementsTable, Stronghold.getTextDivSmall(_requirement.Text), _requirement.IsValid);
+        }, this))
+        this.mAddStructureButton.enableButton(this.areRequirementsFulfilled(this.mActiveStructureRequirementsTable));
     }
 }
 

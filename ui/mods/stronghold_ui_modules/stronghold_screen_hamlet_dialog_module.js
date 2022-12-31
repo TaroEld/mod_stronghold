@@ -22,25 +22,26 @@ StrongholdScreenHamletModule.prototype.createDIV = function (_parentDiv)
 	this.mContentContainer.addClass("hamlet-module");
 	var hamletRow = this.mContentContainer.appendRow(null, "build-hamlet-row");
 
-	var hamletDetailsContainer = $('<div class="hamlet-details-container"/>');
-	hamletRow.append(hamletDetailsContainer);
-	this.mHamletNameLabel = hamletDetailsContainer.appendRow("Advantages").find(".sub-title");
-	var hamletDetails = hamletDetailsContainer.appendRow();
-	this.mDescriptionTextContainer = $('<div class="hamlet-details-text-container text-font-normal font-style-italic font-bottom-shadow font-color-subtitle"/>');
-	hamletDetails.append(this.mDescriptionTextContainer);
-	var hamletSpriteContainer = $('<div class="hamlet-sprite-container"/>');
-	hamletRow.append(hamletSpriteContainer);
-	this.mBaseHamletSpriteImage = $('<img class="hamlet-sprite-image"/>');
-	hamletSpriteContainer.append(this.mBaseHamletSpriteImage);
-	this.mContentContainer.appendRow(Stronghold.Text.Requirements, "custom-header-background");
-	var requirements = this.mContentContainer.appendRow(null, "requirements-row");
+	var hamletDetailsContainer = $('<div class="hamlet-details-container"/>')
+		.appendTo(hamletRow)
+	var hamletDetails = hamletDetailsContainer.appendRow("Advantages");
+	this.mDescriptionTextContainer = Stronghold.getTextDiv()
+		.addClass("hamlet-details-text-container")
+		.appendTo(hamletDetails)
+
+	var hamletSpriteContainer = $('<div class="hamlet-sprite-container"/>')
+		.appendTo(hamletRow)
+	this.mBaseHamletSpriteImage = $('<img class="hamlet-sprite-image"/>')
+	 	.appendTo(hamletSpriteContainer)
+
+	var requirements = this.mContentContainer.appendRow(Stronghold.Text.Requirements, "requirements-row");
 	var requirementsDone = requirements.appendRow("Fulfilled", "stronghold-half-width");
-	this.mRequirementsDoneTable = $('<table/>');
-	requirementsDone.append(this.mRequirementsDoneTable);
+	this.mRequirementsDoneTable = $('<table/>')
+		.appendTo(requirementsDone)
 
 	var requirementsNotDone = requirements.appendRow("Unfulfilled", "stronghold-half-width");
-	this.mRequirementsNotDoneTable = $('<table/>');
-	requirementsNotDone.append(this.mRequirementsNotDoneTable);
+	this.mRequirementsNotDoneTable = $('<table/>')
+		.appendTo(requirementsNotDone)
 
 
 	var footerRow = this.mContentContainer.appendRow(null, "footer-button-bar");
@@ -63,27 +64,16 @@ StrongholdScreenHamletModule.prototype.fillHamletDetailsText = function()
 
 StrongholdScreenHamletModule.prototype.fillRequirementsText = function()
 {
+
 	this.mRequirementsDoneTable.empty();
 	this.mRequirementsNotDoneTable.empty();
 	var self = this;
 
-    var allRequirementsDone = true;
-    MSU.iterateObject(this.mModuleData.Requirements, function(_key, _requirement){
-        self.addRequirementRow(_requirement);
-        // if (!_requirement.Done)
-        // 	allRequirementsDone = false;
-    })
-    this.mBuildHamletButton.enableButton(allRequirementsDone)
-}
-
-StrongholdScreenHamletModule.prototype.addRequirementRow = function(_requirement)
-{
-	var container = _requirement.Done ? this.mRequirementsDoneTable : this.mRequirementsNotDoneTable;
-	var imgPath = _requirement.Done ? "ui/icons/unlocked_small.png" : "ui/icons/locked_small.png";
-
-	var tr = $("<tr/>").appendTo(container);
-    tr.append("<td><img src='" + Path.GFX + imgPath + "'/></td>");
-    tr.append("<td><div class='text-font-medium font-color-label'>" + _requirement.Text + "</div></td>");
+    MSU.iterateObject(this.mModuleData.Requirements, $.proxy(function(_key, _requirement){
+    	var table = _requirement.Done ? this.mRequirementsDoneTable : this.mRequirementsNotDoneTable;
+        this.addRequirementRow(table, Stronghold.getTextDivSmall(_requirement.Text), _requirement.Done);
+    }, this))
+    this.mBuildHamletButton.enableButton(this.areRequirementsFulfilled(this.mRequirementsDoneTable) && this.areRequirementsFulfilled(this.mRequirementsNotDoneTable))
 }
 
 StrongholdScreenHamletModule.prototype.loadFromData = function()

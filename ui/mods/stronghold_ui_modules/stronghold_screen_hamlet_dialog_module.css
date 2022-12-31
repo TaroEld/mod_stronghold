@@ -6,24 +6,11 @@
 .stronghold-screen .hamlet-module .hamlet-details-container
 {
     flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    /*border: 1px solid green;*/
-}
-
-.stronghold-screen .hamlet-module .hamlet-details-container .hamlet-details-text-container
-{
-    flex: 1;
-    /*border: 1px solid red;*/
 }
 
 .stronghold-screen .hamlet-module .hamlet-sprite-container
 {
     width: 28.0rem;
-    display: flex;
-    flex-wrap: wrap;
-
-    /*border: 2px solid blue;*/
 }
 
 .stronghold-screen .hamlet-module .hamlet-sprite-image

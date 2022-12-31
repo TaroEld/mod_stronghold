@@ -6,18 +6,11 @@
 .stronghold-screen .upgrade-module .upgrade-details-container
 {
     flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    /*border: 1px solid green;*/
 }
 
 .stronghold-screen .upgrade-module .upgrade-sprite-container
 {
     width: 28.0rem;
-    display: flex;
-    flex-wrap: wrap;
-
-    /*border: 2px solid blue;*/
 } 
 
 .stronghold-screen .upgrade-module .upgrade-sprite-image
@@ -26,39 +19,13 @@
     height: 19.9rem;
 }
 
-
-.stronghold-screen .upgrade-module .upgrade-details-container .sub-title
-{
-    /*border: 1px solid yellow;*/
-} 
-
-.stronghold-screen .upgrade-module .upgrade-details-container .upgrade-base-text-container
-{
-    flex: 1;
-    /*border: 1px solid red;*/
-} 
-
-
-.stronghold-screen .upgrade-module .requirements-row
-{
-}
-
-.stronghold-screen .upgrade-module .requirements-row .upgrade-requirements-container
-{
-    width: 50%;
-}
-
-.stronghold-screen .upgrade-module .requirements-row .upgrade-requirements-container img
-{
-    top: 3rem;
-}
-
 .stronghold-screen .upgrade-module .footer-button-bar
 {
     position: absolute;
     bottom: 0;
     justify-content: center;
 }
+
 .stronghold-screen .upgrade-module .footer-button-bar .upgrade-base-button
 {
     align-self: center;

@@ -80,24 +80,6 @@ StrongholdScreenStructuresModule.prototype.createStructureContent = function ()
     else this.switchActiveStructure(this.mActiveStructure.ConstID)
 };
 
-StrongholdScreenStructuresModule.prototype.addRequirementRow = function(_requirement)
-{
-	var container = this.mActiveStructureRequirementsTable;
-	if(_requirement.IsValid)
-    {
-    	var tr = $("<tr/>").appendTo(container);
-        tr.append($("<td><img src='" + Path.GFX + "ui/icons/unlocked_small.png" + "'/></td>"));
-        tr.append($("<td><div class='text-font-medium font-color-label'>" + _requirement.Text + "</div></td>"));
-    }
-    else
-    {
-
-    	var tr = $("<tr/>").appendTo(container);
-       	tr.append($("<td><img src='" + Path.GFX + "ui/icons/locked_small.png" + "'/></td>"));
-        tr.append($("<td><div class='text-font-medium font-color-disabled'>" + _requirement.Text + "</div></td>"));
-    }
-}
-
 StrongholdScreenStructuresModule.prototype.addStructure = function ()
 {
 };
