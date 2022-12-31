@@ -126,7 +126,7 @@ StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 	this.mGiftRequirementsTable = $("<table>")
 		.appendTo(requirementsContainer);
 
-	Stronghold.getTextSpan(this.getModuleText().SendGifts.SendTo)
+	Stronghold.getTextSpanSmall(this.getModuleText().SendGifts.SendTo)
 		.appendTo(leftContent)
 
 	this.mGiftsTargetDropdown = createDropDownMenu(leftContent, "stronghold-padding-left")
@@ -153,9 +153,9 @@ StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 	// Text details right of image
 	this.mGiftsDetails = $('<div class="gifts-details"/>')
 		.appendTo(this.mGiftsDetailsContainer)
-	this.mGiftsCurrentRelation = Stronghold.getTextDiv()
+	this.mGiftsCurrentRelation = Stronghold.getTextDivSmall()
 		.appendTo(this.mGiftsDetails)
-	this.mGiftsTargetTown = Stronghold.getTextDiv()
+	this.mGiftsTargetTown = Stronghold.getTextDivSmall()
 		.appendTo(this.mGiftsDetails)
 
 
