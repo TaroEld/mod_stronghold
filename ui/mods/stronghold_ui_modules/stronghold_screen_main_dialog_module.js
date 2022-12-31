@@ -38,14 +38,13 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
 
 StrongholdScreenMainModule.prototype.addAssetRow = function(_parent, _name, _imgsrc)
 {
-	var ret = $('<div class="main-module-asset-row"/>');
-	var name = $('<div class="title-font-big font-bold font-color-brother-name main-module-asset-name"/>');
-	ret.append(name);
-	name.html(_name);
-	var img = $('<img class="main-module-asset-img">');
-	img.src = _imgsrc;
-	ret.append(img);
-	_parent.append(ret);
+	var ret = $('<div class="main-module-asset-row"/>')
+		.appendTo(_parent)
+	Stronghold.getTextSpan(_name)
+		.appendTo(ret)
+	$('<img class="main-module-asset-img">')
+		.attr("src", _imgsrc)
+		.appendTo(ret)
 	return ret;
 }
 

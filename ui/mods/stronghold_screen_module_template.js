@@ -158,7 +158,6 @@ StrongholdScreenModuleTemplate.prototype.areRequirementsFulfilled = function(_ta
 	var fulfilled = true;
 	_table.find("tr").each(function(_idx)
 	{
-		console.error($(this).data("IsValid"))
 		if ($(this).data("IsValid") === false)
 			fulfilled = false;
 	})

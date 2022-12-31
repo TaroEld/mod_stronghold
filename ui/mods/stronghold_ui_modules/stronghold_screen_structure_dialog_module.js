@@ -62,12 +62,12 @@ StrongholdScreenStructuresModule.prototype.createStructureContent = function ()
         structureImageContainer.click(function(){
             self.switchActiveStructure(_structureID)
         })
-        var structureImage = $('<img class="structure-image"/>');
-        structureImage.attr('src', Path.GFX + self.mStructureImagePath + _structure.ImagePath);
-        structureImageContainer.append(structureImage)
-        var structureSelection = $('<img class="structure-selection display-none"/>');
-        structureSelection.attr('src', Path.GFX + Stronghold.Visuals.SelectionGoldImagePath);
-        structureImageContainer.append(structureSelection)
+        var structureImage = $('<img class="structure-image"/>')
+        	.attr('src', Path.GFX + self.mStructureImagePath + _structure.ImagePath)
+        	.appendTo(structureImageContainer)
+        var structureSelection = $('<img class="structure-selection display-none"/>')
+        	.attr('src', Path.GFX + Stronghold.Visuals.SelectionGoldImagePath)
+        	.appendTo(structureImageContainer)
         _structure.Selection = structureSelection;
 
         if (!_structure.HasStructure)
