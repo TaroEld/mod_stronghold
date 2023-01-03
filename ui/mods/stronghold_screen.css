@@ -19,6 +19,14 @@
 	width: 17.5rem !important;
     height: 4.3rem !important;
 }
+
+.stronghold-flex-center
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .stronghold-half-width
 {
 	flex: 1;
