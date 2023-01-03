@@ -123,25 +123,25 @@ var Stronghold = {
     {
     	return $("<div/>")
     		.addClass(Stronghold.Style.TextFont)
-    		.text(_text || "")
+    		.html(_text || "")
     },
     getTextDivSmall : function(_text)
     {
     	return $("<div/>")
     		.addClass(Stronghold.Style.TextFontSmall)
-    		.text(_text || "")
+    		.html(_text || "")
     },
     getTextSpan : function(_text)
     {
     	return $("<span/>")
     		.addClass(Stronghold.Style.TextFont)
-    		.text(_text || "")
+    		.html(_text || "")
     },
     getTextSpanSmall : function(_text)
     {
     	return $("<span/>")
     		.addClass(Stronghold.Style.TextFontSmall)
-    		.text(_text || "")
+    		.html(_text || "")
     }
 }
 
