@@ -149,6 +149,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		{
 			Price = 3000,
 			Gifts = [],
+			ReputationGain = 0,
 			Factions = []
 		}
 
@@ -159,8 +160,11 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 				ret.Gifts.push({
 					Name = item.m.Name,
 					ID = item.getID(),
-					Icon = item.m.Icon
+					Icon = item.m.Icon,
+					Value = item.m.Value
 				});
+
+				ret.ReputationGain += ::Math.abs(item.m.Value / 200)
 			}
 		}
 

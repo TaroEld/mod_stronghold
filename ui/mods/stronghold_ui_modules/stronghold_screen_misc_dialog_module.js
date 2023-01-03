@@ -186,6 +186,7 @@ StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
 			.attr("src", Path.ITEMS + _element.Icon)
 			//.bindTooltip({ contentType: 'ui-item', itemId: _element.ID, itemOwner: 'craft' })
 	})
+	this.mGiftsReputationGain.text(giftText.ReputationGain.replace("{reputation}", this.mModuleData.SendGifts.ReputationGain))
 	this.addRequirementRow(this.mGiftRequirementsTable, requirement, this.mModuleData.SendGifts.Gifts.length > 0)
 
 	this.addRequirementRow(this.mGiftRequirementsTable,
