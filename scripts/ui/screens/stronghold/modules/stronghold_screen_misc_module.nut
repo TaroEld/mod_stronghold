@@ -223,6 +223,60 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		return ret;
 	}
 
+	function onSendGift(_target)
+	{
+		local playerFaction = this.Stronghold.getPlayerFaction();
+		local playerBase = this.getTown()
+		local targetSettlement = this.World.getEntityByID(_target.SettlementID);
+
+		local patrolStrength = 400 +  100 * (playerBase.getSize()-1)
+		patrolStrength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+
+		local party = playerFaction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 100);
+		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, patrolStrength);
+		party.setDescription("A caravan bringing gifts to " + targetSettlement.getName());
+		party.setFootprintType(this.Const.World.FootprintsType.Caravan);
+		party.getSprite("body").setBrush("cart_02")
+		party.setVisibilityMult(1.0);
+		party.setVisionRadius(this.Const.World.Settings.Vision * 0.25);
+		party.getSprite("base").Visible = false;
+		party.setVisibleInFogOfWar(true)
+		party.setMirrored(true);
+		party.getFlags().set("IsCaravan", true);
+		party.getFlags().set("Stronghold_Caravan", true);
+
+		// count and remove items
+		local itemsToRemove = this.getTown().getStash().getItems().filter(@(_idx, _item)
+			_item != null && _item.isItemType(this.Const.Items.ItemType.Loot)
+		)
+		local stash = this.getTown().getStash();
+		foreach(item in itemsToRemove)
+			stash.remove(item)
+
+
+
+		//add orders to move to destination, 'unload' the gifts and get reputation, despawn
+		local c = party.getController();
+		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false);
+		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false);
+
+		local move = this.new("scripts/ai/world/orders/move_order");
+		move.setDestination(targetSettlement.getTile());
+		move.setRoadsOnly(true);
+
+		local unload = this.new("scripts/ai/world/orders/stronghold_unload_gifts_order");
+		unload.m.Flags.set("DestinationFaction", _target.ID)
+		unload.m.Flags.set("Destination", targetSettlement.getName())
+		unload.m.Flags.set("Reputation", _target.ReputationGain)
+
+		local despawn = this.new("scripts/ai/world/orders/despawn_order");
+
+		c.addOrder(move)
+		c.addOrder(unload)
+		c.addOrder(despawn)
+		return true;
+	}
+
 	function getDistanceToTowns(_origin, _destinations)
 	{
 		local chosenSettlement = null;
