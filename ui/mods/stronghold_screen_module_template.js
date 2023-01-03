@@ -130,11 +130,15 @@ StrongholdScreenModuleTemplate.prototype.destroyPopup = function()
 
 StrongholdScreenModuleTemplate.prototype.addRequirementRow = function(_table, _requirement, _isValid)
 {
-	var icon = _isValid ? "ui/icons/unlocked_small.png" : "ui/icons/locked_small.png";
-	var font = _isValid ? "" : "font-color-disabled"
+	var icon = "";
+
 	var tr = $("<tr/>")
 		.appendTo(_table)
-    	.append($("<td><img src='" + Path.GFX + icon + "'/></td>"))
+	if (_isValid === true)
+		tr.append($("<td><img src='" + Path.GFX + "ui/icons/unlocked_small.png" + "'/></td>"))
+	else if (_isValid === false)
+		tr.append($("<td><img src='" + Path.GFX + "ui/icons/locked_small.png" + "'/></td>"))
+	var font = _isValid ? "" : "font-color-disabled"
     var container = $("<td/>")
     	.appendTo(tr)
     tr.data("IsValid", _isValid)
