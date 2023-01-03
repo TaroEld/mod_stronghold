@@ -221,7 +221,19 @@ StrongholdScreenMiscModule.prototype.setGiftElement = function(_element)
 
 StrongholdScreenMiscModule.prototype.notifyBackendSendGift = function()
 {
-	 SQ.call(this.mSQHandle, 'onSendGift', this.mGiftsTargetDropdown.data("activeElement"));
+	var self = this;
+	var data = this.mGiftsTargetDropdown.data("activeElement");
+	data.ReputationGain = this.mModuleData.SendGifts.ReputationGain;
+	SQ.call(this.mSQHandle, 'onSendGift', data, function(_ret){
+		self.createPopup('Caravan on its way!', null, null, 'change-name-and-title-popup');
+		self.mPopupDialog.addPopupDialogContent(Stronghold.getTextDiv("The caravan is traveling to " + self.mGiftsTargetDropdown.data("activeElement").SettlementName))
+
+		self.mPopupDialog.addPopupDialogOkButton(function (_dialog)
+		{
+		    self.reloadData();
+		    self.destroyPopup();
+		});
+	});
 }
 
 StrongholdScreenMiscModule.prototype.createTrainBrotherContent = function ()
