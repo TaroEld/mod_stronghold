@@ -182,14 +182,19 @@ StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
 
 	// Check if player has gifts to send in stash
 	var requirement = $("<div/>")
-	var text = Stronghold.getTextSpan(giftText.Requirements.HaveGifts)
+	var text = Stronghold.getTextDivSmall(giftText.Requirements.HaveGifts)
 		.appendTo(requirement)
-	$.each(this.mModuleData.SendGifts.Gifts, function(_idx, _element){
-		$('<img class="misc-gift"/>')
+	if (this.mModuleData.SendGifts.Gifts.length > 0)
+	{
+		var giftContainer = $("<div/>")
 			.appendTo(requirement)
-			.attr("src", Path.ITEMS + _element.Icon)
-			//.bindTooltip({ contentType: 'ui-item', itemId: _element.ID, itemOwner: 'craft' })
-	})
+		$.each(this.mModuleData.SendGifts.Gifts, function(_idx, _element){
+			$('<img class="misc-gift"/>')
+				.appendTo(giftContainer)
+				.attr("src", Path.ITEMS + _element.Icon)
+				//.bindTooltip({ contentType: 'ui-item', itemId: _element.ID, itemOwner: 'craft' })
+		})
+	}
 	this.mGiftsReputationGain.text(giftText.ReputationGain.replace("{reputation}", this.mModuleData.SendGifts.ReputationGain))
 	this.addRequirementRow(this.mGiftRequirementsTable, requirement, this.mModuleData.SendGifts.Gifts.length > 0)
 
