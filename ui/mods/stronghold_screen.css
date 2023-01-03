@@ -16,8 +16,8 @@
 
 .stronghold-generic-element-container
 {
-	width: 17.5rem;
-    height: 4.3rem;
+	width: 17.5rem !important;
+    height: 4.3rem !important;
 }
 .stronghold-half-width
 {
