@@ -195,16 +195,18 @@ StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
 				//.bindTooltip({ contentType: 'ui-item', itemId: _element.ID, itemOwner: 'craft' })
 		})
 	}
+
 	this.mGiftsReputationGain.text(giftText.ReputationGain.replace("{reputation}", this.mModuleData.SendGifts.ReputationGain))
+
 	this.addRequirementRow(this.mGiftRequirementsTable, requirement, this.mModuleData.SendGifts.Gifts.length > 0)
 
 	this.addRequirementRow(this.mGiftRequirementsTable,
-		Stronghold.getTextSpan().text(giftText.Requirements.Faction),
+		Stronghold.getTextSpanSmall().text(giftText.Requirements.Faction),
 		this.mModuleData.SendGifts.Factions.length > 0)
 
 	var price = this.mModuleData.SendGifts.Price;
 	this.addRequirementRow(this.mGiftRequirementsTable,
-		Stronghold.getTextSpan().text(giftText.Requirements.Price.replace("{price}", price)),
+		Stronghold.getTextSpanSmall().text(giftText.Requirements.Price.replace("{price}", price)),
 		this.mData.Assets.Money > price)
 	this.mGiftsButton.attr("disabled", !this.areRequirementsFulfilled(this.mGiftRequirementsTable))
 }
