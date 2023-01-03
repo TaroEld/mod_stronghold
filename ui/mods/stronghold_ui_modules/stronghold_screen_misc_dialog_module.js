@@ -73,11 +73,6 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 	this.mRoadCostText = Stronghold.getTextSpan()
 		.appendTo(this.mRoadCost)
 
-	this.mRoadButtonContainer = leftContent.appendRow(null, "stronghold-generic-element-container");
-	this.mRoadButton = this.mRoadButtonContainer.createTextButton("Build", $.proxy(function()
-	{
-	    this.notifyBackendBuildRoad();
-	}, this), "", 1)
 
 	this.RoadTownImg = $('<img class="road-town-img"/>').appendTo(rightContent);
 	this.RoadTownImg.mousedown($.proxy(function(_event){
@@ -90,6 +85,13 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 	            break;
 	    }
 	}, this));
+
+
+	this.mRoadFooterContainer = this.mBuildRoadContentContainer.appendRow(null, "stronghold-flex-center");
+	this.mRoadButton = this.mRoadFooterContainer.createTextButton("Build Road", $.proxy(function()
+	{
+	    this.notifyBackendBuildRoad();
+	}, this), "stronghold-generic-element-container", 1)
 }
 
 StrongholdScreenMiscModule.prototype.loadBuildRoadData = function()
@@ -157,13 +159,15 @@ StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 		.appendTo(this.mGiftsDetails)
 	this.mGiftsTargetTown = Stronghold.getTextDivSmall()
 		.appendTo(this.mGiftsDetails)
+	this.mGiftsReputationGain = Stronghold.getTextDivSmall()
+		.appendTo(this.mGiftsDetails)
 
 
-	this.mGiftsButtonContainer = leftContent.appendRow(null, "stronghold-generic-element-container");
-	this.mGiftsButton = this.mGiftsButtonContainer.createTextButton("Build", $.proxy(function()
+	this.mGiftsFooterContainer = this.mSendGiftsContentContainer.appendRow(null, "stronghold-flex-center");
+	this.mGiftsButton = this.mGiftsFooterContainer.createTextButton("Send Gifts", $.proxy(function()
 	{
 	    this.notifyBackendSendGift();
-	}, this), "", 1)
+	}, this), "stronghold-generic-element-container", 1)
 }
 
 StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
