@@ -23,12 +23,12 @@ StrongholdScreenBuildingsModule.prototype.switchActiveStructure = function( _str
     {
         this.mActiveStructure.Selection.toggleDisplay(false)
     }
-    console.error("_structureID" + _structureID)
     this.mActiveStructure = this.mModuleData[_structureID];
-    this.mActiveStructureTitle.html(this.mActiveStructure.Name);
+    this.mActiveStructureDef = Stronghold.Text.Buildings[_structureID];
+    this.mActiveStructureTitle.html(this.mActiveStructureDef.Name);
     this.mActiveStructure.Selection.toggleDisplay(true)
     this.mActiveStructureImage.attr('src', Path.GFX + this.mStructureImagePath + this.mActiveStructure.ImagePath);
-    this.mActiveStructureDescription.html(this.mActiveStructure.Description)
+    this.mActiveStructureDescription.html(this.mActiveStructureDef.getDescription ? this.mActiveStructureDef.getDescription() : this.mActiveStructureDef.Description);
 
     if (this.mActiveStructure.HasStructure)
     {

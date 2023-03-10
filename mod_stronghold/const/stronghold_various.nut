@@ -220,7 +220,7 @@
 		t = ::Stronghold.assignTroops(party, _template, _resources);
 	}
 
-	party.getSprite("base").setBrush(this.m.Base);
+	party.getSprite("base").setBrush(_faction.m.Base);
 
 	if (t != null)
 	{

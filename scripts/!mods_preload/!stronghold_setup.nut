@@ -10,11 +10,11 @@
 	::mods_registerCSS("dropdown.css");
 	::mods_registerJS("mod_stronghold.js");
 	::mods_registerCSS("mod_stronghold.css");
+	::mods_registerJS("const/stronghold_text.js");
 	::mods_registerJS("stronghold_screen_module_template.js");
 	local noCSSFiles = ["stronghold_screen_zbuildings_dialog_module", "stronghold_screen_zlocations_dialog_module"]
 	foreach(file in this.IO.enumerateFiles("ui/mods/stronghold_ui_modules"))
 	{
-		::logInfo(file)
 		local path = split(file, "/")
 		local name = path[path.len()-1]
 		::mods_registerJS(format("stronghold_ui_modules/%s.js", name));

@@ -112,6 +112,14 @@ StrongholdScreenMiscModule.prototype.setRoadElement = function(_element)
 	this.RoadTownImg.attr("src", Path.GFX + _element.UISprite)
 }
 
+StrongholdScreenMiscModule.prototype.notifyBackendBuildRoad = function()
+{
+	var self = this;
+	var data = this.mRoadTargetDropdown.data("activeElement");
+	SQ.call(this.mSQHandle, 'onBuildRoad', data, function(_ret){
+	});
+}
+
 StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 {
 	this.mSendGiftsContentContainer = this.mSendGiftsContainer.appendRow("Send Gifts");
@@ -225,8 +233,9 @@ StrongholdScreenMiscModule.prototype.notifyBackendSendGift = function()
 	var data = this.mGiftsTargetDropdown.data("activeElement");
 	data.ReputationGain = this.mModuleData.SendGifts.ReputationGain;
 	SQ.call(this.mSQHandle, 'onSendGift', data, function(_ret){
-		self.createPopup('Caravan on its way!', null, null, 'change-name-and-title-popup');
-		self.mPopupDialog.addPopupDialogContent(Stronghold.getTextDiv("The caravan is traveling to " + self.mGiftsTargetDropdown.data("activeElement").SettlementName))
+		var text = _ret === true ? self.getModuleText().SendGifts.OnSend.replace("{town}", self.mGiftsTargetDropdown.data("activeElement").SettlementName) : Stronghold.Text.Error;
+		self.createPopup(self.getModuleText().SendGifts.Title, null, null, 'change-name-and-title-popup');
+		self.mPopupDialog.addPopupDialogContent(Stronghold.getTextDiv(text))
 
 		self.mPopupDialog.addPopupDialogOkButton(function (_dialog)
 		{

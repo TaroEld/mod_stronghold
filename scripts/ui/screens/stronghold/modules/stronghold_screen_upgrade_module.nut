@@ -3,6 +3,7 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 
 	function getUIData( _ret )
 	{
+		// If level cap is reached, there is no need for the other info
 		if (this.getTown().getSize() == 3)
 		{
 			return {
@@ -35,6 +36,9 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 		        Done = this.World.Contracts.getActiveContract() == null
 		    },
 		}
+
+		_ret.Price <- ::Stronghold.PriceMult * tier.Price;
+		_ret.HasActiveContract <- this.World.Contracts.getActiveContract() == null;
 		return _ret
 	}
 })

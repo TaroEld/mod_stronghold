@@ -6,16 +6,17 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 		foreach(locationID, location in ::Stronghold.LocationDefs)
 		{
 			local countLocation = this.getTown().countAttachedLocations(location.ID)
-			local requirements = [
-				{
-					Text = "Maximum amount of locations for this base level: " + this.getTown().countAttachedLocations() + " / " + this.getTown().getMaxLocations(),
-					IsValid = this.getTown().countAttachedLocations() < this.getTown().getMaxLocations()
-				},
-				{
-					Text = "Maximum amount of locations of this type: " + countLocation + " / " + location.MaxAmount,
-					IsValid = countLocation < location.MaxAmount,
-				}
-			]
+			// local requirements = [
+			// 	{
+			// 		Text = "Maximum amount of locations for this base level: " + this.getTown().countAttachedLocations() + " / " + this.getTown().getMaxLocations(),
+			// 		IsValid = this.getTown().countAttachedLocations() < this.getTown().getMaxLocations()
+			// 	},
+			// 	{
+			// 		Text = "Maximum amount of locations of this type: " + countLocation + " / " + location.MaxAmount,
+			// 		IsValid = countLocation < location.MaxAmount,
+			// 	}
+			// ]
+			local requirements = [];
 			foreach(requirement in location.Requirements)
 			{
 				requirements.push({
@@ -24,18 +25,14 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 				})
 			}
 			_ret[locationID] <- {
-				Name = location.Name,
-				ID = location.ID,
 				ConstID = locationID,
-				Description = location.Description,
-				Price = location.Price,
-				Path = location.Path,
 				ImagePath = location.Path + ".png",
 				HasStructure = countLocation > 0,
 				CurrentAmount = countLocation,
-				MaxAmount = location.MaxAmount,
 				Requirements = requirements
 			}
+			::MSU.Table.merge(_ret[locationID], location, true);
+			::MSU.Log.printData(_ret[locationID])
 		}
 		return _ret
 	}
@@ -43,7 +40,7 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 	function addLocation(_data)
 	{
 		local home = this.getTown();
-		local price = _data[1].tointeger() * ::Stronghold.PriceMult
+		local price = _data[1].tointeger()
 		this.World.Assets.addMoney(-price)
 		local script = "scripts/entity/world/attached_location/" + _data[0]
 		local validTerrain =
@@ -67,6 +64,7 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 		]
 		home.buildAttachedLocation(1, script, validTerrain, [], 2)
 		home.buildRoad(home.m.AttachedLocations[home.m.AttachedLocations.len()-1])
+		::logInfo("adding LocationsModule")
 		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
 	}
 

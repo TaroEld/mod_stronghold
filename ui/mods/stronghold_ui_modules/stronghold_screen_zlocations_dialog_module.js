@@ -24,10 +24,11 @@ StrongholdScreenLocationsModule.prototype.switchActiveStructure = function( _str
         this.mActiveStructure.Selection.toggleDisplay(false)
     }
     this.mActiveStructure = this.mModuleData[_structureID];
+    this.mActiveStructureDef = Stronghold.Text.Locations[_structureID];
     this.mActiveStructureTitle.html(this.mActiveStructure.Name);
     this.mActiveStructure.Selection.toggleDisplay(true)
     this.mActiveStructureImage.attr('src', Path.GFX + this.mStructureImagePath + this.mActiveStructure.ImagePath);
-    this.mActiveStructureDescription.html(this.mActiveStructure.Description)
+    this.mActiveStructureDescription.html(this.mActiveStructureDef.getDescription ? this.mActiveStructureDef.getDescription(this.mActiveStructure) : this.mActiveStructureDef.Description);
 
     if (this.mActiveStructure.CurrentAmount >= this.mActiveStructure.MaxAmount)
     {
@@ -38,6 +39,24 @@ StrongholdScreenLocationsModule.prototype.switchActiveStructure = function( _str
     {
         this.mAddStructureButton.toggleDisplay(true)
         this.mRemoveStructureButton.toggleDisplay(false)
+
+        // Price
+        this.addRequirementRow(this.mActiveStructureRequirementsTable,
+        	Stronghold.getTextSpanSmall(Stronghold.Text.Price.replace("{price}", this.mActiveStructure.Price)),
+        	this.mData.Assets.Money > this.mActiveStructure.Price
+        )
+        // Total locations in town
+        this.addRequirementRow(this.mActiveStructureRequirementsTable,
+        	Stronghold.getTextSpanSmall(Stronghold.Text.format(this.getModuleText().MaxTotal, this.mData.TownAssets.mLocationAsset, this.mData.TownAssets.mLocationAssetMax)),
+        	this.mData.Assets.Money > this.mActiveStructure.Price
+        )
+
+        // Total of this type
+        this.addRequirementRow(this.mActiveStructureRequirementsTable,
+        	Stronghold.getTextSpanSmall(Stronghold.Text.format(this.getModuleText().MaxTotal, this.mActiveStructure.CurrentAmount, this.mActiveStructure.MaxAmount)),
+        	this.mData.Assets.Money > this.mActiveStructure.Price
+        )
+
         $.each(this.mActiveStructure.Requirements, $.proxy(function(_, _requirement){
             this.addRequirementRow(this.mActiveStructureRequirementsTable, Stronghold.getTextDivSmall(_requirement.Text), _requirement.IsValid);
         }, this))

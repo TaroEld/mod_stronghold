@@ -106,40 +106,48 @@
 // Hamlet defs
 ::Stronghold.Hamlet <-
 {
-	Name = "Hamlet",
-	Price = 20,
-	Description = "A hamlet serves as additional living space for your retainers. You will be able to construct additional buildings, buy goods, and hire from a variety of recruits. Each base can only have one hamlet.",
-	Requirements = [
-		{
-			Text = @(_town) format("Have a max level base. (%s)", ::Stronghold.Tiers[3].Name),
-			IsValid = @(_town) _town.isMaxLevel()
-		},
-		{
-			Text = @(_town) format("Price: %s", (::Stronghold.Hamlet.Price * ::Stronghold.PriceMult).tostring()),
-			IsValid = @(_town) this.World.Assets.getMoney() >= ::Stronghold.Hamlet.Price * ::Stronghold.PriceMult
-		},
-		{
-			Text = @(_town) "Don't already have a hamlet",
-			IsValid = @(_town) !_town.getFlags().get("Child")
-		},
-	]
+	Price = 20
 }
 
 // Cost for each building, multiplied by PriceMult (1000 by default)
-::Stronghold.BuildingPrices <-
+::Stronghold.Buildings <-
 {
-	Tavern = 5,
-	Kennel = 5,
-	Taxidermist = 5,
-	Temple = 5,
-	Training_Hall = 5,
-	Alchemist = 5,
-	Barber = 1,
-	Weaponsmith = 10,
-	Armorsmith = 10,
-	Fletcher = 10,
-	Port = 15,
-	Arena = 20
+	Tavern = {
+		Price = 5,
+	}
+	Kennel = {
+		Price = 5,
+	}
+	Taxidermist = {
+		Price = 5,
+	}
+	Temple = {
+		Price = 5,
+	}
+	Training_Hall = {
+		Price = 5,
+	}
+	Alchemist = {
+		Price = 5,
+	}
+	Barber = {
+		Price = 1,
+	}
+	Weaponsmith = {
+		Price = 10,
+	}
+	Armorsmith = {
+		Price = 10,
+	}
+	Fletcher = {
+		Price = 10,
+	}
+	Port = {
+		Price = 15,
+	}
+	Arena = {
+		Price = 20
+	}
 };
 
 
@@ -204,3 +212,8 @@
 		AddGoldDirectlyToAssets = false // Add gold generated in base directly to the asset crowns on base enter instead of creating a crowns item
 	}
 };
+
+foreach (locationID, location in ::Stronghold.Locations)
+{
+	location.Price *= ::Stronghold.PriceMult;
+}

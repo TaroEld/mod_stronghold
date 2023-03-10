@@ -77,48 +77,7 @@ var Stronghold = {
     	TextFont : 'text-font-normal font-style-italic font-bottom-shadow font-color-subtitle',
     	TextFontSmall : 'text-font-medium font-style-italic font-bottom-shadow font-color-subtitle'
     },
-    Text : {
-    	Requirements : "Requirements",
-    	HamletModule : {},
-    	MainModuleModule : {},
-    	MiscModule : {
-    		BuildRoad : {
-    			Description : "Building a road to the road network allows your caravans to travel and your patrols to roam. You will also be able to send gifts to connected factions.",
-    			BuildTo : "Build Road to: "
-    		},
-    		SendGifts : {
-    			Description : 'You can choose to send a delegation carrying gifts to a faction. This will consume the treasures you have in your warehouse, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods.<br>The caravan will be traveling on roads towards the target town, and while it will be protected by a number of mercenaries, you might want to accompany it.',
-    			SendTo : "Send Gifts to: ",
-    			Requirements: {
-    				Faction : "At least one faction is connected to you by roads and not friendly",
-    				Price : "Price: {price} (for transportation of the gifts)",
-    				HaveGifts : "Have gifts (treasure items) in your warehouse.",
-    			},
-    			CurrentRelation : "Current relation: {num} ({numText})",
-    			TargetTown : "Target town: {town}",
-    			ReputationGain : "Reputation gained from the gifts: {reputation}",
-    		},
-    		TrainBrother : {
-    			Description : "Provide focused training to one of your recruits",
-    			Invalid : "Nobody here can provide training beyond the services of a Training Hall."
-    		},
-    		BuyWater : {
-    			Description : "Buy a Water Skin with mythical properties.",
-    			Invalid : "You ask the learned men if they could craft you a mythical Water of Life. Unfortunately, the recipe has been lost to time. Perhaps you can recover it."
-    		},
-    		HireMercenaries : {
-    			Description : "Hire a group of mercenaries to follow you in your travels.",
-    			Invalid : "There are no mercenary companies available for hire."
-    		},
-    	},
-    	RosterModule : {},
-    	StashModule : {},
-    	StructureModule : {},
-    	BuildingsModule : {},
-    	LocationsModule : {},
-    	VisualsModule : {},
-    	UpgradeModule : {},
-    },
+
     getTextDiv : function(_text)
     {
     	return $("<div/>")
@@ -547,3 +506,24 @@ WorldCampfireScreenAssets.prototype.destroyDIV = function ()
 };
 
 
+var mycoolmod_loadPerkTreesWithBrotherData = CharacterScreenPerksModule.prototype.loadPerkTreesWithBrotherData;
+CharacterScreenPerksModule.prototype.loadPerkTreesWithBrotherData = function(_brother)
+{
+	mycoolmod_loadPerkTreesWithBrotherData.call(this, _brother);
+	// could only iterate last row or sth instead
+	for (var row = 0; row < this.mPerkTree.length; ++row)
+	{
+		for (var i = 0; i < this.mPerkTree[row].length; ++i)
+		{
+			var perk = this.mPerkTree[row][i];
+			if (perk.ID == "perk.fast_adaption")
+			{
+				perk.Container.css("display", _brother.HasCoolPerk ? "block" : "none")
+				var centerDIV = perk.Container.parent();
+				centerDIV.css({ 'width': (5.0 * (this.mPerkTree[row].length - 1)) + 'rem' }); // css is retarded?
+				centerDIV.css({ 'left': ((660 - centerDIV.width()) / 2) + 'px' }); // css is retarded?
+				return;
+			}
+		}
+	}
+}

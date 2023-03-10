@@ -3,24 +3,13 @@ this.stronghold_screen_hamlet_module <-  this.inherit("scripts/ui/screens/strong
 
 	function getUIData( _ret )
 	{
-		local town = this.getTown();
-		_ret.Price <- ::Stronghold.PriceMult * ::Stronghold.Hamlet.Price,
-		_ret.Name <- ::Stronghold.Hamlet.Name,
-		_ret.Description <- ::Stronghold.Hamlet.Description,
-		_ret.Requirements <- []
-		foreach (requirement in ::Stronghold.Hamlet.Requirements)
-		{
-			_ret.Requirements.push({
-				Text = requirement.Text(town),
-				Done = requirement.IsValid(town)
-			})
-		}
+		_ret.Price <- ::Stronghold.PriceMult * ::Stronghold.Hamlet.Price;
 		return _ret
 	}
 
 	function spawnHamlet()
 	{
-		local tries = 0;
+		local tries = 1;
 		local radius = 3
 		local used = [];
 		local list = this.Const.World.Settlements.Villages_small
@@ -28,7 +17,7 @@ this.stronghold_screen_hamlet_module <-  this.inherit("scripts/ui/screens/strong
 		local playerFaction = this.Stronghold.getPlayerFaction()
 		while (tries++ < 1000)
 		{
-			if (tries%100 == 0) radius++
+			if (tries % 100 == 0) radius++
 			local tile = this.getTileToSpawnLocation(playerBase.getTile(), radius, radius+1, [], false)
 			if (used.find(tile.ID) != null)
 			{

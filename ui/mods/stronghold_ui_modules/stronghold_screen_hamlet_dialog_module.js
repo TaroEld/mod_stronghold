@@ -4,7 +4,7 @@ var StrongholdScreenHamletModule = function(_parent)
 {
 	StrongholdScreenModuleTemplate.call(this, _parent);
 	this.mID = "HamletModule";
-	this.mTitle = "Build a Hamlet";
+	this.mTitle = this.getModuleText().Title;
     this.mBaseSprite = null;
     this.mBuildHamletButton = null;
 };
@@ -35,13 +35,8 @@ StrongholdScreenHamletModule.prototype.createDIV = function (_parentDiv)
 	 	.appendTo(hamletSpriteContainer)
 
 	var requirements = this.mContentContainer.appendRow(Stronghold.Text.Requirements, "requirements-row");
-	var requirementsDone = requirements.appendRow("Fulfilled", "stronghold-half-width");
-	this.mRequirementsDoneTable = $('<table/>')
-		.appendTo(requirementsDone)
-
-	var requirementsNotDone = requirements.appendRow("Unfulfilled", "stronghold-half-width");
-	this.mRequirementsNotDoneTable = $('<table/>')
-		.appendTo(requirementsNotDone)
+	this.mRequirementsTable = $('<table/>')
+		.appendTo(requirements)
 
 
 	var footerRow = this.mContentContainer.appendRow(null, "footer-button-bar");
@@ -59,21 +54,20 @@ StrongholdScreenHamletModule.prototype.setSpriteImage = function()
 
 StrongholdScreenHamletModule.prototype.fillHamletDetailsText = function()
 {
-    this.mDescriptionTextContainer.html(this.mModuleData.Description.replace("/n", "<br>"));
+    this.mDescriptionTextContainer.html(this.getModuleText().Description);
 }
 
 StrongholdScreenHamletModule.prototype.fillRequirementsText = function()
 {
-
-	this.mRequirementsDoneTable.empty();
-	this.mRequirementsNotDoneTable.empty();
+	var moduleText = this.getModuleText();
 	var self = this;
 
-    MSU.iterateObject(this.mModuleData.Requirements, $.proxy(function(_key, _requirement){
-    	var table = _requirement.Done ? this.mRequirementsDoneTable : this.mRequirementsNotDoneTable;
-        this.addRequirementRow(table, Stronghold.getTextDivSmall(_requirement.Text), _requirement.Done);
-    }, this))
-    this.mBuildHamletButton.enableButton(this.areRequirementsFulfilled(this.mRequirementsDoneTable) && this.areRequirementsFulfilled(this.mRequirementsNotDoneTable))
+	this.mRequirementsTable.empty();
+	this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextSpanSmall(Stronghold.Text.Price.replace("{price}", this.mModuleData.Price)), this.mData.Assets.Money > this.mModuleData.Price);
+	this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextSpanSmall(moduleText.Requirements.BaseSize), this.mData.TownAssets.Size == 3);
+	this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextSpanSmall(moduleText.Requirements.MaxHamlet), this.mData.TownAssets.HasHamlet == false);
+
+    this.mBuildHamletButton.enableButton(this.areRequirementsFulfilled(this.mRequirementsTable))
 }
 
 StrongholdScreenHamletModule.prototype.loadFromData = function()

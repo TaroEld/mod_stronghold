@@ -5,7 +5,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		isPlayerBase = true,
 		IsUpgrading = false,
 		Stash = null,
-		TroopSprites = [],
+		TroopSprites = "",
 		HouseSprites = [],
 	},
 

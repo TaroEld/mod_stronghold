@@ -130,6 +130,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	function queryAssetsInformation(_ret)
 	{
 		_ret.Assets = this.UIDataHelper.convertAssetsInformationToUIData();
+		_ret.Assets.InventoryLevel <- this.World.Retinue.getInventoryUpgrades();
 		return _ret;
 	}
 
@@ -164,6 +165,8 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		_ret.Size <- town.getSize();
 		_ret.SizeName <- town.getSizeName();
 		_ret.Upgrading <- town.isUpgrading();
+		_ret.IsCoastal <- town.isCoastal();
+		_ret.HasHamlet <- town.getFlags().get("Child");
 		_ret.SpriteName <- town.getFlags().get("CustomSprite");
 		_ret.mRosterAsset <- townRoster;
 		_ret.mRosterAssetMax <- 16;

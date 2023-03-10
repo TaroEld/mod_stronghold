@@ -8,48 +8,30 @@ var StrongholdScreen = function ()
 	this.mModules = {
 		"MainModule" : {
             "ButtonName" : "Main",
-            "Button" : null,
-            "Module" : null
         },
         "VisualsModule" : {
             "ButtonName" : "Visuals",
-            "Button" : null,
-            "Module" : null
         },
         "StashModule" : {
             "ButtonName" : "Stash",
-            "Button" : null,
-            "Module" : null
         },
         "RosterModule" : {
             "ButtonName" : "Roster",
-            "Button" : null,
-            "Module" : null
         },
         "BuildingsModule" : {
             "ButtonName" : "Buildings",
-            "Button" : null,
-            "Module" : null
         },
         "LocationsModule" : {
             "ButtonName" : "Locations",
-            "Button" : null,
-            "Module" : null
         },
         "UpgradeModule" : {
             "ButtonName" : "Upgrade",
-            "Button" : null,
-            "Module" : null
         },
         "HamletModule" : {
             "ButtonName" : "Hamlet",
-            "Button" : null,
-            "Module" : null
         },
         "MiscModule" : {
             "ButtonName" : "Misc",
-            "Button" : null,
-            "Module" : null
         },
 	}
 	$.each(this.mModules, function(_id, _module)
@@ -285,12 +267,12 @@ StrongholdScreen.prototype.loadFromData = function(_data)
 {
     var self = this;
     this.mData = _data;
-    this.loadAssetsData();
+    this.loadPlayerAssetsData();
+    this.loadTownAssetsData();
 }
 
 StrongholdScreen.prototype.updateData = function(_data)
 {
-    var updatedAssets = false;
     var types = _data[0];
     var data = _data[1]
     for (var i = 0; i < types.length; i++)
@@ -298,12 +280,15 @@ StrongholdScreen.prototype.updateData = function(_data)
         var typeID = types[i];
         var typeValue = data[typeID]
         this.mData[typeID] = typeValue;
-        if ((typeID == "Assets" || typeID == "TownAssets") && !updatedAssets)
+        if (typeID == "Assets")
         {
-        	this.loadAssetsData();
-            updatedAssets = true;
+        	this.loadPlayerAssetsData();
         }
-        else
+        else if (typeID == "TownAssets")
+        {
+        	this.loadTownAssetsData();
+        }
+        else if (typeID in this.mModules)
         {
         	this.mModules[typeID].Module.setModuleData(data);
         }
@@ -317,11 +302,17 @@ StrongholdScreen.prototype.updateData = function(_data)
     }
 }
 
-StrongholdScreen.prototype.loadAssetsData = function()
+StrongholdScreen.prototype.loadPlayerAssetsData = function()
 {
 	this.mAssets.loadFromData(this.mData['Assets']);
 	this.mAssetValues = this.mData['Assets'];
 }
+
+StrongholdScreen.prototype.loadTownAssetsData = function()
+{
+
+}
+
 
 StrongholdScreen.prototype.onLeaveButtonPressed = function()
 {

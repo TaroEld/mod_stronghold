@@ -4,6 +4,7 @@ var StrongholdScreenStructuresModule = function(_parent)
 {
     StrongholdScreenModuleTemplate.call(this, _parent);
     this.mActiveStructure = null;
+    this.mActiveStructureDef = null;
     this.mStructureImagePath = "";
 };
 
