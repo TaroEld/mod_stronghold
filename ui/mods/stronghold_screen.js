@@ -179,18 +179,18 @@ StrongholdScreen.prototype.createAssetDIV = function (_parentDiv, _imagePath, _c
 
 StrongholdScreen.prototype.createAssetDIVs = function()
 {
-    Asset["ICON_ASSET_ROSTER"] = 'ui/icons/asset_brothers.png';
-    Asset["ICON_ASSET_BUILDING"] = 'ui/icons/asset_brothers.png';
-    Asset["ICON_ASSET_LOCATION"] = 'ui/icons/asset_brothers.png';
+    Asset["ICON_ASSET_ROSTER_STRONGHOLD"] = 'ui/icons/asset_brothers.png';
+    Asset["ICON_ASSET_BUILDING_STRONGHOLD"] = 'ui/icons/asset_brothers.png';
+    Asset["ICON_ASSET_LOCATION_STRONGHOLD"] = 'ui/icons/asset_brothers.png';
     this.mAssets.mMoneyAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_MONEY, 'is-money');
     this.mAssets.mFoodAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_FOOD, 'is-food');
     this.mAssets.mAmmoAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_AMMO, 'is-ammo');
     this.mAssets.mSuppliesAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_SUPPLIES, 'is-supplies');
     this.mAssets.mMedicineAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_MEDICINE, 'is-medicine');
     this.mAssets.mBrothersAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_BROTHERS, 'is-brothers');
-    this.mAssets.mRosterAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_ROSTER, 'is-roster');
-    this.mAssets.mBuildingAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_BUILDING, 'is-building');
-    this.mAssets.mLocationAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_LOCATION, 'is-location');
+    this.mAssets.mRosterAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_ROSTER_STRONGHOLD, 'is-roster');
+    this.mAssets.mBuildingAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_BUILDING_STRONGHOLD, 'is-building');
+    this.mAssets.mLocationAsset = this.createAssetDIV(this.mAssetContainer, Path.GFX + Asset.ICON_ASSET_LOCATION_STRONGHOLD, 'is-location');
 }
 
 
