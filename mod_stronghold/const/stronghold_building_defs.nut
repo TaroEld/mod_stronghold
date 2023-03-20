@@ -4,7 +4,7 @@
 		Name = "Tavern",
 		ID = "building.tavern",
 		Path = "tavern_building",
-		SouthPath = false,
+		SouthPath = "",
 		Description = "A large tavern filled with patrons from all over the lands, offering beverages, food and a lively atmosphere in which to share news and rumors.",
 		Requirements = []
 	},
@@ -13,7 +13,7 @@
 		Description = "A kennel where strong and fast dogs are bred for war.",
 		ID = "building.kennel",
 		Path = "kennel_building",
-		SouthPath = false,
+		SouthPath = "",
 		Requirements = []
 	},
 	Taxidermist = {
@@ -39,7 +39,7 @@
 		Description = "A meeting point for those of the fighting profession. Have your men train with and learn from experienced fighters here, so you can mold them faster into hardened mercenaries.",
 		ID = "building.training_hall",
 		Path = "training_hall_building",
-		SouthPath = false,
+		SouthPath = "",
 		Requirements = []
 	},
 	Alchemist = {
@@ -47,7 +47,7 @@
 		Description = "An alchemist offering exotic and quite dangerous contraptions for a tidy sum.",
 		ID = "building.alchemist",
 		Path = "alchemist_building",
-		SouthPath = false,
+		SouthPath = "",
 		Requirements = []
 	},
 	Weaponsmith = {
@@ -73,7 +73,7 @@
 		Description = "A fletcher offering all kinds of expertly crafted ranged weaponry.",
 		ID = "building.fletcher",
 		Path = "fletcher_building",
-		SouthPath = false,
+		SouthPath = "",
 		Requirements = []
 	},
 	Port = {
@@ -81,7 +81,7 @@
 		Description = "A harbor that serves both foreign trading ships and local fishermen. You\'ll likely be able to book passage by sea to other parts of the continent here.",
 		ID = "building.port",
 		Path = "port_building",
-		SouthPath = false,
+		SouthPath = "",
 		Requirements =
 		[{
 			Text = "Live next to the sea.",
@@ -93,7 +93,7 @@
 		Description = "The arena offers an opportunity to earn gold and fame in fights that are to the death, and in front of crowds that cheer for the most gruesome manner in which lives are dispatched.",
 		ID = "building.arena",
 		Path = "arena_building",
-		SouthPath = false,
+		SouthPath = "",
 		Requirements =
 		[{
 			Text = "Required base size: Stronghold (3/3).",
@@ -106,7 +106,7 @@
 		Description = "Customize the appearance of your men at the barber. Have their hair cut and their beards trimmed or buy dubious potions to lose weight.",
 		ID = "building.barber",
 		Path = "barber_building",
-		SouthPath = false,
+		SouthPath = "",
 		Requirements = []
 	},
 }
