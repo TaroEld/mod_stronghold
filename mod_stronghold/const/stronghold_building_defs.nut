@@ -112,9 +112,5 @@
 }
 foreach(buildingID, building in ::Stronghold.BuildingDefs)
 {
-	building.Requirements.push({
-		Text = "Price: " + ::Stronghold.Buildings[buildingID].Price * ::Stronghold.PriceMult,
-		IsValid = @(_town) this.World.Assets.getMoney() >= ::Stronghold.BuildingPrices[buildingID] * ::Stronghold.PriceMult
-	})
 	::MSU.Table.merge(building, ::Stronghold.Buildings[buildingID]);
 }
