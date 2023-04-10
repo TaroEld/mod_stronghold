@@ -1,6 +1,6 @@
 local gt = this.getroottable();
 gt.Stronghold <- {};
-::mods_registerMod("mod_stronghold", 1.27);
+::mods_registerMod("mod_stronghold", 1.28);
 ::mods_queue("mod_stronghold", ">mod_MSU", function()
 {	
 	
