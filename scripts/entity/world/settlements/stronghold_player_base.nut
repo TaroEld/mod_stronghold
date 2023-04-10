@@ -789,110 +789,23 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	
 	function onSerialize( _out )
 	{
+		this.m.Buildings.resize(6);
 		this.settlement.onSerialize(_out);
 		_out.writeU8(this.m.Size);
 		_out.writeBool(this.m.IsUpgrading);
-		
+		this.m.Buildings.resize(7);
+		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
+		this.m.Buildings[6].updateSprite();
 	}
-	
+
 	function onDeserialize( _in )
 	{
-		this.location.onDeserialize(_in);
-		this.m.IsActive = _in.readBool();
-		this.m.IsCoastal = _in.readBool();
-
-		if (_in.getMetaData().getVersion() >= 52)
-		{
-			this.m.LastPreload = _in.readF32();
-		}
-
-		this.m.LastShopUpdate = _in.readF32();
-		this.m.LastRosterUpdate = _in.readF32();
-		this.m.ShopSeed = _in.readI32();
-		this.m.RosterSeed = _in.readI32();
-		local x = _in.readI16();
-		local y = _in.readI16();
-
-		if (!(x == -1 && y == -1))
-		{
-			this.m.DeepOceanTile = this.World.getTile(x, y);
-		}
-
-		this.m.Buildings = [];
-		this.m.Buildings.resize(7, null);
-		local numBuildings = _in.readU8();
-
-		for( local i = 0; i < numBuildings; i = ++i )
-		{
-			local id = _in.readU32();
-
-			if (id != 0)
-			{
-				this.m.Buildings[i] = this.new(this.IO.scriptFilenameByHash(id));
-				this.m.Buildings[i].setSettlement(this);
-				this.m.Buildings[i].onDeserialize(_in);
-			}
-		}
-
-		if (this.m.IsCoastal && this.m.Buildings[3] != null && this.m.Buildings[3].getID() == "building.port")
-		{
-			this.m.UIBackgroundLeft = "ui/settlements/water_01";
-		}
-
-		local numSituations = _in.readU8();
-		this.m.Situations.resize(numSituations);
-
-		for( local i = 0; i < numSituations; i = ++i )
-		{
-			this.m.Situations[i] = this.new(this.IO.scriptFilenameByHash(_in.readU32()));
-			this.m.Situations[i].onDeserialize(_in);
-		}
-
-		this.m.Modifiers.reset();
-
-		foreach( s in this.m.Situations )
-		{
-			s.onUpdate(this.m.Modifiers);
-		}
-
-		local numProduce = _in.readU8();
-
-		for( local i = 0; i != numProduce; i = ++i )
-		{
-			this.m.ProduceImported.push(_in.readString());
-		}
-
-		local numConnectedTo = _in.readU8();
-
-		for( local i = 0; i != numConnectedTo; i = ++i )
-		{
-			this.m.ConnectedTo.push(_in.readU32());
-		}
-
-		local numConnectedToByRoads = _in.readU8();
-
-		for( local i = 0; i != numConnectedToByRoads; i = ++i )
-		{
-			this.m.ConnectedToByRoads.push(_in.readU32());
-		}
-
-		local numHouses = _in.readU8();
-
-		for( local i = 0; i != numHouses; i = ++i )
-		{
-			local x = _in.readI16();
-			local y = _in.readI16();
-			local v = _in.readU8();
-			this.m.HousesTiles.push({
-				X = x,
-				Y = y,
-				V = v
-			});
-		}
+		this.m.Buildings.resize(6);
+		this.settlement.onDeserialize(_in);
 		this.m.Size  = _in.readU8();
 		this.m.IsUpgrading = _in.readBool();
+		this.m.Buildings.resize(7);
 		this.updateTown();
 	}
-	
 });
 
