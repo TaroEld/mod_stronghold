@@ -294,7 +294,7 @@ StrongholdScreen.prototype.updateData = function(_data)
         }
         $.each(this.mModules, function(_key, _module)
         {
-        	if ($.inArray(typeID, _module.Module.mUpdateOn) != -1)
+        	if (_module.Module.mAlwaysUpdate === true || $.inArray(typeID, _module.Module.mUpdateOn) != -1)
         	{
         		_module.Module.reloadData();
         	}

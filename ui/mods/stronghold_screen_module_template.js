@@ -17,6 +17,7 @@ var StrongholdScreenModuleTemplate = function(_parent)
 
     this.mData = null;
     this.mModuleData = null;
+    this.mAlwaysUpdate = false;
     this.mUpdateOn = [];
 };
 
@@ -54,6 +55,8 @@ StrongholdScreenModuleTemplate.prototype.destroyDIV = function ()
     this.mContainer.empty();
     this.mContainer.remove();
     this.mContainer = null;
+    this.mData = null;
+    this.mModuleData = null;
 };
 
 StrongholdScreenModuleTemplate.prototype.show = function ()
