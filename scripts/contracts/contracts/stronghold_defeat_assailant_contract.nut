@@ -133,7 +133,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					this.World.Contracts.showActiveContract();
 				}
 					
-				else if (this.Contract.m.Target != null && !this.Contract.m.Target.isNull() && this.Contract.isPlayerAt(this.Contract.m.Target))
+				else if (this.Contract.m.Target != null && !this.Contract.m.Target.isNull() && this.getVecDistance(this.Contract.m.Target.getPos(), this.World.State.getPlayer().getPos()) <= 99)
 				{
 					this.Contract.onDestinationAttacked(this.Contract.m.Target, false);
 				}
