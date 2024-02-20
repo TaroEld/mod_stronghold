@@ -15,7 +15,7 @@
 	text-align: center;
 }
 
-.dropdown:disabled > .dropdown-text
+.dropdown[disabled] > .dropdown-text
 {
 	background-image: url("coui://gfx/ui/skin/custom_background_698_40_disabled.png");
 }

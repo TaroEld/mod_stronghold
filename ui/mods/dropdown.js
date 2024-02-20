@@ -14,8 +14,6 @@ var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default
 	// NOTE: you need to pass the _parentDiv that the dropdown gets attached to
 	// This is due do aciScrollBar
 	// The _parentDiv needs to be attached to the DOM!!!
-	// Wrap the array passed to addChildren in another array, like so : trigger("addChildren", [["a", "b", "c"]]);
-	// trigger("set") is a shorthand function. Pass the arguments wrapped into an array
 	// The maximum height of the element container is 20rem, but this can be changed via setting data("maxHeight") on the result
 	var result = $('<div class="dropdown"/>')
 		.addClass(_classes || "")
@@ -26,11 +24,10 @@ var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default
 		.append($('<div class="dropdown-container-scroll"/>'))
 		.appendTo(result)
 
-	result.on("addChildren", function(_event, _children)
+	result.addChildren = function(_children)
 	{
-		var $this = $(this);
-		var innerContainer = $this.find(".dropdown-container-scroll");
-		var outerContainer = $this.find(".dropdown-container");
+		var innerContainer = this.find(".dropdown-container-scroll");
+		var outerContainer = this.find(".dropdown-container");
 		var width = 175;
 		$.each(_children, function(_idx, _element)
 		{
@@ -61,47 +58,57 @@ var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default
 			})
 			width = Math.max(width, getWidthOfDropdownChild(_element.Name))
 		})
-		var newheight = Math.min($(this).data("maxHeight") || 20, innerContainer.children().length * 3) + "rem";
+		var newheight = Math.min(this.data("maxHeight") || 20, innerContainer.children().length * 3) + "rem";
 		outerContainer.css("height", newheight);
-		$this.width(width);
-	})
+		this.width(width);
+	}
 
-	result.on("setDefault", function(_event, _default)
+	result.setDefault = function(_default)
 	{
-		$(this).find(".dropdown-child").each(function()
+		this.find(".dropdown-child").each(function()
 		{
 			if($(this).data("Element") == _default)
 			{
 				$(this).click();
 			}
 		})
-	})
+	}
 
-	result.on("setCallback", function(_event, _function)
+	result.setCallback = function(_function)
 	{
-		$(this).data("callback", _function);
-	})
+		this.data("callback", _function);
+	}
 
-	result.on("removeChildren", function()
+	result.removeChildren = function()
 	{
-		$(this).find(".dropdown-container-scroll").empty();
-	})
+		this.find(".dropdown-container-scroll").empty();
+	}
 
-	result.on("set", function(_event, _children, _default, _callback)
+	result.get = function()
 	{
-		var $this = $(this);
-		$this.trigger("removeChildren");
+		return this.data("activeElement");
+	}
+
+	result.set = function(_children, _default, _callback)
+	{
+		this.attr('disabled', false);
+		this.removeChildren();
 		if (_callback !== undefined && _callback !== null)
-			$this.trigger("setCallback", _callback)
+			this.setCallback(_callback)
 
 		if (_children !== undefined && _children !== null)
-			$this.trigger("addChildren", [_children])
+			this.addChildren(_children)
 
 		if (_default !== undefined && _default !== null)
-			$this.trigger("setDefault", _default)
-	})
+			this.setDefault(_default)
 
-	result.trigger("set", [_childrenArray, _default, _onChangeCallback]);
+		if ((_children === undefined || _children.length == 0) || this.get() === undefined)
+		{
+    		this.attr('disabled', true);
+		}
+	}
+
+	result.set(_childrenArray, _default, _onChangeCallback);
 
 	// These must be last!
 	_parentDiv.append(result);
