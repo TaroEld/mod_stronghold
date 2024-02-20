@@ -58,6 +58,8 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 	this.mRoadTargetDropdown = createDropDownMenu(this.mRoadTarget, "stronghold-padding-left");
 	this.mRoadTargetDropdown.data("maxHeight", 30);
 
+	this.mRoadFactionText = Stronghold.getTextDiv()
+		.appendTo(leftContent);
 	// this.mRoadDistance = leftContent.appendRow();
 	this.mRoadDistanceText = Stronghold.getTextDiv()
 		.appendTo(leftContent);
@@ -85,6 +87,7 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 	            break;
 	    }
 	}, this));
+	this.RoadTownImg.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Misc.RoadZoom"})
 
 
 	this.mRoadFooterContainer = this.mBuildRoadContentContainer.appendRow(null, "stronghold-flex-center");
@@ -96,14 +99,15 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 
 StrongholdScreenMiscModule.prototype.loadBuildRoadData = function()
 {
-	this.mRoadTargetDropdown.trigger("set", [this.mModuleData.BuildRoad, this.mModuleData.BuildRoad[0], $.proxy(function(_element)
+	this.mRoadTargetDropdown.set(this.mModuleData.BuildRoad, this.mModuleData.BuildRoad[0], $.proxy(function(_element)
 	{
 		this.setRoadElement(_element);
-	}, this)]);
+	}, this));
 }
 
 StrongholdScreenMiscModule.prototype.setRoadElement = function(_element)
 {
+	this.mRoadFactionText.text("Faction: " + _element.FactionName);
 	this.mRoadDistanceText.text("Distance (by air): " + _element.Score);
 	this.mRoadPiecesText.text("Segments: " + _element.Segments)
 	this.mRoadCostText.text("Price: " + _element.Cost);
@@ -115,7 +119,7 @@ StrongholdScreenMiscModule.prototype.setRoadElement = function(_element)
 StrongholdScreenMiscModule.prototype.notifyBackendBuildRoad = function()
 {
 	var self = this;
-	var data = this.mRoadTargetDropdown.data("activeElement");
+	var data = this.mRoadTargetDropdown.get();
 	SQ.call(this.mSQHandle, 'onBuildRoad', data, function(_ret){
 	});
 }
@@ -157,6 +161,7 @@ StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 	            break;
 	    }
 	}, this));
+
 	this.mGiftsFactionImage = $('<img/>')
 		.appendTo(this.mGiftsFactionImageContainer)
 
@@ -181,10 +186,10 @@ StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
 {
 	var giftText = this.getModuleText().SendGifts;
-	this.mGiftsTargetDropdown.trigger("set", [this.mModuleData.SendGifts.Factions, this.mModuleData.SendGifts.Factions[0], $.proxy(function(_element)
+	this.mGiftsTargetDropdown.set(this.mModuleData.SendGifts.Factions, this.mModuleData.SendGifts.Factions[0], $.proxy(function(_element)
 	{
 		this.setGiftElement(_element);
-	}, this)]);
+	}, this));
 
 	this.mGiftRequirementsTable.empty();
 
@@ -230,7 +235,7 @@ StrongholdScreenMiscModule.prototype.setGiftElement = function(_element)
 StrongholdScreenMiscModule.prototype.notifyBackendSendGift = function()
 {
 	var self = this;
-	var data = this.mGiftsTargetDropdown.data("activeElement");
+	var data = this.mGiftsTargetDropdown.get();
 	data.ReputationGain = this.mModuleData.SendGifts.ReputationGain;
 	SQ.call(this.mSQHandle, 'onSendGift', data, function(_ret){
 		var text = _ret === true ? self.getModuleText().SendGifts.OnSend.replace("{town}", self.mGiftsTargetDropdown.data("activeElement").SettlementName) : Stronghold.Text.Error;

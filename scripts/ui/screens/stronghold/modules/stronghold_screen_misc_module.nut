@@ -53,6 +53,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 				option = {
 					Score = dist,
 					Name = settlement.getName(),
+					FactionName = settlement.getOwner().getName(),
 					ID = settlement.getID(),
 					Segments = cost,
 					Cost = cost * ::Stronghold.PriceMult,
