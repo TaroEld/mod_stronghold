@@ -6,6 +6,7 @@
 ::mods_registerMod(::Stronghold.ID, ::Stronghold.Version, ::Stronghold.Name);
 ::mods_queue(::Stronghold.ID, "mod_msu", function()
 {	
+	::Stronghold.Mod <- ::MSU.Class.Mod(::Stronghold.ID, ::Stronghold.Version, ::Stronghold.Name);
 	::mods_registerJS("dropdown.js");
 	::mods_registerCSS("dropdown.css");
 	::mods_registerJS("mod_stronghold.js");

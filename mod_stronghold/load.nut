@@ -11,3 +11,4 @@ foreach (folder in folders)
 		::include(file);
 	}
 }
+::include(::Stronghold.ID + "/tooltips.nut");
