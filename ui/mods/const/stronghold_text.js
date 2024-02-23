@@ -23,6 +23,7 @@ Stronghold.Text = {
 	MainModuleModule : {},
 	MiscModule : {
 		BuildRoad : {
+			Title : "Build a road",
 			Description : "Building a road to the road network allows your caravans to travel and your patrols to roam. You will also be able to send gifts to connected factions.",
 			BuildTo : "Build Road to: "
 		},
@@ -41,25 +42,61 @@ Stronghold.Text = {
 			OnSend : "The caravan is traveling to {town}"
 		},
 		TrainBrother : {
-			Description : "Provide focused training to one of your recruits",
-			Invalid : "Nobody here can provide training beyond the services of a Training Hall."
+			Title : "Train a brother",
+			Description : "Provide focused training to one of your recruits which exceeds the skills of a Training Hall.",
+			Invalid : "Nobody here can provide training beyond the services of a Training Hall.",
+			Requirements : {
+				FoundTrainer : "Find someone that can provide better training than a mere Training Hall.",
+				Price : "Have sufficient money ({price})",
+				ValidBrother : "Have at least one brother below level 11 that is not already under training."
+			},
+			ConfirmButton : "Train this brother",
+			ChooseButton : "Choose brother"
 		},
 		BuyWater : {
+			Title : "Buy a Water Skin",
 			Description : "Buy a Water Skin with mythical properties.",
-			Invalid : "You ask the learned men if they could craft you a mythical Water of Life. Unfortunately, the recipe has been lost to time. Perhaps you can recover it."
+			Requirements : {
+				Price : "Have sufficient money ({price})",
+				Unlocked : "Recovered the recipe to create a mythical Water of Life."
+			},
+			ConfirmButton : "Buy the Water Skin",
 		},
 		HireMercenaries : {
-			Description : "Hire a group of mercenaries to follow you in your travels.",
-			Invalid : "There are no mercenary companies available for hire."
+			Title : "Hire Mercenaries",
+			Description : "Hire a group of mercenaries to follow you in your travels. They will follow your party and join in any fights.",
+			Requirements : {
+				Price : "Have sufficient money ({price})",
+				Unlocked : "You have attracted mercenary companies to hire.",
+				NoMercenaries : "Currently have no mercenaries following you."
+			},
+			ConfirmButton : "Hire the mercenaries",
 		},
+		RemoveBase : {
+			Title : "Remove your base",
+			Description : "Remove this base and the connected Hamlet, if it exists. This action cannot be undone.",
+			Requirements: {
+				NoContract : "You can't have an active contract.",
+				NotUpgrading : "You can't be upgrading your base.",
+			},
+			Warning : "LAST WARNING! Are you sure you want to remove your base?"
+		}
 	},
 	RosterModule : {},
 	StashModule : {},
-	StructureModule : {},
-	BuildingsModule : {},
+	StructureModule : {
+		Build : "Build",
+		Remove : "Remove",
+	},
+	BuildingsModule : {
+		Build : "Build",
+		Remove : "Remove",
+	},
 	LocationsModule : {
 		MaxTotal : "Maximum amount of locations for this base level: {0} / {1}",
 		MaxType : "Maximum amount of locations of this type: {0} / {1}",
+		Build : "Build",
+		Remove : "Remove",
 	},
 	VisualsModule : {},
 	UpgradeModule : {
@@ -163,6 +200,8 @@ Stronghold.Text = {
 		},
 	},
 	Locations : {
+		Build : "Build",
+		Remove : "Remove",
 		Workshop : {
 			Name : "Workshop",
 			Path : "workshop_location",
@@ -213,7 +252,7 @@ Stronghold.Text = {
 		Herbalists_Grove : {
 			Name : "Herbalists Grove",
 			Path : "herbalists_grove_location",
-			Description : "The wise women of the herbalists grove know how to treat wounds with special and curious methods. Hitpoints regenerate faster when around the base.<br>They will also gather herbal medicine for you. You can expect to receive {0} extra medicine every day, and your warehouse will be able to store {1} more.",
+			Description : "The wise women of the herbalists grove know how to treat wounds with special and curious methods. Hitpoints regenerate faster when around the base.<br>You can also expect to receive {0} extra medicine every day, and your warehouse will be able to store {1} more.",
 			getDescription : function(_element)
 			{
 				return Stronghold.Text.format(this.Description,	_element.DailyIncome, _element.MaxItemSlots)

@@ -43,9 +43,10 @@ StrongholdScreenMiscModule.prototype.createDIV = function (_parentDiv)
 
 StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 {
-	this.mBuildRoadContentContainer = this.mBuildRoadContainer.appendRow("Build a road");
+	var text = this.getModuleText().BuildRoad;
+	this.mBuildRoadContentContainer = this.mBuildRoadContainer.appendRow(text.Title);
 
-	Stronghold.getTextDiv(this.getModuleText().BuildRoad.Description)
+	Stronghold.getTextDiv(text.Description)
 		.appendTo(this.mBuildRoadContentContainer)
 
 	var leftContent = $('<div class="stronghold-half-width"/>').appendTo(this.mBuildRoadContentContainer);
@@ -90,11 +91,11 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 	this.RoadTownImg.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Misc.RoadZoom"})
 
 
-	this.mRoadFooterContainer = this.mBuildRoadContentContainer.appendRow(null, "stronghold-flex-center");
-	this.mRoadButton = this.mRoadFooterContainer.createTextButton("Build Road", $.proxy(function()
+	var footer = this.mBuildRoadContentContainer.appendRow(null, "stronghold-flex-center stronghold-row-background");
+	this.mRoadButton = footer.createTextButton(text.Title, $.proxy(function()
 	{
 	    this.notifyBackendBuildRoad();
-	}, this), "stronghold-generic-element-container", 1)
+	}, this), "stronghold-button-4", 4)
 }
 
 StrongholdScreenMiscModule.prototype.loadBuildRoadData = function()
@@ -124,10 +125,13 @@ StrongholdScreenMiscModule.prototype.notifyBackendBuildRoad = function()
 	});
 }
 
+// Send Gifts
+
 StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 {
-	this.mSendGiftsContentContainer = this.mSendGiftsContainer.appendRow("Send Gifts");
-	Stronghold.getTextSpan(this.getModuleText().SendGifts.Description)
+	var text = this.getModuleText().SendGifts;
+	this.mSendGiftsContentContainer = this.mSendGiftsContainer.appendRow(text.Title);
+	Stronghold.getTextSpan(text.Description)
 		.appendTo(this.mSendGiftsContentContainer)
 
 
@@ -140,7 +144,7 @@ StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 	this.mGiftRequirementsTable = $("<table>")
 		.appendTo(requirementsContainer);
 
-	Stronghold.getTextSpanSmall(this.getModuleText().SendGifts.SendTo)
+	Stronghold.getTextSpanSmall(text.SendTo)
 		.appendTo(leftContent)
 
 	this.mGiftsTargetDropdown = createDropDownMenu(leftContent, "stronghold-padding-left")
@@ -176,11 +180,11 @@ StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 		.appendTo(this.mGiftsDetails)
 
 
-	this.mGiftsFooterContainer = this.mSendGiftsContentContainer.appendRow(null, "stronghold-flex-center");
-	this.mGiftsButton = this.mGiftsFooterContainer.createTextButton("Send Gifts", $.proxy(function()
+	var footer = this.mSendGiftsContentContainer.appendRow(null, "stronghold-flex-center stronghold-row-background");
+	this.mGiftsButton = footer.createTextButton(text.Title, $.proxy(function()
 	{
 	    this.notifyBackendSendGift();
-	}, this), "stronghold-generic-element-container", 1)
+	}, this), "stronghold-button-4", 4)
 }
 
 StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
@@ -250,58 +254,252 @@ StrongholdScreenMiscModule.prototype.notifyBackendSendGift = function()
 	});
 }
 
+
+
+// End Send Gifts
+
+// Train Brother
+
 StrongholdScreenMiscModule.prototype.createTrainBrotherContent = function ()
 {
-	this.mTrainBrotherContentContainer = this.mTrainBrotherContainer.appendRow("Train Brother");
-	this.mTrainBrotherDescriptionContainer = $("<div/>");
-	this.mTrainBrotherDescriptionText = Stronghold.getTextSpan()
+	var self = this;
+	var text = this.getModuleText().TrainBrother;
+	this.mTrainBrotherContentContainer = this.mTrainBrotherContainer.appendRow(text.Title);
+	this.mTrainBrotherDescriptionText = Stronghold.getTextDiv(text.Description)
 		.appendTo(this.mTrainBrotherContentContainer)
+		.css("width", "100%")
+
+	//Left Side
+	var leftContent = $('<div class="stronghold-half-width"/>')
+		.appendTo(this.mTrainBrotherContentContainer)
+	leftContent.appendRow("Brother", null, true);
+	this.mTrainChooseBrotherButton = leftContent.createTextButton(text.ChooseButton, function()
+	{
+	    self.createPopup(text.ChooseButton, null, null, 'train-brother-popup');
+	    var mainContainer =  $('<div class="train-brother-popup-main"/>')
+	    self.mPopupDialog.addPopupDialogContent(mainContainer); //just attach it to dom for list...
+	    self.createTrainBrotherPopupContent(mainContainer)
+		self.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
+		{
+		    self.destroyPopup();
+		});
+		mainContainer.find(".train-brother-popup-entry").click(function(){
+			self.selectBrotherToTrain($(this).data("entry"));
+			self.destroyPopup();
+		})
+	}, "stronghold-button-4", 4)
+
+	var imgContainer = $('<div class = "train-brother-img-container">')
+		.appendTo(leftContent)
+	this.mTrainBrotherImg = $('<img class="train-brother-img"/>')
+		.appendTo(imgContainer)
+	this.mTrainBrotherName = Stronghold.getTextDiv()
+		.appendTo(leftContent)
+	this.mTrainBrotherLevel = Stronghold.getTextDiv()
+		.appendTo(leftContent)
+
+
+	//Right Side
+	var rightContent = $('<div class="stronghold-half-width"/>')
+		.appendTo(this.mTrainBrotherContentContainer)
+	var requirementsContainer = rightContent.appendRow(Stronghold.Text.Requirements, null, true);
+	this.mTrainBrotherRequirementsTable = $("<table>")
+		.appendTo(requirementsContainer);
+
+	var footer = this.mTrainBrotherContentContainer.appendRow(null, "stronghold-flex-center stronghold-row-background");
+	this.mTrainBrotherConfirmButton = footer.createTextButton(text.ConfirmButton, function()
+		{
+	    self.notifyBackendTrainBrother();
+	}, "stronghold-button-4", 4) ;
+}
+
+StrongholdScreenMiscModule.prototype.createTrainBrotherPopupContent = function (_parent)
+{
+	var self = this;
+	var scrollContainer = $('<div class=train-brother-popup-scroll/>')
+		.appendTo(_parent);
+
+	$.each(this.mModuleData.TrainBrother.ValidBrothers, function(_idx, _entry){
+		var entryContainer = $('<div class="train-brother-popup-entry"/>')
+			.appendTo(scrollContainer)
+		entryContainer.data("entry", _entry)
+		$('<img class="st-portrait"/>')
+			.appendTo(entryContainer)
+			.attr("src", Path.PROCEDURAL + _entry.ImagePath)
+		entryContainer.append(Stronghold.getTextDiv(_entry.Name))
+		entryContainer.append(Stronghold.getTextDiv("Level: " + _entry.Level))
+		// selection
+		$('<img class="train-brother-popup-entry-selection display-none"/>')
+			.attr('src', Path.GFX + Stronghold.Visuals.SelectionGoldImagePath)
+			.appendTo(entryContainer)
+	})
+	_parent.aciScrollBar({
+         delta: 1,
+         lineDelay: 0,
+         lineTimer: 0,
+         pageDelay: 0,
+         pageTimer: 0,
+         bindKeyboard: false,
+         resizable: false,
+         smoothScroll: false
+   });
+}
+
+StrongholdScreenMiscModule.prototype.selectBrotherToTrain = function(_entry)
+{
+	this.mTrainBrotherImg.attr("src", Path.PROCEDURAL + _entry.ImagePath);
+	this.mTrainBrotherImg.show();
+	this.mTrainBrotherName.text(_entry.Name);
+	this.mTrainBrotherLevel.text("Level: " + _entry.Level);
+	this.mTrainBrotherID = _entry.ID;
+	this.mTrainBrotherConfirmButton.attr("disabled", false);
 }
 
 StrongholdScreenMiscModule.prototype.loadTrainBrotherData = function()
 {
-	if (!this.mModuleData.TrainBrother.IsUnlocked)
-	{
-		this.mTrainBrotherDescriptionText.text(this.getModuleText().TrainBrother.Invalid)
-		return;
-	}
-	this.mTrainBrotherDescriptionText.text(this.getModuleText().TrainBrother.Description)
+
+	var text = this.getModuleText().TrainBrother;
+	this.mTrainBrotherDescriptionText.text(text.Description);
+	this.mTrainBrotherImg.hide();
+	this.mTrainBrotherName.text("");
+	this.mTrainBrotherLevel.text("");
+	this.mTrainBrotherID = -1;
+	this.mTrainBrotherConfirmButton.attr("disabled", true);
+
+	this.mTrainBrotherRequirementsTable.empty()
+	this.addRequirementRow(this.mTrainBrotherRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.FoundTrainer), this.mModuleData.TrainBrother.Requirements.FoundTrainer);
+	this.addRequirementRow(this.mTrainBrotherRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Price.replace("{price}", this.mModuleData.TrainBrother.Price)), this.mModuleData.TrainBrother.Requirements.Price);
+	this.addRequirementRow(this.mTrainBrotherRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.ValidBrother), this.mModuleData.TrainBrother.Requirements.ValidBrother);
+	this.mTrainChooseBrotherButton.attr("disabled", !this.areRequirementsFulfilled(this.mTrainBrotherRequirementsTable))
 }
+
+StrongholdScreenMiscModule.prototype.notifyBackendTrainBrother = function()
+{
+	SQ.call(this.mSQHandle, 'onTrainBrother', this.mTrainBrotherID);
+}
+
+// End train brother
+
+// Buy water
 
 StrongholdScreenMiscModule.prototype.createBuyWaterContent = function ()
 {
-	this.mBuyWaterContentContainer = this.mBuyWaterContainer.appendRow("Buy Water");
-	this.mBuyWaterDescriptionContainer = $("<div/>");
-	this.mBuyWaterDescriptionText = Stronghold.getTextSpan()
-		.appendTo(this.mBuyWaterContentContainer)
+	var text = this.getModuleText().BuyWater;
+	this.mBuyWaterContentContainer = this.mBuyWaterContainer.appendRow(text.Title);
+	this.mBuyWaterDescriptionText = Stronghold.getTextSpan(text.Description)
+		.appendTo(this.mBuyWaterContentContainer);
+	var requirementsContainer = this.mBuyWaterContentContainer.appendRow(Stronghold.Text.Requirements, null, true);
+	this.mBuyWaterRequirementsTable = $("<table>")
+		.appendTo(requirementsContainer);
+	var footer = this.mBuyWaterContentContainer.appendRow(null, "stronghold-flex-center stronghold-row-background");
+	this.mBuyWaterConfirmButton = footer.createTextButton(text.ConfirmButton, function()
+	{
+	    self.notifyBackendBuyWater();
+	}, "stronghold-button-4", 4)
 }
 
 StrongholdScreenMiscModule.prototype.loadBuyWaterData = function()
 {
-	if (!this.mModuleData.BuyWater.IsUnlocked)
-	{
-		this.mBuyWaterDescriptionText.text(this.getModuleText().BuyWater.Invalid)
-		return;
-	}
-	this.mBuyWaterDescriptionText.text(this.getModuleText().BuyWater.Description)
+	var text = this.getModuleText().BuyWater;
+	this.mBuyWaterRequirementsTable.empty()
+	this.addRequirementRow(this.mBuyWaterRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Price.replace("{price}", this.mModuleData.BuyWater.Price)), this.mModuleData.BuyWater.Requirements.Price);
+	this.addRequirementRow(this.mBuyWaterRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Unlocked), this.mModuleData.BuyWater.Requirements.Unlocked);
+	this.mBuyWaterConfirmButton.attr("disabled", !this.areRequirementsFulfilled(this.mBuyWaterRequirementsTable))
 }
+
+StrongholdScreenMiscModule.prototype.notifyBackendBuyWater = function()
+{
+	SQ.call(this.mSQHandle, 'onWaterSkinBought');
+}
+
+// End Buy Water
+
+// Hire Mercenaries
 
 StrongholdScreenMiscModule.prototype.createHireMercenariesContent = function ()
 {
-	this.mHireMercenariesContentContainer = this.mHireMercenariesContainer.appendRow("Hire Mercenaries");
-	this.mHireMercenariesDescriptionContainer = $("<div/>");
-	this.mHireMercenariesDescriptionText = Stronghold.getTextSpan()
+	var text = this.getModuleText().HireMercenaries;
+	this.mHireMercenariesContentContainer = this.mHireMercenariesContainer.appendRow(text.Title);
+	this.mHireMercenariesDescriptionText = Stronghold.getTextSpan(text.Description)
 		.appendTo(this.mHireMercenariesContentContainer)
+	var requirementsContainer = this.mHireMercenariesContentContainer.appendRow(Stronghold.Text.Requirements, null, true);
+	this.mHireMercenariesRequirementsTable = $("<table>")
+		.appendTo(requirementsContainer);
+	var footer = this.mHireMercenariesContentContainer.appendRow(null, "stronghold-flex-center stronghold-row-background");
+	this.mHireMercenariesConfirmButton = footer.createTextButton(text.ConfirmButton, function()
+	{
+	    self.notifyBackendHireMercenaries();
+	}, "stronghold-button-4", 4)
 }
 
 StrongholdScreenMiscModule.prototype.loadHireMercenariesData = function()
 {
-	if (!this.mModuleData.HireMercenaries.IsUnlocked)
+	var text = this.getModuleText().HireMercenaries;
+	this.mHireMercenariesRequirementsTable.empty()
+	this.addRequirementRow(this.mHireMercenariesRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Unlocked), this.mModuleData.HireMercenaries.Requirements.Unlocked);
+	this.addRequirementRow(this.mHireMercenariesRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.NoMercenaries), this.mModuleData.HireMercenaries.Requirements.NoMercenaries);
+	this.addRequirementRow(this.mHireMercenariesRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Price.replace("{price}", this.mModuleData.HireMercenaries.Price)), this.mModuleData.HireMercenaries.Requirements.Price);
+	this.mHireMercenariesConfirmButton.attr("disabled", !this.areRequirementsFulfilled(this.mHireMercenariesRequirementsTable))
+}
+
+StrongholdScreenMiscModule.prototype.notifyBackendHireMercenaries = function()
+{
+	SQ.call(this.mSQHandle, 'onHireMercenaries');
+}
+
+// End Hire Mercenaries
+
+
+// Remove base
+
+StrongholdScreenMiscModule.prototype.createRemoveBaseContent = function()
+{
+	var self = this;
+	var text = this.getModuleText().RemoveBase;
+	this.mRemoveBaseContentContainer = this.mRemoveBaseContainer.appendRow(text.Title);
+	this.mRemoveBaseDescriptionText = Stronghold.getTextSpan()
+		.appendTo(this.mRemoveBaseContentContainer)
+		.text(text.Description)
+	var requirementsContainer = this.mRemoveBaseContentContainer.appendRow(Stronghold.Text.Requirements, null, true);
+	this.mRemoveBaseRequirementsTable = $("<table>")
+		.appendTo(requirementsContainer);
+
+
+	var footer = this.mRemoveBaseContentContainer.appendRow(null, "stronghold-flex-center stronghold-row-background");
+	this.mRemoveBaseButton = footer.createTextButton(text.Title, function()
 	{
-		this.mHireMercenariesDescriptionText.text(this.getModuleText().HireMercenaries.Invalid)
-		return;
-	}
-	this.mHireMercenariesDescriptionText.text(this.getModuleText().HireMercenaries.Description)
+	    self.createPopup(text.Title, null, null, 'change-name-and-title-popup');
+	    self.mPopupDialog.addPopupDialogContent(Stronghold.getTextDiv(text.Warning))
+		self.mPopupDialog.addPopupDialogOkButton(function (_dialog)
+		{
+		    self.destroyPopup();
+		    self.notifyBackEndRemoveBase();
+		});
+		self.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
+		{
+		    self.destroyPopup();
+		});
+	}, "stronghold-button-4", 4)
+}
+
+StrongholdScreenMiscModule.prototype.loadRemoveBaseData = function()
+{
+	var text = this.getModuleText().RemoveBase;
+	this.mRemoveBaseRequirementsTable.empty()
+	this.addRequirementRow(this.mRemoveBaseRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.NoContract), this.mModuleData.RemoveBase.NoContract);
+	this.addRequirementRow(this.mRemoveBaseRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.NotUpgrading), this.mModuleData.RemoveBase.NotUpgrading);
+	this.mRemoveBaseButton.attr("disabled", !this.areRequirementsFulfilled(this.mRemoveBaseRequirementsTable))
+}
+
+StrongholdScreenMiscModule.prototype.notifyBackEndRemoveBase = function()
+{
+	SQ.call(this.mSQHandle, 'onRemoveBase');
+}
+
+
+StrongholdScreenMiscModule.prototype.zoomToTargetCity = function(_townID)
+{
+	 SQ.call(this.mSQHandle, 'onZoomToTargetCity', _townID);
 }
 
 StrongholdScreenMiscModule.prototype.loadFromData = function()
@@ -316,19 +514,4 @@ StrongholdScreenMiscModule.prototype.loadFromData = function()
 	this.loadBuyWaterData();
 	this.loadHireMercenariesData();
 	this.loadRemoveBaseData();
-}
-
-StrongholdScreenMiscModule.prototype.createRemoveBaseContent = function()
-{
-
-}
-
-StrongholdScreenMiscModule.prototype.loadRemoveBaseData = function()
-{
-
-}
-
-StrongholdScreenMiscModule.prototype.zoomToTargetCity = function(_townID)
-{
-	 SQ.call(this.mSQHandle, 'onZoomToTargetCity', _townID);
 }

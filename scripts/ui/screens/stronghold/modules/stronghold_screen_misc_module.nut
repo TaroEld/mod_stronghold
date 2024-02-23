@@ -275,6 +275,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		c.addOrder(move)
 		c.addOrder(unload)
 		c.addOrder(despawn)
+		this.updateData(["Assets", "MiscModule"]);
 		return true;
 	}
 
@@ -303,64 +304,174 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 	{
 		// TrainBrother
 		local ret = {
-			IsUnlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Teacher"),
-			ValidBrothers = [],
+			Requirements = {
+				FoundTrainer = this.Stronghold.getPlayerFaction().m.Flags.get("Teacher"),
+				Price = (::Stronghold.TrainerPrice * ::Stronghold.PriceMult) <= this.World.Assets.getMoney(),
+				ValidBrother = null //later
+			}
 			Price = ::Stronghold.TrainerPrice * ::Stronghold.PriceMult,
+			ValidBrothers = []
 		};
-		if (!ret.IsUnlocked)
-			return ret;
-
 		local roster = [];
 		roster.extend(this.World.getPlayerRoster().getAll());
-		roster.extend(this.getTown().getLocalRoster());
+		roster.extend(this.getTown().getLocalRoster().getAll());
 		roster = roster.filter(function(idx, bro){
 			return bro != null && bro.getLevel() < 11 && !bro.getSkills().hasSkill("effects.trained")
 		});
 		foreach (bro in roster)
 		{
-			ret.ValidBrothers.push(
-			{
+			local uiData = {
 				Name = bro.getName(),
-				ID = bro.getID()
-			})
+				ID = bro.getID(),
+				Level = bro.getLevel(),
+				ImagePath = bro.getImagePath(),
+				ImageOffsetX = bro.getImageOffsetX(),
+				ImageOffsetY = bro.getImageOffsetY(),
+			}
+			ret.ValidBrothers.push(uiData)
 		}
-
+		ret.Requirements.ValidBrother = ret.ValidBrothers.len() > 0;
 		return ret;
 	}
+
+	function onTrainBrother(_entityID)
+	{
+		local bro = ::Tactical.getEntityByID(_entityID);
+		local effect = this.new("scripts/skills/effects_world/new_trained_effect");
+		effect.m.Duration = 10;
+		effect.m.XPGainMult = 1.5;
+		effect.m.Icon = "skills/status_effect_75.png";
+		bro.getSkills().add(effect);
+		this.World.Assets.addMoney(-(::Stronghold.TrainerPrice * ::Stronghold.PriceMult));
+		this.updateData(["Assets", "MiscModule"]);
+		return true;
+	}
+
+
 
 	function getWaterUIData()
 	{
 		local ret = {
-			IsUnlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Waterskin"),
-			Price = ::Stronghold.WaterPrice * ::Stronghold.PriceMult,
+			Requirements =
+			{
+				Unlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Waterskin"),
+				Price = ::Stronghold.WaterPrice * ::Stronghold.PriceMult <= this.World.Assets.getMoney(),
+			},
+			Price = ::Stronghold.WaterPrice * ::Stronghold.PriceMult
 		};
-		if (!ret.IsUnlocked)
-			return ret;
 		return ret;
 	}
+
+	function onWaterSkinBought()
+	{
+		this.World.Assets.getStash().makeEmptySlots(1);
+		local item = this.new("scripts/items/special/fountain_of_youth_item");
+		this.World.Assets.getStash().add(item);
+		this.updateData(["Assets", "MiscModule"]);
+	}
+
+	// Mercenaries
 
 	function getMercenariesUIData()
 	{
+
 		local ret = {
-			IsUnlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Mercenaries"),
-			AlreadyHasMercenaries = false,
-			Price = ::Stronghold.MercenaryPrice * ::Stronghold.PriceMult,
+			Requirements =
+			{
+				Unlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Mercenaries"),
+				NoMercenaries = true,
+				Price = ::Stronghold.MercenaryPrice * ::Stronghold.PriceMult <= this.World.Assets.getMoney(),
+			},
+			Price = ::Stronghold.MercenaryPrice * ::Stronghold.PriceMult
 		};
-		if (!ret.IsUnlocked)
-			return ret;
-
+		foreach ( unit in this.Stronghold.getPlayerFaction().m.Units){
+			if (unit.getFlags().get("Stronghold_Mercenaries")){
+				ret.Requirements.NoMercenaries = false;
+				break;
+			}
+		}
 		return ret;
 	}
 
-	function getRemoveBaseUIData()
+	function onHireMercenaries()
 	{
-		local ret = {};
-		return ret;
+		local playerBase = this.getTown();
+		local playerFaction = this.Stronghold.getPlayerFaction();
+		local mercenary_size = 200
+		mercenary_size += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+
+		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
+		party.getSprite("body").setBrush("figure_mercenary_01");
+		party.setDescription("A band of mercenaries following you around.");
+		party.getFlags().set("Stronghold_Mercenaries", true);
+		party.setFootprintType(this.Const.World.FootprintsType.CityState);
+		party.setMovementSpeed(150)
+		local c = party.getController();
+		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
+		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
+		local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
+		follow.setDuration(7);
+		c.addOrder(follow);
+		this.updateData(["Assets", "MiscModule"]);
 	}
+
+
 
 
 	function onZoomToTargetCity(_townID)
 	{
 		this.World.getCamera().moveTo(this.World.getEntityByID(_townID));
+	}
+
+	function onMercenariesHired()
+	{
+		local playerBase = this.getTown()
+		local playerFaction = this.Stronghold.getPlayerFaction();
+		local mercenary_size = 200
+		mercenary_size += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+
+		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
+		party.getSprite("body").setBrush("figure_mercenary_01");
+		party.setDescription("A band of mercenaries following you around.");
+		party.getFlags().set("Stronghold_Mercenaries", true);
+		party.setFootprintType(this.Const.World.FootprintsType.CityState);
+		party.setMovementSpeed(150)
+		local c = party.getController();
+		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
+		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
+		local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
+		follow.setDuration(7);
+		c.addOrder(follow);
+
+	}
+
+	function getRemoveBaseUIData()
+	{
+		local ret = {
+			NotUpgrading = !this.getTown().isUpgrading(),
+			NoContract = this.World.Contracts.getActiveContract() == null
+		};
+		return ret;
+	}
+
+	function onRemoveBase()
+	{
+		this.World.State.m.MenuStack.pop();
+		this.removeBase();
+	}
+
+	function removeBase()
+	{
+		local playerFaction = this.Stronghold.getPlayerFaction()
+		local contracts = playerFaction.getContracts()
+		foreach (contract in contracts)
+		{
+			this.World.Contracts.removeContract(contract)
+		}
+		local toRemove = this.getTown()
+		if ("getHamlet" in toRemove && toRemove.getHamlet() != false){
+			toRemove.getHamlet().fadeOutAndDie(true)
+		}
+		toRemove.fadeOutAndDie(true)
 	}
 })
