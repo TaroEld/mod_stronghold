@@ -18,6 +18,7 @@ StrongholdScreenStructuresModule.prototype.createDIV = function (_parentDiv)
 {
     StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     var self = this;
+    var text = this.getModuleText();
 
     this.mContentContainer.addClass("structures-module");
     this.mStructuresRow = this.mContentContainer.appendRow(null, "structure-row gold-line-bottom");
@@ -30,17 +31,18 @@ StrongholdScreenStructuresModule.prototype.createDIV = function (_parentDiv)
     activeStructureImageContainer.append(this.mActiveStructureImage);
     this.mActiveStructureTextContainer = $('<div class="active-structure-text-container"/>');
     this.mDescriptionRow.append(this.mActiveStructureTextContainer)
-    this.mActiveStructureDescription = this.mActiveStructureTextContainer.appendRow(null, "text-font-normal font-style-italic font-bottom-shadow font-color-subtitle")
+    var scroll = $('<div/>').appendTo(this.mActiveStructureTextContainer)
+    this.mActiveStructureDescription = scroll.appendRow(null, "text-font-medium font-style-italic font-bottom-shadow font-color-subtitle")
 
-    var activeStructureRequirements = this.mActiveStructureTextContainer.appendRow(Stronghold.Text.Requirements);
+    var activeStructureRequirements = scroll.appendRow(Stronghold.Text.Requirements);
     this.mActiveStructureRequirementsTable = $("<table>").appendTo(activeStructureRequirements);
 
     this.mFooterRow = this.mContentContainer.appendRow(null, "footer-button-bar");
-    this.mAddStructureButton = this.mFooterRow.createTextButton("Build", function()
+    this.mAddStructureButton = this.mFooterRow.createTextButton(text.Build, function()
     {
         self.addStructure(self.mActiveStructure.ID);
     }, "add-structure-button display-none", 1)
-    this.mRemoveStructureButton = this.mFooterRow.createTextButton("Remove", function()
+    this.mRemoveStructureButton = this.mFooterRow.createTextButton(text.Remove, function()
     {
         self.removeStructure();
     }, "remove-structure-button display-none", 1)
@@ -80,6 +82,22 @@ StrongholdScreenStructuresModule.prototype.createStructureContent = function ()
 		this.switchActiveStructure(this.mDefaultStructure)
     else this.switchActiveStructure(this.mActiveStructure.ConstID)
 };
+
+StrongholdScreenStructuresModule.prototype.switchActiveStructure = function( _structureID)
+{
+    var self = this
+    this.mActiveStructureRequirementsTable.empty();
+    if(this.mActiveStructure != null && this.mActiveStructure != undefined)
+    {
+        this.mActiveStructure.Selection.toggleDisplay(false)
+    }
+    this.mActiveStructure = this.mModuleData[_structureID];
+    this.mActiveStructureDef = this.mActiveStructureDefs[_structureID];
+    this.mActiveStructureTitle.html(this.mActiveStructureDef.Name);
+    this.mActiveStructure.Selection.toggleDisplay(true)
+    this.mActiveStructureImage.attr('src', Path.GFX + this.mStructureImagePath + this.mActiveStructure.ImagePath);
+    this.mActiveStructureDescription.html(this.mActiveStructureDef.getDescription ? this.mActiveStructureDef.getDescription(this.mActiveStructure) : this.mActiveStructureDef.Description);
+}
 
 StrongholdScreenStructuresModule.prototype.addStructure = function ()
 {

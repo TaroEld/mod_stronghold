@@ -7,6 +7,7 @@ var StrongholdScreenBuildingsModule = function(_parent)
 	this.mTitle = "Your Buildings";
 	this.mDefaultStructure = "Arena";
     this.mStructureImagePath = Stronghold.Visuals.BuildingSpritePath;
+    this.mActiveStructureDefs = Stronghold.Text.Buildings;
 };
 
 StrongholdScreenBuildingsModule.prototype = Object.create(StrongholdScreenStructuresModule.prototype);
@@ -17,18 +18,7 @@ Object.defineProperty(StrongholdScreenBuildingsModule.prototype, 'constructor', 
 
 StrongholdScreenBuildingsModule.prototype.switchActiveStructure = function( _structureID)
 {
-    var self = this
-    this.mActiveStructureRequirementsTable.empty();
-    if(this.mActiveStructure != null && this.mActiveStructure != undefined)
-    {
-        this.mActiveStructure.Selection.toggleDisplay(false)
-    }
-    this.mActiveStructure = this.mModuleData[_structureID];
-    this.mActiveStructureDef = Stronghold.Text.Buildings[_structureID];
-    this.mActiveStructureTitle.html(this.mActiveStructureDef.Name);
-    this.mActiveStructure.Selection.toggleDisplay(true)
-    this.mActiveStructureImage.attr('src', Path.GFX + this.mStructureImagePath + this.mActiveStructure.ImagePath);
-    this.mActiveStructureDescription.html(this.mActiveStructureDef.getDescription ? this.mActiveStructureDef.getDescription() : this.mActiveStructureDef.Description);
+    StrongholdScreenStructuresModule.prototype.switchActiveStructure.call(this, _structureID)
 
     if (this.mActiveStructure.HasStructure)
     {

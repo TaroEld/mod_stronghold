@@ -7,6 +7,7 @@ var StrongholdScreenLocationsModule = function(_parent)
 	this.mTitle = "Your Locations";
 	this.mDefaultStructure = "Wheat_Fields";
     this.mStructureImagePath = Stronghold.Visuals.LocationSpritePath;
+    this.mActiveStructureDefs = Stronghold.Text.Locations;
 };
 
 StrongholdScreenLocationsModule.prototype = Object.create(StrongholdScreenStructuresModule.prototype);
@@ -17,18 +18,7 @@ Object.defineProperty(StrongholdScreenLocationsModule.prototype, 'constructor', 
 
 StrongholdScreenLocationsModule.prototype.switchActiveStructure = function( _structureID)
 {
-    var self = this
-    this.mActiveStructureRequirementsTable.empty();
-    if(this.mActiveStructure != null && this.mActiveStructure != undefined)
-    {
-        this.mActiveStructure.Selection.toggleDisplay(false)
-    }
-    this.mActiveStructure = this.mModuleData[_structureID];
-    this.mActiveStructureDef = Stronghold.Text.Locations[_structureID];
-    this.mActiveStructureTitle.html(this.mActiveStructure.Name);
-    this.mActiveStructure.Selection.toggleDisplay(true)
-    this.mActiveStructureImage.attr('src', Path.GFX + this.mStructureImagePath + this.mActiveStructure.ImagePath);
-    this.mActiveStructureDescription.html(this.mActiveStructureDef.getDescription ? this.mActiveStructureDef.getDescription(this.mActiveStructure) : this.mActiveStructureDef.Description);
+    StrongholdScreenStructuresModule.prototype.switchActiveStructure.call(this, _structureID)
 
     if (this.mActiveStructure.CurrentAmount >= this.mActiveStructure.MaxAmount)
     {
