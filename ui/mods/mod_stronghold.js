@@ -151,14 +151,19 @@ $.fn.toggleOpacity = function(_bool)
     }
 }
 
-$.fn.appendRow = function(_subTitle, _classes)
+$.fn.appendRow = function(_subTitle, _classes, _smallSubText)
 {
     var row = $('<div class="flex-row"/>')
     	.appendTo(this)
     	.addClass(_classes || "")
 
     if (_subTitle !== undefined && _subTitle !== null)
-        row.append($('<div class="sub-title title-font-big font-bold font-bottom-shadow font-color-title">' + _subTitle + '</div>'))
+    {
+    	var fontSize = "title-font-big";
+    	if (_smallSubText)
+    		fontSize = "title-font-normal";
+        row.append($('<div class="sub-title ' + fontSize + ' font-bold font-bottom-shadow font-color-title">' + _subTitle + '</div>'))
+    }
     return row
 }
 
