@@ -258,6 +258,11 @@
 	overflow: hidden;
 }
 
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-left .title-container:hover
+{
+	border: 1px solid grey;
+}
+
 .stronghold-screen .roster-module > .right-column > .middle-row > .is-left .title-container .title
 {
 	/* vertical center */
@@ -373,7 +378,7 @@
 
 .stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .portrait .name-container
 {
-	top: 17.0rem;
+	top: 21.0rem;
 	left: 0rem;
 	right: 0;
 	height: 6.0rem;
