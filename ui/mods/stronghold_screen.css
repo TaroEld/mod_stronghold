@@ -14,10 +14,23 @@
 	padding-left: 2rem;
 }
 
-.stronghold-generic-element-container
+/* button nonsense*/
+.stronghold-button-1
 {
 	width: 17.5rem !important;
     height: 4.3rem !important;
+}
+
+.stronghold-button-4
+{
+	width: 23.0rem !important;
+    height: 4.3rem !important;
+}
+
+.stronghold-button-4 > span,
+.stronghold-button-1 > span
+{
+	padding-top:0.5rem;
 }
 
 .stronghold-flex-center
@@ -27,9 +40,17 @@
 	justify-content: center;
 }
 
+.stronghold-row-background
+{
+   	background-image: url("coui://gfx/ui/skin/custom_background_698_40.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+
 .stronghold-half-width
 {
-	flex: 1;
+	width:50%;
+/*	flex:1;*/
 	padding: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
 
