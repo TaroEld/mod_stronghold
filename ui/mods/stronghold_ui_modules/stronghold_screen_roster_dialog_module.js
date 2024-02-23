@@ -217,9 +217,9 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     {
         self.toggleScrollDiv(true);
     });
-    var titleContainer = $('<div class="title-container"/>');
+    var titleContainer = $('<div class="title-container stronghold-flex-center stronghold-row-background"/>');
     this.mDetailsScrollHeaderContainer.append(titleContainer);
-    this.mTitleContainer = $('<div class="title title-font-normal font-bold font-color-ink"/>');
+    this.mTitleContainer = Stronghold.getTextSpan()
     titleContainer.append(this.mTitleContainer);
     this.mTitleContainer.html('Stats');
 
@@ -300,12 +300,12 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     this.mDetailsContainer.append(this.mScrollBackgroundContainer);
     {
         // create: stats progressbars
-        this.mStatsContainer = $('<div class="display-block stats"/>');
+        this.mStatsContainer = $('<div class="stats"/>');
         this.mScrollBackgroundContainer.append(this.mStatsContainer);
         this.createRowsDIV(this.mStatsRows, this.mStatsContainer);
 
         // create: portrait to have a clearer look on your selected bro
-        this.mPortrait.Container = $('<div class="display-none portrait"/>');
+        this.mPortrait.Container = $('<div class="portrait"/>').hide();
         this.mScrollBackgroundContainer.append(this.mPortrait.Container);
         {
             var portraitContainer = $('<div class="portrait-container"/>');
@@ -327,10 +327,10 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
                 self.mPortrait.Placeholder.attr('src', self.mPortrait.Image.attr('src'));
             }, null, '');
 
-            var nameContainer = $('<div class="name-container"/>');
+            var nameContainer = $('<div class="name-container stronghold-flex-center stronghold-row-background"/>');
             this.mPortrait.Container.append(nameContainer);
 
-            this.mPortrait.NameLabel = $('<div class="label title-font-normal font-bold font-color-ink"/>');
+            this.mPortrait.NameLabel = Stronghold.getTextDiv();
             nameContainer.append(this.mPortrait.NameLabel);
 
             nameContainer.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterScreen.LeftPanelHeaderModule.ChangeNameAndTitle });
@@ -342,7 +342,7 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     }
 
     // stuffs outside the scroll
-    this.mSkills.Container = $('<div class="display-none l-list-container"/>');
+    this.mSkills.Container = $('<div class="l-list-container"/>').hide();
     this.mDetailsContainer.append(this.mSkills.Container);
     {
         this.mSkills.ListContainer = this.mSkills.Container.createList(100, null, true);
@@ -1418,9 +1418,9 @@ StrongholdScreenRosterModule.prototype.updateSelectedBrother = function (_data)
 
 StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
 {
-	this.mPortrait.Container.removeClass('display-block').addClass('display-none');
-    this.mSkills.Container.removeClass('display-block').addClass('display-none');
-    this.mStatsContainer.removeClass('display-block').addClass('display-none');
+	this.mPortrait.Container.hide();
+    this.mSkills.Container.hide();
+    this.mStatsContainer.hide();
 
     if (_brother === null)
     {
@@ -1438,7 +1438,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
     switch(this.mToggledType)
     {
     case Stronghold.Roster.ToggleScroll.Type.Portrait:
-    	this.mPortrait.Container.addClass('display-block').removeClass('display-none');
+    	this.mPortrait.Container.show();
         this.mTitleContainer.html('Portrait');
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Character.Key in _brother)
         {
@@ -1453,7 +1453,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
         break;
 
     case Stronghold.Roster.ToggleScroll.Type.Skills:
-    	this.mSkills.Container.addClass('display-block').removeClass('display-none');
+    	this.mSkills.Container.show();
         this.mTitleContainer.html('Skills');
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Id in _brother)
         {
@@ -1471,7 +1471,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
         break;
 
     default:
-    	this.mStatsContainer.addClass('display-block').removeClass('display-none');
+    	this.mStatsContainer.show();
         this.mTitleContainer.html('Stats');
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Stats in _brother)
             this.setProgressbarValues(_brother[CharacterScreenIdentifier.Entity.Stats]);
