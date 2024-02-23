@@ -148,14 +148,11 @@ StrongholdScreen.prototype.createDIV = function (_parentDiv)
     this.mModuleContainer  = $('<div class="module-container"/>');
     this.mDialogContainer.append(this.mModuleContainer)
 
-    this.mFooter = $('<div class="footer"/>');
-    this.mDialogContainer.append(this.mFooter);
-    var layout = $('<div class="l-leave-button"/>');
-    this.mFooter.append(layout);
-    this.mLeaveButton = layout.createTextButton("Leave", $.proxy(function()
+    var footer = this.mDialogContainer.appendRow(null, "stronghold-flex-center footer");
+    this.mLeaveButton = footer.createTextButton("Leave", $.proxy(function()
 	{
         this.onLeaveButtonPressed();
-    }, this), '', 1);
+    }, this), 'stronghold-button-1', 1);
 
     this.createModuleOptionsButtons();
 

@@ -61,6 +61,11 @@
     background-repeat: no-repeat;
 }
 
+.ui-control.dialog-stronghold-main .footer
+{
+	position:absolute;
+	bottom:0;
+}
 .stronghold-screen
 {
 	top: 0;
