@@ -307,7 +307,15 @@ StrongholdScreen.prototype.loadPlayerAssetsData = function()
 
 StrongholdScreen.prototype.loadTownAssetsData = function()
 {
-
+	if (this.mData['TownAssets'].IsMainBase === false)
+	{
+		this.getModuleObject("StashModule").Button.enableButton(false);
+		this.getModuleObject("RosterModule").Button.enableButton(false);
+		this.getModuleObject("LocationsModule").Button.enableButton(false);
+		this.getModuleObject("UpgradeModule").Button.enableButton(false);
+		this.getModuleObject("HamletModule").Button.enableButton(false);
+		this.getModuleObject("MiscModule").Button.enableButton(false);
+	}
 }
 
 

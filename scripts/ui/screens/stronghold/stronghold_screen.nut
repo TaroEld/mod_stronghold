@@ -161,13 +161,14 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		
 		_ret.ID <- town.getID();
 		_ret.Name <- town.getName();
+		_ret.IsMainBase <- town.isMainBase();
 		_ret.Size <- town.getSize();
 		_ret.SizeName <- town.getSizeName();
 		_ret.Upgrading <- town.isUpgrading();
 		_ret.IsCoastal <- town.isCoastal();
 		_ret.HasHamlet <- town.getFlags().get("Child");
 		_ret.SpriteName <- town.getFlags().get("CustomSprite");
-		_ret.mRosterAsset <- townRoster;
+		_ret.mRosterAsset <- _ret.IsMainBase ? town.getLocalRoster().getAll().len() : -1;
 		_ret.mRosterAssetMax <- 16;
 		_ret.mBuildingAsset <- town.getActiveBuildings().len();
 		_ret.mBuildingAssetMax <- maxBuildingSlots;
