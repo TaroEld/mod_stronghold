@@ -4,41 +4,36 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 	function getUIData( _ret )
 	{
 		// If level cap is reached, there is no need for the other info
-		if (this.getTown().getSize() == 3)
-		{
-			return {
-				MaxSize = true
-			}
-		}
+		_ret.MaxSize <- this.getTown().getSize() == 3;
+		if (_ret.MaxSize) return;
+		_ret.CurrentInventoryLevel <-this.World.Retinue.getInventoryUpgrades();
 		local tier = ::Stronghold.Tiers[this.getTown().getSize() + 1];
 		local price = ::Stronghold.PriceMult * tier.Price;
-		local currentInventory = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades()]
-		local nextInventory = currentInventory;
-		if(this.World.Retinue.getInventoryUpgrades() < this.getTown().getSize() + 1)
-		{
-			nextInventory = this.Const.Strings.InventoryHeader[this.World.Retinue.getInventoryUpgrades() + 1]
-		}
-		_ret.Description <- tier.UnlockDescription;
 		_ret.Requirements <- {
-		    Money  = {
-		        TextDone = "You have the required " + price + " crowns.",
-		        TextNotDone = "You don't have the required " + price + "crowns.",
-		        Done = this.World.Assets.getMoney() >= price
-		    },
-		    Cart  = {
-		        TextDone = format("You have a %s", currentInventory),
-		        TextNotDone  = format("You need to level up your %s to a %s!", currentInventory, nextInventory),
-		        Done  = this.World.Retinue.getInventoryUpgrades() >= this.getTown().getSize() + 1
-		    },
-		    ActiveContract  = {
-		        TextDone = "You don't have an active contract.",
-		        TextNotDone = "You have an active contract.",
-		        Done = this.World.Contracts.getActiveContract() == null
-		    },
+			Price = this.World.Assets.getMoney() >= price,
+			Cart = this.World.Retinue.getInventoryUpgrades() >= this.getTown().getSize() + 1
+			NotUpgrading = !this.getTown().isUpgrading(),
+			NoContract = this.World.Contracts.getActiveContract() == null,
 		}
-
 		_ret.Price <- ::Stronghold.PriceMult * tier.Price;
-		_ret.HasActiveContract <- this.World.Contracts.getActiveContract() == null;
 		return _ret
+	}
+
+	function onUpgradeBase()
+	{
+		this.World.State.m.MenuStack.popAll(true);
+		local tier = ::Stronghold.Tiers[this.getTown().getSize() + 1];
+		local price = ::Stronghold.PriceMult * tier.Price;
+		::World.Assets.addMoney(-price);
+		local playerFaction = this.Stronghold.getPlayerFaction();
+		local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
+		contract.setEmployerID(playerFaction.getRandomCharacter().getID());
+		contract.setFaction(playerFaction.getID());
+		contract.setHome(this.getTown());
+		contract.setOrigin(this.getTown());
+		contract.m.Flags.set("IsUpgrading", true)
+		contract.m.TargetLevel = this.getTown().getSize() + 1;
+		this.World.Contracts.addContract(contract);
+		contract.start();
 	}
 })

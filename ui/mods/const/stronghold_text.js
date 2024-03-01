@@ -102,10 +102,21 @@ Stronghold.Text = {
 	UpgradeModule : {
 		Title : "Upgrade your base",
 		Name : "Upgrade",
-		Description : "A hamlet serves as additional living space for your retainers. You will be able to construct additional buildings, buy goods, and hire from a variety of recruits. Each base can only have one hamlet.",
+		Description : "Upgrade your base to unlock additional features.",
 		Requirements : {
-			BaseSize : "Required base size: Stronghold (3/3)",
-			MaxHamlet : "Maximum amount of Hamlets per base: 1"
+			MaxSize : "Your base is fully upgraded!",
+			Cart : "You need to have a {0} for this upgrade level (unlocked in the retinue screen).",
+			CartNames : {
+				2 : "Wagon",
+				3 : "Big Wagon",
+			},
+			Price : "Have sufficient money ({0})",
+			NoContract : "You can't have an active contract.",
+			NotUpgrading : "You can't already be upgrading your base or already have a fully upgraded base.",
+		},
+		UnlockDescriptions : {
+			2 : "You can construct an additional building and three additional locations.<br>Bands of mercenaries will join your base and guard it against aggressors.<br>You can construct roads to other settlements, connecting your base to the world.",
+			3 : "You can construct an additional building, including an arena, and three additional locations.<br>A number of unique contracts will be made available.<br>You can now construct the Hamlet, a town which is connected to your Stronghold.",
 		}
 	},
 	Buildings : {
