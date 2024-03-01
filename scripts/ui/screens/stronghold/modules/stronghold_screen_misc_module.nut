@@ -456,7 +456,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 
 	function onRemoveBase()
 	{
-		this.World.State.m.MenuStack.pop();
+		this.World.State.m.MenuStack.popAll(true);
 		this.removeBase();
 	}
 
