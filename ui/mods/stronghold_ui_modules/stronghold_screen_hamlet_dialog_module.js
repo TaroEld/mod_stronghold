@@ -7,6 +7,7 @@ var StrongholdScreenHamletModule = function(_parent)
 	this.mTitle = this.getModuleText().Title;
     this.mBaseSprite = null;
     this.mBuildHamletButton = null;
+    this.mAlwaysUpdate = true;
 };
 
 StrongholdScreenHamletModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
@@ -24,9 +25,9 @@ StrongholdScreenHamletModule.prototype.createDIV = function (_parentDiv)
 
 	var hamletDetailsContainer = $('<div class="hamlet-details-container"/>')
 		.appendTo(hamletRow)
-	var hamletDetails = hamletDetailsContainer.appendRow("Advantages");
+
+	var hamletDetails = hamletDetailsContainer.appendRow(Stronghold.Text.Advantages, null, true);
 	this.mDescriptionTextContainer = Stronghold.getTextDiv()
-		.addClass("hamlet-details-text-container")
 		.appendTo(hamletDetails)
 
 	var hamletSpriteContainer = $('<div class="hamlet-sprite-container"/>')
