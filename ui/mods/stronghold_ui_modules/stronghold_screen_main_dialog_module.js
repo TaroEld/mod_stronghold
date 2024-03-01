@@ -3,10 +3,52 @@ var StrongholdScreenMainModule = function(_parent)
 {
     StrongholdScreenModuleTemplate.call(this, _parent);
     this.mID = "MainModule";
-    this.mTitle = "Your Base";
+    this.mTitle = "Overview";
     this.mAlwaysUpdate = true;
     this.mHeaderRow = null;
     this.mBaseSpriteImage = null;
+    this.mAssets = {
+    	Tier : {
+    		Img : "",
+    		Div : null
+    	},
+    	Defenders : {
+    		Img : "",
+    		Div : null
+    	},
+    	Roster : {
+    		Img : "",
+    		Div : null
+    	},
+    	Stash : {
+    		Img : "",
+    		Div : null
+    	},
+    	Recruits : {
+    		Img : "",
+    		Div : null
+    	},
+    	LastVisit : {
+    		Img : "",
+    		Div : null
+    	},
+    	Gold : {
+    		Img : "",
+    		Div : null
+    	},
+    	Tools : {
+    		Img : "",
+    		Div : null
+    	},
+    	Medicine : {
+    		Img : "",
+    		Div : null
+    	},
+    	Arrows : {
+    		Img : "",
+    		Div : null
+    	},
+    }
 };
 
 StrongholdScreenMainModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
@@ -20,53 +62,50 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
     StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     this.mContentContainer.addClass("main-module");
     var self = this;    
+    var text = this.getModuleText();
 
-    this.mHeaderRow = this.mContentContainer.appendRow("", "gold-line-bottom description-row");
-    var baseSpriteContainer = $('<div class="base-sprite-container"/>')
-    	.appendTo(this.mHeaderRow);
+    this.mHeaderRow = this.mContentContainer.appendRow(null, "stronghold-row-background stronghold-flex-center");
+    var inputContainer = $('<div/>').css({
+    	"width" : "30.0rem",
+    	"height" : " 4.0rem"
+    }).appendTo(this.mHeaderRow);
+    this.mChangeNameInput = inputContainer.createInput("", 0, 200, 1, null, 'title-font-big font-bold font-color-brother-name', function (_input)
+	{
+		self.changeBaseName();
+	});
+
+	var infoContainer = this.mContentContainer.appendRow();
+    var baseSpriteContainer = $('<div class="stronghold-half-width stronghold-generic-background stronghold-flex-center"/>')
+    	.appendTo(infoContainer);
     this.mBaseSpriteImage = $('<img class="base-sprite-image"/>')
     	.appendTo(baseSpriteContainer);
 
-    var changeNameRow = $('<div class="change-name-row"/>')
-    	.appendTo(this.mHeaderRow)
-    this.mChangeNameInput = changeNameRow.createInput("", 0, 200, 1, null, 'title-font-big font-bold font-color-brother-name', function (_input)
-	{
-		self.mChangeNameButton.click()
-	});
-	this.mChangeNameButton = changeNameRow.createTextButton("Change Name", function(){
-    	self.changeBaseName();
-    }, '', 1)
-
-    var addAssetRow = function(_parent, _name, _imgsrc)
+    var assetsContainer = $('<div class="stronghold-half-width stronghold-generic-background"/>')
+    	.appendTo(infoContainer);
+    MSU.iterateObject(this.mAssets, function(_key, _value)
     {
     	var ret = $('<div class="main-module-asset-row"/>')
-    		.appendTo(_parent)
-    	Stronghold.getTextSpan(_name)
-    		.appendTo(ret)
+    		.appendTo(assetsContainer);
+    	Stronghold.getTextSpan(	text.Assets[_key])
+    		.appendTo(ret);
     	$('<img class="main-module-asset-img">')
-    		.attr("src", _imgsrc)
+    		.attr("src", _value.Img)
     		.appendTo(ret)
+    	_value.Div = $('<img class="main-module-asset-value">')
+    		.appendTo(ret);
     	return ret;
-    }
-
-	addAssetRow(this.mContentContainer, "Tier", "");
-    addAssetRow(this.mContentContainer, "Local Roster", "");
-	addAssetRow(this.mContentContainer, "Local Stash", "");
-	addAssetRow(this.mContentContainer, "Local Recruits", "");
-	addAssetRow(this.mContentContainer, "Days since last visit", "");
-	addAssetRow(this.mContentContainer, "Accumulated Gold", "");
-	addAssetRow(this.mContentContainer, "Accumulated Tools", "");
-	addAssetRow(this.mContentContainer, "Accumulated Medicine", "");
-	addAssetRow(this.mContentContainer, "Accumulated Arrows", "");
+    })
 };
 
 StrongholdScreenMainModule.prototype.loadFromData = function()
 {
 	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
 		return;
-	this.mTitle = this.mData.TownAssets.Name;
-	this.mParent.updateTitle(this.mTitle);
+	var text = this.getModuleText();
+	this.mParent.updateTitle(text.Title);
+
 	this.mChangeNameInput.setInputText(this.mData.TownAssets.Name);
+
 	var baseSprite = this.mData.TownAssets.SpriteName;
 	var currentSprite = Stronghold.Visuals.Sprites[baseSprite].MainSprites[this.mData.TownAssets.Size -1];
     this.mBaseSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentSprite + ".png");
