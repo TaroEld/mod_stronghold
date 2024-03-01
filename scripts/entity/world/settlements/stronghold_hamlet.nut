@@ -68,13 +68,12 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 	
 	function getSizeName()
 	{
-		return this.Stronghold.Hamlet.Name
+		return this.Stronghold.Hamlet.Name;
 	}
 	
 	function onEnter()
 	{
 		//updates buildings, shops, quests, attached locations
-		this.World.State.getTownScreen().getMainDialogModule().loadRename()
 		this.location.onEnter();
 		this.updateRoster();
 		this.updateShop();

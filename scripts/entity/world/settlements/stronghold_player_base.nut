@@ -77,7 +77,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			}
 		}
 		::Math.seedRandom(this.Time.getRealTime());
-		this.World.State.getTownScreen().getMainDialogModule().loadRename();
 		return true;
 	}
 
@@ -106,11 +105,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Buildings[2].updateProducedItems(daysPassed);
 	}
 	
-	function onLeave()
-	{
-		this.World.State.getTownScreen().getMainDialogModule().deleteRename();
-	}
-
 	function isMainBase()
 	{
 		return true;
