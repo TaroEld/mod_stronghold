@@ -18,7 +18,6 @@ var StrongholdScreenModuleTemplate = function(_parent)
     this.mData = null;
     this.mModuleData = null;
     this.mAlwaysUpdate = false;
-    this.mUpdateOn = [];
 };
 
 StrongholdScreenModuleTemplate.prototype = Object.create(MSUUIScreen.prototype);
@@ -62,7 +61,7 @@ StrongholdScreenModuleTemplate.prototype.destroyDIV = function ()
 StrongholdScreenModuleTemplate.prototype.show = function ()
 {
 	var self = this;
-	if (!this.mIsLoaded)
+	if (!this.mIsLoaded || this.mAlwaysUpdate)
 	{
 		SQ.call(this.mParent.mSQHandle, 'getUIData', [this.mID], function(_data)
 		{
