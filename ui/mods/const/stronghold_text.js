@@ -11,6 +11,14 @@ Stronghold.Text = {
 	Error : "There was an error.",
 	Price : "Price: {price}",
 	Requirements : "Requirements",
+	Advantages : "Advantages",
+	General : {
+		Tier1 : "Fort",
+		Tier2 : "Castle",
+		Tier3 : "Stronghold",
+		Hamlet : "Hamlet",
+		Mercenaries : "Mercenaries"
+	},
 	HamletModule : {
 		Title : "Build a Hamlet",
 		Name : "Hamlet",
@@ -20,7 +28,21 @@ Stronghold.Text = {
 			MaxHamlet : "Maximum amount of Hamlets per base: 1"
 		}
 	},
-	MainModuleModule : {},
+	MainModule : {
+		Title : "Overview",
+		Assets : {
+			Tier : "Tier",
+			Defenders : "Defenders",
+			Roster : "Local Roster",
+			Stash : "Local Stash",
+			Recruits : "Local Recruits",
+			LastVisit : "Days since last visit",
+			Gold : "Accumulated Gold",
+			Tools : "Accumulated Tools",
+			Medicine : "Accumulated Medicine",
+			Arrows : "Accumulated Arrows",
+		}
+	},
 	MiscModule : {
 		BuildRoad : {
 			Title : "Build a road",
@@ -98,7 +120,12 @@ Stronghold.Text = {
 		Build : "Build",
 		Remove : "Remove",
 	},
-	VisualsModule : {},
+	VisualsModule : {
+		Title : "Change Visuals",
+		SpriteName : "{0} by {1}{2}", // name by author (current visuals)
+		Current : " (current visuals)",
+		Button : "Apply Sprites"
+	},
 	UpgradeModule : {
 		Title : "Upgrade your base",
 		Name : "Upgrade",
