@@ -147,7 +147,6 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	function getTownUIData(_ret)
 	{
 		local town = this.getTown();
-		local townRoster = town.getLocalRoster().getAll().len();
 		local maxBuildingSlots = town.getSize() + 4;
 		local currentBuildings = 0
 		foreach (building in town.m.Buildings){

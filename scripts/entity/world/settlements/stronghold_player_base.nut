@@ -877,12 +877,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function showStrongholdUIDialog()
 	{
 		::Stronghold.StrongholdScreen.setTown(this);
-		// if(::Stronghold.StrongholdScreen.m.JSHandle == null)
-		// {
-		// 	::Stronghold.StrongholdScreen.m.JSHandle = this.UI.connect("StrongholdScreen", ::Stronghold.StrongholdScreen);
-		// }
 		::Stronghold.StrongholdScreen.show();
-
 	}
 
 	function onSerialize( _out )

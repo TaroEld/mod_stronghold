@@ -4,9 +4,9 @@ Stronghold.Text = {
 		//adapted from https://coderwall.com/p/flonoa/simple-string-format-in-javascript
 		var args = Array.prototype.slice.call(arguments, 1);
 		for (k in args) {
-			_string = _string.replace("{" + k + "}", args[k])
+			_string = _string.replace("{" + k + "}", args[k]);
 		}
-		return _string
+		return _string;
 	},
 	Error : "There was an error.",
 	Price : "Price: {price}",
@@ -215,7 +215,7 @@ Stronghold.Text = {
 		Ore_Smelter : {
 			Name : "Ore Smelter",
 			Path : "ore_smelters_location",
-			Description : "This will allow the local weaponsmiths to carry more items. It will also allow them to work with unusual materials, allowing you to reforge named items. \n To reforge a named item, put it in the warehouse and shift-rightclick on it.",
+			Description : "This will allow the local weaponsmiths to carry more items. It will also allow them to work with unusual materials, allowing you to reforge named items.<br>To reforge a named item, put it in the warehouse and shift-rightclick on it.",
 
 		},
 		Blast_Furnace : {
@@ -223,7 +223,7 @@ Stronghold.Text = {
 			Path : "blast_furnace_location",
 			Description : "This will allow the local armorsmiths to carry more items. It will also enable them to repair your armors more efficiently, giving you a {0}% discount on repairing armor at the armorsmith.",
 			getDescription : function(_element){
-				return Stronghold.Text.format(this.Description,	parseInt(_element.RepairMultiplier * 100))
+				return Stronghold.Text.format(this.Description, parseInt(_element.RepairMultiplier * 100))
 			}
 
 		},
@@ -255,7 +255,7 @@ Stronghold.Text = {
 			Description : "The wise women of the herbalists grove know how to treat wounds with special and curious methods. Hitpoints regenerate faster when around the base.<br>You can also expect to receive {0} extra medicine every day, and your warehouse will be able to store {1} more.",
 			getDescription : function(_element)
 			{
-				return Stronghold.Text.format(this.Description,	_element.DailyIncome, _element.MaxItemSlots)
+				return Stronghold.Text.format(this.Description, _element.DailyIncome, _element.MaxItemSlots)
 			}
 
 		},

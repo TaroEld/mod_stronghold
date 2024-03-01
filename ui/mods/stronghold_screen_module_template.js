@@ -92,7 +92,7 @@ StrongholdScreenModuleTemplate.prototype.setModuleData = function(_data)
 	this.mHasChangedData = true;
 	if (this.mIsVisible)
 		this.loadFromData();
-}
+};
 
 StrongholdScreenModuleTemplate.prototype.hide = function ()
 {
@@ -109,12 +109,12 @@ StrongholdScreenModuleTemplate.prototype.loadFromData = function()
 	}
 	this.mHasChangedData = false;
 	return true;
-}
+};
 
 StrongholdScreenModuleTemplate.prototype.reloadData = function()
 {
 	SQ.call(this.mSQHandle, 'updateData');
-}
+};
 
 // Refer popups to the parent
 StrongholdScreenModuleTemplate.prototype.createPopup = function(_title, _subTitle, _headerImagePath, _classes, _modalBackground)
@@ -123,28 +123,28 @@ StrongholdScreenModuleTemplate.prototype.createPopup = function(_title, _subTitl
 	this.mParent.setPopupDialog(popup);
 	this.mPopupDialog = popup;
 	return popup;
-}
+};
 
 StrongholdScreenModuleTemplate.prototype.destroyPopup = function()
 {
 	this.mParent.destroyPopupDialog();
 	this.mPopupDialog = null;
-}
+};
 
 StrongholdScreenModuleTemplate.prototype.addRequirementRow = function(_table, _requirement, _isValid)
 {
 	var icon = "";
 
 	var tr = $("<tr/>")
-		.appendTo(_table)
+		.appendTo(_table);
 	if (_isValid === true)
-		tr.append($("<td><img src='" + Path.GFX + "ui/icons/unlocked_small.png'/></td>"))
+		tr.append($("<td><img src='" + Path.GFX + "ui/icons/unlocked_small.png'/></td>"));
 	else if (_isValid === false)
-		tr.append($("<td><img src='" + Path.GFX + "ui/icons/locked_small.png'/></td>"))
+		tr.append($("<td><img src='" + Path.GFX + "ui/icons/locked_small.png'/></td>"));
 	var font = _isValid ? "" : "font-color-disabled"
     var container = $("<td/>")
-    	.appendTo(tr)
-    tr.data("IsValid", _isValid)
+    	.appendTo(tr);
+    tr.data("IsValid", _isValid);
 
     if (_requirement)
     {
@@ -152,14 +152,14 @@ StrongholdScreenModuleTemplate.prototype.addRequirementRow = function(_table, _r
     		.appendTo(container)
     		.addClass(font)
     		.children()
-    			.addClass(font)
+    			.addClass(font);
     }
     return {
     	Row : tr,
     	Img : tr.find("img"),
     	Container : container
-    }
-}
+    };
+};
 
 StrongholdScreenModuleTemplate.prototype.areRequirementsFulfilled = function(_table)
 {
@@ -168,11 +168,11 @@ StrongholdScreenModuleTemplate.prototype.areRequirementsFulfilled = function(_ta
 	{
 		if ($(this).data("IsValid") === false)
 			fulfilled = false;
-	})
+	});
 	return fulfilled;
-}
+};
 
 StrongholdScreenModuleTemplate.prototype.getModuleText = function()
 {
 	return Stronghold.Text[this.mID];
-}
+};
