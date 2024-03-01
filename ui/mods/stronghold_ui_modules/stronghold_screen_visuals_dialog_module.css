@@ -9,33 +9,23 @@
  *  @Description:	World Town Screen JS
  */
 
-.stronghold-screen .visuals-module .base-sprites-row
+.stronghold-screen .visuals-module .sprites-container
 {
-    justify-content: space-between;
-    height: 25rem;
-    border: 2px solid green;
+    justify-content: space-around;
+    padding-bottom: 1rem;
 }
 
-.stronghold-screen .visuals-module .base-sprite-container
+.stronghold-screen .visuals-module .sprite-container
 {
-    width: 25.2rem;
-    height: 19.9rem;
-    /*border: 2px solid blue;*/
+    display:flex;
+    flex-direction: column;
 } 
 
-.stronghold-screen .visuals-module .base-sprite-container .base-sprite-image
+.stronghold-screen .visuals-module .sprite-container .sprite-image
 {
 	width: 25.2rem;
 	height: 19.9rem;
 }
-
-.stronghold-screen .visuals-module .other-sprites-row
-{
-    justify-content: space-between;
-
-    border: 2px solid red;
-}
-
 
 
 .stronghold-screen .visuals-module .footer-button-bar
