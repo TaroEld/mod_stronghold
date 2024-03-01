@@ -156,7 +156,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				foreach( h in this.m.HousesTiles )
 				{
 					// Only enable light on houses if the specified sprite has a lights version
-					if (h.Light != "")
+					if (h.len() > 1)
 					{
 						local tile = this.World.getTileSquare(h.X, h.Y);
 						local d = tile.spawnDetail(h[1], this.Const.World.ZLevel.Object - 4, this.Const.World.DetailType.Lighting, false, insideScreen);
