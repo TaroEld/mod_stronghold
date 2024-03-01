@@ -6,6 +6,7 @@ var StrongholdScreenUpgradeModule = function(_parent)
     this.mID = "UpgradeModule";
     this.mTitle = "Upgrade your base";
     this.mBaseSprite = null;
+    this.mAlwaysUpdate = true;
 };
 
 StrongholdScreenUpgradeModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);

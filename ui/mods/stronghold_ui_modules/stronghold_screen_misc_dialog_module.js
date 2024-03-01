@@ -5,7 +5,7 @@ var StrongholdScreenMiscModule = function(_parent)
 	StrongholdScreenModuleTemplate.call(this, _parent);
 	this.mID = "MiscModule";
 	this.mTitle = "Miscellaneous";
-	this.mUpdateOn.push("StashModule");
+	this.mAlwaysUpdate = true;
 };
 
 StrongholdScreenMiscModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
