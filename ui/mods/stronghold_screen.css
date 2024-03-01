@@ -46,6 +46,12 @@
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 }
+.stronghold-generic-background
+{
+	background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
 
 .stronghold-half-width
 {

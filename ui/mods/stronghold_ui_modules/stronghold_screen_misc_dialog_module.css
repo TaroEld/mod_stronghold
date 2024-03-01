@@ -13,9 +13,6 @@
 	flex-direction: column;
 	flex-wrap: nowrap;
 	margin-bottom: 3rem;
-	background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
     padding-top:2rem;
     padding-left: 1rem;
     padding-right: 1rem;

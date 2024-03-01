@@ -22,10 +22,10 @@ StrongholdScreenMiscModule.prototype.createDIV = function (_parentDiv)
 
 	this.mListContainerLayout = $('<div class="l-list-container"/>')
    		.appendTo(this.mContentContainer);
-    this.mListContainer = this.mListContainerLayout.createList(5, null, true);
+    this.mListContainer = this.mListContainerLayout.createList(1, null, true);
     this.mListScrollContainer = this.mListContainer.findListScrollContainer();
 
-	var miscDiv = '<div class="misc-option"/>';
+	var miscDiv = '<div class="misc-option stronghold-generic-background"/>';
     this.mBuildRoadContainer 		= $(miscDiv).addClass("build-road-container").appendTo(this.mListScrollContainer);
     this.mSendGiftsContainer 		= $(miscDiv).addClass("send-gifts-container").appendTo(this.mListScrollContainer);
     this.mTrainBrotherContainer 	= $(miscDiv).addClass("train-brother-container").appendTo(this.mListScrollContainer);
