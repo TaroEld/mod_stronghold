@@ -5,6 +5,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		isPlayerBase = true,
 		IsUpgrading = false,
 		Stash = null,
+		Warehouse = null,
 		TroopSprites = "",
 		HouseSprites = [],
 	},
@@ -19,14 +20,14 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.HousesType = 3;
 		this.m.HousesMin = 1;
 		this.m.HousesMax = 2;
-		this.m.AttachedLocationsMax = 3;
+		this.m.AttachedLocationsMax = 4;
 		this.m.IsVisited = true;
 		this.m.Banner = this.World.Assets.getBannerID();
 		this.m.Buildings.resize(7, null);
 		this.m.Stash = ::new("scripts/items/stash_container");
 		this.m.Stash.resize(99);
 		this.defineName();
-		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_storage_building"), 2);
+		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/marketplace_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/tavern_building"), 5);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 	}
@@ -44,6 +45,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.getFlags().set("TimeUntilNextPatrol", -1);
 		this.getFlags().set("RosterSeed", this.toHash(this));
 		this.getFlags().set("LastProduceUpdate", this.Time.getVirtualTimeF());
+		this.getFlags().set("LastLocationUpdate", this.Time.getVirtualTimeF());
 		this.World.createRoster(this.toHash(this));
 		this.updateProperties();
 		this.updateTown();
@@ -60,7 +62,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.location.onEnter();
 		this.m.CurrentBuilding = null;
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
-		this.updateProducedItems();
+		this.updateLocationEffects();
 		this.updateSituations();
 		this.updateShop();
 
@@ -80,31 +82,27 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return true;
 	}
 
+	function getWarehouse()
+	{
+		return this.m.Warehouse;
+	}
+
 	function getStash()
 	{
-		return this.m.Stash;
+		return this.getWarehouse() == null ? null : this.getWarehouse().getStash();
 	}
 
-	function updateProducedItems()
+	function updateLocationEffects()
 	{
-		local lastUpdateTime = this.getFlags().get("LastProduceUpdate");
-		// If older save
-		if (lastUpdateTime == false)
-		{
-			this.getFlags().set("LastProduceUpdate", this.Time.getVirtualTimeF());
-			return;
-		}
+		local lastUpdateTime = this.getFlags().get("LastLocationUpdate");
 		local daysPassed = (this.Time.getVirtualTimeF() - lastUpdateTime) / this.World.getTime().SecondsPerDay;
-
 		if ( daysPassed == 0)
-		{
 			return;
-		}
-		this.getFlags().set("LastProduceUpdate", this.Time.getVirtualTimeF());
-
-		this.m.Buildings[2].updateProducedItems(daysPassed);
+		this.getFlags().set("LastLocationUpdate", this.Time.getVirtualTimeF());
+		foreach (location in this.getActiveAttachedLocations())
+			location.stronghold_updateLocationEffects(daysPassed);
 	}
-	
+
 	function isMainBase()
 	{
 		return true;
@@ -112,13 +110,19 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function isMaxLevel()
 	{
-		return !this.isUpgrading() && this.getSize() == 3;
+		return !this.isUpgrading() && this.getSize() == 4;
 	}
 
 	function getHamlet()
 	{
 		local flag = this.m.Flags.get("Child");
 		return flag ? this.World.getEntityByID(flag) : false;
+	}
+
+	function getLocation(_id)
+	{
+		local loc = this.getActiveAttachedLocations().filter(@(_idx, _a) _a.getTypeID() == _id)
+		return loc.len() > 0 ? loc[0] : null;
 	}
 
 	//I dont trust the roster seed
@@ -667,27 +671,13 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		{
 			return;
 		}
-		local marketplace;
-
-		foreach( building in this.m.Buildings )
-		{
-			if (building != null && building.getID() == "building.storage_building")
-			{
-				marketplace = building;
-				break;
-			}
-		}
-		if (marketplace == null)
-		{
-			return;
-		}
 		foreach( p in this.m.ProduceImported )
 		{
 			local item = this.new("scripts/items/" + p);
-			marketplace.getStash().add(item);
+			this.getWarehouse().getStash().add(item);
 		}
 
-		marketplace.getStash().sort();
+		this.getWarehouse().getStash().sort();
 		this.m.ProduceImported = [];
 	}
 	

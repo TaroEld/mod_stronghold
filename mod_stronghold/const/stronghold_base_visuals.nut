@@ -9,12 +9,24 @@
 	[
 		{
 			// First entry in array is base sprite, second is lights during night
-			Base =  ["world_stronghold_01", "world_stronghold_01_light"]
+			Base =  ["stronghold_00", "stronghold_00_light"]
 			// First entry in array is base sprite, second is lights during night
-			Upgrading =  ["stronghold_01u", ""]
+			Upgrading =  ["stronghold_00u", "stronghold_00u_light"]
 			// Multiple variations of houses are possible, will be randomised ; First entry in subarray is base sprite, second is lights during night
 			Houses =  [["world_houses_03_01", "world_houses_03_01_light"]],
 			// Look of the parties that are spawned by the base
+			WorldmapFigure = "figure_mercenary_01",
+			Background = {
+				UIBackgroundCenter = "ui/settlements/stronghold_00",
+				UIBackgroundLeft = "ui/settlements/bg_houses_01_left",
+				UIBackgroundRight = "ui/settlements/bg_houses_01_right",
+				UIRampPathway = "ui/settlements/ramp_01_planks",
+			}
+		},
+		{
+			Base =  ["world_stronghold_01", "world_stronghold_01_light"]
+			Upgrading =  ["stronghold_01u", ""]
+			Houses =  [["world_houses_03_01", "world_houses_03_01_light"]],
 			WorldmapFigure = "figure_mercenary_01",
 			Background = {
 				UIBackgroundCenter = "ui/settlements/stronghold_01",
@@ -62,7 +74,7 @@
 			Houses =  [["luft_basic_houses_01", ""], ["luft_basic_houses_02", ""], ["luft_basic_houses_03", ""]],
 			WorldmapFigure = "luft_basic_patrol",
 			Background = {
-				UIBackgroundCenter = "ui/settlements/stronghold_01",
+				UIBackgroundCenter = "ui/settlements/stronghold_00",
 				UIBackgroundLeft = "ui/settlements/bg_houses_01_left",
 				UIBackgroundRight = "ui/settlements/bg_houses_01_right",
 				UIRampPathway = "ui/settlements/ramp_01_planks",
@@ -107,7 +119,7 @@
 			Houses =  [["luft_fort_houses_01", ""], ["luft_fort_houses_02", ""]],
 			WorldmapFigure = "luft_fort_patrol",
 			Background = {
-				UIBackgroundCenter = "ui/settlements/stronghold_01",
+				UIBackgroundCenter = "ui/settlements/stronghold_00",
 				UIBackgroundLeft = "ui/settlements/bg_houses_01_left",
 				UIBackgroundRight = "ui/settlements/bg_houses_01_right",
 				UIRampPathway = "ui/settlements/ramp_01_planks",
@@ -152,7 +164,7 @@
 			Houses =  [["luft_fishing_houses_01", "luft_fishing_houses_01_light"], ["luft_fishing_houses_02", "luft_fishing_houses_02_light"]],
 			WorldmapFigure = "luft_fishing_patrol",
 			Background = {
-				UIBackgroundCenter = "ui/settlements/stronghold_01",
+				UIBackgroundCenter = "ui/settlements/stronghold_00",
 				UIBackgroundLeft = "ui/settlements/bg_houses_01_left",
 				UIBackgroundRight = "ui/settlements/bg_houses_01_right",
 				UIRampPathway = "ui/settlements/ramp_01_planks",
@@ -197,7 +209,7 @@
 			Houses =  [["luft_necro_houses_01", ""], ["luft_necro_houses_02", ""], ["luft_necro_houses_03", ""]],
 			WorldmapFigure = "luft_necro_patrol",
 			Background = {
-				UIBackgroundCenter = "ui/settlements/stronghold_01",
+				UIBackgroundCenter = "ui/settlements/stronghold_00",
 				UIBackgroundLeft = "ui/settlements/bg_houses_01_left",
 				UIBackgroundRight = "ui/settlements/bg_houses_01_right",
 				UIRampPathway = "ui/settlements/ramp_01_planks",

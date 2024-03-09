@@ -19,7 +19,7 @@ this.stronghold_unload_order <- this.inherit("scripts/ai/world/world_behavior", 
 		this.getController().popOrder();
 		if(settlement == null) return true
 
-		local items = settlement.getBuilding("building.storage_building").getStash().getItems()
+		local items = settlement.getWarehouse().getStash().getItems()
 		local food = [];
 		foreach( i, item in items )
 		{
@@ -31,7 +31,7 @@ this.stronghold_unload_order <- this.inherit("scripts/ai/world/world_behavior", 
 		//removes old food from storage
 		foreach (item in food)
 		{
-			settlement.getBuilding("building.storage_building").getStash().remove(item)
+			settlement.getWarehouse().getStash().remove(item)
 		}
 
 		foreach( item in _entity.getInventory() )

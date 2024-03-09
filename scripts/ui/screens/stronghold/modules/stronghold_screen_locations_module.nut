@@ -1,11 +1,11 @@
 this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/stronghold/modules/stronghold_screen_module" , {
-	m = {},
-
+	m = {
+	},
 	function getUIData( _ret )
 	{
 		foreach(locationID, location in ::Stronghold.LocationDefs)
 		{
-			local countLocation = this.getTown().countAttachedLocations(location.ID)
+			local locationInTown =  this.getTown().getLocation(location.ID)
 			local requirements = [];
 			foreach(requirement in location.Requirements)
 			{
@@ -17,12 +17,13 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 			_ret[locationID] <- {
 				ConstID = locationID,
 				ImagePath = location.Path + ".png",
-				HasStructure = countLocation > 0,
-				CurrentAmount = countLocation,
-				Requirements = requirements
+				HasStructure = locationInTown != null,
+				Level = 0,
+				Requirements = requirements,
 			}
+			if (locationInTown != null)
+				_ret[locationID].Level = locationInTown.m.Level
 			::MSU.Table.merge(_ret[locationID], location, true);
-			::MSU.Log.printData(_ret[locationID])
 		}
 		return _ret
 	}
@@ -30,9 +31,9 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 	function addLocation(_data)
 	{
 		local home = this.getTown();
-		local price = _data[1].tointeger()
-		this.World.Assets.addMoney(-price)
-		local script = "scripts/entity/world/attached_location/" + _data[0]
+		local locationDef = ::Stronghold.LocationDefs[_data];
+		this.World.Assets.addMoney(-locationDef.Price)
+		local script = "scripts/entity/world/attached_location/" + locationDef.Path
 		local validTerrain =
 		[
 			this.Const.World.TerrainType.Plains,
@@ -54,13 +55,23 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 		]
 		home.buildAttachedLocation(1, script, validTerrain, [], 2)
 		home.buildRoad(home.m.AttachedLocations[home.m.AttachedLocations.len()-1])
-		::logInfo("adding LocationsModule")
+		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
+	}
+
+	function upgradeLocation(_data)
+	{
+		local locationDef = ::Stronghold.LocationDefs[_data];
+		local location = this.getTown().getLocation(locationDef.ID);
+		location.upgrade();
+		this.World.Assets.addMoney(-locationDef.UpgradePrice);
+		this.getTown().removeLocation(_data);
 		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
 	}
 
 	function removeLocation(_data)
 	{
-		this.getTown().removeLocation(_data);
+		local locationDef = ::Stronghold.LocationDefs[_data];
+		this.getTown().removeLocation(locationDef.ID);
 		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
 	}
 })

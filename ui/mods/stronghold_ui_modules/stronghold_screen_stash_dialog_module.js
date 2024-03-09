@@ -223,6 +223,135 @@ StrongholdScreenStashModule.prototype.loadFromData = function (_data)
 	this.updateStashFreeSlotsLabel();
 };
 
+StrongholdScreenStashModule.prototype.updateShopList = function (_data)
+{
+    if(this.mShopList === null || !jQuery.isArray(this.mShopList) || this.mShopList.length === 0)
+    {
+		this.loadShopData(_data);
+        return;
+    }
+
+	// create more slots?
+	if(_data.length > this.mShopSlots.length)
+	{
+		this.createItemSlots(WorldTownScreenShop.ItemOwner.Shop, _data.length - this.mShopSlots.length, this.mShopSlots, this.mShopListScrollContainer);
+	}
+
+    // check shop for changes
+	var maxLength = this.mShopList.length >= _data.length ? this.mShopList.length : _data.length;
+
+    for(var i = 0; i < maxLength; ++i)
+    {
+        var oldItem = this.mShopList[i];
+        var newItem = _data[i];
+
+        // item added to shop slot
+        if(i >= this.mShopList.length || (oldItem === null && newItem !== null))
+        {
+			//console.info('SHOP: Item inserted (Index: ' + i + ')');
+			this.updateSlotItem(WorldTownScreenShop.ItemOwner.Shop, this.mShopSlots, newItem, i, WorldTownScreenShop.ItemFlag.Inserted);
+        }
+
+        // item removed from shop slot
+        else if(i >= _data.length || (oldItem !== null && newItem === null))
+        {
+			//console.info('SHOP: Item removed (Index: ' + i + ')');
+			this.updateSlotItem(WorldTownScreenShop.ItemOwner.Shop, this.mShopSlots, oldItem, i, WorldTownScreenShop.ItemFlag.Removed);
+        }
+
+        // item might have changed within shop slot
+        else
+        {
+            if((oldItem !== null && newItem !== null) && ('id' in oldItem && 'id' in newItem))
+            {
+				if(oldItem.id !== newItem.id)
+				{
+					//console.info('SHOP: Item updated (Index: ' + i + ')');
+					this.updateSlotItem(WorldTownScreenShop.ItemOwner.Shop, this.mShopSlots, newItem, i, WorldTownScreenShop.ItemFlag.Updated);
+				}
+				else
+				{
+					 this.updateItemPriceLabel(this.mShopSlots[i], newItem, false);
+				}
+            }
+        }
+    }
+
+	// update list
+	this.mShopList = _data;
+};
+
+StrongholdScreenStashModule.prototype.updateSlotItem = function (_owner, _itemArray, _item, _index, _flag)
+{
+    var slot = this.querySlotByIndex(_itemArray, _index);
+    if(slot === null)
+    {
+        console.error('ERROR: Failed to update slot item: Reason: Invalid slot index: ' + _index);
+        return;
+    }
+
+    switch(_flag)
+    {
+        case WorldTownScreenShop.ItemFlag.Inserted:
+        case WorldTownScreenShop.ItemFlag.Updated:
+        {
+            this.removeItemFromSlot(slot);
+            this.assignItemToSlot(_owner, slot, _item);
+            this.updateItemPriceLabel(slot, _item, _owner === WorldTownScreenShop.ItemOwner.Stash);
+			break;
+        }
+        case WorldTownScreenShop.ItemFlag.Removed:
+        {
+            this.removeItemFromSlot(slot);
+			break;
+        }
+    }
+};
+
+StrongholdScreenStashModule.prototype.assignItemToSlot = function(_owner, _slot, _item)
+{
+    var remove = false;
+
+    if(!('id' in _item) || !('imagePath' in _item))
+    {
+        remove = true;
+    }
+
+    if(remove === true)
+    {
+        this.removeItemFromSlot(_slot);
+    }
+    else
+    {
+        // update item data
+        var itemData = _slot.data('item') || {};
+        itemData.id = _item.id;
+        _slot.data('item', itemData);
+
+        // assign image
+        _slot.assignListItemImage(Path.ITEMS + _item.imagePath);
+        if(_item['imageOverlayPath']) _slot.assignListItemOverlayImage(Path.ITEMS + _item['imageOverlayPath']);
+        else _slot.assignListItemOverlayImage();
+
+        // show amount
+        if(_item.showAmount === true && _item.amount != '')
+        {
+			_slot.assignListItemAmount('' + _item.amount, _item['amountColor']);
+        }
+
+        // show price
+        if('price' in _item && _item.price !== null)
+        {
+            _slot.assignListItemPrice(_item.price);
+        }
+
+        // bind tooltip
+        console.error("itemData.id " + itemData.id)
+        console.error("itemData._owner " + _owner)
+        _slot.assignListItemTooltip(itemData.id, _owner);
+    }
+};
+
 StrongholdScreenStashModule.prototype.updateStashFreeSlotsLabel = function ()
 {
     var statistics = this.getStashStatistics();
@@ -243,98 +372,13 @@ StrongholdScreenStashModule.prototype.updateStashFreeSlotsLabel = function ()
 
 StrongholdScreenStashModule.prototype.setupEventHandler = function ()
 {
-    var self = this;
-    var dropHandler = function (ev, dd)
-	{
-        var drag = $(dd.drag);
-        var drop = $(dd.drop);
-
-        // do the swapping
-        var sourceData = drag.data('item') || {};
-        var targetData = drop.data('item') || {};
-
-        var sourceOwner = (sourceData !== null && 'owner' in sourceData) ? sourceData.owner : null;
-        var targetOwner = (targetData !== null && 'owner' in targetData) ? targetData.owner : null;
-
-        if(sourceOwner === null || targetOwner === null)
-        {
-            console.error('Failed to drop item. Owner are invalid.');
-            return;
-        }
-
-        // we don't allow swapping within the shop container
-        if(sourceOwner === WorldTownScreenShop.ItemOwner.Shop && targetOwner === WorldTownScreenShop.ItemOwner.Shop)
-        {
-            //console.error('Failed to swap item within shop container. Not allowed.');
-            return;
-        }
-
-        var sourceItemIdx = (sourceData !== null && 'index' in sourceData) ? sourceData.index : null;
-        var targetItemIdx = (targetData !== null && 'index' in targetData) ? targetData.index : null;
-
-        if(sourceItemIdx === null)
-        {
-            console.error('Failed to drop item. Source idx is invalid.');
-            return;
-        }
-
-        self.swapItem(sourceItemIdx, sourceOwner, targetItemIdx, targetOwner);
-
-        // workaround if the source container was removed before we got here
-        if(drag.parent().length === 0)
-        {
-            $(dd.proxy).remove();
-        }
-        else
-        {
-            drag.removeClass('is-dragged');
-        }
-    };
-
-    // create drop handler for the stash & shop container
-    $.drop({ mode: 'middle' });
-
-    this.mStashListContainer.data('item', { owner: WorldTownScreenShop.ItemOwner.Stash });
-    this.mStashListContainer.drop(dropHandler);
-
-    this.mShopListContainer.data('item', { owner: WorldTownScreenShop.ItemOwner.Shop });
-    this.mShopListContainer.drop(dropHandler);
 };
 
 StrongholdScreenStashModule.prototype.swapItem = function (_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner)
 {
     var self = this;
-    this.notifyBackendSwapItem(_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner, function (data)
-    {
-        if (data === undefined || data == null || typeof (data) !== 'object')
-        {
-            console.error("ERROR: Failed to swap item. Reason: Invalid data result.");
-            return;
-        }
+    this.notifyBackendSwapItem(_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner, function (data){});
 
-        // error?
-        if (data.Result != 0)
-        {
-            if (data.Result == ErrorCode.NotEnoughStashSpace)
-            {
-                self.mStashSlotSizeContainer.shakeLeftRight();
-            }
-            else
-            {
-                console.error("Failed to swap item. Reason: Unknown");
-            }
-
-            return;
-        }
-        self.updateStashFreeSlotsLabel();
-    });
-};
-
-StrongholdScreenStashModule.prototype.updateStashes = function (_data)
-{
-	this.updateStashList(_data.Stash);
-	this.updateShopList(_data.Shop);
-    return;
 };
 
 StrongholdScreenStashModule.prototype.updateItemPriceLabel = function (_slot, _item, _positiveColor)
@@ -351,6 +395,119 @@ StrongholdScreenStashModule.prototype.hasEnoughMoneyToBuy = function (_itemIdx)
     return true;
 };
 
+
+StrongholdScreenStashModule.prototype.createItemSlot = function (_owner, _index, _parentDiv, _screenDiv)
+{
+    var self = this;
+    var result = WorldTownScreenShopDialogModule.prototype.createItemSlot.call(this, _owner, _index, _parentDiv, _screenDiv);
+    result.off("mousedown");
+    result.assignListItemRightClick(function (_item, _event)
+	{
+        var data = _item.data('item');
+
+        var isEmpty = (data !== null && 'isEmpty' in data) ? data.isEmpty : true;
+        var owner = (data !== null && 'owner' in data) ? data.owner : null;
+        var itemIdx = (data !== null && 'index' in data) ? data.index : null;
+		var repairItem = KeyModiferConstants.AltKey in _event && _event[KeyModiferConstants.AltKey] === true;
+		var reforgeItem = KeyModiferConstants.ShiftKey in _event && _event[KeyModiferConstants.ShiftKey] === true;
+
+        if(isEmpty === false && owner !== null && itemIdx !== null)
+        {
+            switch(owner)
+            {
+                case WorldTownScreenShop.ItemOwner.Stash:
+                {
+                    if (repairItem === true)
+                    {
+                        //console.info('destroy');
+                        self.repairItem(itemIdx);
+                    }
+                    else
+                    {
+                        //console.error('sell');
+                        self.swapItem(itemIdx, owner, null, WorldTownScreenShop.ItemOwner.Shop);
+                    }
+                } break;
+                case WorldTownScreenShop.ItemOwner.Shop:
+                {
+                	if (reforgeItem == true){
+                    	self.checkIfReforgeIsValid(itemIdx)
+                    	return false
+                    }
+                    else{
+                    	self.swapItem(itemIdx, owner, null, WorldTownScreenShop.ItemOwner.Stash);
+                    }
+
+                } break;
+            }
+        }
+    });
+    return result
+}
+
+WorldTownScreenShopDialogModule.prototype.showConfirmReforgeDialog = function(_sourceItemIdx, _itemName, _price, _affordable){
+     var self = this;
+     this.createPopup('Confirm reforging', null, null, "confirm-reforge-dialog");
+     this.mPopupDialog.addPopupDialogContent(this.createConfirmReforgeContent(this.mPopupDialog, _itemName, _price, _affordable));
+     if(_affordable == true){
+     	this.mPopupDialog.addPopupDialogOkButton(function (_dialog)
+     	{
+     	   self.reforgeNamedItemAfterClick(_sourceItemIdx);
+     	   self.destroyPopup();
+     	});
+     	this.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
+     	{
+     	   self.destroyPopup();
+     	});
+     }
+     else{
+     	this.mPopupDialog.addPopupDialogOkButton(function (_dialog)
+     	{
+     	   self.destroyPopup();
+     	});
+     }
+}
+
+WorldTownScreenShopDialogModule.prototype.createConfirmReforgeContent = function (_dialog, _itemName, _price, _affordable)
+{
+    var result = $('<div class="confirm-reforge-container"/>');
+
+    var row = $('<div class="row"/>');
+    result.append(row);
+
+    var label = $('<div class="text-font-normal font-color-label"></div>');
+    if(_affordable === true){
+    	label.html("Are you sure you want to reforge the " + _itemName + " ? This will cost " + _price + " crowns.")
+    }
+    else{
+    	label.html("You can't afford to reforge the " + _itemName + " ! (" + _price + " crowns.)")
+    }
+    row.append(label);
+
+    return result;
+};
+
+WorldTownScreenShopDialogModule.prototype.reforgeNamedItemAfterClick = function(_sourceItemIdx){
+
+    var self = this;
+   	SQ.call(this.mSQHandle, 'onReforgeNamedItem', _sourceItemIdx, function (data));
+};
+
+WorldTownScreenShopDialogModule.prototype.checkIfReforgeIsValid = function (_sourceItemIdx)
+{
+	var self = this;
+    SQ.call(this.mSQHandle, 'onReforgeIsValid', _sourceItemIdx, function(data){
+    	if (data === undefined || data == null || typeof (data) !== 'object')
+    	{
+    	    console.error('ERROR: Failed to reforge item.');
+    	    return;
+    	}
+    	if (data["IsValid"] === false){
+    		return
+    	}
+    	self.showConfirmReforgeDialog(data["ItemIdx"], data["ItemName"], data["Price"], data["Affordable"]);
+    });
+};
 
 var copyFunctionList = [
 	"loadStashData",
@@ -380,8 +537,11 @@ var copyFunctionList = [
 
 for (var x = 0; x < copyFunctionList.length; x++)
 {
-	Object.defineProperty(StrongholdScreenStashModule.prototype, copyFunctionList[x], {
-	value: WorldTownScreenShopDialogModule.prototype[copyFunctionList[x]],
-	enumerable: false,
-	writable: true });
+	if (!(copyFunctionList[x] in StrongholdScreenStashModule.prototype))
+	{
+		Object.defineProperty(StrongholdScreenStashModule.prototype, copyFunctionList[x], {
+		value: WorldTownScreenShopDialogModule.prototype[copyFunctionList[x]],
+		enumerable: false,
+		writable: true });
+	}
 }

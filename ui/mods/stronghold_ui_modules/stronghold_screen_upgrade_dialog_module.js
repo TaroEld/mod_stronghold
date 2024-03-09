@@ -78,7 +78,7 @@ StrongholdScreenUpgradeModule.prototype.fillRequirementsText = function()
 
     this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(text.NotUpgrading), reqs.NotUpgrading);
     this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(Stronghold.Text.format(text.Price, this.mModuleData.Price)), reqs.Price);
-    this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(Stronghold.Text.format(text.Cart, text.CartNames[this.mData.TownAssets.Size + 1])), reqs.Cart);
+    this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(text.Warehouse), reqs.Warehouse);
     this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(text.NoContract), reqs.NoContract);
 
     this.mUpgradeBaseButton.enableButton(this.areRequirementsFulfilled(this.mRequirementsTable))

@@ -47,6 +47,11 @@
 ::Stronghold.WellSupplied <-
 [
 	{
+		Rarity = 1.00,
+		BuyPrice = 1.05,
+		SellPrice = 0.95
+	},
+	{
 		Rarity = 1.04,
 		BuyPrice = 1.00,
 		SellPrice = 1.00
@@ -78,25 +83,36 @@
 
 ::Stronghold.Tiers <- {};
 ::Stronghold.Tiers[1] <- {
-	Name = "Fort",
+	Name = "Outpost",
 	Size = 1,
-	Price = 10,
-	MaxAttachments = 3,
-	UnlockDescription = "You can leave items and brothers behind, to retrieve them later as you need them.\n You can construct up to three settlement buildings.\nYou can construct up to three locations, granting various advantages.\n You will be able to upgrade your base, unlocking more features.",
+	Price = 5,
+	MaxAttachments = 4,
+	MaxBuildings = 3,
+	UnlockDescription = "You can an additional settlement building.\nYou can construct up to four locations, granting various advantages such as storing brothers and items.\n You will be able to upgrade your base, unlocking more features.",
 };
 ::Stronghold.Tiers[2] <- {
-	Name = "Castle",
+	Name = "Fort",
 	Size = 2,
-	Price = 20,
+	Price = 5,
 	MaxAttachments = 6,
-	UnlockDescription = "Bands of mercenaries will join your base and guard it against aggressors.\nYou can construct an additional building and three additional locations.\nYou can construct roads to other settlements, connecting your base to the world.",
+	MaxBuildings = 4,
+	UnlockDescription = "You can construct up to two settlement buildings.\nYou can construct up to eight locations.\nBands of mercenaries will join your base and guard it against aggressors.",
 };
 ::Stronghold.Tiers[3] <- {
-	Name = "Stronghold",
+	Name = "Castle",
 	Size = 3,
-	Price = 30,
-	MaxAttachments = 9,
-	UnlockDescription = "You can construct an additional building, including an arena, and three additional locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold.",
+	Price = 5,
+	MaxAttachments = 8,
+	MaxBuildings = 5,
+	UnlockDescription = "You can construct up to three settlement buildings.\nYou can construct up to eight locations.\nYou can construct roads to other settlements, connecting your base to the world.",
+};
+::Stronghold.Tiers[4] <- {
+	Name = "Stronghold",
+	Size = 4,
+	Price = 5,
+	MaxAttachments = 10,
+	MaxBuildings = 6,
+	UnlockDescription = "You can construct up to four settlement buildings, and unlock the arena building.\nYou can construct up to ten locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold.",
 };
 
 ::Stronghold.TrainerPrice <- 5;
@@ -106,6 +122,7 @@
 // Hamlet defs
 ::Stronghold.Hamlet <-
 {
+	Name = "Hamlet",
 	Price = 20
 }
 
@@ -113,10 +130,10 @@
 ::Stronghold.Buildings <-
 {
 	Tavern = {
-		Price = 5,
+		Price = 1,
 	}
 	Kennel = {
-		Price = 5,
+		Price = 2.5,
 	}
 	Taxidermist = {
 		Price = 5,
@@ -140,13 +157,13 @@
 		Price = 10,
 	}
 	Fletcher = {
-		Price = 10,
+		Price = 5,
 	}
 	Port = {
-		Price = 15,
+		Price = 5,
 	}
 	Arena = {
-		Price = 20
+		Price = 15
 	}
 };
 
@@ -154,66 +171,81 @@
 // Change settings related to attached locations
 ::Stronghold.Locations <-
 {
-	Workshop = {
-		Price = 10, // Price for each attached location, multiplied by PriceMult (1000 by default)
-		MaxAmount = 1, // Maximum amount allowed per base
-		DailyIncome = 20, // Amount of tools generated every day
-		MaxItemSlots = 40 // Amount added to the maximum amount of stored items of this type
-	},
-
-	Ore_Smelter = {
-		Price = 10,
-		MaxAmount = 1,
-		ReforgeMultiplier = 1.5 // Price multiplier applied on the base value of the item being reforged
-	},
-
 	Blast_Furnace = {
-		Price = 5,
-		MaxAmount = 1,
-		RepairMultiplier = 0.7 // Value by which instant repair will be multiplied
+		Price = 2.5,
+		UpgradePrice = 2.5
+		RepairMultiplier = 0.1 // Value by which instant repair will be multiplied
 	},
 
-	Stone_Watchtower = {
-		Price = 10,
-		MaxAmount = 1,
-		VisionInFogOfWarRange = 15, // Range in which you can see enemies in fog of war
-		EffectRange = 25, // Distance in tiles for which the next two effects work
-		VisionIncrease = 125, // Amount of extra vision you get around the base
-		MovementSpeedIncrease = 9 // Amount of extra movement speed you get around the base
-	},
-
-	Militia_Trainingcamp = {
-		Price = 10,
-		MaxAmount = 3,
-		MaxBrotherExpLevel = 7, //
-		DailyIncome = 200, // Amount of Experience generated each day
-		MercenaryStrengthIncrease = 100, // Amount of strength added to new mercenary and caravan parties
-		RecruitIncrease = 2 // Amount of recruits added to the Hamlet roster
-	},
-
-	Wheat_Fields = {
-		Price = 5,
-		MaxAmount = 1,
-		EffectRange = 25, // Distance in tiles for which the effect works
-	},
+	Gold_Mine = {
+		Price = 2,
+		UpgradePrice = 2
+		DailyIncome = 50,
+		AddGoldDirectlyToAssets = false // Add gold generated in base directly to the asset crowns on base enter instead of creating a crowns item
+	}
 
 	Herbalists_Grove = {
-		Price = 5,
-		MaxAmount = 1,
+		Price = 2,
+		UpgradePrice = 2,
 		DailyIncome = 20, // Amount of extra medicine generated every day
 		MaxItemSlots = 40, // Amount added to the maximum amount of stored items of this type
 		EffectRange = 25, // Distance in tiles for which the effect works
 	},
 
-	Gold_Mine = {
-		Price = 10,
-		MaxAmount = 1,
-		DailyIncome = 150,
-		AddGoldDirectlyToAssets = false // Add gold generated in base directly to the asset crowns on base enter instead of creating a crowns item
+	Ore_Smelter = {
+		Price = 5,
+		UpgradePrice = 2.5
+		ReforgeMultiplier = 0.1 // Price multiplier applied on the base value of the item being reforged, per level
+	},
+
+
+	Militia_Trainingcamp = {
+		Price = 5,
+		UpgradePrice = 2.5,
+		MaxBrotherExpLevel = 7, //
+		MaxBrotherExpLevelUpgrade = 1,
+		DailyIncome = 200, // Amount of Experience generated each day
+		MercenaryStrengthIncrease = 100, // Amount of strength added to new mercenary and caravan parties
+		RecruitIncrease = 2 // Amount of recruits added to the Hamlet roster
+	},
+
+	Stone_Watchtower = {
+		Price = 5,
+		UpgradePrice = 1,
+		VisionInFogOfWarRange = 5, // Range in which you can see enemies in fog of war
+		EffectRange = 5, // Distance in tiles for which the next two effects work
+		VisionIncrease = 30, // Amount of extra vision you get around the base
+		MovementSpeedIncrease = 2 // Amount of extra movement speed you get around the base
+	},
+	Troop_Quarters = {
+		Price = 2.5,
+		UpgradePrice = 2.5,
+		MaxTroops = 6, // Max bros in the base
 	}
+	Warehouse = {
+		Price = 2.5,
+		UpgradePrice = 2.5,
+		MaxItemSlots = 20, // Max slots in the warehouse per level
+	}
+
+	Wheat_Fields = {
+		Price = 2.5,
+		UpgradePrice = 2.5,
+		EffectRange = 5, // Distance in tiles for which the effect works
+		StatGain = 2,
+		EffectTime = 7,
+	},
+
+	Workshop = {
+		Price = 5, // Price for each attached location, multiplied by PriceMult (1000 by default)
+		UpgradePrice = 2.5,
+		DailyIncome = 20, // Amount of tools generated every day
+		MaxItemSlots = 40 // Amount added to the maximum amount of stored items of this type
+	},
 };
 
 foreach (locationID, location in ::Stronghold.Locations)
 {
 	location.Price *= ::Stronghold.PriceMult;
+	location.UpgradePrice *= ::Stronghold.PriceMult;
 }

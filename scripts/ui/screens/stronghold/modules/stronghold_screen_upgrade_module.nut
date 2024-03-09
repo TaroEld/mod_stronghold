@@ -6,12 +6,12 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 		// If level cap is reached, there is no need for the other info
 		_ret.MaxSize <- this.getTown().getSize() == 3;
 		if (_ret.MaxSize) return;
-		_ret.CurrentInventoryLevel <-this.World.Retinue.getInventoryUpgrades();
 		local tier = ::Stronghold.Tiers[this.getTown().getSize() + 1];
 		local price = ::Stronghold.PriceMult * tier.Price;
+		local warehouse = this.getTown().getWarehouse();
 		_ret.Requirements <- {
 			Price = this.World.Assets.getMoney() >= price,
-			Cart = this.World.Retinue.getInventoryUpgrades() >= this.getTown().getSize() + 1
+			Warehouse = warehouse != null && warehouse.m.Level >= this.getTown().getSize()
 			NotUpgrading = !this.getTown().isUpgrading(),
 			NoContract = this.World.Contracts.getActiveContract() == null,
 		}

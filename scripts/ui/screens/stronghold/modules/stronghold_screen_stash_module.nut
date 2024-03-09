@@ -3,20 +3,25 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		InventoryFilter = this.Const.Items.ItemFilter.All
 	},
 
+	function getStash()
+	{
+		return this.getTown().getStash();
+	}
+
 	function getUIData( _ret )
 	{
 		_ret.Title <- "Warehouse",
 		_ret.SubTitle <- "Your Warehouse",
 		_ret.Shop <- [],
 		_ret.Stash <- [],
-		_ret.StashSpaceUsed <- this.Stash.getNumberOfFilledSlots(),
-		_ret.StashSpaceMax <- this.Stash.getCapacity(),
-		_ret.TownStashSpaceUsed <- this.getTown().getStash().getNumberOfFilledSlots(),
-		_ret.TownStashSpaceMax <- this.getTown().getStash().getCapacity(),
+		_ret.StashSpaceUsed <- ::Stash.getNumberOfFilledSlots(),
+		_ret.StashSpaceMax <- ::Stash.getCapacity(),
+		_ret.TownStashSpaceUsed <- this.getStash().getNumberOfFilledSlots(),
+		_ret.TownStashSpaceMax <- this.getStash().getCapacity(),
 		_ret.IsRepairOffered <- false
 
-		this.UIDataHelper.convertItemsToUIData(this.getTown().getStash().getItems(), _ret.Shop, this.Const.UI.ItemOwner.Stash, this.m.InventoryFilter);
-		this.UIDataHelper.convertItemsToUIData(this.World.Assets.getStash().getItems(), _ret.Stash, this.Const.UI.ItemOwner.Stash, this.m.InventoryFilter);
+		this.UIDataHelper.convertItemsToUIData(this.getStash().getItems(), _ret.Shop, this.Const.UI.ItemOwner.Stash, this.m.InventoryFilter);
+		this.UIDataHelper.convertItemsToUIData(::Stash.getItems(), _ret.Stash, this.Const.UI.ItemOwner.Stash, this.m.InventoryFilter);
 		return _ret
 	}
 
@@ -35,8 +40,8 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 
 	function onSortButtonClicked()
 	{
-		this.getTown().getStash().sort();
-		this.World.Assets.getStash().sort();
+		this.getStash().sort();
+		::Stash.sort();
 
 		this.updateData();
 	}
@@ -82,7 +87,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 			return null;
 		}
 
-		local item = this.Stash.getItemAtIndex(_itemIndex).item;
+		local item = ::Stash.getItemAtIndex(_itemIndex).item;
 
 		if (item.getConditionMax() <= 1 || item.getCondition() >= item.getConditionMax())
 		{
@@ -122,8 +127,8 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 			this.logError("onSwapItem #1");
 			return null;
 		}
-		local sourceStash = sourceItemOwner == "world-town-screen-shop-dialog-module.stash" ? this.Stash : this.getTown().getStash();
-		local destinationStash = sourceItemOwner == "world-town-screen-shop-dialog-module.stash" ? this.getTown().getStash() : this.Stash;
+		local sourceStash = sourceItemOwner == "world-town-screen-shop-dialog-module.stash" ? ::Stash : this.getStash();
+		local destinationStash = sourceItemOwner == "world-town-screen-shop-dialog-module.stash" ? this.getStash() : ::Stash;
 		local sourceItem = sourceStash.getItemAtIndex(sourceItemIdx);
 
 		if (sourceItem == null)
@@ -154,13 +159,13 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		}
 		else if (sourceItemOwner == targetItemOwner)
 		{
-			if (!this.Stash.isLastTakenSlot(sourceItemIdx))
+			if (!::Stash.isLastTakenSlot(sourceItemIdx))
 			{
-				local firstEmptySlotIdx = this.Stash.getFirstEmptySlot();
+				local firstEmptySlotIdx = ::Stash.getFirstEmptySlot();
 
 				if (firstEmptySlotIdx != null)
 				{
-					if (this.Stash.swap(sourceItemIdx, firstEmptySlotIdx))
+					if (::Stash.swap(sourceItemIdx, firstEmptySlotIdx))
 					{
 						sourceItem.item.playInventorySound(this.Const.Items.InventoryEventType.PlacedInBag);
 					}
@@ -189,6 +194,53 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		return result;
 	}
 
+	function onReforgeIsValid(_idx)
+	{
+		//check if in player base and store
+		local town = this.getTowm();
+		if (!town.hasAttachedLocation("attached_location.ore_smelters"))
+		{
+			return { IsValid = false }
+		}
+
+		local sourceItem = this.getStash().getItemAtIndex(_idx);
+		if (sourceItem == null || sourceItem.item == null || !sourceItem.item.isItemType(this.Const.Items.ItemType.Named))
+		{
+			return { IsValid = false }
+		}
+		local price = sourceItem.item.m.Value * this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier;
+
+		return {
+			IsValid = true,
+			ItemIdx = _idx,
+			ItemName = sourceItem.item.getName(),
+			Price = price,
+			Affordable = price < this.World.Assets.getMoney()
+		}
+	}
+
+	function onReforgeNamedItem(_idx)
+	{
+		local sourceItem = this.getStash().removeByIndex(_idx);
+		local name = sourceItem.getName();
+		local type = sourceItem.ClassNameHash;
+		local price = sourceItem.m.Value * this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier;
+
+		//can't savescum quite as easily
+		if (!this.World.Flags.get("ReforgeNamedItemSeed"))
+		{
+			this.World.Flags.set("ReforgeNamedItemSeed", this.World.State.getCurrentTown().getFlags().get("RosterSeed"));
+		}
+		this.World.Flags.increment("ReforgeNamedItemSeed");
+		::Math.seedRandom(this.World.Flags.get("ReforgeNamedItemSeed"));
+
+		local replacementItem = this.new(this.IO.scriptFilenameByHash(type));
+		replacementItem.setName(name);
+		this.World.Assets.addMoney(-price);
+		this.getStash().add(replacementItem);
+		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + ::Math.rand(0, 6) + ".wav", 1.0);
+		this.updateData(["Assets", "StashModule"]);
+	}
 
 	function updateStashes()
 	{

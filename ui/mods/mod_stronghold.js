@@ -9,7 +9,7 @@ var Stronghold = {
 	    BaseSpriteTypes : ["Default", "Luft_Basic", "Luft_Brigand", "Luft_Necro", "Luft_Fishing"],
 	    Sprites : {
 	        Default : {
-	            "MainSprites" 		: ["stronghold_01", "stronghold_02", "stronghold_03"],
+	            "MainSprites" 		: ["stronghold_00", "stronghold_01", "stronghold_02", "stronghold_03"],
 	            "HouseSprites" 		: ["houses_03_01", "", ""],
 	            "UnitSprite" 		: "figure_mercenary_01",
 	            "HamletSprite" 		: "townhall_01",

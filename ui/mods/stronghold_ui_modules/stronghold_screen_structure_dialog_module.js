@@ -38,14 +38,18 @@ StrongholdScreenStructuresModule.prototype.createDIV = function (_parentDiv)
     this.mActiveStructureRequirementsTable = $("<table>").appendTo(activeStructureRequirements);
 
     this.mFooterRow = this.mContentContainer.appendRow(null, "footer-button-bar");
+    this.mUpgradeStructureButton = this.mFooterRow.createTextButton(text.Upgrade, function()
+    {
+        self.upgradeStructure(self.mActiveStructure.ID);
+    }, "display-none", 1)
     this.mAddStructureButton = this.mFooterRow.createTextButton(text.Build, function()
     {
         self.addStructure(self.mActiveStructure.ID);
-    }, "add-structure-button display-none", 1)
+    }, "display-none", 1)
     this.mRemoveStructureButton = this.mFooterRow.createTextButton(text.Remove, function()
     {
         self.removeStructure();
-    }, "remove-structure-button display-none", 1)
+    }, "display-none", 1)
 };
 
 StrongholdScreenStructuresModule.prototype.loadFromData = function()
@@ -72,6 +76,13 @@ StrongholdScreenStructuresModule.prototype.createStructureContent = function ()
         	.attr('src', Path.GFX + Stronghold.Visuals.SelectionGoldImagePath)
         	.appendTo(structureImageContainer)
         _structure.Selection = structureSelection;
+        if (_structure.Level !== undefined)
+        {
+        	var structureLevel = $('<div class="structure-level"/>')
+        		.appendTo(structureImageContainer)
+
+        	_structure.LevelDiv = Stronghold.getTextDiv(_structure.Level).appendTo(structureLevel);
+        }
 
         if (!_structure.HasStructure)
         {

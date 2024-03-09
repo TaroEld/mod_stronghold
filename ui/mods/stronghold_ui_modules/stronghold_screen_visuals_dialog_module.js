@@ -12,6 +12,7 @@ var StrongholdScreenVisualsModule = function(_parent)
     	Tier1 : null,
     	Tier2 : null,
     	Tier3 : null,
+    	Tier4 : null,
     	Mercenaries : null,
     	Hamlet : null
     };
@@ -100,6 +101,7 @@ StrongholdScreenVisualsModule.prototype.setSpriteImage = function()
     this.mSpriteImages.Tier1.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[0] + ".png");
     this.mSpriteImages.Tier2.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[1] + ".png");
     this.mSpriteImages.Tier3.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[2] + ".png");
+    this.mSpriteImages.Tier4.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[3] + ".png");
 	this.mSpriteImages.Mercenaries.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.UnitSprite + ".png");
 	this.mSpriteImages.Hamlet.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.HouseSprites[0] + ".png");
 	var name = Stronghold.Text.format(text.SpriteName, currentArr.Name, currentArr.Author, this.mCurrentBaseSprite == this.mBaseSprite ? text.Current : "")

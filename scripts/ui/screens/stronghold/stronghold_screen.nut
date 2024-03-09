@@ -174,6 +174,27 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		_ret.mBuildingAssetMax <- maxBuildingSlots;
 		_ret.mLocationAsset <- town.m.AttachedLocations.len() - town.countAttachedLocations("attached_location.harbor");
 		_ret.mLocationAssetMax <- town.m.AttachedLocationsMax;
+		_ret.Locations <- {};
+		foreach(locationID, location in ::Stronghold.LocationDefs)
+		{
+			local locObj = town.getLocation(location.ID);
+			local requirements = [];
+			foreach(requirement in location.Requirements)
+			{
+				requirements.push({
+					Text = requirement.Text,
+					IsValid = requirement.IsValid(this.getTown())
+				})
+			}
+			_ret.Locations[locationID] <- {
+				ConstID = locationID,
+				ImagePath = location.Path + ".png",
+				HasStructure = locObj != null,
+				Level = locObj == null ? null : locObj.m.Level,
+				Requirements = requirements
+			}
+			::MSU.Table.merge(_ret.Locations[locationID], location, true);
+		}
 		return _ret
 	}
 

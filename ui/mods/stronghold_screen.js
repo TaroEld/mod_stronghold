@@ -300,6 +300,7 @@ StrongholdScreen.prototype.loadPlayerAssetsData = function()
 
 StrongholdScreen.prototype.loadTownAssetsData = function()
 {
+	this.getModuleObject("StashModule").Button.enableButton(this.mData.TownAssets.Locations.Warehouse.HasStructure);
 	if (this.mData['TownAssets'].IsMainBase === false)
 	{
 		this.getModuleObject("StashModule").Button.enableButton(false);

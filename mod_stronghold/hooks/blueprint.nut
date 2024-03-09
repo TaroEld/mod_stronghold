@@ -8,7 +8,7 @@
 		this.World.Statistics.getFlags().increment("ItemsCrafted", 1);
 		this.World.Ambitions.updateUI();
 		local globalStash = this.World.Assets.getStash();
-		local townStash = this.World.State.getCurrentTown().getBuilding("building.storage_building").getStash()
+		local townStash = this.World.State.getCurrentTown().getWarehouse().getStash()
 		local hasAlchemist = this.World.Retinue.hasFollower("follower.alchemist");
 		local stash = globalStash
 		foreach( c in this.m.PreviewComponents )
@@ -41,7 +41,7 @@
 
 		this.updateAchievement("IMadeThis", 1, 1);
 		local globalStash = this.World.Assets.getStash();
-		local townStash = this.World.State.getCurrentTown().getBuilding("building.storage_building").getStash()
+		local townStash = this.World.State.getCurrentTown().getWarehouse().getStash()
 		local hasAlchemist = this.World.Retinue.hasFollower("follower.alchemist");
 		local stash = globalStash
 
@@ -85,7 +85,7 @@
 	{
 		local items = []
 		items.extend(this.World.Assets.getStash().m.Items);
-		items.extend(this.World.State.getCurrentTown().getBuilding("building.storage_building").getStash().getItems())
+		items.extend(this.World.State.getCurrentTown().getWarehouse().getStash().getItems())
 		return items
 	}
 	
