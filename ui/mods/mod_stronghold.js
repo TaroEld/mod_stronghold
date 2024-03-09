@@ -351,7 +351,7 @@ WorldTownScreenMainDialogModule.prototype.notifyBackendPopupDialogIsVisible = fu
 WorldCampfireScreenAssets.prototype.createStrongholdDIV = function (_parentDiv)
 {
 	var self = this;
-	var layout = $('<div class="l-button"/>');
+	var layout = $('<div class="l-button stronghold-generic-background"/>');
 	_parentDiv.append(layout);
 	this.mStrongholdButton = layout.createImageButton(Path.GFX + 'ui/settlements/stronghold_01_retinue.png', function ()
 	{
