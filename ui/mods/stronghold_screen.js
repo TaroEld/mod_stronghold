@@ -43,18 +43,6 @@ var StrongholdScreen = function ()
 	})
 	this.mAssetValues = null;
 	this.mAssets = new WorldTownScreenAssets(this);
-    // this.mAssetContainer = null;
-    // this.mAssets = {
-    //     "mMoneyAsset"        : null,
-    //     "mFoodAsset"         : null,
-    //     "mAmmoAsset"         : null,
-    //     "mSuppliesAsset"     : null,
-    //     "mMedicineAsset"     : null,
-    //     "mBrothersAsset"     : null,
-    //     "mRosterAsset"       : null,
-    //     "mBuildingAsset"     : null,
-    //     "mLocationAsset"     : null,
-    // }
     this.mData = null;
     //left side tab container
     this.mModuleOptionsContainer = null;
@@ -294,13 +282,14 @@ StrongholdScreen.prototype.updateData = function(_data)
 
 StrongholdScreen.prototype.loadPlayerAssetsData = function()
 {
+	console.error("loadPlayerAssetsData")
 	this.mAssets.loadFromData(this.mData['Assets']);
-	this.mAssetValues = this.mData['Assets'];
 }
 
 StrongholdScreen.prototype.loadTownAssetsData = function()
 {
 	this.getModuleObject("StashModule").Button.enableButton(this.mData.TownAssets.Locations.Warehouse.HasStructure);
+	this.getModuleObject("RosterModule").Button.enableButton(this.mData.TownAssets.Locations.Troop_Quarters.HasStructure);
 	if (this.mData['TownAssets'].IsMainBase === false)
 	{
 		this.getModuleObject("StashModule").Button.enableButton(false);

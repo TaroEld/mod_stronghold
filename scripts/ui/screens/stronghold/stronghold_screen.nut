@@ -130,7 +130,6 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	function queryAssetsInformation(_ret)
 	{
 		_ret.Assets = this.UIDataHelper.convertAssetsInformationToUIData();
-		_ret.Assets.InventoryLevel <- this.World.Retinue.getInventoryUpgrades();
 		return _ret;
 	}
 

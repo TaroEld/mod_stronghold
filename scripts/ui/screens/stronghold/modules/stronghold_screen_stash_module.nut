@@ -190,7 +190,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		local result = {
 			Result = 0,
 		};
-		this.updateData();
+		this.updateData(["Assets", "TownAssets", "StashModule"]);
 		return result;
 	}
 
