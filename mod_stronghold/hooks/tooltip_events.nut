@@ -53,34 +53,6 @@
 
 		switch(_elementId)
 		{
-			case "world-town-screen.main-dialog-module.RenameButton":
-				return [
-					{
-						id = 1,
-						type = "title",
-						text = "Rename"
-					},
-					{
-						id = 2,
-						type = "description",
-						text = "Rename your settlement"
-					}
-				];
-
-			case "world-town-screen.main-dialog-module.Storage":
-				return [
-					{
-						id = 1,
-						type = "title",
-						text = "Warehouse"
-					},
-					{
-						id = 2,
-						type = "description",
-						text = "Your companies warehouse. Here, you can store items to retrieve them at a later date."
-					}
-				];
-
 			case "world-town-screen.main-dialog-module.Management":
 				return [
 					{
@@ -109,9 +81,6 @@
 					}
 				];
 				return ret;
-
-
-				
 		}
 		return general_queryUIElementTooltipData( _entityId, _elementId, _elementOwner )
 	}
