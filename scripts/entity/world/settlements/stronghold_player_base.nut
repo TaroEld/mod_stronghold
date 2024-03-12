@@ -894,10 +894,13 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function onSerialize( _out )
 	{
+		local management = this.m.Buildings.pop()
+		this.m.Buildings.resize(6)
 		this.settlement.onSerialize(_out);
 		this.m.Stash.onSerialize(_out);
 		_out.writeU8(this.m.Size);
 		_out.writeBool(this.m.IsUpgrading);
+		this.m.Buildings.append(management)
 	}
 	
 	function onDeserialize( _in )
@@ -906,6 +909,9 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Stash.onDeserialize(_in);
 		this.m.Size  = _in.readU8();
 		this.m.IsUpgrading = _in.readBool();
+		this.m.Buildings.resize(7)
+		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
+		this.m.Buildings[6].updateSprite();
 		this.updateTown();
 	}
 });
