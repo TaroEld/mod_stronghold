@@ -22,11 +22,13 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 	function onUpgradeBase()
 	{
 		this.World.State.m.MenuStack.popAll(true);
+
 		local tier = ::Stronghold.Tiers[this.getTown().getSize() + 1];
 		local price = ::Stronghold.PriceMult * tier.Price;
 		::World.Assets.addMoney(-price);
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");
+		this.getTown().startUpgrading();
 		contract.setEmployerID(playerFaction.getRandomCharacter().getID());
 		contract.setFaction(playerFaction.getID());
 		contract.setHome(this.getTown());

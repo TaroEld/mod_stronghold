@@ -36,8 +36,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.setState("Running")
 	}
 
-
-	
 	function getBanner()
 	{
 		return "ui/banners/factions/banner_06s"
@@ -160,10 +158,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					}
 				}
 			}			
-			
-
-		});		
-
+		});
 	}
 
 	function createScreens()
@@ -181,9 +176,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					function getResult()
 					{
 						this.Contract.m.Flags.set("Introduced", true)
-						this.Contract.m.Home.m.Size = this.Contract.m.TargetLevel;
-						this.Contract.m.Home.setUpgrading(true);
-						this.Contract.m.Home.updateTown();
 					}
 
 				}
@@ -269,14 +261,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					Text = "Excellent.",
 					function getResult()
 					{
+						this.Contract.m.Home.finishUpgrading(true);
 						local playerFaction = this.Stronghold.getPlayerFaction()
-						local playerBase = this.Contract.m.Home
-						//upgrade looks and situation
-						playerBase.buildHouses();
 						//spawn new guards to reflect the change in size
 						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
-						this.Contract.m.Home.setUpgrading(false);
-						this.Contract.m.Home.updateTown()
 						foreach(card in playerFaction.m.Deck){
 							if (card.getID() == "stronghold_guard_base_action"){
 								card.m.PlayerBase = this.Contract.m.Home;
@@ -343,16 +331,11 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						{
 							this.Contract.m.Target.die()
 						}
-						local playerBase = this.Contract.getHome()
-						playerBase.getFlags().remove("UpgradeInterrupted");
-						playerBase.m.Size = playerBase.m.Size - 1;
-						playerBase.setUpgrading(false);
-						playerBase.updateTown();
+						this.Contract.m.Home.finishUpgrading(false);
 						this.Stronghold.getPlayerFaction().updateAlliancesPlayerFaction()
 						this.World.Contracts.finishActiveContract();
 						return 0;
 					}
-
 				},
 			],
 			function start()

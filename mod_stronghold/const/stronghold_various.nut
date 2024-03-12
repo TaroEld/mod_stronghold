@@ -168,7 +168,7 @@
 	
 	local playerBase = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_player_base", tile.Coords);
 	playerFaction.addSettlement(playerBase);
-	playerBase.setUpgrading(true);
+	playerBase.startUpgrading();
 	playerBase.onBuild()
 	
 
