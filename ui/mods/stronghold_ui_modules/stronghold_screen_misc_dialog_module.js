@@ -108,10 +108,11 @@ StrongholdScreenMiscModule.prototype.loadBuildRoadData = function()
 
 StrongholdScreenMiscModule.prototype.setRoadElement = function(_element)
 {
-	this.mRoadFactionText.text("Faction: " + _element.FactionName);
-	this.mRoadDistanceText.text("Distance (by air): " + _element.Score);
-	this.mRoadPiecesText.text("Segments: " + _element.Segments)
-	this.mRoadCostText.text("Price: " + _element.Cost);
+	var text = this.getModuleText().BuildRoad
+	this.mRoadFactionText.text(Stronghold.Text.format(text.Faction, _element.FactionName));
+	this.mRoadDistanceText.text(Stronghold.Text.format(text.Distance,  _element.Score));
+	this.mRoadPiecesText.text(Stronghold.Text.format(text.Segments, _element.Segments))
+	this.mRoadCostText.text(Stronghold.Text.Price.replace("{price}",_element.Cost));
 	this.mRoadCostImg.attr("src", Path.GFX + (_element.IsValid ? "ui/icons/unlocked_small.png" : "ui/icons/locked_small.png"))
 	this.mRoadButton.attr("disabled", !_element.IsValid)
 	this.RoadTownImg.attr("src", Path.GFX + _element.UISprite)
@@ -334,7 +335,7 @@ StrongholdScreenMiscModule.prototype.createTrainBrotherPopupContent = function (
 			.appendTo(entryContainer)
 	})
 	_parent.aciScrollBar({
-         delta: 1,
+         delta: 0.1,
          lineDelay: 0,
          lineTimer: 0,
          pageDelay: 0,
@@ -487,7 +488,6 @@ StrongholdScreenMiscModule.prototype.loadRemoveBaseData = function()
 	var text = this.getModuleText().RemoveBase;
 	this.mRemoveBaseRequirementsTable.empty()
 	this.addRequirementRow(this.mRemoveBaseRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.NoContract), this.mModuleData.RemoveBase.NoContract);
-	this.addRequirementRow(this.mRemoveBaseRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.NotUpgrading), this.mModuleData.RemoveBase.NotUpgrading);
 	this.mRemoveBaseButton.attr("disabled", !this.areRequirementsFulfilled(this.mRemoveBaseRequirementsTable))
 }
 
