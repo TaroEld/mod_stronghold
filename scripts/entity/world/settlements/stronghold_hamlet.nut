@@ -119,10 +119,10 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 			this.getFlags().set("CustomSprite", "Default");
 		}
 		local spriteID = this.getFlags().get("CustomSprite");
-		local constSprites = this.Stronghold.Visuals[this.Stronghold.VisualsMap[spriteID]];
+		local constSprites = this.Stronghold.VisualsMap[spriteID];
 		local sprites = constSprites.Levels[2];
-		this.m.TroopSprites = sprites.WorldmapFigure;
-		this.m.HouseSprites = sprites.Houses;
+		this.m.TroopSprites = constSprites.WorldmapFigure[3];
+		this.m.HouseSprites = sprites.Houses[3];
 	}
 	
 	

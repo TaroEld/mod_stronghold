@@ -53,7 +53,7 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
 
 StrongholdScreenUpgradeModule.prototype.setSpriteImage = function()
 {
-    var currentArr = Stronghold.Visuals.Sprites[this.mBaseSprite];
+    var currentArr = Stronghold.Visuals.VisualsMap[this.mBaseSprite];
     var baseSize = this.mData.TownAssets.Size;
     this.mBaseUpgradeSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[baseSize] + ".png");
 } 

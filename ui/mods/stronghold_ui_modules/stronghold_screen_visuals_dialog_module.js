@@ -69,16 +69,16 @@ StrongholdScreenVisualsModule.prototype.createDIV = function (_parentDiv)
 
 StrongholdScreenVisualsModule.prototype.getSpriteIndex = function()
 {
-	return Stronghold.Visuals.BaseSpriteTypes.indexOf(this.mBaseSprite)
+	return Stronghold.Visuals.VisualsKeys.indexOf(this.mBaseSprite);
 }
 
 StrongholdScreenVisualsModule.prototype.switchSpriteImage = function( _idx )
 {
-	var arrLen = Stronghold.Visuals.BaseSpriteTypes.length;
+	var arrLen = Stronghold.Visuals.VisualsKeys.length;
 	var newIdx = this.getSpriteIndex() + _idx;
 	if(newIdx == arrLen) newIdx = 0;
 	if(newIdx < 0) newIdx = arrLen - 1;
-	this.mBaseSprite = Stronghold.Visuals.BaseSpriteTypes[newIdx];
+	this.mBaseSprite = Stronghold.Visuals.VisualsKeys[newIdx];
     this.setSpriteImage();
 }
 
@@ -94,16 +94,15 @@ StrongholdScreenVisualsModule.prototype.loadFromData = function(_data)
 
 StrongholdScreenVisualsModule.prototype.setSpriteImage = function()
 {
-	var currentArr = Stronghold.Visuals.Sprites[this.mBaseSprite];
-	var baseSize = this.mParent.mData.Size;
+	var currentArr = Stronghold.Visuals.VisualsMap[this.mBaseSprite];
 	var text = this.getModuleText();
 
-    this.mSpriteImages.Tier1.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[0] + ".png");
-    this.mSpriteImages.Tier2.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[1] + ".png");
-    this.mSpriteImages.Tier3.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[2] + ".png");
-    this.mSpriteImages.Tier4.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[3] + ".png");
-	this.mSpriteImages.Mercenaries.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.UnitSprite + ".png");
-	this.mSpriteImages.Hamlet.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.HouseSprites[0] + ".png");
+    this.mSpriteImages.Tier1.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Base[0] + ".png");
+    this.mSpriteImages.Tier2.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Base[1] + ".png");
+    this.mSpriteImages.Tier3.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Base[2] + ".png");
+    this.mSpriteImages.Tier4.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Base[3] + ".png");
+	this.mSpriteImages.Mercenaries.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.WorldmapFigure[0] + ".png");
+	this.mSpriteImages.Hamlet.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Houses[0] + ".png");
 	var name = Stronghold.Text.format(text.SpriteName, currentArr.Name, currentArr.Author, this.mCurrentBaseSprite == this.mBaseSprite ? text.Current : "")
 	this.mSpriteNameLabel.text(name)
 }

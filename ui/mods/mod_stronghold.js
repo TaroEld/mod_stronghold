@@ -7,48 +7,7 @@ var Stronghold = {
 	    SelectionImagePath : "ui/selection.png",
 	    SelectionGoldImagePath : "ui/selection-gold.png",
 	    BaseSpriteTypes : ["Default", "Luft_Basic", "Luft_Brigand", "Luft_Necro", "Luft_Fishing"],
-	    Sprites : {
-	        Default : {
-	            "MainSprites" 		: ["stronghold_00", "stronghold_01", "stronghold_02", "stronghold_03"],
-	            "HouseSprites" 		: ["houses_03_01", "", ""],
-	            "UnitSprite" 		: "figure_mercenary_01",
-	            "HamletSprite" 		: "townhall_01",
-	            "Name" 				: "Default",
-	            "Author" 			: "Overhype"
-	        },
-	        Luft_Basic : {
-	            "MainSprites" 		: ["luft_basic_01", "luft_basic_02", "luft_basic_03"],
-	            "HouseSprites" 		: ["luft_basic_houses_01", "", ""],
-	            "UnitSprite" 		: "luft_basic_patrol",
-	            "HamletSprite" 		: "townhall_01",
-	            "Name" 				: "Basic Village",
-	            "Author" 			: "Luftwaffle"
-	        },
-	        Luft_Brigand : {
-	            "MainSprites" 		: ["luft_fort_01", "luft_fort_02", "luft_fort_03"],
-	            "HouseSprites" 		: ["luft_fort_houses_01", "", ""],
-	            "UnitSprite" 		: "luft_fort_patrol",
-	            "HamletSprite" 		: "townhall_01",
-	            "Name" 				: "Brigand's Hideout",
-	            "Author" 			: "Luftwaffle"
-	        },
-	        Luft_Necro : {
-	            "MainSprites" 		: ["luft_necro_01", "luft_necro_02", "luft_necro_03"],
-	            "HouseSprites" 		: ["luft_necro_houses_01", "", ""],
-	            "UnitSprite" 		: "luft_necro_patrol",
-	            "HamletSprite" 		: "townhall_01",
-	            "Name" 				: "Necromancer's Lair",
-	            "Author" 			: "Luftwaffle"
-	        },
-	        Luft_Fishing : {
-	            "MainSprites" 		: ["luft_fishing_01", "luft_fishing_02", "luft_fishing_03"],
-	            "HouseSprites" 		: ["luft_fishing_houses_01", "", ""],
-	            "UnitSprite" 		: "luft_fishing_patrol",
-	            "HamletSprite" 		: "townhall_01",
-	            "Name" 				: "Fishing Village",
-	            "Author" 			: "Luftwaffle"
-	        }
-	    },
+	    VisualsMap : null, // sent by SQ once stronghold_screen.nut initializes
 	},
     Roster : {
     	ToggleScroll :
@@ -248,90 +207,6 @@ WorldTownScreenShopDialogModule.prototype.createItemSlot = function (_owner, _in
     return result
 }
 
-WorldTownScreenShopDialogModule.prototype.showConfirmReforgeDialog = function(_sourceItemIdx, _itemName, _price, _affordable){
-     var self = this;
-     this.mPopupDialog = $('.world-town-screen').createPopupDialog('Confirm reforging', null, null, "confirm-reforge-dialog");
-     this.mPopupDialog.addPopupDialogContent(this.createConfirmReforgeContent(this.mPopupDialog, _itemName, _price, _affordable));
-     if(_affordable == true){
-     	this.mPopupDialog.addPopupDialogOkButton(function (_dialog)
-     	{
-     	   self.mPopupDialog = null;
-     	   self.reforgeNamedItemAfterClick(_sourceItemIdx);
-     	   _dialog.destroyPopupDialog();
-
-     	});
-     	this.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
-     	{
-     	   self.mPopupDialog = null;
-     	   _dialog.destroyPopupDialog();
-     	});
-     }
-     else{
-     	this.mPopupDialog.addPopupDialogOkButton(function (_dialog)
-     	{
-     	   self.mPopupDialog = null;
-     	   _dialog.destroyPopupDialog();
-     	});
-     }
-}
-
-WorldTownScreenShopDialogModule.prototype.createConfirmReforgeContent = function (_dialog, _itemName, _price, _affordable)
-{
-    var result = $('<div class="confirm-reforge-container"/>');
-
-    var row = $('<div class="row"/>');
-    result.append(row);
-
-    var label = $('<div class="text-font-normal font-color-label"></div>');
-    if(_affordable === true){
-    	label.html("Are you sure you want to reforge the " + _itemName + " ? This will cost " + _price + " crowns.")
-    }
-    else{
-    	label.html("You can't afford to reforge the " + _itemName + " ! (" + _price + " crowns.)")
-    }
-    row.append(label);
-
-    return result;
-};
-
-WorldTownScreenShopDialogModule.prototype.reforgeNamedItemAfterClick = function(_sourceItemIdx){
-    
-    var self = this;
-   	SQ.call(this.mSQHandle, 'onReforgeNamedItem', _sourceItemIdx, function (data)
-    {
-        // check if we have an error
-        if (ErrorCode.Key in data)
-        {
-            self.notifyEventListener(ErrorCode.Key, data[ErrorCode.Key]);
-        }
-        else
-        {
-            if(data.Item != null)
-            {
-                self.updateSlotItem(WorldTownScreenShop.ItemOwner.Shop, self.mShopSlots, data.Item, _sourceItemIdx, WorldTownScreenShop.ItemFlag.Updated);
-            }
-
-            self.mParent.loadAssetData(data.Assets);
-        }
-    });
-};
-
-WorldTownScreenShopDialogModule.prototype.checkIfReforgeIsValid = function (_sourceItemIdx)
-{
-	var self = this;
-    SQ.call(this.mSQHandle, 'onReforgeIsValid', _sourceItemIdx, function(data){
-    	if (data === undefined || data == null || typeof (data) !== 'object')
-    	{
-    	    console.error('ERROR: Failed to reforge item.');
-    	    return;
-    	}
-    	if (data["IsValid"] === false){
-    		return
-    	}
-    	self.showConfirmReforgeDialog(data["ItemIdx"], data["ItemName"], data["Price"], data["Affordable"]);
-    });
-};
-
 $.fn.findDialogTextContainer = function()
 {
     var result = this.find('.text-container:first');
@@ -425,26 +300,3 @@ WorldCampfireScreenAssets.prototype.destroyDIV = function ()
     	this.mStrongholdButton = null;
     }
 };
-
-
-var mycoolmod_loadPerkTreesWithBrotherData = CharacterScreenPerksModule.prototype.loadPerkTreesWithBrotherData;
-CharacterScreenPerksModule.prototype.loadPerkTreesWithBrotherData = function(_brother)
-{
-	mycoolmod_loadPerkTreesWithBrotherData.call(this, _brother);
-	// could only iterate last row or sth instead
-	for (var row = 0; row < this.mPerkTree.length; ++row)
-	{
-		for (var i = 0; i < this.mPerkTree[row].length; ++i)
-		{
-			var perk = this.mPerkTree[row][i];
-			if (perk.ID == "perk.fast_adaption")
-			{
-				perk.Container.css("display", _brother.HasCoolPerk ? "block" : "none")
-				var centerDIV = perk.Container.parent();
-				centerDIV.css({ 'width': (5.0 * (this.mPerkTree[row].length - 1)) + 'rem' }); // css is retarded?
-				centerDIV.css({ 'left': ((660 - centerDIV.width()) / 2) + 'px' }); // css is retarded?
-				return;
-			}
-		}
-	}
-}

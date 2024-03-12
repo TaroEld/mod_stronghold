@@ -239,10 +239,33 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return ret;
 	}
 
-
-	function setUpgrading(_bool)
+	function debugUpgrade()
 	{
-		this.m.IsUpgrading = _bool;
+		this.startUpgrading();
+		this.finishUpgrading(true);
+	}
+
+	function startUpgrading()
+	{
+		this.m.IsUpgrading = true;
+		this.m.Size += 1;
+		this.updateTown();
+	}
+
+	function finishUpgrading(_success)
+	{
+		this.m.IsUpgrading = false;
+		this.getFlags().remove("UpgradeInterrupted");
+		this.getFlags().remove("BuildInterrupted");
+		if (_success)
+		{
+			this.buildHouses();
+		}
+		else
+		{
+			this.m.Size -= 1;
+		}
+		this.updateTown()
 	}
 
 	function isUpgrading()
@@ -252,7 +275,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function getSizeName(_nextLevel = false)
 	{
-		local size = this.getSize();
+		local size = ::Math.max(this.getSize(), 1);
 		if (this.isUpgrading()) size = ::Math.max(1, size-1);
 		if (_nextLevel) return this.Stronghold.Tiers[size + 1].Name;
 		return this.Stronghold.Tiers[size].Name;
@@ -343,20 +366,19 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local spriteID = this.getFlags().get("CustomSprite");
 		local isOnSnow = this.getFlags().get("IsOnSnow");
 		local isOnDesert = this.getFlags().get("IsOnDesert");
-		local constSprites = this.Stronghold.Visuals[this.Stronghold.VisualsMap[spriteID]];
-		local sprites = constSprites.Levels;
-		sprites = sprites[this.getSize()-1];
+		local sprites = this.Stronghold.VisualsMap[spriteID];
+		local i = this.getSize()-1;
 
-		this.m.Sprite = this.isUpgrading() ? sprites.Upgrading[0] : sprites.Base[0];
-		this.m.Lighting = this.isUpgrading() ? sprites.Upgrading[1] : sprites.Base[1];
+		this.m.Sprite = this.isUpgrading() ? sprites.Upgrading[i][0] : sprites.Base[i][0];
+		this.m.Lighting = this.isUpgrading() ? sprites.Upgrading[i][1] : sprites.Base[i][1];
 		this.getSprite("body").setBrush(this.m.Sprite);
 
-		this.m.UIBackgroundCenter = sprites.Background.UIBackgroundCenter + (isOnSnow ? "_snow" : "");
-		this.m.UIBackgroundLeft = sprites.Background.UIBackgroundLeft + (isOnSnow ? "_snow" : "");
-		this.m.UIBackgroundRight = sprites.Background.UIBackgroundRight + (isOnSnow ? "_snow" : "");
-		this.m.UIRampPathway = sprites.Background.UIRampPathway;
+		this.m.UIBackgroundCenter = sprites.Background.UIBackgroundCenter[i] + (isOnSnow ? "_snow" : "");
+		this.m.UIBackgroundLeft = sprites.Background.UIBackgroundLeft[i] + (isOnSnow ? "_snow" : "");
+		this.m.UIBackgroundRight = sprites.Background.UIBackgroundRight[i] + (isOnSnow ? "_snow" : "");
+		this.m.UIRampPathway = sprites.Background.UIRampPathway[i];
 		
-		this.m.TroopSprites = sprites.WorldmapFigure;
+		this.m.TroopSprites = sprites.WorldmapFigure[i];
 		this.m.HouseSprites = sprites.Houses;
 		if(this.m.IsCoastal)
 		{

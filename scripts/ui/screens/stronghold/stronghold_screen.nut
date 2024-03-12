@@ -57,6 +57,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		{
 			module.Module.connectUI(this.m.JSHandle);
 		}
+		this.sendVisuals();
 	}
 
 	function setTown( _t )
@@ -203,6 +204,24 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		if (typeof _type == "string")
 			_type = [_type];
 		this.m.JSHandle.asyncCall("updateData",  [_type, this.getUIData(_type)]);
+	}
+
+	function sendVisuals()
+	{
+		local ret = {}
+		foreach(name, entry in ::Stronghold.VisualsMap)
+		{
+			ret[name] <- {
+				ID = entry.ID,
+				Name = entry.Name,
+				Author = entry.Author,
+				WorldmapFigure = entry.WorldmapFigure,
+				Base = entry.Base.map(@ (_v) _v[0]),
+				Upgrading = entry.Upgrading.map(@ (_v) _v[0]),
+				Houses = entry.Houses.map(@ (_v) _v[0]),
+			}
+		}
+		this.m.JSHandle.asyncCall("getVisuals",  ret);
 	}
 
 	function onLeaveButtonPressed()
