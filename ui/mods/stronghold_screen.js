@@ -298,13 +298,24 @@ StrongholdScreen.prototype.loadTownAssetsData = function()
 		this.getModuleObject("UpgradeModule").Button.enableButton(false);
 		this.getModuleObject("HamletModule").Button.enableButton(false);
 		this.getModuleObject("MiscModule").Button.enableButton(false);
+		return;
 	}
+	var self = this;
+	$.each(["UpgradeModule","HamletModule","MiscModule","LocationsModule", "BuildingsModule"], function(_idx, _str){
+		self.getModuleObject(_str).Button.enableButton(self.mData['TownAssets'].IsUpgrading === false);
+	})
 }
 
 
 StrongholdScreen.prototype.onLeaveButtonPressed = function()
 {
 	SQ.call(this.mSQHandle, 'onLeaveButtonPressed');
+}
+
+StrongholdScreen.prototype.getVisuals = function(_data)
+{
+	Stronghold.Visuals.VisualsMap = _data;
+	Stronghold.Visuals.VisualsKeys = Object.keys(_data);
 }
 
 registerScreen("StrongholdScreen", new StrongholdScreen());
