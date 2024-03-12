@@ -48,7 +48,10 @@ Stronghold.Text = {
 		BuildRoad : {
 			Title : "Build a road",
 			Description : "Building a road to the road network allows your caravans to travel and your patrols to roam. You will also be able to send gifts to connected factions.",
-			BuildTo : "Build Road to: "
+			BuildTo : "Build Road to: ",
+			Faction : "Faction: {0}",
+			Distance : "Distance (by air): {0}",
+			Segments : "Road Segments: {0}",
 		},
 		SendGifts : {
 			Title : "Send Gifts",
@@ -100,7 +103,6 @@ Stronghold.Text = {
 			Description : "Remove this base and the connected Hamlet, if it exists. This action cannot be undone.",
 			Requirements: {
 				NoContract : "You can't have an active contract.",
-				NotUpgrading : "You can't be upgrading your base.",
 			},
 			Warning : "LAST WARNING! Are you sure you want to remove your base?"
 		}
@@ -135,18 +137,17 @@ Stronghold.Text = {
 	UpgradeModule : {
 		Title : "Upgrade your base",
 		Name : "Upgrade",
-		Description : "Upgrade your base to unlock additional features.",
+		Description : "Upgrade your base to unlock additional features. A base can have a total of four levels.",
 		Requirements : {
 			MaxSize : "Your base is fully upgraded!",
 			Warehouse : "Your warehouse needs to be upgraded to the same level of the base.",
 			Price : "Have sufficient money ({0})",
 			NoContract : "You can't have an active contract.",
-			NotUpgrading : "You can't already be upgrading your base or already have a fully upgraded base.",
 		},
-		GeneralUnlockDescriptions : "You can construct an additional building and two additional locations.",
+		GeneralUnlockDescriptions : "Upgrade your {0} to a {1} to unlock the following features:<br>You can construct an additional building and two additional locations.<br>Locations can be upgraded a further level.<br>Buy and sell prices improve by 5%, and merchant stock increases in rarity and quantity.",
 		UnlockDescriptions : {
 			1 : "",
-			2 : "Bands of mercenaries will join your base and guard it against aggressors.<br>You can construct roads to other settlements, connecting your base to the world.",
+			2 : "You can construct roads to other settlements, connecting your base to the world.",
 			3 : "A number of unique contracts will be made available.",
 			4 : "A Hamlet will be built and connected to your base.",
 		}
