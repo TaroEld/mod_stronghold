@@ -9,24 +9,4 @@
 		}
 		return showCharacterScreenFromTown()
 	}
-
-	//llws esc in base management
-	local keyHandler = o.helper_handleContextualKeyInput;
-	o.helper_handleContextualKeyInput = function(key)
-	{
-		if(!keyHandler(key) && key.getState() == 0)
-		{
-			if (key.getKey() == 41) // esc
-			{
-				foreach (contract in this.World.Contracts.m.Open)
-				{
-					if ("onEscPressed" in contract){
-						contract.onEscPressed()
-						return
-					}
-				}
-			}
-		}
-	}
-
 });

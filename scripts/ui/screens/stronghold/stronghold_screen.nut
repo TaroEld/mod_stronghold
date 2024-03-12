@@ -83,7 +83,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 				this.m.WorldTownScreen.getMainDialogModule().reload();
 				this.m.WorldTownScreen.showLastActiveDialog();
 			});
-			this.m.JSHandle.asyncCall("show", this.getAssetsUIData());
+			this.m.JSHandle.asyncCall("show", this.getUIData(["Assets", "TownAssets"]));
 		}
 	}
 
@@ -104,15 +104,6 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		{
 			ret[id] <- {};
 		}
-		return ret
-	}
-
-	function getAssetsUIData()
-	{
-		local ret = this.getUIDataObject();
-
-		this.getTypeUIData("Assets", ret);
-		this.getTypeUIData("TownAssets", ret);
 		return ret
 	}
 
@@ -164,7 +155,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		_ret.IsMainBase <- town.isMainBase();
 		_ret.Size <- town.getSize();
 		_ret.SizeName <- town.getSizeName();
-		_ret.Upgrading <- town.isUpgrading();
+		_ret.IsUpgrading <- town.isUpgrading();
 		_ret.IsCoastal <- town.isCoastal();
 		_ret.HasHamlet <- town.getFlags().get("Child");
 		_ret.SpriteName <- town.getFlags().get("CustomSprite");

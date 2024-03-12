@@ -4,8 +4,8 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 	function getUIData( _ret )
 	{
 		// If level cap is reached, there is no need for the other info
-		_ret.MaxSize <- this.getTown().getSize() == 3;
-		if (_ret.MaxSize) return;
+		_ret.MaxSize <- this.getTown().getSize() == 4;
+		if (_ret.MaxSize) return _ret;
 		local tier = ::Stronghold.Tiers[this.getTown().getSize() + 1];
 		local price = ::Stronghold.PriceMult * tier.Price;
 		local warehouse = this.getTown().getWarehouse();

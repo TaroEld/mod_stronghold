@@ -153,19 +153,21 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			ReputationGain = 0,
 			Factions = []
 		}
-
-		foreach (i, item in this.getTown().getStash().getItems())
+		if (this.getTown().getWarehouse() != null)
 		{
-			if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
+			foreach (i, item in this.getTown().getStash().getItems())
 			{
-				ret.Gifts.push({
-					Name = item.m.Name,
-					ID = item.getID(),
-					Icon = item.m.Icon,
-					Value = item.m.Value
-				});
+				if (item != null && item.isItemType(this.Const.Items.ItemType.Loot))
+				{
+					ret.Gifts.push({
+						Name = item.m.Name,
+						ID = item.getID(),
+						Icon = item.m.Icon,
+						Value = item.m.Value
+					});
 
-				ret.ReputationGain += ::Math.abs(item.m.Value / 200)
+					ret.ReputationGain += ::Math.abs(item.m.Value / 200)
+				}
 			}
 		}
 
