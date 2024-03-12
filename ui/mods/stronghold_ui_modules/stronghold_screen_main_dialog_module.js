@@ -66,13 +66,14 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
 
     this.mHeaderRow = this.mContentContainer.appendRow(null, "stronghold-row-background stronghold-flex-center");
     var inputContainer = $('<div/>').css({
-    	"width" : "30.0rem",
+    	"width" : "60.0rem",
     	"height" : " 4.0rem"
     }).appendTo(this.mHeaderRow);
     this.mChangeNameInput = inputContainer.createInput("", 0, 200, 1, null, 'title-font-big font-bold font-color-brother-name', function (_input)
 	{
 		self.changeBaseName();
 	});
+	this.mChangeNameInput.css("background-size", "60.0rem 4.0rem")
 
 	var infoContainer = this.mContentContainer.appendRow();
     var baseSpriteContainer = $('<div class="stronghold-half-width stronghold-generic-background stronghold-flex-center"/>')
