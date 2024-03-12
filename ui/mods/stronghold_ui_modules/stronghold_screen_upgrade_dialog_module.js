@@ -21,9 +21,7 @@ StrongholdScreenUpgradeModule.prototype.createDIV = function (_parentDiv)
     StrongholdScreenModuleTemplate.prototype.createDIV.call(this, _parentDiv);
     var self = this;
     this.mContentContainer.addClass("upgrade-module");
-    this.mDescriptionTextContainer = Stronghold.getTextDiv(this.getModuleText().Description)
-    	.addClass("stronghold-flex-center")
-    	.appendTo(this.mContentContainer)
+    this.mDescriptionTextContainer = this.mContentContainer.appendRow(this.getModuleText().Description, null, true);
 
     var upgradeRow = this.mContentContainer.appendRow(null, "upgrade-base-row");
 
@@ -55,12 +53,17 @@ StrongholdScreenUpgradeModule.prototype.setSpriteImage = function()
 {
     var currentArr = Stronghold.Visuals.VisualsMap[this.mBaseSprite];
     var baseSize = this.mData.TownAssets.Size;
-    this.mBaseUpgradeSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.MainSprites[baseSize] + ".png");
+    this.mBaseUpgradeSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Base[baseSize] + ".png");
 } 
 
 StrongholdScreenUpgradeModule.prototype.fillUpgradeDetailsText = function()
 {
-    this.mAdvantagesTextContainer.html(this.getModuleText().UnlockDescriptions[this.mData.TownAssets.Size + 1]);
+	var text = Stronghold.Text.format(this.getModuleText().GeneralUnlockDescriptions,
+		Stronghold.Text.General["Tier" + this.mData.TownAssets.Size],
+		Stronghold.Text.General["Tier" + (this.mData.TownAssets.Size + 1)]
+		) + "<br>";
+	text += this.getModuleText().UnlockDescriptions[this.mData.TownAssets.Size + 1];
+    this.mAdvantagesTextContainer.html(text);
 }
 
 StrongholdScreenUpgradeModule.prototype.fillRequirementsText = function()
@@ -75,8 +78,6 @@ StrongholdScreenUpgradeModule.prototype.fillRequirementsText = function()
 		this.mUpgradeBaseButton.enableButton(false);
 		return;
 	}
-
-    this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(text.NotUpgrading), reqs.NotUpgrading);
     this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(Stronghold.Text.format(text.Price, this.mModuleData.Price)), reqs.Price);
     this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(text.Warehouse), reqs.Warehouse);
     this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(text.NoContract), reqs.NoContract);
