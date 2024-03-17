@@ -7,7 +7,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		HasSpawnedUnit = false,
 		AttacksRemaining = -1,
 		TimeOfNextAttack = -1.0,
-		HostileFaction = null
 	},
 	function create()
 	{
@@ -32,7 +31,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.m.AttacksRemaining = this.m.TargetLevel
 		this.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  ::Math.rand(12, 24) * this.World.getTime().SecondsPerHour
 		this.m.Name = format("Defend your %s", this.getHome().getSizeName());
-		this.m.HostileFaction = ::World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies);
 		this.World.Contracts.setActiveContract(this);
 		this.setState("Running")
 	}
@@ -409,10 +407,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			Description = "An army of city state soldiers.",
 			Footprint = this.Const.World.FootprintsType.CityState,
 		}
-		this.m.HostileFaction.copyLooks(closest_faction);
+		::Stronghold.getHostileFaction().copyLooks(closest_faction);
 
 		local factionType = factionTypes[closest_faction.m.Type]
-		local party = this.m.HostileFaction.spawnEntity(closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
+		local party = ::Stronghold.getHostileFaction().spawnEntity(closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
 		party.setDescription(factionType.Description);
 		party.setFootprintType(factionType.Footprint);
 		party.setMovementSpeed(70.0);
@@ -530,6 +528,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		{
 			this.m.Destination = this.WeakTableRef(this.World.getEntityByID(destination));
 		}
+		local target = _in.readU32();
 		if (target != 0)
 		{
 			this.m.Target = this.WeakTableRef(this.World.getEntityByID(target));
@@ -540,7 +539,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.m.TargetLevel = _in.readI32()
 		this.m.HasSpawnedUnit = _in.readBool()
 		this.m.AttacksRemaining = _in.readI32()
-		this.m.HostileFaction = ::World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies);
 		this.contract.onDeserialize(_in);
 	}
 });

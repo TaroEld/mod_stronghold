@@ -95,13 +95,15 @@ this.stronghold_enemy_faction <- this.inherit("scripts/factions/faction", {
 
 	function onSerialize(_out)
 	{
-		_out.writeString(_faction.m.Base);
-		_out.writeString(_faction.m.TacticalBase);
-		_out.writeString(_faction.m.CombatMusic);
+		this.faction.onSerialize(_out);
+		_out.writeString(this.m.Base);
+		_out.writeString(this.m.TacticalBase);
+		_out.writeString(this.m.CombatMusic);
 	}
 
 	function onDeserialize(_in)
 	{
+		this.faction.onDeserialize(_in);
 		this.m.Base = _in.readString();
 		this.m.TacticalBase = _in.readString();
 		this.m.CombatMusic = _in.readString();

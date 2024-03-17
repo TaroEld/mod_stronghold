@@ -9,7 +9,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		LastCombatTime = 0.0,
 		Destination = null,
 		Enemy_Faction = null,
-		HostileFaction = null
 	},
 	function create()
 	{
@@ -31,7 +30,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	function start()
 	{
 		this.contract.start();
-		this.Contract.m.HostileFaction = ::World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies);
 	}
 	
 	function getBanner()
@@ -159,7 +157,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 						this.logInfo("COULD NOT FIND EITHER START OR END SETTLEMENT")
 						this.Contract.setState("Return");
 					}
-					this.Contract.m.HostileFaction.copyLooks(selected_faction);
+					::Stronghold.getHostileFaction().copyLooks(selected_faction);
 					local party = this.Contract.m.Enemy_Faction.spawnEntity(selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
 					this.Const.World.Common.addTroop(party, {
 							Type = this.Const.World.Spawn.Troops.Executioner

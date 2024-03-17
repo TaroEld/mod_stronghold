@@ -90,8 +90,14 @@
 
 ::Stronghold.getPlayerFaction <- function()
 {
-	if ("FactionManager" in this.World) return this.World.FactionManager.getFactionOfType(this.Const.FactionType.Player)
-	return null
+	if ("FactionManager" in this.World)
+		return this.World.FactionManager.getFactionOfType(this.Const.FactionType.Player)
+}
+
+::Stronghold.getHostileFaction <- function()
+{
+	if ("FactionManager" in this.World)
+		return this.World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies)
 }
 
 ::Stronghold.getMaxStrongholdNumber <- function()
