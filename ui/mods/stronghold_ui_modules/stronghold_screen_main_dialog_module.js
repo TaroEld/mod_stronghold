@@ -49,6 +49,10 @@ var StrongholdScreenMainModule = function(_parent)
     		Div : null
     	},
     }
+    this.mBaseSettings = {
+    	// AutoConsume : null,
+    	ShowBanner : null,
+    }
 };
 
 StrongholdScreenMainModule.prototype = Object.create(StrongholdScreenModuleTemplate.prototype);
@@ -96,10 +100,35 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
     		.appendTo(ret);
     	return ret;
     })
+
+    var settingsContainer = $('<div class="stronghold-generic-background"/>')
+    	.appendTo(this.mContentContainer);
+    this.mSettingsTable = $('<table/>')
+    	.appendTo(settingsContainer)
+    MSU.iterateObject(this.mBaseSettings, function(_key, _value)
+    {
+    	var row = $("<tr/>").appendTo(self.mSettingsTable);
+    	$("<td/>").appendTo(row).append(Stronghold.getTextDiv(text.BaseSettings[_key]));
+    	var checkboxContainer = $("<td/>").appendTo(row);
+    	var checkbox = $('<input type="checkbox"/>')
+    		.appendTo(checkboxContainer);
+    	self.mBaseSettings[_key] = checkbox;
+    	checkbox.iCheck({
+    		checkboxClass: 'icheckbox_flat-orange',
+    		radioClass: 'iradio_flat-orange',
+    		increaseArea: '30%'
+    	});
+
+    	checkbox.on('ifChecked ifUnchecked', null, this, function (_event) {
+    		self.changeSetting(_key, checkbox.prop('checked') === true);
+    	});
+    	checkbox.iCheck("check");
+    })
 };
 
 StrongholdScreenMainModule.prototype.loadFromData = function()
 {
+	var self = this;
 	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
 		return;
 	var text = this.getModuleText();
@@ -110,9 +139,18 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
 	var baseSprite = this.mData.TownAssets.SpriteName;
 	var currentSprite = Stronghold.Visuals.VisualsMap[baseSprite].Base[this.mData.TownAssets.Size -1];
     this.mBaseSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentSprite + ".png");
+    MSU.iterateObject(this.mBaseSettings, function(_key, _value)
+    {
+    	_value.iCheck(self.mData.TownAssets.BaseSettings[_key] === true ? 'check' : 'uncheck');
+    });
 }
 
 StrongholdScreenMainModule.prototype.changeBaseName = function ()
 {
 	SQ.call(this.mSQHandle, 'changeBaseName', this.mChangeNameInput.getInputText());
+};
+
+StrongholdScreenMainModule.prototype.changeSetting = function (_setting, _value)
+{
+	SQ.call(this.mSQHandle, 'onChangeSetting', [_setting, _value]);
 };

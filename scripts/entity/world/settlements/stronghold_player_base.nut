@@ -5,9 +5,12 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		isPlayerBase = true,
 		IsUpgrading = false,
 		Stash = null,
-		Warehouse = null,
 		TroopSprites = "",
 		HouseSprites = [],
+		BaseSettings = {
+			AutoConsume = true,
+			ShowBanner = true,
+		}
 	},
 
 	function create()
@@ -16,13 +19,14 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Rumors = this.Const.Strings.RumorsFarmingSettlement;
 		this.m.Culture = this.Const.World.Culture.Neutral;
 		this.m.IsMilitary = true;
-		this.m.Size = 1;
+		this.m.Size = 0;
 		this.m.HousesType = 3;
 		this.m.HousesMin = 1;
 		this.m.HousesMax = 2;
 		this.m.AttachedLocationsMax = 4;
 		this.m.IsVisited = true;
 		this.m.Banner = this.World.Assets.getBannerID();
+		this.m.IsShowingBanner = this.m.BaseSettings.ShowBanner;
 		this.m.Buildings.resize(7, null);
 		this.m.Stash = ::new("scripts/items/stash_container");
 		this.m.Stash.resize(99);
@@ -197,6 +201,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				}
 			}
 		}
+		local flag = this.getSprite("location_banner")
+		flag.Visible = this.m.BaseSettings.ShowBanner;
 	}
 
 	function fadeOutAndDie(_force = false)
@@ -892,8 +898,14 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		::Stronghold.StrongholdScreen.show();
 	}
 
+	function onChangeSetting(_setting, _bool)
+	{
+		this.m.BaseSettings[_setting] = _bool;
+	}
+
 	function onSerialize( _out )
 	{
+		::Stronghold.Mod.Serialization.flagSerialize("BaseSettings",  this.m.BaseSettings, this.getFlags());
 		local management = this.m.Buildings.pop()
 		this.m.Buildings.resize(6)
 		this.settlement.onSerialize(_out);
@@ -912,6 +924,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Buildings.resize(7)
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 		this.m.Buildings[6].updateSprite();
+		this.m.BaseSettings = ::Stronghold.Mod.Serialization.flagDeserialize("BaseSettings",  this.m.BaseSettings, null, this.getFlags());
 		this.updateTown();
 	}
 });

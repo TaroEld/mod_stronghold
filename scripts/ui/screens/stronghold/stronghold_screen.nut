@@ -186,6 +186,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			}
 			::MSU.Table.merge(_ret.Locations[locationID], location, true);
 		}
+		_ret.BaseSettings <- town.m.BaseSettings;
 		return _ret
 	}
 

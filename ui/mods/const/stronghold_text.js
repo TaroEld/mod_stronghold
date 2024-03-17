@@ -42,6 +42,10 @@ Stronghold.Text = {
 			Tools : "Accumulated Tools",
 			Medicine : "Accumulated Medicine",
 			Arrows : "Accumulated Arrows",
+		},
+		BaseSettings : {
+			AutoConsume : "Automatically take consumable items (tools, medicine, arrows, gold) from the base stash.",
+			ShowBanner : "Show the banner of your base on the worldmap.",
 		}
 	},
 	MiscModule : {
