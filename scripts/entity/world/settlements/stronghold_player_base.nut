@@ -69,6 +69,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.updateLocationEffects();
 		this.updateSituations();
 		this.updateShop();
+		this.consumeItems();
 
 		this.Stronghold.getPlayerFaction().updateQuests();
 		this.rebuildAttachedLocations();
@@ -88,7 +89,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function getWarehouse()
 	{
-		return this.m.Warehouse;
+		return this.getLocation("attached_location.warehouse");
 	}
 
 	function getStash()
@@ -105,6 +106,13 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.getFlags().set("LastLocationUpdate", this.Time.getVirtualTimeF());
 		foreach (location in this.getActiveAttachedLocations())
 			location.stronghold_updateLocationEffects(daysPassed);
+	}
+
+	function consumeItems()
+	{
+		if (this.getWarehouse() == null)
+			return;
+		this.getWarehouse().consumeConsumableItems();
 	}
 
 	function isMainBase()
@@ -400,7 +408,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		light.IgnoreAmbientColor = true;
 		light.Alpha = 0;
 	}
-	
+
 	function addBuilding( _building, _slot = null )
 	{
 		//modded vanilla function
@@ -450,11 +458,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function getMaxLocations()
 	{
 		return this.m.AttachedLocationsMax;
-	}
-
-	function getActiveBuildings()
-	{
-		return this.m.Buildings.filter(@(a, b) b != null);
 	}
 
 	function countAttachedLocations( _id = null )

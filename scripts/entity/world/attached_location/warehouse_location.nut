@@ -74,7 +74,7 @@ this.warehouse_location <- this.inherit("scripts/entity/world/attached_location"
 
 	function onUpgrade()
 	{
-		this.getStash().resize(this.getStash().m.Capacity + ::Stronghold.Locations.Warehouse.MaxItemSlots)
+		this.getStash().resize(this.getStash().m.Capacity + ::Stronghold.Locations.Warehouse.MaxItemSlots);
 	}
 
 	function onSerialize(_out)
