@@ -368,10 +368,8 @@ StrongholdScreenMiscModule.prototype.loadTrainBrotherData = function()
 	this.mTrainBrotherConfirmButton.attr("disabled", true);
 
 	this.mTrainBrotherRequirementsTable.empty()
-	this.addRequirementRow(this.mTrainBrotherRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.FoundTrainer), this.mModuleData.TrainBrother.Requirements.FoundTrainer);
-	this.addRequirementRow(this.mTrainBrotherRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Price.replace("{price}", this.mModuleData.TrainBrother.Price)), this.mModuleData.TrainBrother.Requirements.Price);
-	this.addRequirementRow(this.mTrainBrotherRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.ValidBrother), this.mModuleData.TrainBrother.Requirements.ValidBrother);
-	this.mTrainChooseBrotherButton.attr("disabled", !this.areRequirementsFulfilled(this.mTrainBrotherRequirementsTable))
+	var reqs = this.buildRequirements(this.mTrainBrotherRequirementsTable, text.Requirements, this.mModuleData.TrainBrother.Requirements, true);
+	this.mTrainChooseBrotherButton.attr("disabled", !reqs)
 }
 
 StrongholdScreenMiscModule.prototype.notifyBackendTrainBrother = function()
@@ -403,9 +401,8 @@ StrongholdScreenMiscModule.prototype.loadBuyWaterData = function()
 {
 	var text = this.getModuleText().BuyWater;
 	this.mBuyWaterRequirementsTable.empty()
-	this.addRequirementRow(this.mBuyWaterRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Price.replace("{price}", this.mModuleData.BuyWater.Price)), this.mModuleData.BuyWater.Requirements.Price);
-	this.addRequirementRow(this.mBuyWaterRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Unlocked), this.mModuleData.BuyWater.Requirements.Unlocked);
-	this.mBuyWaterConfirmButton.attr("disabled", !this.areRequirementsFulfilled(this.mBuyWaterRequirementsTable))
+	var reqs = this.buildRequirements(this.mBuyWaterRequirementsTable, text.Requirements, this.mModuleData.BuyWater.Requirements, true);
+	this.mBuyWaterConfirmButton.attr("disabled", !reqs);
 }
 
 StrongholdScreenMiscModule.prototype.notifyBackendBuyWater = function()
@@ -437,10 +434,8 @@ StrongholdScreenMiscModule.prototype.loadHireMercenariesData = function()
 {
 	var text = this.getModuleText().HireMercenaries;
 	this.mHireMercenariesRequirementsTable.empty()
-	this.addRequirementRow(this.mHireMercenariesRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Unlocked), this.mModuleData.HireMercenaries.Requirements.Unlocked);
-	this.addRequirementRow(this.mHireMercenariesRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.NoMercenaries), this.mModuleData.HireMercenaries.Requirements.NoMercenaries);
-	this.addRequirementRow(this.mHireMercenariesRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.Price.replace("{price}", this.mModuleData.HireMercenaries.Price)), this.mModuleData.HireMercenaries.Requirements.Price);
-	this.mHireMercenariesConfirmButton.attr("disabled", !this.areRequirementsFulfilled(this.mHireMercenariesRequirementsTable))
+	var reqs = this.buildRequirements(this.mHireMercenariesRequirementsTable, text.Requirements, this.mModuleData.HireMercenaries.Requirements, true);
+	this.mHireMercenariesConfirmButton.attr("disabled", !reqs)
 }
 
 StrongholdScreenMiscModule.prototype.notifyBackendHireMercenaries = function()
