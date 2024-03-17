@@ -1,13 +1,13 @@
 this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/contract", {
 	m = {
 		//spawns the enemy when you build/upgrade the base. Uses a scripted fight to set the location. Sets nobles to enemy
-		noble_enemy = null,
 		Target = null, 
 		Destination = null,
 		TargetLevel = null,
 		HasSpawnedUnit = false,
 		AttacksRemaining = -1,
-		TimeOfNextAttack = -1.0
+		TimeOfNextAttack = -1.0,
+		HostileFaction = null
 	},
 	function create()
 	{
@@ -32,6 +32,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.m.AttacksRemaining = this.m.TargetLevel
 		this.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  ::Math.rand(12, 24) * this.World.getTime().SecondsPerHour
 		this.m.Name = format("Defend your %s", this.getHome().getSizeName());
+		this.m.HostileFaction = ::World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies);
 		this.World.Contracts.setActiveContract(this);
 		this.setState("Running")
 	}
@@ -43,25 +44,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	
 	function onDestinationAttacked(_dest, _isPlayerAttacking)
 	{
-		//sets noble to enemy, also makes sure mercs join
-		if (this.m.Flags.get("EnemyNobleHouse"))
-		{
-			this.World.FactionManager.getFaction(this.m.Flags.get("EnemyNobleHouse")).setIsTemporaryEnemy(true)
-			local entities = this.World.getAllEntitiesAtPos(this.getHome().getPos(), 3.0);
-			foreach(entity in entities)
-			{
-				if (entity.getFlags().get("Stronghold_Guards"))
-				{
-					local noble = this.World.FactionManager.getFaction(this.m.Flags.get("EnemyNobleHouse"))
-					local playerFaction = this.Stronghold.getPlayerFaction()
-					noble.removeAlly(playerFaction.getID());
-					playerFaction.removeAlly(noble.getID());
-
-				}
-			}
-		}
-		
-		local isPlayerInitiated = false;
+		local isPlayerInitiated = true;
 		local p;
 		//special location if fighting at stronghold
 		if (this.getVecDistance(this.getHome().getPos(), this.World.State.getPlayer().getPos()) <= 250)
@@ -80,10 +63,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		p.Music = this.Const.Music.NobleTracks;
 		p.CombatID = "Stronghold";
 		this.World.Contracts.startScriptedCombat(p, isPlayerInitiated, true, true);
-		
-		
 	}
-
 
 	function createStates()
 	{
@@ -129,11 +109,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 				else if (this.Contract.m.Origin.getFlags().get("UpgradeInterrupted")){
 					this.Contract.setScreen("FailureInterrupt");
 					this.World.Contracts.showActiveContract();
-				}
-					
-				else if (this.Contract.m.Target != null && !this.Contract.m.Target.isNull() && this.Contract.isPlayerAt(this.Contract.m.Target))
-				{
-					this.Contract.onDestinationAttacked(this.Contract.m.Target, false);
 				}
 			}
 			
@@ -394,7 +369,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			Spawnlist = this.Const.World.Spawn.GoblinRaiders,
 			Description = "A warband of goblins.",
 			Footprint = this.Const.World.FootprintsType.Goblins,
-			Noble = false
 		}
 		if(this.Const.DLC.Wildmen)
 		{
@@ -403,7 +377,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 				Spawnlist = this.Const.World.Spawn.Barbarians,
 				Description = "A warband of barbarian tribals.",
 				Footprint = this.Const.World.FootprintsType.Barbarians,
-				Noble = false
 			}
 		}
 		factionTypes[this.Const.FactionType.OrientalBandits] <- {
@@ -411,60 +384,51 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			Spawnlist = this.Const.World.Spawn.NomadDefenders,
 			Description = "A warband of nomads.",
 			Footprint = this.Const.World.FootprintsType.Nomads,
-			Noble = false
 		}
 		factionTypes[this.Const.FactionType.Orcs] <- {
 			Name = "Orc Marauders",
 			Spawnlist = this.Const.World.Spawn.OrcRaiders,
 			Description = "A warband of Orcs.",
 			Footprint = this.Const.World.FootprintsType.Orcs,
-			Noble = false
 		}
 		factionTypes[this.Const.FactionType.Zombies] <- {
 			Name = "Army of the dead",
 			Spawnlist = this.Const.World.Spawn.Necromancer,
 			Description = "An army of undead lead by a necromancer.",
 			Footprint = this.Const.World.FootprintsType.Undead,
-			Noble = false
 		}
 		factionTypes[this.Const.FactionType.NobleHouse] <- {
 			Name = "Noble Army",
 			Spawnlist = this.Const.World.Spawn.Noble,
 			Description = "An army of noble soldiers.",
 			Footprint = this.Const.World.FootprintsType.Nobles,
-			Noble = true
 		}
 		factionTypes[this.Const.FactionType.OrientalCityState] <- {
 			Name = "City State Army",
 			Spawnlist = this.Const.World.Spawn.Southern,
 			Description = "An army of city state soldiers.",
 			Footprint = this.Const.World.FootprintsType.CityState,
-			Noble = true
 		}
+		this.m.HostileFaction.copyLooks(closest_faction);
+
 		local factionType = factionTypes[closest_faction.m.Type]
-		local party = ::Stronghold.spawnEntity(closest_faction, closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
+		local party = this.m.HostileFaction.spawnEntity(closest_settlement.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
 		party.setDescription(factionType.Description);
 		party.setFootprintType(factionType.Footprint);
-
-		if (factionType.Noble){
-			this.m.Flags.set("EnemyNobleHouse", closest_faction.getID());
-		}
-
-		//can't get the same location twice
-		this.m.Flags.set(closest_settlement.getID(), true)
-		//spawn the party, assign AI controller, give the order to intercept the player. switches contract state to running straight away, no offer here
+		party.setMovementSpeed(70.0);
+		party.setAttackableByAI(false);
+		party.setVisibleInFogOfWar(true);
+		party.setImportant(true);
+		party.setDiscovered(true);
 		party.getLoot().ArmorParts = ::Math.rand(10, 30) * wave;
 		party.getLoot().Medicine = ::Math.rand(1, 3) * wave;
 		party.getLoot().Ammo = ::Math.rand(0, 30) * wave ;
 		party.getLoot().Money = ::Math.rand(200, 300) * wave;
 		party.getSprite("banner").setBrush(closest_settlement.getBanner());
 		party.getSprite("selection").Visible = true
-		party.setMovementSpeed(70.0);
-		party.setAttackableByAI(false);
-		party.setVisibleInFogOfWar(true);
-		party.setImportant(true);
-		party.setDiscovered(true);
 		this.m.Target = this.WeakTableRef(party);
+
+
 		party.setOnCombatWithPlayerCallback(this.onDestinationAttacked.bindenv(this));
 		local c = party.getController();
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false);
@@ -490,7 +454,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 				card.m.PlayerBase = this.m.Home;
 				card.execute(playerFaction);
 			}
-		}	
+		}
+
+		//can't get the same location twice
+		this.m.Flags.set(closest_settlement.getID(), true)
 	}
 	
 	function onPrepareVariables( _vars )
@@ -515,9 +482,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			if(!this.World.FactionManager.getFactionsOfType(this.Const.FactionType.Player)[0].m.Settlements.len() == 0){
 				this.m.Home.getSprite("selection").Visible = false;
 			}
-
 		}
-
 	}
 
 	function onIsValid()
@@ -565,8 +530,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		{
 			this.m.Destination = this.WeakTableRef(this.World.getEntityByID(destination));
 		}
-		local target = _in.readU32();
-
 		if (target != 0)
 		{
 			this.m.Target = this.WeakTableRef(this.World.getEntityByID(target));
@@ -577,9 +540,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.m.TargetLevel = _in.readI32()
 		this.m.HasSpawnedUnit = _in.readBool()
 		this.m.AttacksRemaining = _in.readI32()
+		this.m.HostileFaction = ::World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies);
 		this.contract.onDeserialize(_in);
-
 	}
-
 });
 

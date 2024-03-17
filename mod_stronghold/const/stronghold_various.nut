@@ -164,6 +164,10 @@
 		playerFaction.updatePlayerRelation()
 		this.World.FactionManager.m.Factions.push(playerFaction);
 		playerFaction.onUpdateRoster();
+
+		local enemyFaction = this.new("scripts/factions/stronghold_enemy_faction");
+		enemyFaction.setID(::World.FactionManager.m.Factions.len());
+		::World.FactionManager.m.Factions.push(enemyFaction);
 	}
 	
 	local playerBase = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_player_base", tile.Coords);
@@ -181,57 +185,4 @@
 	contract.m.TargetLevel = 1
 	this.World.Contracts.addContract(contract);
 	contract.start();
-}
-
-::Stronghold.assignTroops <- function ( _party, _partyList, _resources, _weightMode = 1)
-{
-	//this function circumvents the max party sizes. initially had it used universally, now only during  specific calls
-	local max_resources = _resources;
-	local selected_party;
-	while (_resources > 15)
-	{
-		selected_party = this.Const.World.Common.assignTroops( _party, _partyList, _resources, _weightMode = 1)
-		foreach (t in _party.m.Troops)
-		{
-			_resources -= t.Cost;
-		}
-	}
-	_party.updateStrength();
-	return selected_party;
-}
-
-::Stronghold.spawnEntity <- function( _faction, _tile, _name, _uniqueName, _template, _resources )
-{
-	//same as vanilla
-	local party = this.World.spawnEntity("scripts/entity/world/party", _tile.Coords);
-	party.setFaction(_faction.getID());
-
-	if (_uniqueName)
-	{
-		_name = _faction.getUniqueName(_name);
-	}
-
-	party.setName(_name);
-	local t;
-
-	if (_template != null)
-	{
-		//except for this line, allowing more than unit cap
-		t = ::Stronghold.assignTroops(party, _template, _resources);
-	}
-
-	party.getSprite("base").setBrush(_faction.m.Base);
-
-	if (t != null)
-	{
-		party.getSprite("body").setBrush(t.Body);
-	}
-
-	if (_faction.m.BannerPrefix != "")
-	{
-		party.getSprite("banner").setBrush(_faction.m.BannerPrefix + (_faction.m.Banner < 10 ? "0" + _faction.m.Banner : _faction.m.Banner));
-	}
-
-	_faction.addUnit(party);
-	return party;
 }

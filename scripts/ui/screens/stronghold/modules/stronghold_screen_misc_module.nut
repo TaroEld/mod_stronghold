@@ -404,7 +404,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 
 		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
 		party.getSprite("body").setBrush("figure_mercenary_01");
-		party.setDescription("A band of mercenaries following you around.");
+		party.setDescription("A band of mercenaries accompanying your party.");
 		party.getFlags().set("Stronghold_Mercenaries", true);
 		party.setFootprintType(this.Const.World.FootprintsType.CityState);
 		party.setMovementSpeed(150)

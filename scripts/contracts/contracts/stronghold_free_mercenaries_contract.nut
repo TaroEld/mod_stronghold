@@ -8,7 +8,8 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		Title = "Free the mercenaries",
 		LastCombatTime = 0.0,
 		Destination = null,
-		Enemy_Faction = null
+		Enemy_Faction = null,
+		HostileFaction = null
 	},
 	function create()
 	{
@@ -30,6 +31,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	function start()
 	{
 		this.contract.start();
+		this.Contract.m.HostileFaction = ::World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies);
 	}
 	
 	function getBanner()
@@ -67,7 +69,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					this.Contract.m.Target.getSprite("selection").Visible = true;
 					this.Contract.m.Target.setVisibleInFogOfWar(true);
 					this.Contract.m.Target.setOnCombatWithPlayerCallback(this.onTargetAttacked.bindenv(this));
-					this.Contract.m.Enemy_Faction = this.Contract.m.Target.getFaction()
+					this.Contract.m.Enemy_Faction = this.Contract.m.Target.getFaction();
 				}
 				else
 				{
@@ -157,8 +159,8 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 						this.logInfo("COULD NOT FIND EITHER START OR END SETTLEMENT")
 						this.Contract.setState("Return");
 					}
-					
-					local party = ::Stronghold.spawnEntity(selected_faction, selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
+					this.Contract.m.HostileFaction.copyLooks(selected_faction);
+					local party = this.Contract.m.Enemy_Faction.spawnEntity(selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
 					this.Const.World.Common.addTroop(party, {
 							Type = this.Const.World.Spawn.Troops.Executioner
 						}, true, 100);
@@ -191,10 +193,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					"Hunt down the noble caravan",
 					"Don't let it reach " + selected_end_settlememt.getName() + " ."
 					];
-					
 				}
-				
-								
 			}
 			
 			
@@ -220,7 +219,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			{
 				if (this.Time.getVirtualTimeF() >= this.Contract.m.LastCombatTime + 5.0)
 				{
-					this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).setIsTemporaryEnemy(true);
 					this.Contract.m.LastCombatTime = this.Time.getVirtualTimeF();
 					this.World.Contracts.showCombatDialog(_isPlayerAttacking);
 				}
@@ -228,7 +226,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			
 			function onActorRetreated( _actor, _combatID )
 			{
-				if (!_actor.isNonCombatant() && _actor.getFaction() == this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).getID())
+				if (!_actor.isNonCombatant() && _actor.getFaction() == ::World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies).getID())
 				{
 					this.Contract.m.Flags.set("Survivors", this.Flags.get("Survivors") + 1);
 				}
@@ -487,9 +485,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			}
 			this.World.FactionManager.getFaction(this.getFaction()).setActive(true);
 			this.m.Home.getSprite("selection").Visible = false;
-
 		}
-
 	}
 	
 	function cancel()
@@ -564,11 +560,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		{
 			this.m.Target = this.WeakTableRef(this.World.getEntityByID(target));
 		}
-		
-		
 		this.contract.onDeserialize(_in);
-
 	}
-
 });
 

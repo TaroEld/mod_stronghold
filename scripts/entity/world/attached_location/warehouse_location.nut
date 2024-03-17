@@ -30,7 +30,6 @@ this.warehouse_location <- this.inherit("scripts/entity/world/attached_location"
 	function setSettlement( _s )
 	{
 		this.attached_location.setSettlement(_s);
-		_s.m.Warehouse = this.WeakTableRef(this);
 	}
 
 	function addConsumableItem(_i)
