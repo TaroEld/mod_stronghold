@@ -14,6 +14,9 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 			"Trade with %settlement% is prospering, my friend! Safe roads and full stocks, let\'s hope it stays this way...",
 			"My cousin over in %settlement% keeps bragging about how good they have it there. Well stocked market stands and all. Not like this rotten place."
 		];
+		this.m.Descriptions <- [
+			"The few merchants that venture to this settlement have little to gain.","","","With no noble house asking for tariffs, you can get very good prices for your goods.",
+		]
 		this.m.IsStacking = false;
 		
 	}
@@ -36,8 +39,7 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 	//should be dynamic and check the properties
 	function defineDescription(_town)
 	{
-		local description = "With no noble house asking for tariffs, you can get very good prices for your goods. ";
-		local mults = this.Stronghold.WellSupplied[_town.getSize()-1]
+		local description = "With no noble house asking for tariffs, you can get very good prices for your goods.";
 		return description
 	}
 
@@ -56,7 +58,7 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 		local playerBase = this.World.State.getCurrentTown();
 		if (playerBase == null) return
 		this.defineDescription(playerBase);
-		local mults = this.Stronghold.WellSupplied[playerBase.getSize()-1]
+		local mults = this.Stronghold.Tiers[playerBase.getSize()]
 		_modifiers.RarityMult = mults.Rarity;
 		_modifiers.BuyPriceMult = mults.BuyPrice;
 		_modifiers.SellPriceMult = mults.SellPrice;
