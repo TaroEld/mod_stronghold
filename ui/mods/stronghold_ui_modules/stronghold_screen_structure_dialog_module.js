@@ -22,20 +22,32 @@ StrongholdScreenStructuresModule.prototype.createDIV = function (_parentDiv)
 
     this.mContentContainer.addClass("structures-module");
     this.mStructuresRow = this.mContentContainer.appendRow(null, "structure-row gold-line-bottom");
-
     this.mActiveStructureTitle = this.mContentContainer.appendRow("").find(".sub-title");
-    this.mDescriptionRow = this.mContentContainer.appendRow(null, "description-row");
-    var activeStructureImageContainer = $('<div class="active-structure-image-container"/>');
-    this.mDescriptionRow.append(activeStructureImageContainer)
-    this.mActiveStructureImage = $('<img class="active-structure-image"/>')
-    activeStructureImageContainer.append(this.mActiveStructureImage);
-    this.mActiveStructureTextContainer = $('<div class="active-structure-text-container"/>');
-    this.mDescriptionRow.append(this.mActiveStructureTextContainer)
-    var scroll = $('<div/>').appendTo(this.mActiveStructureTextContainer)
-    this.mActiveStructureDescription = scroll.appendRow(null, "text-font-medium font-style-italic font-bottom-shadow font-color-subtitle")
 
-    var activeStructureRequirements = scroll.appendRow(Stronghold.Text.Requirements);
+
+
+
+    this.mDescriptionRow = this.mContentContainer.appendRow(null, "description-row");
+    this.mListContainer = this.mDescriptionRow.createList(1, null, true);
+    this.mListScrollContainer = this.mListContainer.findListScrollContainer();
+    this.mListScrollContainer.addClass("flex-row");
+
+    this.mImageAndDescriptionContainer = this.mListScrollContainer.appendRow();
+
+
+    // var activeStructureImageContainer = $('<div class="active-structure-image-container"/>')
+    // 	.appendTo(this.mImageAndDescriptionContainer);
+    this.mActiveStructureImage = $('<img class="active-structure-image"/>')
+    	.appendTo(this.mImageAndDescriptionContainer);
+
+    this.mActiveStructureDescription = Stronghold.getTextSpan().addClass("active-structure-text-container").appendTo(this.mImageAndDescriptionContainer);
+
+    var activeStructureRequirements = this.mImageAndDescriptionContainer.appendRow(Stronghold.Text.Requirements);
     this.mActiveStructureRequirementsTable = $("<table>").appendTo(activeStructureRequirements);
+
+    this.mActiveStructurePerks = this.mListScrollContainer.appendRow("Advantages", "text-font-medium font-style-italic font-bottom-shadow font-color-subtitle")
+    Stronghold.getTextDiv("aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa ").appendTo(this.mActiveStructurePerks)
+
 
     this.mFooterRow = this.mContentContainer.appendRow(null, "footer-button-bar");
     this.mUpgradeStructureButton = this.mFooterRow.createTextButton(text.Upgrade, function()

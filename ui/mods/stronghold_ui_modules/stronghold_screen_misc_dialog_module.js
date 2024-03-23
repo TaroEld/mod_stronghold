@@ -112,7 +112,7 @@ StrongholdScreenMiscModule.prototype.setRoadElement = function(_element)
 	this.mRoadFactionText.text(Stronghold.Text.format(text.Faction, _element.FactionName));
 	this.mRoadDistanceText.text(Stronghold.Text.format(text.Distance,  _element.Score));
 	this.mRoadPiecesText.text(Stronghold.Text.format(text.Segments, _element.Segments))
-	this.mRoadCostText.text(Stronghold.Text.Price.replace("{price}",_element.Cost));
+	this.mRoadCostText.text(Stronghold.Text.format(Stronghold.Text.General.Price, _element.Cost));
 	this.mRoadCostImg.attr("src", Path.GFX + (_element.IsValid ? "ui/icons/unlocked_small.png" : "ui/icons/locked_small.png"))
 	this.mRoadButton.attr("disabled", !_element.IsValid)
 	this.RoadTownImg.attr("src", Path.GFX + _element.UISprite)
@@ -321,7 +321,7 @@ StrongholdScreenMiscModule.prototype.createTrainBrotherPopupContent = function (
 		.appendTo(_parent);
 
 	$.each(this.mModuleData.TrainBrother.ValidBrothers, function(_idx, _entry){
-		var entryContainer = $('<div class="train-brother-popup-entry"/>')
+		var entryContainer = $('<div class="train-brother-popup-entry stronghold-generic-background"/>')
 			.appendTo(scrollContainer)
 		entryContainer.data("entry", _entry)
 		$('<img class="st-portrait"/>')
@@ -368,7 +368,7 @@ StrongholdScreenMiscModule.prototype.loadTrainBrotherData = function()
 	this.mTrainBrotherConfirmButton.attr("disabled", true);
 
 	this.mTrainBrotherRequirementsTable.empty()
-	var reqs = this.buildRequirements(this.mTrainBrotherRequirementsTable, text.Requirements, this.mModuleData.TrainBrother.Requirements, true);
+	var reqs = this.buildRequirements(this.mTrainBrotherRequirementsTable, this.mModuleData.TrainBrother.Requirements, text.Requirements);
 	this.mTrainChooseBrotherButton.attr("disabled", !reqs)
 }
 
@@ -401,7 +401,7 @@ StrongholdScreenMiscModule.prototype.loadBuyWaterData = function()
 {
 	var text = this.getModuleText().BuyWater;
 	this.mBuyWaterRequirementsTable.empty()
-	var reqs = this.buildRequirements(this.mBuyWaterRequirementsTable, text.Requirements, this.mModuleData.BuyWater.Requirements, true);
+	var reqs = this.buildRequirements(this.mBuyWaterRequirementsTable, this.mModuleData.BuyWater.Requirements, text.Requirements);
 	this.mBuyWaterConfirmButton.attr("disabled", !reqs);
 }
 
@@ -434,7 +434,7 @@ StrongholdScreenMiscModule.prototype.loadHireMercenariesData = function()
 {
 	var text = this.getModuleText().HireMercenaries;
 	this.mHireMercenariesRequirementsTable.empty()
-	var reqs = this.buildRequirements(this.mHireMercenariesRequirementsTable, text.Requirements, this.mModuleData.HireMercenaries.Requirements, true);
+	var reqs = this.buildRequirements(this.mHireMercenariesRequirementsTable, this.mModuleData.HireMercenaries.Requirements, text.Requirements);
 	this.mHireMercenariesConfirmButton.attr("disabled", !reqs)
 }
 

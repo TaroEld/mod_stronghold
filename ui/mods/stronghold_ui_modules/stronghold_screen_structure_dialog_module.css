@@ -25,6 +25,9 @@
 {
 	height: 8rem;
 	width: 14.4rem;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 .stronghold-screen .structures-module .structure-image-container:hover .structure-selection
@@ -32,23 +35,17 @@
 	display: block;
 }
 
-.stronghold-screen .structures-module .structure-image-container .structure-selection
-{
-	position: absolute;
-	top: 0;
-	right: 0;
-}
-
 
 .stronghold-screen .structures-module .description-row
 {
-	height: 16rem;
+	height: 25rem;
 }
 .stronghold-screen .structures-module .description-row .active-structure-image-container
 {
 	height: 20rem;
 	width: 28rem;
 }
+
 .stronghold-screen .structures-module .active-structure-image-container .active-structure-image
 {
 	height: 16rem;
@@ -56,10 +53,13 @@
 	align-self: center;
 }
 
+.stronghold-screen .structures-module .active-structure-image
+{
+	width: 20rem;
+}
 
 .stronghold-screen .structures-module .description-row .active-structure-text-container
 {
-	height: 20rem;
 	flex: 1;
 	margin-left: 0.5rem;
 }

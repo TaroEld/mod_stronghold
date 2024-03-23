@@ -16,8 +16,8 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		_ret.Stash <- [],
 		_ret.StashSpaceUsed <- ::Stash.getNumberOfFilledSlots(),
 		_ret.StashSpaceMax <- ::Stash.getCapacity(),
-		_ret.TownStashSpaceUsed <- this.getStash().getNumberOfFilledSlots(),
-		_ret.TownStashSpaceMax <- this.getStash().getCapacity(),
+		_ret.TownStashSpaceUsed <- this.getStash() == null ? 0 : this.getStash().getNumberOfFilledSlots(),
+		_ret.TownStashSpaceMax <- this.getStash() == null ? 0 : this.getStash().getCapacity(),
 		_ret.IsRepairOffered <- false
 
 		this.UIDataHelper.convertItemsToUIData(this.getStash().getItems(), _ret.Shop, this.Const.UI.ItemOwner.Stash, this.m.InventoryFilter);

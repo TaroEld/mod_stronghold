@@ -18,7 +18,8 @@ Stronghold.Text = {
 		Tier3 : "Castle",
 		Tier4 : "Stronghold",
 		Hamlet : "Hamlet",
-		Mercenaries : "Mercenaries"
+		Mercenaries : "Mercenaries",
+		Price : "Price: {0} crowns.",
 	},
 	HamletModule : {
 		Title : "Build a Hamlet",

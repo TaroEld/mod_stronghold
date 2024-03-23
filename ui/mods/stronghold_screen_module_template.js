@@ -130,19 +130,22 @@ StrongholdScreenModuleTemplate.prototype.destroyPopup = function()
 	this.mPopupDialog = null;
 };
 
-StrongholdScreenModuleTemplate.prototype.buildRequirements = function(_table, _requirements, _requirementsText, _validate)
+StrongholdScreenModuleTemplate.prototype.buildRequirements = function(_table, _requirements, _requirementsText)
 {
 	var self = this;
 	$.each(_requirements, function(_key, _value){
 		var text = _requirementsText[_key];
+		var isValid = _requirements[_key];
 		if (_key === "Price")
-			text = Stronghold.Text.format(Stronghold.Text.General.Price, _requirements.Price)
+		{
+			text = Stronghold.Text.format(Stronghold.Text.General.Price, _requirements.Price);
+			isValid = self.mData.Assets.Money > _requirements[_key];
+		}
 		if (text === undefined)
 			console.error("Missing text for requirement: " + _key)
-		self.addRequirementRow(_table, Stronghold.getTextSpanSmall(text), _requirements[_key]);
+		self.addRequirementRow(_table, Stronghold.getTextSpanSmall(text), isValid);
 	})
-	if (_validate === true)
-		return this.areRequirementsFulfilled(_table)
+	return this.areRequirementsFulfilled(_table)
 }
 
 StrongholdScreenModuleTemplate.prototype.addRequirementRow = function(_table, _requirement, _isValid)
