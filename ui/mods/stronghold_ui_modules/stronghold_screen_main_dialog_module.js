@@ -103,7 +103,8 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
     this.mRaidedContainer = this.mContentContainer.appendRow(text.RaidedTitle).hide();
     this.mRaidedImage = $("<img/>").css({"width" : "5rem", "height" : "5rem", "margin-left" : "2rem"}).attr('src', Path.GFX + "ui/settlement_status/settlement_effect_08.png").appendTo(this.mRaidedContainer);
     this.mRaidedText = Stronghold.getTextDiv().css({"width" : "90%", "padding-left" : "5rem"}).appendTo(this.mRaidedContainer);
-    this.mRaidedButton = this.mRaidedContainer.createTextButton(text.RaidedButton, $.proxy(function()
+    var footer = this.mRaidedContainer.appendRow(null, "stronghold-flex-center");
+    this.mRaidedButton = footer.createTextButton(text.RaidedButton, $.proxy(function()
     {
         this.notifyBackendPayForRaided();
     }, this), "stronghold-button-4", 4)
