@@ -42,32 +42,6 @@
 	return difficulty
 }
 
-// Effect of the well supplied buff that is activated by default
-// Rarity dictates the amount of items that spawn in shops, including named items
-::Stronghold.WellSupplied <-
-[
-	{
-		Rarity = 1.00,
-		BuyPrice = 1.05,
-		SellPrice = 0.95
-	},
-	{
-		Rarity = 1.04,
-		BuyPrice = 1.00,
-		SellPrice = 1.00
-	},
-	{
-		Rarity = 1.08,
-		BuyPrice = 0.95,
-		SellPrice = 1.05
-	},
-	{
-		Rarity = 1.12,
-		BuyPrice = 0.9,
-		SellPrice = 1.1
-	}
-]
-
 // Cost of each road segment
 ::Stronghold.RoadCost <- 0.5; 
 
@@ -75,6 +49,9 @@
 ::Stronghold.ToolsPerDay <- 9;
 ::Stronghold.MedicinePerDay <- 7;
 ::Stronghold.AmmoPerDay <- 20;
+
+// Cost to make the raided debuff go away; multiplied with the price mult
+::Stronghold.RaidedCostPerDay <- 0.5;
 
 // Maximum amount of each item that can be stored in the warehouse. Also the 'amount' value.
 ::Stronghold.MaxAmountOfStoredTools <- 150;
@@ -89,6 +66,10 @@
 	MaxAttachments = 4,
 	MaxBuildings = 3,
 	UnlockDescription = "You can an additional settlement building.\nYou can construct up to four locations, granting various advantages such as storing brothers and items.\n You will be able to upgrade your base, unlocking more features.",
+	ThreatRadius = 7,
+	Rarity = 1.00, // Rarity dictates the amount of items that spawn in shops, including named items
+	BuyPrice = 1.05, // buy price of items, multiplier
+	SellPrice = 0.95 // sell price of items, multiplier
 };
 ::Stronghold.Tiers[2] <- {
 	Name = "Fort",
@@ -97,6 +78,10 @@
 	MaxAttachments = 6,
 	MaxBuildings = 4,
 	UnlockDescription = "You can construct up to two settlement buildings.\nYou can construct up to eight locations.\nBands of mercenaries will join your base and guard it against aggressors.",
+	ThreatRadius = 9,
+	Rarity = 1.04,
+	BuyPrice = 1.00,
+	SellPrice = 1.00
 };
 ::Stronghold.Tiers[3] <- {
 	Name = "Castle",
@@ -105,6 +90,10 @@
 	MaxAttachments = 8,
 	MaxBuildings = 5,
 	UnlockDescription = "You can construct up to three settlement buildings.\nYou can construct up to eight locations.\nYou can construct roads to other settlements, connecting your base to the world.",
+	ThreatRadius = 11,
+	Rarity = 1.08,
+	BuyPrice = 0.95,
+	SellPrice = 1.05
 };
 ::Stronghold.Tiers[4] <- {
 	Name = "Stronghold",
@@ -113,6 +102,10 @@
 	MaxAttachments = 10,
 	MaxBuildings = 6,
 	UnlockDescription = "You can construct up to four settlement buildings, and unlock the arena building.\nYou can construct up to ten locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold.",
+	ThreatRadius = 13,
+	Rarity = 1.12,
+	BuyPrice = 0.9,
+	SellPrice = 1.1
 };
 
 ::Stronghold.TrainerPrice <- 5;

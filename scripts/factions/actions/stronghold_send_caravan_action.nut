@@ -1,6 +1,7 @@
 this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_action", {
 	m = {
 		PlayerBase = null,
+		TimeUntilNextCaravan = 7,
 	},
 	function create()
 	{
@@ -15,7 +16,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		local basesRequiringCaravan = [];
 		foreach(playerBase in _faction.getDevelopedBases())
 		{
-			if (this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextCaravan") && !playerBase.isUpgrading())
+			if (::Stronghold.isCooldownExpired(playerBase, "TimeUntilNextCaravan") && !playerBase.isUpgrading())
 			{
 				basesRequiringCaravan.push(playerBase)
 			}
@@ -136,7 +137,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		c.addOrder(unload);
 		c.addOrder(despawn);
 
-		playerBase.getFlags().set("TimeUntilNextCaravan", this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 7)
+		::Stronghold.setCooldown(playerBase, "TimeUntilNextCaravan", this.m.TimeUntilNextCaravan);
 		return true;
 	}
 

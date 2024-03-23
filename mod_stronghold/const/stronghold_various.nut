@@ -7,7 +7,8 @@
 [
 	"scripts/factions/actions/stronghold_guard_base_action", 
 	"scripts/factions/actions/stronghold_send_caravan_action", 
-	"scripts/factions/actions/stronghold_patrol_roads_action"
+	"scripts/factions/actions/stronghold_patrol_roads_action",
+	"scripts/factions/actions/stronghold_send_attacker_action",
 ];
 
 
@@ -146,6 +147,19 @@
 	return false
 }
 
+::Stronghold.getDays <- function(_i)
+{
+	return _i * this.World.getTime().SecondsPerDay;
+}
+::Stronghold.setCooldown <- function(_obj, _flag, _i)
+{
+	return _obj.getFlags().set(_flag, ::Time.getVirtualTimeF() + ::Stronghold.getDays(_i));
+}
+::Stronghold.isCooldownExpired <- function(_obj, _flag)
+{
+	return ::Time.getVirtualTimeF() > _obj.getFlags().get(_flag);
+}
+
 ::Stronghold.buildMainBase <- function()
 {
 	local buildPrice = ::Stronghold.Tiers[1].Price * ::Stronghold.PriceMult
@@ -191,4 +205,36 @@
 	contract.m.TargetLevel = 1
 	this.World.Contracts.addContract(contract);
 	contract.start();
+}
+
+::Stronghold.onDestinationAttacked <- function(_dest, _isPlayerAttacking)
+{
+	local isPlayerInitiated = true;
+	local p;
+	local playerBases = ::Stronghold.getFaction().getMainBases();
+	local target = null;
+	foreach(playerBase in playerBases)
+	{
+		if (this.getVecDistance(playerBase.getPos(), this.World.State.getPlayer().getPos()) <= 250)
+		{
+			target = playerBase;
+			break;
+		}
+	}
+	if (target != null)
+	{
+		p = this.World.State.getLocalCombatProperties(playerBase.getPos());
+		isPlayerInitiated = true;
+		p.PlayerDeploymentType = this.Const.Tactical.DeploymentType.LineForward;
+		p.EnemyDeploymentType = this.Const.Tactical.DeploymentType.LineBack;
+		p.LocationTemplate = clone this.Const.Tactical.LocationTemplate;
+		p.LocationTemplate.OwnedByFaction = this.Const.Faction.Player;
+		p.LocationTemplate.Template[0] = "tactical.stronghold_fortress_defense";
+		p.LocationTemplate.Fortification = this.Const.Tactical.FortificationType.WallsAndPalisade;
+		p.LocationTemplate.ShiftX = -10;
+	}
+	else p = this.World.State.getLocalCombatProperties(this.World.State.getPlayer().getPos());
+	p.Music = this.Const.Music.NobleTracks;
+	p.CombatID = "Stronghold";
+	this.World.Contracts.startScriptedCombat(p, isPlayerInitiated, true, true);
 }

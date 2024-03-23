@@ -149,7 +149,16 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			if (location != null && location.m.ID != "attached_location.harbor")
 				currentLocations++
 		}
-		
+		local isRaidedUntil = -1;
+		if (town.hasSituation("situation.raided"))
+		{
+			local until = town.getSituationByID("situation.raided").getValidUntil();
+			isRaidedUntil = (until - this.Time.getVirtualTimeF()) / this.World.getTime().SecondsPerDay;
+			::logInfo(isRaidedUntil)
+			isRaidedUntil = ::Math.round(isRaidedUntil);
+			::logInfo(isRaidedUntil)
+		}
+
 		_ret.ID <- town.getID();
 		_ret.Name <- town.getName();
 		_ret.IsMainBase <- town.isMainBase();
@@ -162,6 +171,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		_ret.mRosterAsset <- _ret.IsMainBase ? town.getLocalRoster().getAll().len() : -1;
 		_ret.mRosterAssetMax <- 16;
 		_ret.mBuildingAsset <- town.getActiveBuildings().len();
+		_ret.IsRaidedUntil <- isRaidedUntil;
 		_ret.mBuildingAssetMax <- maxBuildingSlots;
 		_ret.mLocationAsset <- town.m.AttachedLocations.len() - town.countAttachedLocations("attached_location.harbor");
 		_ret.mLocationAssetMax <- town.m.AttachedLocationsMax;

@@ -46,7 +46,11 @@ Stronghold.Text = {
 		BaseSettings : {
 			AutoConsume : "Automatically take consumable items (tools, medicine, arrows, gold) from the base stash.",
 			ShowBanner : "Show the banner of your base on the worldmap.",
-		}
+		},
+		RaidedTitle : "Raided",
+		RaidedText : "Your base has recently been raided. It will take {0} days to clear out the rubble and make the base fully accessible. You can also pay {1} crowns to speed up the cleanup.",
+		RaidedButton : "Pay {0} crowns"
+
 	},
 	MiscModule : {
 		BuildRoad : {

@@ -1,6 +1,8 @@
 this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_action", {
 	//Governs the spawning of stronghold patrols.
-	m = {},
+	m = {
+		TimeUntilNextPatrol = 7
+	},
 	function create()
 	{
 		this.m.ID = "stronghold_patrol_roads_action";
@@ -20,7 +22,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		local settlements = this.World.EntityManager.getSettlements();
 
 		foreach(playerBase in playerBases){
-			if (playerBase.isIsolated() || this.Time.getVirtualTimeF() < playerBase.getFlags().get("TimeUntilNextPatrol") || playerBase.isUpgrading()) continue
+			if (playerBase.isIsolated() || !::Stronghold.isCooldownExpired(playerBase, "TimeUntilNextPatrol") || playerBase.isUpgrading()) continue
 
 			local connected = []
 			foreach (settlement in settlements)
@@ -100,7 +102,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		}
 		local despawn = this.new("scripts/ai/world/orders/despawn_order");
 		c.addOrder(despawn);
-		playerBase.getFlags().set("TimeUntilNextPatrol", this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 7)
+		::Stronghold.setCooldown(playerBase, "TimeUntilNextPatrol", this.m.TimeUntilNextPatrol)
 		return true;
 	}
 

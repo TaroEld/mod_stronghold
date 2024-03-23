@@ -3,6 +3,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 	//they patrol around the settlement and the attached locations
 	m = {
 		PlayerBase = null,
+		TimeUntilNextMercs = 7
 	},
 	function create()
 	{
@@ -23,9 +24,8 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 			}
 		}
 		foreach(playerBase in _faction.getMainBases()){
-			if (mercIDs.find(playerBase.getID()) == null && this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextMercs")){
+			if (mercIDs.find(playerBase.getID()) == null && ::Stronghold.isCooldownExpired(playerBase, "TimeUntilNextMercs"))
 				basesRequiringMercs.push(playerBase)
-			}
 		}
 		if (basesRequiringMercs.len() == 0) return
 		this.m.PlayerBase = ::MSU.Array.rand(basesRequiringMercs);
@@ -61,7 +61,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		party.setFootprintType(this.Const.World.FootprintsType.Mercenaries);
 		party.getFlags().set("Stronghold_Guards", true);
 		party.getFlags().set("Stronghold_Base_ID", playerBase.getID());
-		playerBase.getFlags().set("TimeUntilNextMercs", this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 7)
+		::Stronghold.setCooldown(playerBase, "TimeUntilNextMercs", this.m.TimeUntilNextMercs);
 		local c = party.getController();
 
 		local totalTime = this.World.getTime().SecondsPerDay * 7

@@ -100,9 +100,17 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
     		.appendTo(ret);
     	return ret;
     })
+    this.mRaidedContainer = this.mContentContainer.appendRow(text.RaidedTitle).hide();
+    this.mRaidedImage = $("<img/>").css({"width" : "5rem", "height" : "5rem", "margin-left" : "2rem"}).attr('src', Path.GFX + "ui/settlement_status/settlement_effect_08.png").appendTo(this.mRaidedContainer);
+    this.mRaidedText = Stronghold.getTextDiv().css({"width" : "90%", "padding-left" : "5rem"}).appendTo(this.mRaidedContainer);
+    this.mRaidedButton = this.mRaidedContainer.createTextButton(text.RaidedButton, $.proxy(function()
+    {
+        this.notifyBackendPayForRaided();
+    }, this), "stronghold-button-4", 4)
 
+    this.mSettingsContainer = this.mContentContainer.appendRow("Settings");
     var settingsContainer = $('<div class="stronghold-generic-background"/>')
-    	.appendTo(this.mContentContainer);
+    	.appendTo(this.mSettingsContainer);
     this.mSettingsTable = $('<table/>')
     	.appendTo(settingsContainer)
     MSU.iterateObject(this.mBaseSettings, function(_key, _value)
@@ -143,6 +151,16 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
     {
     	_value.iCheck(self.mData.TownAssets.BaseSettings[_key] === true ? 'check' : 'uncheck');
     });
+
+    if (this.mData.TownAssets.IsRaidedUntil > 0)
+    {
+    	var price = this.mData.TownAssets.IsRaidedUntil * this.mModuleData.RaidedCostPerDay;
+    	this.mRaidedText.text(Stronghold.Text.format(text.RaidedText, this.mData.TownAssets.IsRaidedUntil, price));
+    	this.mRaidedButton.find(".label").text(Stronghold.Text.format(text.RaidedButton, price))
+    	this.mRaidedButton.attr("disabled", price > this.mData.Assets.Money)
+    	this.mRaidedContainer.show();
+    }
+    else this.mRaidedContainer.hide();
 }
 
 StrongholdScreenMainModule.prototype.changeBaseName = function ()
@@ -154,3 +172,9 @@ StrongholdScreenMainModule.prototype.changeSetting = function (_setting, _value)
 {
 	SQ.call(this.mSQHandle, 'onChangeSetting', [_setting, _value]);
 };
+
+StrongholdScreenMainModule.prototype.notifyBackendPayForRaided = function (_setting, _value)
+{
+	SQ.call(this.mSQHandle, 'onPayForRaided', this.mData.TownAssets.IsRaidedUntil);
+};
+

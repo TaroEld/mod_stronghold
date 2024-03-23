@@ -33,7 +33,6 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 		contract.setFaction(playerFaction.getID());
 		contract.setHome(this.getTown());
 		contract.setOrigin(this.getTown());
-		contract.m.Flags.set("IsUpgrading", true)
 		contract.m.TargetLevel = this.getTown().getSize() + 1;
 		this.World.Contracts.addContract(contract);
 		contract.start();

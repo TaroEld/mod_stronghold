@@ -10,6 +10,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		BaseSettings = {
 			AutoConsume = true,
 			ShowBanner = true,
+			ShowThreat = true,
 		}
 	},
 
@@ -85,6 +86,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		::Math.seedRandom(this.Time.getRealTime());
 		return true;
+	}
+
+	function getThreatRadius()
+	{
+		return ::Stronghold.Tiers[this.getSize()].ThreatRadius;
 	}
 
 	function getWarehouse()
@@ -262,6 +268,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function startUpgrading()
 	{
 		this.m.IsUpgrading = true;
+		::Stronghold.setCooldown(this, "LastUpgradeDoneCooldown" 7);
 		this.m.Size += 1;
 		this.updateTown();
 	}
@@ -313,7 +320,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		this.m.Buildings[6].updateSprite();
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
-		//need to update building size since it's changed to 9 during serialisation
 
 		this.m.AttachedLocationsMax = this.Stronghold.Tiers[this.getSize()].MaxAttachments;
 	}
@@ -407,6 +413,15 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		light.IgnoreAmbientColor = true;
 		light.Alpha = 0;
+		if (!this.hasSprite("threat_radius"))
+		{
+			local c = this.addSprite("threat_radius");
+			c.setBrush("debug_circle_100");
+		}
+		local threatRadius =  this.getSprite("threat_radius");
+		threatRadius.setBrush("debug_circle_100");
+		threatRadius.Scale = this.getThreatRadius();
+		threatRadius.Visible = this.m.BaseSettings.ShowThreat;
 	}
 
 	function addBuilding( _building, _slot = null )
@@ -904,6 +919,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function onChangeSetting(_setting, _bool)
 	{
 		this.m.BaseSettings[_setting] = _bool;
+		this.updateTown();
 	}
 
 	function onSerialize( _out )
