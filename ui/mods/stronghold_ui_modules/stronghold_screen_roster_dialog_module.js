@@ -41,6 +41,10 @@ var StrongholdScreenRosterModule = function(_parent)
     this.mTooltipButton                = null;
     this.mPlayerBrotherButton          = null;
 
+    this.mPlayerWages = null;
+    this.mStrongholdWages = null;
+    this.mWageMult = null;
+
     // stronghold
     this.mStronghold =
     {
@@ -285,6 +289,23 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     this.mPlayerBrotherButton.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.Assets.Brothers });
     panelLayout.append(layout);
 
+    var layout = $('<div class="l-button is-wages is-player-wages"/>');
+    panelLayout.append(layout);
+    layout.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Roster.PlayerWages"});
+    var image = $('<img/>')
+    	.attr('src', Path.GFX + Asset.ICON_ASSET_DAILY_MONEY)
+    	.appendTo(layout);
+    this.mPlayerWages = Stronghold.getTextSpan()
+    	.appendTo(layout);
+
+    var layout = $('<div class="l-button is-wages is-stronghold-wages"/>');
+    panelLayout.append(layout);
+    layout.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Roster.StrongholdWages"});
+    var image = $('<img/>')
+    	.attr('src', Path.GFX + Asset.ICON_ASSET_DAILY_MONEY)
+    	.appendTo(layout);
+    this.mStrongholdWages = Stronghold.getTextSpan()
+    	.appendTo(layout);
 
 
     //-3 bottom row
@@ -435,15 +456,31 @@ StrongholdScreenRosterModule.prototype.loadFromData = function ()
     this.mPlayer.NumActiveMax = this.mData.mBrothersAssetMax;
     this.mPlayer.BrothersList = this.mModuleData.PlayerRoster;
     this.onBrothersListLoaded(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
+    this.updateWages();
     for (var i = 0; i < this.mPlayer.BrothersList.length; i++) {
     	if (this.mPlayer.BrothersList[i] !== undefined && this.mPlayer.BrothersList[i] !== null)
     	{
-    		console.error("i: " + i + " " + this.mPlayer.BrothersList[i])
     		this.setBrotherSelected(i, Stronghold.Roster.RosterOwner.Player, true);
     		return;
     	}
     }
 };
+
+StrongholdScreenRosterModule.prototype.sumWages = function (_roster, _wageMult)
+{
+	var total = 0;
+	$.each(_roster, function(_idx, _bro){
+		if (_bro == null) return;
+		total += _bro.character.dailyMoneyCost * _wageMult;
+	})
+	return Math.round(total);
+}
+
+StrongholdScreenRosterModule.prototype.updateWages = function (_roster)
+{
+	this.mStrongholdWages.text(this.sumWages(this.mStronghold.BrothersList, this.mModuleData.WageMult));
+	this.mPlayerWages.text(this.sumWages(this.mPlayer.BrothersList, 1.0));
+}
 
 StrongholdScreenRosterModule.prototype.toggleScrollDiv = function(_withSlideAnimation)
 {
@@ -1095,6 +1132,7 @@ StrongholdScreenRosterModule.prototype.swapSlots = function (_a, _tagA, _b, _tag
             this.setBrotherSelected(_a, _tagA, true);
         }
     }
+    this.updateWages();
 
     //this.updateRosterLabel();
 }
@@ -1225,7 +1263,7 @@ StrongholdScreenRosterModule.prototype.createSlotDropHandler = function ( _slot 
 	    }
 
 	    // always keep at least 1 in formation
-	    if (parent.NumActive == parent.NumActiveMin && drag.data('idx') <= parent.NumActiveMax && drop.data('idx') > parent.NumActiveMax && $(this).data('child') == null)
+	    if (parent.NumActive == parent.NumActiveMin && drag.data('tag') != drop.data('tag'))
 	    {
 	        return false;
 	    }
@@ -1503,7 +1541,7 @@ StrongholdScreenRosterModule.prototype.addSkillsDIV = function (_parentDiv, _ent
 {
     if (_data === undefined ||_data === null || !jQuery.isArray(_data))
     {
-        console.error('ERROR: Failed to add Skills. Reason: Invalid data.');
+        // console.error('ERROR: Failed to add Skills. Reason: Invalid data.');
         return;
     }
 

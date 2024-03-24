@@ -75,7 +75,8 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 
 	function queryTownRosterInformation()
 	{
-		local num = 16;
+		local troopQuarters = this.getTown().getLocation("attached_location.troop_quarters");
+		local num = troopQuarters != null ? troopQuarters.getSlots() : 0;
 		local roster = [];
 		local brothers = this.getTown().getLocalRoster().getAll();
 
@@ -126,6 +127,7 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 		_ret.SimpleTooltip <- this.isUsingSimplifiedRosterTooltip();
 		_ret.PlayerRoster <- this.queryPlayerRosterInformation();
 		_ret.TownRoster <- this.queryTownRosterInformation();
+		_ret.WageMult <- this.getTown().getLocation("attached_location.troop_quarters") ? this.getTown().getLocation("attached_location.troop_quarters").getWageMult() : 1.0;
 		return _ret
 	}
 
@@ -198,7 +200,6 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 	function MoveAtoB(_data)
 	{
 		local bro = this.getBroWithTagAndID(_data.ID, _data.OriginTag);
-		::logInfo(bro.getName())
 		local originRoster = this.getRosterWithTag(_data.OriginTag);
 		local destinationRoster = this.getRosterWithTag(_data.DestinationTag);
 		destinationRoster.add(bro);

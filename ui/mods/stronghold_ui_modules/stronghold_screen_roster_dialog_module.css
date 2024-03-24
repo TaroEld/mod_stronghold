@@ -130,10 +130,6 @@
 	padding-right: 0.5rem;
 	position: relative;
 	float: left;
-
-	background-image: url("coui://gfx/ui/skin/panel_custom_quest_header.png");
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
 }
 
 .stronghold-screen .roster-module > .right-column > .middle-row > .is-right
@@ -167,22 +163,43 @@
 	line-height: 2.6rem;
 }
 
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .is-wages img
+{
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2.8rem;
+    height: 2.8rem;
+    margin: auto;
+    position: absolute;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .is-wages span
+{
+    top: 0;
+    bottom: 0;
+    left: 3.4rem;
+    width: 3.2rem;
+    height: 3.0rem;
+    margin: auto;
+    position: absolute;
+
+    text-align : left;
+    line-height: 2.6rem;
+}
+
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .is-player-wages
+{
+
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .is-stronghold-wages
+{
+	left: 7rem;
+}
+
 .stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-stripping-all
-{
-
-}
-
-.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-stripping-weapon
-{
-	left: 5.0rem;
-}
-
-.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-stripping-armor
-{
-	left: 10.0rem;
-}
-
-.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-stripping-bag
 {
 	left: 15.0rem;
 }
@@ -333,10 +350,6 @@
 	width: 100%;
 	pointer-events: auto;
 	position: absolute;
-
-	background-image: url("coui://gfx/ui/skin/panel_custom_quest.png"); /*tooltip_255_bottom*/
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
 }
 
 .stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats

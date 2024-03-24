@@ -52,12 +52,15 @@
 					this.m.HitpointsPerHourMult = 1.0
 				}
 
-				//stored brothers draw half wage
-				if (this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
+				local troopQuarters = playerBase.getLocation("attached_location.troop_quarters");
+
+				//stored brothers draw less
+				if (troopQuarters != null && this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
 				{
+					local wageMult = troopQuarters.getWageMult();
 					foreach(bro in playerBase.getLocalRoster().getAll())
 					{
-						this.m.Money -= ::Math.floor(bro.getDailyCost()/2);
+						this.m.Money -= ::Math.floor(bro.getDailyCost() * wageMult);
 					}
 				}
 				

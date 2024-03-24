@@ -214,6 +214,9 @@
 		Price = 2.5,
 		UpgradePrice = 2.5,
 		MaxTroops = 6, // Max bros in the base
+		// starts out at 60%, then 40%, 20%, 0%
+		WageCost = 0.8,
+		WageCostPerLevel = 0.2
 	}
 	Warehouse = {
 		Price = 2.5,
