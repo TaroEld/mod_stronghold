@@ -7,6 +7,11 @@
 		this.m.Level <- 1;
 	}
 
+	function getLevel()
+	{
+		return this.m.Level;
+	}
+
 	local onSerialize = o.onSerialize;
 	o.onSerialize = function( _out )
 	{

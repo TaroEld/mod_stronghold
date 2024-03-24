@@ -47,7 +47,7 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 	this.mBuildRoadContentContainer = this.mBuildRoadContainer.appendRow(text.Title);
 
 	Stronghold.getTextDiv(text.Description)
-		.appendTo(this.mBuildRoadContentContainer)
+		.appendTo(this.mBuildRoadContentContainer);
 
 	var leftContent = $('<div class="stronghold-half-width"/>').appendTo(this.mBuildRoadContentContainer);
 	var rightContent = $('<div class="stronghold-half-width"/>').appendTo(this.mBuildRoadContentContainer);
@@ -91,6 +91,9 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 	this.RoadTownImg.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Misc.RoadZoom"})
 
 
+	var reqs = this.mBuildRoadContentContainer.appendRow();
+	this.mRoadRequirementsTable = $("<table>")
+		.appendTo(reqs);
 	var footer = this.mBuildRoadContentContainer.appendRow(null, "stronghold-flex-center stronghold-row-background");
 	this.mRoadButton = footer.createTextButton(text.Title, $.proxy(function()
 	{
@@ -100,6 +103,8 @@ StrongholdScreenMiscModule.prototype.createBuildRoadContent = function ()
 
 StrongholdScreenMiscModule.prototype.loadBuildRoadData = function()
 {
+	this.mRoadRequirementsTable.empty();
+	this.addRequirementRow(this.mRoadRequirementsTable, Stronghold.Text.format(this.getModuleText().BuildRoad.Requirements.BaseTier, Stronghold.Text.General.Tier2), this.mData.TownAssets.Size > 1);
 	this.mRoadTargetDropdown.set(this.mModuleData.BuildRoad, this.mModuleData.BuildRoad[0], $.proxy(function(_element)
 	{
 		this.setRoadElement(_element);
@@ -114,7 +119,7 @@ StrongholdScreenMiscModule.prototype.setRoadElement = function(_element)
 	this.mRoadPiecesText.text(Stronghold.Text.format(text.Segments, _element.Segments))
 	this.mRoadCostText.text(Stronghold.Text.format(Stronghold.Text.General.Price, _element.Cost));
 	this.mRoadCostImg.attr("src", Path.GFX + (_element.IsValid ? "ui/icons/unlocked_small.png" : "ui/icons/locked_small.png"))
-	this.mRoadButton.attr("disabled", !_element.IsValid)
+	this.mRoadButton.attr("disabled", !_element.IsValid || !this.areRequirementsFulfilled(this.mRoadRequirementsTable));
 	this.RoadTownImg.attr("src", Path.GFX + _element.UISprite)
 }
 
@@ -219,12 +224,12 @@ StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
 	this.addRequirementRow(this.mGiftRequirementsTable, requirement, this.mModuleData.SendGifts.Gifts.length > 0)
 
 	this.addRequirementRow(this.mGiftRequirementsTable,
-		Stronghold.getTextSpanSmall().text(giftText.Requirements.Faction),
+		giftText.Requirements.Faction,
 		this.mModuleData.SendGifts.Factions.length > 0)
 
 	var price = this.mModuleData.SendGifts.Price;
 	this.addRequirementRow(this.mGiftRequirementsTable,
-		Stronghold.getTextSpanSmall().text(giftText.Requirements.Price.replace("{price}", price)),
+		giftText.Requirements.Price.replace("{price}", price),
 		this.mData.Assets.Money > price)
 	this.mGiftsButton.attr("disabled", !this.areRequirementsFulfilled(this.mGiftRequirementsTable))
 }
@@ -482,7 +487,7 @@ StrongholdScreenMiscModule.prototype.loadRemoveBaseData = function()
 {
 	var text = this.getModuleText().RemoveBase;
 	this.mRemoveBaseRequirementsTable.empty()
-	this.addRequirementRow(this.mRemoveBaseRequirementsTable, Stronghold.getTextSpanSmall(text.Requirements.NoContract), this.mModuleData.RemoveBase.NoContract);
+	this.addRequirementRow(this.mRemoveBaseRequirementsTable, text.Requirements.NoContract, this.mModuleData.RemoveBase.NoContract);
 	this.mRemoveBaseButton.attr("disabled", !this.areRequirementsFulfilled(this.mRemoveBaseRequirementsTable))
 }
 

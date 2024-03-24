@@ -50,17 +50,17 @@ StrongholdScreenLocationsModule.prototype.showBuildRequirements = function ()
 {
 	// Price
 	this.addRequirementRow(this.mActiveStructureRequirementsTable,
-		Stronghold.getTextSpanSmall(Stronghold.Text.Price.replace("{price}", this.mActiveStructure.Price)),
+		Stronghold.Text.format(Stronghold.Text.General.Price, this.mActiveStructure.Price),
 		this.mData.Assets.Money > this.mActiveStructure.Price
 	)
 	// Total locations in town
 	this.addRequirementRow(this.mActiveStructureRequirementsTable,
-		Stronghold.getTextSpanSmall(Stronghold.Text.format(this.getModuleText().MaxTotal, this.mData.TownAssets.mLocationAsset, this.mData.TownAssets.mLocationAssetMax, this.mData.TownAssets.mLocationAsset)),
+		Stronghold.Text.format(this.getModuleText().MaxTotal, this.mData.TownAssets.mLocationAsset, this.mData.TownAssets.mLocationAssetMax, this.mData.TownAssets.mLocationAsset),
 		this.mData.TownAssets.mLocationAsset < this.mData.TownAssets.mLocationAssetMax
 	)
 
 	$.each(this.mActiveStructure.Requirements, $.proxy(function(_, _requirement){
-	    this.addRequirementRow(this.mActiveStructureRequirementsTable, Stronghold.getTextDivSmall(_requirement.Text), _requirement.IsValid);
+	    this.addRequirementRow(this.mActiveStructureRequirementsTable, _requirement.Text, _requirement.IsValid);
 	}, this))
 	this.mAddStructureButton.enableButton(this.areRequirementsFulfilled(this.mActiveStructureRequirementsTable));
 }
@@ -71,11 +71,11 @@ StrongholdScreenLocationsModule.prototype.showUpgradeRequirements = function ()
 	var moduleText = this.getModuleText();
 	// Price
 	this.addRequirementRow(this.mActiveStructureRequirementsTable,
-		Stronghold.getTextSpanSmall(Stronghold.Text.Price.replace("{price}", this.mActiveStructure.UpgradePrice)),
+		Stronghold.Text.format(Stronghold.Text.General.Price, this.mActiveStructure.UpgradePrice),
 		this.mData.Assets.Money > this.mActiveStructure.UpgradePrice
 	)
 	this.addRequirementRow(this.mActiveStructureRequirementsTable,
-		Stronghold.getTextSpanSmall(Stronghold.Text.format(moduleText.MaxForBaseLevel, this.mData.TownAssets.Size, this.mActiveStructure.Level)),
+		Stronghold.Text.format(moduleText.MaxForBaseLevel, this.mData.TownAssets.Size, this.mActiveStructure.Level),
 		this.mData.TownAssets.Size > this.mActiveStructure.Level
 	)
 
@@ -86,7 +86,7 @@ StrongholdScreenLocationsModule.prototype.showUpgradeRequirements = function ()
 StrongholdScreenLocationsModule.prototype.showMaxLevelRequirements = function ()
 {
 	var moduleText = this.getModuleText();
-	this.addRequirementRow(this.mActiveStructureRequirementsTable, Stronghold.getTextSpanSmall(moduleText.MaxLevel),false)
+	this.addRequirementRow(this.mActiveStructureRequirementsTable, moduleText.MaxLevel, false)
 	this.mActiveStructureDescription.html(this.mActiveStructureDef.getDescription ? this.mActiveStructureDef.getUpgradeDescription(this.mActiveStructure) : this.mActiveStructureDef.UpgradeDescription);
 	this.mUpgradeStructureButton.enableButton(this.areRequirementsFulfilled(this.mActiveStructureRequirementsTable));
 }

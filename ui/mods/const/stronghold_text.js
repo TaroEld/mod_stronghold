@@ -26,7 +26,7 @@ Stronghold.Text = {
 		Name : "Hamlet",
 		Description : "A hamlet serves as additional living space for your retainers. You will be able to construct additional buildings, buy goods, and hire from a variety of recruits. Each base can only have one hamlet.",
 		Requirements : {
-			BaseSize : "Required base size: Stronghold (3/3)",
+			BaseSize : "Required base size: Stronghold (4/4)",
 			MaxHamlet : "Maximum amount of Hamlets per base: 1"
 		}
 	},
@@ -51,7 +51,6 @@ Stronghold.Text = {
 		RaidedTitle : "Raided",
 		RaidedText : "Your base has recently been raided. It will take {0} days to clear out the rubble and make the base fully accessible. You can also pay {1} crowns to speed up the cleanup.",
 		RaidedButton : "Pay {0} crowns"
-
 	},
 	MiscModule : {
 		BuildRoad : {
@@ -61,6 +60,9 @@ Stronghold.Text = {
 			Faction : "Faction: {0}",
 			Distance : "Distance (by air): {0}",
 			Segments : "Road Segments: {0}",
+			Requirements : {
+				BaseTier : "Upgrade your base to a {0} to be able to build roads to other settlements."
+			}
 		},
 		SendGifts : {
 			Title : "Send Gifts",
@@ -224,8 +226,8 @@ Stronghold.Text = {
 			Requirements : [
 				function (_element, _module){
 					return {
-						Text : "Required base size: Stronghold (3/3).",
-						IsValid : _module.mData.TownAssets.Size == 3
+						Text : Stronghold.Text.format("Required base size: {0} (4/4).", Stronghold.Text.General.Tier4),
+						IsValid : _module.mData.TownAssets.Size == 4
 					}
 				}
 			]
@@ -283,7 +285,7 @@ Stronghold.Text = {
 		Blast_Furnace : {
 			Name : "Blast Furnace",
 			Path : "blast_furnace_location",
-			Description : "This will allow the local armorsmiths to carry more items. It will also enable them to repair your armors more efficiently, giving you a {0}% discount on repairing armor at the armorsmith.",
+			Description : "This will allow the local armorsmiths to carry more items. It will also enable them to repair your armors more efficiently, giving you a {0}% discount per level on repairing armor at the armorsmith.",
 			getDescription : function(_element){
 				return Stronghold.Text.format(this.Description,
 					parseInt(_element.RepairMultiplier * 100))
@@ -335,7 +337,7 @@ Stronghold.Text = {
 		Gold_Mine : {
 			Name : "Gold Mine",
 			Path : "gold_mine_location",
-			Description : "Hire miners to dig greedily and deeply. The resulting gold will be minted into spendable currency, generating {0} crowns a day.",
+			Description : "Hire miners to dig greedily and deeply. The resulting gold will be minted into spendable currency, generating {0} crowns per level a day.",
 			getDescription : function(_element)
 			{
 				return Stronghold.Text.format(this.Description, _element.DailyIncome)

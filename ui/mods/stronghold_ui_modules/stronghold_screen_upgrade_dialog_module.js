@@ -78,9 +78,9 @@ StrongholdScreenUpgradeModule.prototype.fillRequirementsText = function()
 		this.mUpgradeBaseButton.enableButton(false);
 		return;
 	}
-    this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(Stronghold.Text.format(text.Price, this.mModuleData.Price)), reqs.Price);
-    this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(text.Warehouse), reqs.Warehouse);
-    this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextDivSmall(text.NoContract), reqs.NoContract);
+    this.addRequirementRow(this.mRequirementsTable, Stronghold.Text.format(Stronghold.Text.General.Price, this.mModuleData.Price), reqs.Price);
+    this.addRequirementRow(this.mRequirementsTable, text.Warehouse, reqs.Warehouse);
+    this.addRequirementRow(this.mRequirementsTable, text.NoContract, reqs.NoContract);
 
     this.mUpgradeBaseButton.enableButton(this.areRequirementsFulfilled(this.mRequirementsTable))
 }

@@ -205,8 +205,8 @@
 	Stone_Watchtower = {
 		Price = 5,
 		UpgradePrice = 1,
-		VisionInFogOfWarRange = 5, // Range in which you can see enemies in fog of war
-		EffectRange = 5, // Distance in tiles for which the next two effects work
+		EffectRange = 7, // Range in which you can see enemies in fog of war
+		EffectRangePerLevel = 2, // same as threat radius increase per tier
 		VisionIncrease = 30, // Amount of extra vision you get around the base
 		MovementSpeedIncrease = 2 // Amount of extra movement speed you get around the base
 	},
@@ -244,4 +244,9 @@ foreach (locationID, location in ::Stronghold.Locations)
 {
 	location.Price *= ::Stronghold.PriceMult;
 	location.UpgradePrice *= ::Stronghold.PriceMult;
+}
+
+foreach (locationID, location in ::Stronghold.Buildings)
+{
+	location.Price *= ::Stronghold.PriceMult;
 }

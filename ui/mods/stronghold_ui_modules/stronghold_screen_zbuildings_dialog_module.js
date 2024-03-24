@@ -29,8 +29,12 @@ StrongholdScreenBuildingsModule.prototype.switchActiveStructure = function( _str
     {
         this.mAddStructureButton.toggleDisplay(true)
         this.mRemoveStructureButton.toggleDisplay(false)
+        this.addRequirementRow(this.mActiveStructureRequirementsTable,
+        	Stronghold.Text.format(Stronghold.Text.General.Price, this.mActiveStructure.Price),
+        	this.mData.Assets.Money > this.mActiveStructure.Price
+        )
         $.each(this.mActiveStructure.Requirements, $.proxy(function(_, _requirement){
-            this.addRequirementRow(this.mActiveStructureRequirementsTable, Stronghold.getTextDivSmall(_requirement.Text), _requirement.IsValid);
+            this.addRequirementRow(this.mActiveStructureRequirementsTable, _requirement.Text, _requirement.IsValid);
         }, this))
         this.mAddStructureButton.enableButton(this.areRequirementsFulfilled(this.mActiveStructureRequirementsTable));
     }

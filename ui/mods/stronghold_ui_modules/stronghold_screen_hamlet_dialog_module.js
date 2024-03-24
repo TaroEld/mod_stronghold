@@ -64,9 +64,9 @@ StrongholdScreenHamletModule.prototype.fillRequirementsText = function()
 	var self = this;
 
 	this.mRequirementsTable.empty();
-	this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextSpanSmall(Stronghold.Text.Price.replace("{price}", this.mModuleData.Price)), this.mData.Assets.Money > this.mModuleData.Price);
-	this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextSpanSmall(moduleText.Requirements.BaseSize), this.mData.TownAssets.Size == 3);
-	this.addRequirementRow(this.mRequirementsTable, Stronghold.getTextSpanSmall(moduleText.Requirements.MaxHamlet), this.mData.TownAssets.HasHamlet == false);
+	this.addRequirementRow(this.mRequirementsTable, Stronghold.Text.Price.replace("{price}", this.mModuleData.Price), this.mData.Assets.Money > this.mModuleData.Price);
+	this.addRequirementRow(this.mRequirementsTable, moduleText.Requirements.BaseSize, this.mData.TownAssets.Size == 3);
+	this.addRequirementRow(this.mRequirementsTable, moduleText.Requirements.MaxHamlet, this.mData.TownAssets.HasHamlet == false);
 
     this.mBuildHamletButton.enableButton(this.areRequirementsFulfilled(this.mRequirementsTable))
 }

@@ -451,13 +451,14 @@ StrongholdScreenRosterModule.prototype.loadFromData = function ()
     this.mStronghold.NumActiveMax = this.mData.TownAssets.mRosterAssetMax;
     this.mStronghold.BrothersList = this.mModuleData.TownRoster;
     this.onBrothersListLoaded(this.mStronghold, Stronghold.Roster.RosterOwner.Stronghold);
+    this.updateBaseSlots(this.mStronghold, Stronghold.Roster.RosterOwner.Stronghold);
 
     this.mPlayer.NumActive = this.mData.mBrothersAsset;
     this.mPlayer.NumActiveMax = this.mData.mBrothersAssetMax;
     this.mPlayer.BrothersList = this.mModuleData.PlayerRoster;
     this.onBrothersListLoaded(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
+    this.updateBaseSlots(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
     this.updateWages();
-    this.updateBaseSlots();
     for (var i = 0; i < this.mPlayer.BrothersList.length; i++) {
     	if (this.mPlayer.BrothersList[i] !== undefined && this.mPlayer.BrothersList[i] !== null)
     	{
@@ -481,6 +482,19 @@ StrongholdScreenRosterModule.prototype.updateWages = function (_roster)
 {
 	this.mStrongholdWages.text(this.sumWages(this.mStronghold.BrothersList, this.mModuleData.WageMult));
 	this.mPlayerWages.text(this.sumWages(this.mPlayer.BrothersList, 1.0));
+}
+
+StrongholdScreenRosterModule.prototype.updateBaseSlots = function (_parent , _tag)
+{
+	var slots = _parent.Slots;
+	while (slots.length > _parent.NumActiveMax)
+	{
+		slots.pop().remove();
+	}
+	while (slots.length < _parent.NumActiveMax)
+	{
+		this.createBrotherSlot(_parent , _tag);
+	}
 }
 
 StrongholdScreenRosterModule.prototype.toggleScrollDiv = function(_withSlideAnimation)
@@ -1145,32 +1159,34 @@ StrongholdScreenRosterModule.prototype.createBrotherSlots = function ( _parent ,
     var self = this;
     var isPlayer = _tag === Stronghold.Roster.RosterOwner.Player;
     _parent.Slots = [];
-
-    for (var i = 0 ; i < _parent.NumActiveMax; i++)
-    {
-        _parent.Slots.push(null);
-    }
-
     // event listener when dragging then drop bro to an empty slot
-    for (var i = 0; i < _parent.Slots.length; ++i)
+    for (var i = 0; i < _parent.NumActiveMax; ++i)
     {
-        if (isPlayer)
-            _parent.Slots[i] = $('<div class="ui-control is-brother-slot is-roster-slot"/>');
-        else
-            _parent.Slots[i] = $('<div class="ui-control is-brother-slot is-reserve-slot"/>');
-
-        var slot = _parent.Slots[i];
-        _parent.ListScrollContainer.append(slot);
-
-        slot.data('idx', i);
-        slot.data('tag', _tag);
-        slot.data('child', null);
-        this.createSlotDragHandler(slot);
-        this.createSlotDropHandler(slot);
-        this.createSlotClickHandler(slot)
-        // event listener when left-click the brother
+    	this.createBrotherSlot(_parent, _tag);
     }
 };
+
+StrongholdScreenRosterModule.prototype.createBrotherSlot = function ( _parent , _tag )
+{
+	_parent.Slots.push(null);
+	var i = _parent.Slots.length - 1;
+	var isPlayer = _tag === Stronghold.Roster.RosterOwner.Player;
+	if (isPlayer)
+	    _parent.Slots[i] = $('<div class="ui-control is-brother-slot is-roster-slot"/>');
+	else
+	    _parent.Slots[i] = $('<div class="ui-control is-brother-slot is-reserve-slot"/>');
+
+	var slot = _parent.Slots[i];
+	_parent.ListScrollContainer.append(slot);
+
+	slot.data('idx', i);
+	slot.data('tag', _tag);
+	slot.data('child', null);
+	this.createSlotDragHandler(slot);
+	this.createSlotDropHandler(slot);
+	this.createSlotClickHandler(slot)
+	// event listener when left-click the brother
+}
 
 StrongholdScreenRosterModule.prototype.createSlotDragHandler = function ( _slot )
 {

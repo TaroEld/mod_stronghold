@@ -143,7 +143,7 @@ StrongholdScreenModuleTemplate.prototype.buildRequirements = function(_table, _r
 		}
 		if (text === undefined)
 			console.error("Missing text for requirement: " + _key)
-		self.addRequirementRow(_table, Stronghold.getTextSpanSmall(text), isValid);
+		self.addRequirementRow(_table, text, isValid);
 	})
 	return this.areRequirementsFulfilled(_table)
 }
@@ -165,7 +165,9 @@ StrongholdScreenModuleTemplate.prototype.addRequirementRow = function(_table, _r
 
     if (_requirement)
     {
-    	_requirement
+    	if ((typeof _requirement) === "string")
+    		_requirement = Stronghold.getTextSpanSmall(_requirement)
+    	Stronghold.getTextSpanSmall(_requirement)
     		.appendTo(container)
     		.addClass(font)
     		.children()
