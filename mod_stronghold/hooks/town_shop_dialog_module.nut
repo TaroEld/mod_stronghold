@@ -22,7 +22,7 @@
 
 		local price = (item.getConditionMax() - item.getCondition()) * this.Const.World.Assets.CostToRepairPerPoint;
 		local value = item.m.Value * (1.0 - item.getCondition() / item.getConditionMax()) * 0.2 * this.World.State.getCurrentTown().getPriceMult() * this.Const.Difficulty.SellPriceMult[this.World.Assets.getEconomicDifficulty()];
-		price = ::Math.max(price, value) * this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier;
+		price = ::Math.max(price, value) * (1.0 - (this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier * town.getLocation("attached_location.blast_furnace").getLevel()));
 		price = price.tointeger();
 
 		if (this.World.Assets.getMoney() < price)

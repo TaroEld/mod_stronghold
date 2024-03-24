@@ -4,7 +4,7 @@
 	local tactical_helper_addHintsToTooltip = o.tactical_helper_addHintsToTooltip;
 	o.tactical_helper_addHintsToTooltip = function ( _activeEntity, _entity, _item, _itemOwner, _ignoreStashLocked = false )
 	{
-		local result = tactical_helper_addHintsToTooltip( _activeEntity, _entity, _item, _itemOwner, _ignoreStashLocked)
+		local result = tactical_helper_addHintsToTooltip( _activeEntity, _entity, _item, _itemOwner, _ignoreStashLocked);
 		local town = this.World.State.getCurrentTown();
 		if (_itemOwner != "world-town-screen-shop-dialog-module.stash" || town == null || town.getCurrentBuilding() == null || !town.getCurrentBuilding().isRepairOffered() || !town.getFlags().get("IsMainBase") || !town.hasAttachedLocation("attached_location.blast_furnace"))
 		{
@@ -13,7 +13,7 @@
 
 		local price = (_item.getConditionMax() - _item.getCondition()) * this.Const.World.Assets.CostToRepairPerPoint;
 		local value = _item.m.Value * (1.0 - _item.getCondition() / _item.getConditionMax()) * 0.2 * this.World.State.getCurrentTown().getPriceMult() * this.Const.Difficulty.SellPriceMult[this.World.Assets.getEconomicDifficulty()];
-		price = ::Math.max(price, value) * this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier;
+		price = ::Math.max(price, value) * (1.0 - (this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier * town.getLocation("attached_location.blast_furnace").getLevel()));
 		price = price.tointeger();
 		foreach(entry in result){
 			if("text" in entry && entry.text.find("to have it repaired") != null){
