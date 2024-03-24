@@ -280,7 +280,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.getFlags().remove("BuildInterrupted");
 		if (_success)
 		{
-			this.buildHouses();
+			if (this.m.Size > 1)
+				this.buildHouses();
 		}
 		else
 		{
