@@ -27,7 +27,7 @@
 	]
 	Background = {
 		UIBackgroundCenter = [
-			"ui/settlements/stronghold_00",
+			"ui/settlements/stronghold_01",
 			"ui/settlements/stronghold_01",
 			"ui/settlements/stronghold_02",
 			"ui/settlements/stronghold_03",
