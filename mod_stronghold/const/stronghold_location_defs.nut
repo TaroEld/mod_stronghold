@@ -4,6 +4,10 @@
 		ID = "attached_location.blast_furnace",
 		Path = "blast_furnace_location",
 	},
+	Collector = {
+		ID = "attached_location.collector",
+		Path = "collector_location"
+	}
 	Gold_Mine = {
 		ID = "attached_location.gold_mine",
 		Path = "gold_mine_location",

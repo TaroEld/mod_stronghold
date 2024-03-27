@@ -54,6 +54,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.World.createRoster(this.toHash(this));
 		this.updateProperties();
 		this.updateTown();
+		this.buildWarehouseLocation();
 		if(this.m.IsCoastal)
 		{
 			this.buildHarborLocation();
@@ -68,9 +69,9 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.CurrentBuilding = null;
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
 		this.updateLocationEffects();
+		this.consumeItems();
 		this.updateSituations();
 		this.updateShop();
-		this.consumeItems();
 
 		this.Stronghold.getPlayerFaction().updateQuests();
 		this.rebuildAttachedLocations();
@@ -100,7 +101,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function getStash()
 	{
-		return this.getWarehouse() == null ? null : this.getWarehouse().getStash();
+		return this.getWarehouse().getStash();
 	}
 
 	function updateLocationEffects()
@@ -116,9 +117,32 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function consumeItems()
 	{
-		if (this.getWarehouse() == null)
-			return;
 		this.getWarehouse().consumeConsumableItems();
+	}
+
+	function getItemOverflowLen()
+	{
+		local total = 0;
+		foreach (location in this.getActiveAttachedLocations())
+		{
+			if ("ItemOverflow" in location.m)
+			{
+				::logInfo(location.m.ID)
+				total += location.m.ItemOverflow.len()
+			}
+		}
+		return total;
+	}
+
+	function consumeItemOverflow()
+	{
+		this.getStash().setResizable(true);
+		foreach (location in this.getActiveAttachedLocations())
+		{
+			if ("ItemOverflow" in location.m)
+				location.consumeItemOverflow();
+		}
+		this.getStash().setResizable(false);
 	}
 
 	function isMainBase()
@@ -890,6 +914,33 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				return;
 			}
 		}
+	}
+	function buildWarehouseLocation()
+	{
+		local locationDef = ::Stronghold.LocationDefs["Warehouse"];
+		this.World.Assets.addMoney(-locationDef.Price)
+		local script = "scripts/entity/world/attached_location/" + locationDef.Path
+		local validTerrain =
+		[
+			this.Const.World.TerrainType.Plains,
+			this.Const.World.TerrainType.Steppe,
+			this.Const.World.TerrainType.Hills,
+			this.Const.World.TerrainType.Desert,
+			this.Const.World.TerrainType.Land,
+			this.Const.World.TerrainType.Swamp,
+			this.Const.World.TerrainType.Hills,
+			this.Const.World.TerrainType.Forest,
+			this.Const.World.TerrainType.SnowyForest,
+			this.Const.World.TerrainType.LeaveForest,
+			this.Const.World.TerrainType.AutumnForest,
+			this.Const.World.TerrainType.Farmland,
+			this.Const.World.TerrainType.Snow,
+			this.Const.World.TerrainType.Badlands,
+			this.Const.World.TerrainType.Tundra,
+			this.Const.World.TerrainType.Oasis,
+		]
+		this.buildAttachedLocation(1, script, validTerrain, [], 2)
+		this.buildRoad(this.m.AttachedLocations[this.m.AttachedLocations.len()-1])
 	}
 
 	function isEnterable()

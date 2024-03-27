@@ -109,6 +109,14 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
         this.notifyBackendPayForRaided();
     }, this), "stronghold-button-4", 4)
 
+    this.mOverflowContainer = this.mContentContainer.appendRow(text.OverflowTitle).hide();
+    this.mOverflowText = Stronghold.getTextDiv().appendTo(this.mOverflowContainer);
+    var footer = this.mOverflowContainer.appendRow(null, "stronghold-flex-center");
+    this.mOverflowButton = footer.createTextButton(text.OverflowButton, $.proxy(function()
+    {
+        this.notifyBackendConsumeOverflow();
+    }, this), "stronghold-button-4", 4)
+
     this.mSettingsContainer = this.mContentContainer.appendRow("Settings");
     var settingsContainer = $('<div class="stronghold-generic-background"/>')
     	.appendTo(this.mSettingsContainer);
@@ -153,6 +161,14 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
     	_value.iCheck(self.mData.TownAssets.BaseSettings[_key] === true ? 'check' : 'uncheck');
     });
 
+    if (this.mModuleData.ItemOverflow > 0)
+    {
+    	this.mOverflowText.text(Stronghold.Text.format(text.OverflowText, this.mModuleData.ItemOverflow));
+    	this.mOverflowButton.attr("disabled", false)
+    	this.mOverflowContainer.show();
+    }
+    else this.mOverflowContainer.hide();
+
     if (this.mData.TownAssets.IsRaidedUntil > 0)
     {
     	var price = this.mData.TownAssets.IsRaidedUntil * this.mModuleData.RaidedCostPerDay;
@@ -178,4 +194,10 @@ StrongholdScreenMainModule.prototype.notifyBackendPayForRaided = function (_sett
 {
 	SQ.call(this.mSQHandle, 'onPayForRaided', this.mData.TownAssets.IsRaidedUntil);
 };
+
+StrongholdScreenMainModule.prototype.notifyBackendConsumeOverflow = function ()
+{
+	SQ.call(this.mSQHandle, 'onConsumeOverflow');
+};
+
 

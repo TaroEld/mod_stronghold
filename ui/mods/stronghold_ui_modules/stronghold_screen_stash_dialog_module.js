@@ -132,6 +132,14 @@ StrongholdScreenStashModule.prototype.createDIV = function (_parentDiv)
         self.notifyBackendFilterUsableButtonClicked();
     }, 'stash-module-filter-button', 3);
 
+    var layout = $('<div class="l-button small-items-button"/>');
+    buttonContainer.append(layout);
+    this.mSetSmallSizeButton = layout.createImageButton(Path.GFX + "ui/skin/small_icons.png", function ()
+    {
+		self.mSetSmallSizeButton.toggleClass('is-active');
+		self.mContentContainer.toggleClass("small-items");
+    }, 'stash-module-filter-button', 3);
+
     var slotSizeImage = '<img src=" ' + Path.GFX + Asset.ICON_BAG +'"/>';
     this.mStashSlotSizeContainer = $('<div class="slot-count-container"/>').appendTo(buttonContainer);
     $('<div class="slot-count-header text-font-small font-color-title">Player</div>').appendTo(this.mStashSlotSizeContainer);
@@ -158,8 +166,34 @@ StrongholdScreenStashModule.prototype.createDIV = function (_parentDiv)
     this.mShopListContainer = listContainerLayout.createList(1.24/*8.63*/);
     this.mShopListScrollContainer = this.mShopListContainer.findListScrollContainer();
     this.setupEventHandler();
-
 };
+
+StrongholdScreenStashModule.prototype.bindTooltips = function ()
+{
+	this.mSortInventoryButton.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterScreen.RightPanelHeaderModule.SortButton });
+	this.mFilterAllButton.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterScreen.RightPanelHeaderModule.FilterAllButton });
+	this.mFilterWeaponsButton.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterScreen.RightPanelHeaderModule.FilterWeaponsButton });
+	this.mFilterArmorButton.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterScreen.RightPanelHeaderModule.FilterArmorButton });
+    this.mFilterMiscButton.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterScreen.RightPanelHeaderModule.FilterMiscButton });
+    this.mFilterUsableButton.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterScreen.RightPanelHeaderModule.FilterUsableButton });
+    this.mSetSmallSizeButton.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Stash.SmallIcons"});
+};
+
+StrongholdScreenStashModule.prototype.unbindTooltips = function ()
+{
+    this.mAssets.unbindTooltips();
+	this.mStashSlotSizeContainer.unbindTooltip();
+    this.mLeaveButton.unbindTooltip();
+
+	this.mSortInventoryButton.unbindTooltip();
+	this.mFilterAllButton.unbindTooltip();
+	this.mFilterWeaponsButton.unbindTooltip();
+	this.mFilterArmorButton.unbindTooltip();
+    this.mFilterMiscButton.unbindTooltip();
+    this.mFilterUsableButton.unbindTooltip();
+};
+
+
 StrongholdScreenStashModule.prototype.destroyDIV = function ()
 {
     this.mStashSlots = null;
@@ -333,7 +367,26 @@ StrongholdScreenStashModule.prototype.setupEventHandler = function ()
 StrongholdScreenStashModule.prototype.swapItem = function (_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner)
 {
     var self = this;
-    this.notifyBackendSwapItem(_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner, function (data){});
+    this.notifyBackendSwapItem(_sourceItemIdx, _sourceItemOwner, _targetItemIdx, _targetItemOwner, function (data){
+    	// error?
+    	if (data.Result != 0)
+    	{
+    	    if (data.Result == ErrorCode.NotEnoughMoney)
+    	    {
+    	        self.mAssets.mMoneyAsset.shakeLeftRight();
+    	    }
+    	    else if (data.Result == ErrorCode.NotEnoughStashSpace)
+    	    {
+    	        self.mStashSlotSizeContainer.shakeLeftRight();
+    	    }
+    	    else
+    	    {
+    	        console.error("Failed to swap item. Reason: Unknown");
+    	    }
+
+    	    return;
+    	}
+    });
 
 };
 
@@ -465,6 +518,7 @@ StrongholdScreenStashModule.prototype.checkIfReforgeIsValid = function (_sourceI
     });
 };
 
+
 var copyFunctionList = [
 	"loadStashData",
 	"loadShopData",
@@ -475,7 +529,6 @@ var copyFunctionList = [
 	"querySlotByIndex",
 	"createItemSlots",
 	"clearItemSlots",
-	"createItemSlot",
 	"repairItem",
 	"updateStashList",
 	"updateShopList",

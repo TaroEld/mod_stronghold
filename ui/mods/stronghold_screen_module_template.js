@@ -17,7 +17,7 @@ var StrongholdScreenModuleTemplate = function(_parent)
 
     this.mData = null;
     this.mModuleData = null;
-    this.mAlwaysUpdate = false;
+    this.mAlwaysUpdate = true;
 };
 
 StrongholdScreenModuleTemplate.prototype = Object.create(MSUUIScreen.prototype);

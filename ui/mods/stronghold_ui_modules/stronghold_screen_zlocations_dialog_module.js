@@ -25,7 +25,7 @@ StrongholdScreenLocationsModule.prototype.switchActiveStructure = function( _str
     	this.mActiveStructureTitle.html(this.mActiveStructureDef.Name + Stronghold.Text.format(this.getModuleText().Level, this.mActiveStructure.Level, 4));
     	this.mActiveStructure.LevelDiv.html(this.mActiveStructure.Level);
         this.mAddStructureButton.toggleDisplay(false);
-        this.mRemoveStructureButton.toggleDisplay(true);
+        this.mRemoveStructureButton.toggleDisplay(!(_structureID == "Warehouse")); // true except for warehouse, cant remove that
         this.mUpgradeStructureButton.toggleDisplay(true);
 
         if (this.mActiveStructure.Level != 4)

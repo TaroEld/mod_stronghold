@@ -123,7 +123,7 @@
 ::Stronghold.Buildings <-
 {
 	Tavern = {
-		Price = 1,
+		Price = 0,
 	}
 	Kennel = {
 		Price = 2.5,
@@ -170,12 +170,18 @@
 		RepairMultiplier = 0.1 // Value by which instant repair will be multiplied
 	},
 
+	Collector = {
+		Price = 2.5,
+		UpgradePrice = 2.5,
+		Chance = 10, // percentage chance to get an item for each day
+	},
+
 	Gold_Mine = {
 		Price = 2,
 		UpgradePrice = 2
 		DailyIncome = 50,
 		AddGoldDirectlyToAssets = false // Add gold generated in base directly to the asset crowns on base enter instead of creating a crowns item
-	}
+	},
 
 	Herbalists_Grove = {
 		Price = 2,

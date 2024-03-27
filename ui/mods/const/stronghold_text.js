@@ -50,7 +50,10 @@ Stronghold.Text = {
 		},
 		RaidedTitle : "Raided",
 		RaidedText : "Your base has recently been raided. It will take {0} days to clear out the rubble and make the base fully accessible. You can also pay {1} crowns to speed up the cleanup.",
-		RaidedButton : "Pay {0} crowns"
+		RaidedButton : "Pay {0} crowns",
+		OverflowTitle : "Item overlow",
+		OverflowText : "{0} items are overflowing your warehouse. Press this button to add them to your warehouse. [b]Beware![/b] You will need to make space for them, or they will be lost after you leave the base.",
+		OverflowButton : "Pay {0} crowns",
 	},
 	MiscModule : {
 		BuildRoad : {
@@ -118,7 +121,11 @@ Stronghold.Text = {
 			Warning : "LAST WARNING! Are you sure you want to remove your base?"
 		}
 	},
-	RosterModule : {},
+	RosterModule : {
+		Attributes : "Attributes",
+		Skills : "Skills",
+		Portrait : "Portrait",
+	},
 	StashModule : {},
 	StructureModule : {
 		Build : "Build",
@@ -265,6 +272,15 @@ Stronghold.Text = {
 			},
 			getUpgradeDescription : function(_element){return "placeholder"}
 
+		},
+		Collector : {
+			Name : "Collector",
+			Path : "collector_location",
+			Description: "The collector gathers various common and rare natural goods for you.",
+			getDescription : function(_element){
+				return this.Description;
+			},
+			getUpgradeDescription : function(_element){return "placeholder"}
 		},
 		Workshop : {
 			Name : "Workshop",

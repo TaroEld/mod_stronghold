@@ -123,6 +123,15 @@
     top: 20.0rem;
 }
 
+.stronghold-screen .stash-module  .row.is-content .l-button.small-items-button
+{
+    position: absolute;
+
+    width: 5.2rem;
+    height: 4.1rem;
+    top: 30.0rem;
+}
+
 .stronghold-screen .stash-module  .row.is-content .slot-count-container
 {
     position: absolute;
@@ -191,3 +200,24 @@
 {
     z-index: 100;
 }
+
+.stronghold-screen .stash-module.small-items  .ui-control.item.is-list-item
+{
+    width:5.18rem;
+    height:5.18rem;
+}
+
+.stronghold-screen .stash-module.small-items  .ui-control.item > .image-layer
+{
+    width: 5rem;
+    height: 5rem;
+    left: 0.1rem;
+    top: 0.1rem;
+}
+/*.stronghold-screen .stash-module .image-layer.small-item
+{
+    width: 5rem;
+    height: 5rem;
+    left: 0.1rem;
+    top: 0.1rem;
+}*/

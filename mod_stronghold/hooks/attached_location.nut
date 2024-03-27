@@ -15,15 +15,15 @@
 	local onSerialize = o.onSerialize;
 	o.onSerialize = function( _out )
 	{
+		::Stronghold.Mod.Serialization.flagSerialize(this.getID().tostring(),  {Level = this.m.Level}, this.getFlags());
 		onSerialize(_out);
-		::Stronghold.Mod.Serialization.flagSerialize(this.getID().tostring(),  {Level = this.m.Level});
 	}
 
 	local onDeserialize = o.onDeserialize;
 	o.onDeserialize = function( _in )
 	{
 		onDeserialize(_in);
-		this.m.Level = ::Stronghold.Mod.Serialization.flagDeserialize(this.getID().tostring(),{Level = 1}).Level;
+		this.m.Level = ::Stronghold.Mod.Serialization.flagDeserialize(this.getID().tostring(), {Level = 1}, null, this.getFlags()).Level;
 	}
 
 	o.stronghold_updateLocationEffects <- function(_daysPassed)
@@ -41,20 +41,10 @@
 	{
 	}
 })
-::mods_hookDescendants("entity/world/attached_location", function(o)
-{
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
-	{
-
-	}
-	o.onUpgrade <- function()
-	{
-	}
-})
 
 ::mods_hookExactClass("entity/world/attached_location/blast_furnace_location", function(o)
 {
-	o.stronghold_updateLocationEffects = function(_daysPassed)
+	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
 
 	}
@@ -62,7 +52,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/herbalists_grove_location", function(o)
 {
-	o.stronghold_updateLocationEffects = function(_daysPassed)
+	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
 		local item = {
 			ID = "supplies.medicine",
@@ -79,7 +69,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/gold_mine_location", function(o)
 {
-	o.stronghold_updateLocationEffects = function(_daysPassed)
+	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
 		local item = {
 			ID = "supplies.money",
@@ -96,7 +86,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/militia_trainingcamp_location", function(o)
 {
-	o.stronghold_updateLocationEffects = function(_daysPassed)
+	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
 		local XpPerDay = this.Stronghold.Locations["Militia_Trainingcamp"].DailyIncome;
 		local totalXP = XpPerDay * _daysPassed ;
@@ -112,7 +102,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/ore_smelter", function(o)
 {
-	o.stronghold_updateLocationEffects = function(_daysPassed)
+	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
 
 	}
@@ -120,7 +110,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/stone_watchtower_location", function(o)
 {
-	o.stronghold_updateLocationEffects = function(_daysPassed)
+	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
 
 	}
@@ -128,7 +118,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/wheat_fields_location", function(o)
 {
-	o.stronghold_updateLocationEffects = function(_daysPassed)
+	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
 
 	}
@@ -136,7 +126,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/workshop_location", function(o)
 {
-	o.stronghold_updateLocationEffects = function(_daysPassed)
+	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
 		local item = {
 			ID = "supplies.armor_parts",
