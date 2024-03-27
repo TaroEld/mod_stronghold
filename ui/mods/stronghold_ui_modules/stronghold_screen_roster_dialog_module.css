@@ -447,6 +447,11 @@
 	position: relative;
 }
 
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .progressbar .label
+{
+	left: -1.5rem;
+}
+
 .stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .stats-row > .l-stats-row
 {
 	left: 0;

@@ -1334,7 +1334,7 @@ StrongholdScreenRosterModule.prototype.addBrotherSlotDIV = function(_parent, _da
     result.data('tag', _tag);
 
     result.unbindTooltip();
-    result.bindTooltip({ contentType: 'ui-element', entityId: id, elementId: 'pokebro.roster' });
+    result.bindTooltip({ contentType: 'roster-entity', entityId: id });
     parentDiv.data('child', result);
     ++_parent.NumActive;
 
@@ -1494,7 +1494,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
     {
     case Stronghold.Roster.ToggleScroll.Type.Portrait:
     	this.mPortrait.Container.show();
-        this.mTitleContainer.html('Portrait');
+        this.mTitleContainer.html(this.getModuleText().Portrait);
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Character.Key in _brother)
         {
             var character = _brother[CharacterScreenIdentifier.Entity.Character.Key];
@@ -1509,7 +1509,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
 
     case Stronghold.Roster.ToggleScroll.Type.Skills:
     	this.mSkills.Container.show();
-        this.mTitleContainer.html('Skills');
+        this.mTitleContainer.html(this.getModuleText().Skills);
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Id in _brother)
         {
             if (CharacterScreenIdentifier.SkillTypes.ActiveSkills in _brother)
@@ -1527,7 +1527,7 @@ StrongholdScreenRosterModule.prototype.updateDetailsPanel = function (_brother)
 
     default:
     	this.mStatsContainer.show();
-        this.mTitleContainer.html('Stats');
+        this.mTitleContainer.html(this.getModuleText().Attributes);
         if (_brother !== undefined && CharacterScreenIdentifier.Entity.Stats in _brother)
             this.setProgressbarValues(_brother[CharacterScreenIdentifier.Entity.Stats]);
     }
