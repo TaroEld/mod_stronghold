@@ -20,16 +20,11 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 				})
 			}
 			_ret[buildingID] <- {
-				Name = building.Name,
-				ID = building.ID,
-				ConstID = buildingID,
-				Description = building.Description,
-				Price = building.Price,
-				Path = building.Path,
 				ImagePath = building.Path + ".png",
 				HasStructure = hasBuilding,
-				Requirements = requirements
 			}
+			::MSU.Table.merge(_ret[buildingID], building, true);
+			_ret[buildingID].Requirements = requirements;
 		}
 		return _ret
 	}
@@ -46,5 +41,6 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 	function removeBuilding(_data)
 	{
 		this.getTown().removeBuilding(_data);
+		this.updateData(["TownAssets", "Assets", "BuildingsModule"]);
 	}
 })

@@ -42,20 +42,13 @@
 }
 .stronghold-screen .structures-module .description-row .active-structure-image-container
 {
-	height: 20rem;
-	width: 28rem;
-}
-
-.stronghold-screen .structures-module .active-structure-image-container .active-structure-image
-{
-	height: 16rem;
-	width: 28rem;
-	align-self: center;
+/*	height: 20rem;*/
 }
 
 .stronghold-screen .structures-module .active-structure-image
 {
-	width: 20rem;
+	height: 10rem;
+/*	width: 20rem;*/
 }
 
 .stronghold-screen .structures-module .description-row .active-structure-text-container

@@ -58,11 +58,13 @@ StrongholdScreenUpgradeModule.prototype.setSpriteImage = function()
 
 StrongholdScreenUpgradeModule.prototype.fillUpgradeDetailsText = function()
 {
-	var text = Stronghold.Text.format(this.getModuleText().GeneralUnlockDescriptions,
+	var text = "<ul>" + Stronghold.Text.format(this.getModuleText().UpgradeDescription,
 		Stronghold.Text.General["Tier" + this.mData.TownAssets.Size],
 		Stronghold.Text.General["Tier" + (this.mData.TownAssets.Size + 1)]
-		) + "<br>";
+		);
+	text += this.getModuleText().GeneralUnlockDescription;
 	text += this.getModuleText().UnlockDescriptions[this.mData.TownAssets.Size + 1];
+	text += "</ul>";
     this.mAdvantagesTextContainer.html(text);
 }
 

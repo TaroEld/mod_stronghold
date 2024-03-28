@@ -4,7 +4,6 @@ var StrongholdScreenStructuresModule = function(_parent)
 {
     StrongholdScreenModuleTemplate.call(this, _parent);
     this.mActiveStructure = null;
-    this.mActiveStructureDef = null;
     this.mStructureImagePath = "";
 };
 
@@ -35,19 +34,18 @@ StrongholdScreenStructuresModule.prototype.createDIV = function (_parentDiv)
     this.mImageAndDescriptionContainer = this.mListScrollContainer.appendRow();
 
 
-    // var activeStructureImageContainer = $('<div class="active-structure-image-container"/>')
-    // 	.appendTo(this.mImageAndDescriptionContainer);
-    this.mActiveStructureImage = $('<img class="active-structure-image"/>')
+    var activeStructureImageContainer = $('<div class="active-structure-image-container"/>')
     	.appendTo(this.mImageAndDescriptionContainer);
+    this.mActiveStructureImage = $('<img class="active-structure-image"/>')
+    	.appendTo(activeStructureImageContainer);
 
     this.mActiveStructureDescription = Stronghold.getTextSpan().addClass("active-structure-text-container").appendTo(this.mImageAndDescriptionContainer);
 
-    var activeStructureRequirements = this.mImageAndDescriptionContainer.appendRow(Stronghold.Text.Requirements);
+    this.mActiveStructureDetailsRow = this.mListScrollContainer.appendRow("Advantages", "text-font-medium font-style-italic font-bottom-shadow font-color-subtitle").hide();
+    this.mActiveStructureDetails = Stronghold.getTextDivSmall().appendTo(this.mActiveStructureDetailsRow);
+
+    var activeStructureRequirements = this.mListScrollContainer.appendRow(Stronghold.Text.Requirements);
     this.mActiveStructureRequirementsTable = $("<table>").appendTo(activeStructureRequirements);
-
-    this.mActiveStructurePerks = this.mListScrollContainer.appendRow("Advantages", "text-font-medium font-style-italic font-bottom-shadow font-color-subtitle")
-    Stronghold.getTextDiv("aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa aaaaa ").appendTo(this.mActiveStructurePerks)
-
 
     this.mFooterRow = this.mContentContainer.appendRow(null, "footer-button-bar");
     this.mUpgradeStructureButton = this.mFooterRow.createTextButton(text.Upgrade, function()
@@ -115,11 +113,10 @@ StrongholdScreenStructuresModule.prototype.switchActiveStructure = function( _st
         this.mActiveStructure.Selection.toggleDisplay(false)
     }
     this.mActiveStructure = this.mModuleData[_structureID];
-    this.mActiveStructureDef = this.mActiveStructureDefs[_structureID];
-    this.mActiveStructureTitle.html(this.mActiveStructureDef.Name);
+    this.mActiveStructureTitle.html(this.mActiveStructure.Name);
     this.mActiveStructure.Selection.toggleDisplay(true)
     this.mActiveStructureImage.attr('src', Path.GFX + this.mStructureImagePath + this.mActiveStructure.ImagePath);
-    this.mActiveStructureDescription.html(this.mActiveStructureDef.getDescription ? this.mActiveStructureDef.getDescription(this.mActiveStructure) : this.mActiveStructureDef.Description);
+    this.mActiveStructureDescription.html(this.mActiveStructure.Description);
 }
 
 StrongholdScreenStructuresModule.prototype.addStructure = function ()

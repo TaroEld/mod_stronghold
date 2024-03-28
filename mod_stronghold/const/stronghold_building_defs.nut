@@ -96,8 +96,8 @@
 		SouthPath = "",
 		Requirements =
 		[{
-			Text = "Required base size: Stronghold (3/3).",
-			IsValid = @(_town) _town.getSize() == 3
+			Text = "Required base size: Stronghold (4/4).",
+			IsValid = @(_town) _town.getSize() == 4
 		}]
 
 	},
@@ -112,5 +112,6 @@
 }
 foreach(buildingID, building in ::Stronghold.BuildingDefs)
 {
+	building.ConstID <- buildingID;
 	::MSU.Table.merge(building, ::Stronghold.Buildings[buildingID]);
 }

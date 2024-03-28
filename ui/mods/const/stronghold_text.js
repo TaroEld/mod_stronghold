@@ -4,7 +4,7 @@ Stronghold.Text = {
 		//adapted from https://coderwall.com/p/flonoa/simple-string-format-in-javascript
 		var args = Array.prototype.slice.call(arguments, 1);
 		for (k in args) {
-			_string = _string.replace("{" + k + "}", args[k]);
+			_string = _string.replace("{" + k + "}", "<b>" + args[k] + "</b>");
 		}
 		return _string;
 	},
@@ -145,6 +145,8 @@ Stronghold.Text = {
 		MaxForBaseLevel : "Your base tier ({0}) needs to be higher than the location level ({1})",
 		MaxTotal : "Your base tier ({0}) can support up to {1} different locations. (Currently: {2})",
 		MaxLevel : "You have reached the highest possible level for this location.",
+		CurrentDetails : "Current level:<br>",
+		NextDetails : "Next level:<br>",
 	},
 	VisualsModule : {
 		Title : "Change Visuals",
@@ -162,203 +164,114 @@ Stronghold.Text = {
 			Price : "Have sufficient money ({0})",
 			NoContract : "You can't have an active contract.",
 		},
-		GeneralUnlockDescriptions : "Upgrade your {0} to a {1} to unlock the following features:<br>You can construct an additional building and two additional locations.<br>Locations can be upgraded a further level.<br>Buy and sell prices improve by 5%, and merchant stock increases in rarity and quantity.",
+		UpgradeDescription : "Upgrade your {0} to a {1} to unlock the following features:",
+		GeneralUnlockDescription : "<li>You can construct an additional building and two additional locations.</li><li>Locations can be upgraded a further level.</li><li>Buy and sell prices improve by 5%, and merchant stock increases in rarity and quantity.</li>",
 		UnlockDescriptions : {
-			1 : "",
-			2 : "You can construct roads to other settlements, connecting your base to the world.",
-			3 : "A number of unique contracts will be made available.",
-			4 : "A Hamlet will be built and connected to your base.",
+			1 : "<li></li>",
+			2 : "<li>You can construct roads to other settlements, connecting your base to the world.</li>",
+			3 : "<li>A number of unique contracts will be made available.</li>",
+			4 : "<li>A Hamlet will be built and connected to your base.</li>",
 		}
-	},
-	Buildings : {
-		Tavern : {
-			Name : "Tavern",
-			Path : "tavern_building",
-			SouthPath : false,
-			Description : "A large tavern filled with patrons from all over the lands, offering beverages, food and a lively atmosphere in which to share news and rumors.",
-		},
-		Kennel : {
-			Name : "Kennel",
-			Description : "A kennel where strong and fast dogs are bred for war.",
-			Path : "kennel_building",
-			SouthPath : false,
-		},
-		Taxidermist : {
-			Name : "Taxidermist",
-			Description : "For the right price, a taxidermist can create useful items from all kinds of trophies you bring him.",
-			Path : "taxidermist_building",
-			SouthPath : "taxidermist_oriental_building",
-		},
-		Temple : {
-			Name : "Temple",
-			Description : "A refuge from the harsh world outside. You can seek healing here for your wounded and pray for salvation of your eternal soul.",
-			Path : "temple_building",
-			SouthPath : "temple_oriental_building",
-		},
-		Training_Hall : {
-			Name : "Training Hall",
-			Description : "A meeting point for those of the fighting profession. Have your men train with and learn from experienced fighters here, so you can mold them faster into hardened mercenaries.",
-			Path : "training_hall_building",
-			SouthPath : false,
-		},
-		Alchemist : {
-			Name : "Alchemist",
-			Description : "An alchemist offering exotic and quite dangerous contraptions for a tidy sum.",
-			Path : "alchemist_building",
-			SouthPath : false,
-		},
-		Weaponsmith : {
-			Name : "Weaponsmith",
-			Description : "A weapon smith\'s workshop displaying all kinds of well crafted weapons. Damaged equipment can also be repaired here for a price.",
-			Path : "weaponsmith_building",
-			SouthPath : "weaponsmith_oriental_building",
-		},
-		Armorsmith : {
-			Name : "Armorsmith",
-			Description : "This armorer\'s workshop is the right place to look for well-made and durable protection. Damaged equipment can also be repaired here for a price.",
-			Path : "armorsmith_building",
-			SouthPath : "armorsmith_oriental_building",
-		},
-		Fletcher : {
-			Name : "Fletcher",
-			Description : "A fletcher offering all kinds of expertly crafted ranged weaponry.",
-			Path : "fletcher_building",
-			SouthPath : false,
-		},
-		Port : {
-			Name : "Port",
-			Description : "A harbor that serves both foreign trading ships and local fishermen. You\'ll likely be able to book passage by sea to other parts of the continent here.",
-			Path : "port_building",
-			SouthPath : false,
-			Requirements : [
-				function (_element, _module){
-					return {
-						Text : Stronghold.Text.format("Required base size: {0} (4/4).", Stronghold.Text.General.Tier4),
-						IsValid : _module.mData.TownAssets.Size == 4
-					}
-				}
-			]
-		},
-		Arena : {
-			Name : "Arena",
-			Description : "The arena offers an opportunity to earn gold and fame in fights that are to the death, and in front of crowds that cheer for the most gruesome manner in which lives are dispatched.",
-			Path : "arena_building",
-			SouthPath : false,
-			Requirements : [
-				function (_element, _module){
-					return {
-						Text : "Live next to the sea.",
-						IsValid : _module.mData.TownAssets.IsCoastal === true
-					}
-				}
-			]
-
-		},
-		Barber : {
-			Name : "Barber",
-			Description : "Customize the appearance of your men at the barber. Have their hair cut and their beards trimmed or buy dubious potions to lose weight.",
-			Path : "barber_building",
-			SouthPath : false,
-		},
 	},
 	Locations : {
 		Warehouse : {
-			Name : "Warehouse",
-			Path : "warehouse_location",
-			Description : "In the warehouse, you can store items. Each warehouse level increases its size by {0}. Upgrading the warehouse is necessary to upgrading your base.",
-			getDescription : function(_element){
-				return Stronghold.Text.format(this.Description,
-				_element.MaxItemSlots)
+			UpgradeDescription : {
+				MaxItemSlots : "<li>Store up to {0} items in your base.</li>",
+				UpgradeBase : "<li>Allows you to upgrade your base to level {0}.</li>"
 			},
-			getUpgradeDescription : function(_element){return "placeholder"}
+			getUpgradeDescription : function(_element, _level){
+				return  Stronghold.Text.format(this.UpgradeDescription.UpgradeBase, _level) + Stronghold.Text.format(this.UpgradeDescription.MaxItemSlots, (_level + 1) * _element.MaxItemSlots);
+			}
 
 		},
 		Collector : {
-			Name : "Collector",
-			Path : "collector_location",
-			Description: "The collector gathers various common and rare natural goods for you.",
-			getDescription : function(_element){
-				return this.Description;
+			UpgradeDescription : {
+				Description : "<li>Each day, the collector has a {0}% chance to find items and add them to your base stash.</li>",
+				Rarity : "<li>Upgrading the collector adds rarer items to the lootpool</li>",
 			},
-			getUpgradeDescription : function(_element){return "placeholder"}
+			getUpgradeDescription : function(_element, _level){
+				return  Stronghold.Text.format(this.UpgradeDescription.Description, _element.Chance) + this.UpgradeDescription.Rarity;
+			}
 		},
 		Workshop : {
-			Name : "Workshop",
-			Path : "workshop_location",
-			Description : "The workers at this workshop will create tools for your use. You can expect to receive {0} extra tools every day, and your warehouse will be able to store {1} more.",
-			getDescription : function(_element){
-				return Stronghold.Text.format(this.Description,
-				_element.DailyIncome, _element.MaxItemSlots)
+			UpgradeDescription : {
+				Amounts : "<li>The warehouse will produce {0} tools every day, and your warehouse will be able to store a total of {1}.</li>"
 			},
-			getUpgradeDescription : function(_element){return "placeholder"},
+			getUpgradeDescription : function(_element, _level){
+				return  Stronghold.Text.format(this.UpgradeDescription.Amounts, _element.DailyIncome * _level, _element.MaxItemSlots * _level);
+			},
 		},
 		Ore_Smelter : {
-			Name : "Ore Smelter",
-			Path : "ore_smelters_location",
-			Description : "This will allow the local weaponsmiths to carry more items. It will also allow them to work with unusual materials, allowing you to reforge named items.<br>To reforge a named item, put it in the warehouse and shift-rightclick on it.",
-			getUpgradeDescription : function(_element){return "placeholder"},
+			UpgradeDescription : {
+				Weaponsmith : "<li>The Ore Smelter increases the stock of items at a local weaponsmith.</li>",
+				Reforge : "<li>You will be able to reforge named items, with a cost of {0}% of its base value. To reforge a named item, put it in the warehouse and shift-rightclick on it.</li>"
+			},
+			getUpgradeDescription : function(_element, _level){
+				return  this.UpgradeDescription.Weaponsmith +  Stronghold.Text.format(this.UpgradeDescription.Reforge, parseInt((1 - _element.ReforgeMultiplier * _level) * 100));
+			},
 		},
 		Blast_Furnace : {
-			Name : "Blast Furnace",
-			Path : "blast_furnace_location",
-			Description : "This will allow the local armorsmiths to carry more items. It will also enable them to repair your armors more efficiently, giving you a {0}% discount per level on repairing armor at the armorsmith.",
-			getDescription : function(_element){
-				return Stronghold.Text.format(this.Description,
-					parseInt(_element.RepairMultiplier * 100))
+			UpgradeDescription : {
+				Armorsmith : "<li>The Blast Furnace increases the stock of items at a local armorsmith.</li>",
+				RepairMultiplier : "<li>Item repair costs will be reduced by {0}%.</li>"
 			},
-			getUpgradeDescription : function(_element){return "placeholder"},
+			getUpgradeDescription : function(_element, _level){
+				return  this.UpgradeDescription.Armorsmith + Stronghold.Text.format(this.UpgradeDescription.RepairMultiplier,  parseInt(_element.RepairMultiplier * _level * 100));
+			},
 		},
 		Stone_Watchtower : {
-			Name : "Stone Watchtower",
-			Path : "stone_watchtower_location",
-			Description : "By building this, you will be informed about other entities that wander around the base. Your party will also move faster and see further when close to the base.",
-			getUpgradeDescription : function(_element){return "placeholder"},
+			UpgradeDescription : {
+				EffectRange : "<li>The effect range of the following effects is {0} tiles.</li>",
+				FOV : "<li>Reveals enemies in fog of war around the base, and warns you of incoming attacks when the enemy base is within the effect range.</li>",
+				VisionIncrease : "<li>Vision is increased by {0} when around the base.</li>",
+				MovementSpeedIncrease : "<li>Movementspeed is increased by {0} when around the base.</li>",
+			},
+			getUpgradeDescription : function(_element, _level){
+				var range = _element.EffectRange + _level * _element.EffectRangePerLevel;
+				var text = Stronghold.Text.format(this.UpgradeDescription.EffectRange, range);
+				text += this.UpgradeDescription.FOV;
+				text += Stronghold.Text.format(this.UpgradeDescription.VisionIncrease, _element.VisionIncrease);
+				text += Stronghold.Text.format(this.UpgradeDescription.MovementSpeedIncrease, _element.MovementSpeedIncrease);
+				return  text
+			},
 		},
 		Troop_Quarters : {
-			Name : "Troop Quarters",
-			Path : "troop_quarters_location",
-			Description : "This location provides housing for your brothers. Each level allows you to leave up to {0} brothers at your base.",
-			getDescription : function(_element)
-			{
-				return Stronghold.Text.format(this.Description, _element.MaxTroops)
+			UpgradeDescription : {
+				Slots : "<li>This location provides housing for your brothers, allowing you to leave up to {0} brothers at your base.</li>",
+				WageCost : "<li>Brothers at the base cost only {0}% of their normal daily wage.</li>",
 			},
-			getUpgradeDescription : function(_element){return "placeholder"},
+			getUpgradeDescription : function(_element, _level){
+				var text = Stronghold.Text.format(this.UpgradeDescription.Slots, _element.MaxTroops * _level);
+				text += Stronghold.Text.format(this.UpgradeDescription.WageCost, parseInt((_element.WageCost - _level * _element.WageCostPerLevel) * 100));
+				return  text
+			},
 		},
 		Militia_Trainingcamp : {
-			Name : "Militia Trainingcamp",
-			Path : "militia_trainingcamp_location",
-			Description : "This trainingcamp will allow the fresh recruits that you leave behind to train and become more experienced. Each trainingcamp generates {0} experience per day, which is divided over all stored brothers below level {1}.<br>Your allied mercenaries will also train here, increasing the strength of mercenary parties and caravans.<br>If you build a hamlet, each trainingcamp will also increase the amount of recruits that will line up to join you by {2}.",
-			getDescription : function(_element)
-			{
-				return Stronghold.Text.format(this.Description, _element.DailyIncome, _element.MaxBrotherExpLevel + 1, _element.RecruitIncrease)
+			UpgradeDescription : {
+				DailyIncome : "<li>Each trainingcamp generates {0} experience per day, which is divided over all stored brothers below level {1}.</li>",
+				NPC : "<li>Your allied mercenaries and auxiliaries will train here, increasing the strength of mercenary parties and caravans.</li>",
+				Hamlet : "<li>If you build a hamlet, each trainingcamp will also increase the amount of recruits that will line up to join you by {0}.</li>"
 			},
-			getUpgradeDescription : function(_element){return "placeholder"},
+			getUpgradeDescription : function(_element, _level){
+				var text = Stronghold.Text.format(this.UpgradeDescription.DailyIncome, _element.DailyIncome * _level, _element.MaxBrotherExpLevel + _element.MaxBrotherExpLevelUpgrade);
+				text += this.UpgradeDescription.NPC;
+				text += Stronghold.Text.format(this.UpgradeDescription.Hamlet, _element.RecruitIncrease);
+				return  text
+			},
 		},
 		Wheat_Fields : {
-			Name : "Wheat Fields",
-			Path : "wheat_fields_location",
-			Description : "This will allow your base to feed your men while close by. You don't consume any food when around the base.",
 			getUpgradeDescription : function(_element){return "placeholder"},
 		},
 		Herbalists_Grove : {
-			Name : "Herbalists Grove",
-			Path : "herbalists_grove_location",
-			Description : "The wise women of the herbalists grove know how to treat wounds with special and curious methods. Hitpoints regenerate faster when around the base.<br>You can also expect to receive {0} extra medicine every day, and your warehouse will be able to store {1} more.",
-			getDescription : function(_element)
-			{
-				return Stronghold.Text.format(this.Description, _element.DailyIncome, _element.MaxItemSlots)
-			},
-			getUpgradeDescription : function(_element){return "placeholder"},
+			getUpgradeDescription : function(_element, _level){return "placeholder"},
 		},
 		Gold_Mine : {
-			Name : "Gold Mine",
-			Path : "gold_mine_location",
-			Description : "Hire miners to dig greedily and deeply. The resulting gold will be minted into spendable currency, generating {0} crowns per level a day.",
-			getDescription : function(_element)
-			{
-				return Stronghold.Text.format(this.Description, _element.DailyIncome)
+			UpgradeDescription : {
+				DailyIncome : "<li>The gold mine generates {0} crowns a day, which are added to your coffers when you visit the base.</li>",
 			},
-			getUpgradeDescription : function(_element){return "placeholder"},
+			getUpgradeDescription : function(_element, _level){
+				return Stronghold.Text.format(this.UpgradeDescription.DailyIncome, _element.DailyIncome)
+			},
 		}
 	}
 }

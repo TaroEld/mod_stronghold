@@ -7,7 +7,6 @@ var StrongholdScreenBuildingsModule = function(_parent)
 	this.mTitle = "Your Buildings";
 	this.mDefaultStructure = "Arena";
     this.mStructureImagePath = Stronghold.Visuals.BuildingSpritePath;
-    this.mActiveStructureDefs = Stronghold.Text.Buildings;
 };
 
 StrongholdScreenBuildingsModule.prototype = Object.create(StrongholdScreenStructuresModule.prototype);
@@ -15,6 +14,12 @@ Object.defineProperty(StrongholdScreenBuildingsModule.prototype, 'constructor', 
     value: StrongholdScreenBuildingsModule,
     enumerable: false,
     writable: true });
+
+StrongholdScreenBuildingsModule.prototype.createDIV = function (_parentDiv)
+{
+	StrongholdScreenStructuresModule.prototype.createDIV.call(this, _parentDiv);
+	this.mActiveStructureDetailsRow.hide();
+}
 
 StrongholdScreenBuildingsModule.prototype.switchActiveStructure = function( _structureID)
 {
