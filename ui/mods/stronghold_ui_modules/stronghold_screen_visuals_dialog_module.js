@@ -104,7 +104,7 @@ StrongholdScreenVisualsModule.prototype.setSpriteImage = function()
 	this.mSpriteImages.Mercenaries.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.WorldmapFigure[0] + ".png");
 	this.mSpriteImages.Hamlet.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Houses[0] + ".png");
 	var name = Stronghold.Text.format(text.SpriteName, currentArr.Name, currentArr.Author, this.mCurrentBaseSprite == this.mBaseSprite ? text.Current : "")
-	this.mSpriteNameLabel.text(name)
+	this.mSpriteNameLabel.html(name)
 }
 
 StrongholdScreenVisualsModule.prototype.changeSprites = function ()

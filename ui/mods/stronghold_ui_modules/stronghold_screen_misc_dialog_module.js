@@ -114,10 +114,10 @@ StrongholdScreenMiscModule.prototype.loadBuildRoadData = function()
 StrongholdScreenMiscModule.prototype.setRoadElement = function(_element)
 {
 	var text = this.getModuleText().BuildRoad
-	this.mRoadFactionText.text(Stronghold.Text.format(text.Faction, _element.FactionName));
-	this.mRoadDistanceText.text(Stronghold.Text.format(text.Distance,  _element.Score));
-	this.mRoadPiecesText.text(Stronghold.Text.format(text.Segments, _element.Segments))
-	this.mRoadCostText.text(Stronghold.Text.format(Stronghold.Text.General.Price, _element.Cost));
+	this.mRoadFactionText.html(Stronghold.Text.format(text.Faction, _element.FactionName));
+	this.mRoadDistanceText.html(Stronghold.Text.format(text.Distance,  _element.Score));
+	this.mRoadPiecesText.html(Stronghold.Text.format(text.Segments, _element.Segments))
+	this.mRoadCostText.html(Stronghold.Text.format(Stronghold.Text.General.Price, _element.Cost));
 	this.mRoadCostImg.attr("src", Path.GFX + (_element.IsValid ? "ui/icons/unlocked_small.png" : "ui/icons/locked_small.png"))
 	this.mRoadButton.attr("disabled", !_element.IsValid || !this.areRequirementsFulfilled(this.mRoadRequirementsTable));
 	this.RoadTownImg.attr("src", Path.GFX + _element.UISprite)
@@ -238,8 +238,8 @@ StrongholdScreenMiscModule.prototype.setGiftElement = function(_element)
 {
 	var giftText = this.getModuleText().SendGifts;
 	this.mGiftsFactionImage.attr("src", Path.GFX + _element.ImagePath);
-	this.mGiftsCurrentRelation.text(giftText.CurrentRelation.replace("{num}", _element.RelationNum).replace("{numText}", _element.Relation))
-	this.mGiftsTargetTown.text(giftText.TargetTown.replace("{town}", _element.SettlementName))
+	this.mGiftsCurrentRelation.html(giftText.CurrentRelation.replace("{num}", _element.RelationNum).replace("{numText}", _element.Relation))
+	this.mGiftsTargetTown.html(giftText.TargetTown.replace("{town}", _element.SettlementName))
 }
 
 StrongholdScreenMiscModule.prototype.notifyBackendSendGift = function()
