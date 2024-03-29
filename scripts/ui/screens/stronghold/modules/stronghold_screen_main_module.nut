@@ -4,7 +4,6 @@ this.stronghold_screen_main_module <-  this.inherit("scripts/ui/screens/strongho
 	function getUIData(_ret)
 	{
 		_ret.RaidedCostPerDay <- ::Stronghold.RaidedCostPerDay * ::Stronghold.PriceMult;
-		_ret.ItemOverflow <- this.getTown().getItemOverflowLen();
 	}
 
 	function changeBaseName(_data)
@@ -32,5 +31,6 @@ this.stronghold_screen_main_module <-  this.inherit("scripts/ui/screens/strongho
 	function onConsumeOverflow()
 	{
 		this.getTown().consumeItemOverflow();
+		this.updateData(["TownAssets", "MainModule"]);
 	}
 })

@@ -12,6 +12,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			ShowBanner = true,
 			ShowThreat = true,
 		}
+		OverflowStash = null,
 	},
 
 	function create()
@@ -31,6 +32,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Buildings.resize(7, null);
 		this.m.Stash = ::new("scripts/items/stash_container");
 		this.m.Stash.resize(99);
+		this.m.OverflowStash = ::new("scripts/items/stash_container");
+		this.m.OverflowStash.setResizable(true);
 		this.defineName();
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/marketplace_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/tavern_building"), 5);
@@ -85,8 +88,24 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				this.m.Buildings[5].m.UIImageNight = "small_" + this.m.Buildings[5].m.UIImageNight;
 			}
 		}
+		if (!this.m.OverflowStash.isEmpty())
+			this.addSituation(::new("scripts/entity/world/settlements/situations/stronghold_overflow_situation.nut"))
 		::Math.seedRandom(this.Time.getRealTime());
 		return true;
+	}
+
+	function onLeave()
+	{
+		this.settlement.onLeave();
+		foreach( i, e in this.m.Situations )
+		{
+			if (e.getID() == "situation.stronghold_overflow")
+			{
+				this.m.Situations.remove(i);
+			}
+		}
+		this.consumeItemOverflow();
+		this.m.OverflowStash.clear();
 	}
 
 	function getThreatRadius()
@@ -104,10 +123,39 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return this.getWarehouse().getStash();
 	}
 
+	function getOverflowStash()
+	{
+		return this.m.OverflowStash;
+	}
+
+	function addItemsToWarehouse()
+	{
+		local stash = this.getStash();
+		local overflowStash = this.getOverflowStash();
+		if (stash.hasEmptySlot())
+			stash.add(item);
+		else overflowStash.add(item);
+	}
+
+	function consumeItemOverflow()
+	{
+		local stash = this.getStash();
+		local playerStash = ::Stash;
+		local overflowItems = this.getOverflowStash().getItems();
+		while (stash.hasEmptySlot() && overflowItems.len() > 0)
+		{
+			stash.add(overflowItems.pop());
+		}
+		while (playerStash.hasEmptySlot() && overflowItems.len() > 0)
+		{
+			playerStash.add(overflowItems.pop());
+		}
+	}
+
 	function updateLocationEffects()
 	{
 		local lastUpdateTime = this.getFlags().get("LastLocationUpdate");
-		local daysPassed = (this.Time.getVirtualTimeF() - lastUpdateTime) / this.World.getTime().SecondsPerDay;
+		local daysPassed = ((this.Time.getVirtualTimeF() - lastUpdateTime) / this.World.getTime().SecondsPerDay).tointeger();
 		if ( daysPassed == 0)
 			return;
 		this.getFlags().set("LastLocationUpdate", this.Time.getVirtualTimeF());
@@ -118,31 +166,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function consumeItems()
 	{
 		this.getWarehouse().consumeConsumableItems();
-	}
-
-	function getItemOverflowLen()
-	{
-		local total = 0;
-		foreach (location in this.getActiveAttachedLocations())
-		{
-			if ("ItemOverflow" in location.m)
-			{
-				::logInfo(location.m.ID)
-				total += location.m.ItemOverflow.len()
-			}
-		}
-		return total;
-	}
-
-	function consumeItemOverflow()
-	{
-		this.getStash().setResizable(true);
-		foreach (location in this.getActiveAttachedLocations())
-		{
-			if ("ItemOverflow" in location.m)
-				location.consumeItemOverflow();
-		}
-		this.getStash().setResizable(false);
 	}
 
 	function isMainBase()
@@ -745,7 +768,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		foreach( p in this.m.ProduceImported )
 		{
 			local item = this.new("scripts/items/" + p);
-			this.getWarehouse().getStash().add(item);
+			this.addItemsToWarehouse(item);
 		}
 
 		this.getWarehouse().getStash().sort();
@@ -981,6 +1004,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Buildings.resize(6)
 		this.settlement.onSerialize(_out);
 		this.m.Stash.onSerialize(_out);
+		this.m.OverflowStash.onSerialize(_out);
 		_out.writeU8(this.m.Size);
 		_out.writeBool(this.m.IsUpgrading);
 		this.m.Buildings.append(management)
@@ -990,6 +1014,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		this.settlement.onDeserialize(_in);
 		this.m.Stash.onDeserialize(_in);
+		this.m.OverflowStash.onDeserialize(_in);
 		this.m.Size  = _in.readU8();
 		this.m.IsUpgrading = _in.readBool();
 		this.m.Buildings.resize(7)

@@ -51,7 +51,8 @@ var StrongholdScreenMainModule = function(_parent)
     }
     this.mBaseSettings = {
     	// AutoConsume : null,
-    	ShowBanner : null,
+    	ShowBanner : true,
+    	ShowThreat : true
     }
 };
 
@@ -109,13 +110,7 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
         this.notifyBackendPayForRaided();
     }, this), "stronghold-button-4", 4)
 
-    this.mOverflowContainer = this.mContentContainer.appendRow(text.OverflowTitle).hide();
-    this.mOverflowText = Stronghold.getTextDiv().appendTo(this.mOverflowContainer);
-    var footer = this.mOverflowContainer.appendRow(null, "stronghold-flex-center");
-    this.mOverflowButton = footer.createTextButton(text.OverflowButton, $.proxy(function()
-    {
-        this.notifyBackendConsumeOverflow();
-    }, this), "stronghold-button-4", 4)
+    this.createOverflowContent()
 
     this.mSettingsContainer = this.mContentContainer.appendRow("Settings");
     var settingsContainer = $('<div class="stronghold-generic-background"/>')
@@ -135,11 +130,11 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
     		radioClass: 'iradio_flat-orange',
     		increaseArea: '30%'
     	});
+    	checkbox.iCheck("check");
 
     	checkbox.on('ifChecked ifUnchecked', null, this, function (_event) {
     		self.changeSetting(_key, checkbox.prop('checked') === true);
     	});
-    	checkbox.iCheck("check");
     })
 };
 
@@ -161,9 +156,9 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
     	_value.iCheck(self.mData.TownAssets.BaseSettings[_key] === true ? 'check' : 'uncheck');
     });
 
-    if (this.mModuleData.ItemOverflow > 0)
+    if (this.mData.TownAssets.ItemOverflow.length > 0)
     {
-    	this.mOverflowText.text(Stronghold.Text.format(text.OverflowText, this.mModuleData.ItemOverflow));
+    	this.mOverflowText.html(Stronghold.Text.format(text.OverflowText, this.mData.TownAssets.ItemOverflow.length));
     	this.mOverflowButton.attr("disabled", false)
     	this.mOverflowContainer.show();
     }
@@ -172,12 +167,65 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
     if (this.mData.TownAssets.IsRaidedUntil > 0)
     {
     	var price = this.mData.TownAssets.IsRaidedUntil * this.mModuleData.RaidedCostPerDay;
-    	this.mRaidedText.text(Stronghold.Text.format(text.RaidedText, this.mData.TownAssets.IsRaidedUntil, price));
+    	this.mRaidedText.html(Stronghold.Text.format(text.RaidedText, this.mData.TownAssets.IsRaidedUntil, price));
     	this.mRaidedButton.find(".label").text(Stronghold.Text.format(text.RaidedButton, price))
     	this.mRaidedButton.attr("disabled", price > this.mData.Assets.Money)
     	this.mRaidedContainer.show();
     }
     else this.mRaidedContainer.hide();
+}
+
+StrongholdScreenMainModule.prototype.createOverflowContent = function ()
+{
+	var self = this;
+	var text = this.getModuleText();
+	this.mOverflowContainer = this.mContentContainer.appendRow(text.OverflowTitle).hide();
+	this.mOverflowText = Stronghold.getTextDiv().appendTo(this.mOverflowContainer);
+
+	var footer = this.mOverflowContainer.appendRow(null, "stronghold-flex-center");
+	this.mOverflowPopupButton = footer.createTextButton(text.PopupButton, function()
+	{
+	    self.createPopup(text.ChooseButton, null, null, 'overflow-items-popup');
+	    var mainContainer =  $('<div class="overflow-items-popup-main"/>')
+	    self.mPopupDialog.addPopupDialogContent(mainContainer);
+	    self.createOverflowItemsPopupContent(mainContainer)
+		self.mPopupDialog.addPopupDialogCancelButton(function (_dialog)
+		{
+		    self.destroyPopup();
+		});
+	}, "stronghold-button-4", 4)
+
+	this.mOverflowButton = footer.createTextButton(text.OverflowButton, $.proxy(function()
+	{
+	    this.notifyBackendConsumeOverflow();
+	}, this), "stronghold-button-4", 4)
+}
+
+StrongholdScreenMainModule.prototype.createOverflowItemsPopupContent = function (_parent)
+{
+	var self = this;
+	var scrollContainer = $('<div class=overflow-items-popup-scroll/>')
+		.appendTo(_parent);
+
+	$.each(this.mData.TownAssets.ItemOverflow, function(_idx, _entry){
+		var entryContainer = $('<div class="overflow-items-popup-entry stronghold-generic-background"/>')
+			.appendTo(scrollContainer)
+		entryContainer.data("entry", _entry)
+		$('<img class="st-portrait"/>')
+			.appendTo(entryContainer)
+			.attr("src", Path.ITEMS + _entry.Icon)
+		entryContainer.append(Stronghold.getTextDiv(_entry.Name));
+	})
+	_parent.aciScrollBar({
+         delta: 2,
+         lineDelay: 0,
+         lineTimer: 0,
+         pageDelay: 0,
+         pageTimer: 0,
+         bindKeyboard: false,
+         resizable: false,
+         smoothScroll: false
+   });
 }
 
 StrongholdScreenMainModule.prototype.changeBaseName = function ()

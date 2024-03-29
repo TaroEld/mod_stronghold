@@ -45,15 +45,16 @@ Stronghold.Text = {
 			Arrows : "Accumulated Arrows",
 		},
 		BaseSettings : {
-			AutoConsume : "Automatically take consumable items (tools, medicine, arrows, gold) from the base stash.",
+			ShowThreat : "Show the threat radius of your base on the worldmap.",
 			ShowBanner : "Show the banner of your base on the worldmap.",
 		},
 		RaidedTitle : "Raided",
 		RaidedText : "Your base has recently been raided. It will take {0} days to clear out the rubble and make the base fully accessible. You can also pay {1} crowns to speed up the cleanup.",
 		RaidedButton : "Pay {0} crowns",
-		OverflowTitle : "Item overlow",
-		OverflowText : "{0} items are overflowing your warehouse. Press this button to add them to your warehouse. [b]Beware![/b] You will need to make space for them, or they will be lost after you leave the base.",
-		OverflowButton : "Pay {0} crowns",
+		OverflowTitle : "Item overflow",
+		OverflowText : "{0} items are overflowing your warehouse. Press this button to add them to your warehouse. <b>Beware!</b> You will need to make space for them, or they will be lost after you leave the base.",
+		PopupButton : "Show items",
+		OverflowButton : "Take items",
 	},
 	MiscModule : {
 		BuildRoad : {

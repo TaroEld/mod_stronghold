@@ -19,21 +19,6 @@ this.stronghold_unload_order <- this.inherit("scripts/ai/world/world_behavior", 
 		this.getController().popOrder();
 		if(settlement == null) return true
 
-		local items = settlement.getWarehouse().getStash().getItems()
-		local food = [];
-		foreach( i, item in items )
-		{
-			if (item != null && item.isItemType(this.Const.Items.ItemType.Food))
-			{
-				food.push(item);
-			}
-		}
-		//removes old food from storage
-		foreach (item in food)
-		{
-			settlement.getWarehouse().getStash().remove(item)
-		}
-
 		foreach( item in _entity.getInventory() )
 		{
 			settlement.addImportedProduce(item);

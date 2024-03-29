@@ -35,6 +35,10 @@
 		Level = 4,
 		Icon = 	"misc/inventory_hexe_hair.png"
 	}
+	miracle_drug_item = {
+		Level = 4,
+		Icon = 	"consumables/pills_01.png"
+	}
 	mysterious_herbs_item = {
 		Level = 3,
 		Icon = 	"misc/inventory_hexe_herbs.png"
@@ -98,10 +102,6 @@
 	glistening_scales_item = {
 		Level = 1,
 		Icon = 	"loot/southern_14.png"
-	}
-	miracle_drug_item = {
-		Level = 1,
-		Icon = 	"consumables/pills_01.png"
 	}
 	adrenaline_gland_item = {
 		Level = 1,
