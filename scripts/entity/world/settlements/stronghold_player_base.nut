@@ -438,14 +438,14 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		light.IgnoreAmbientColor = true;
 		light.Alpha = 0;
+
 		if (!this.hasSprite("threat_radius"))
 		{
 			local c = this.addSprite("threat_radius");
-			c.setBrush("debug_circle_100");
 		}
 		local threatRadius =  this.getSprite("threat_radius");
-		threatRadius.setBrush("debug_circle_100");
-		threatRadius.Scale = this.getThreatRadius();
+		threatRadius.setBrush("stronghold_threat_radius");
+		threatRadius.Scale = this.getThreatRadius() * 0.2;
 		threatRadius.Visible = this.m.BaseSettings.ShowThreat;
 	}
 

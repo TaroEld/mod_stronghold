@@ -1,5 +1,7 @@
 <brush name="gfx/stronghold_worldmap.png" version="17">
 
+<sprite id="stronghold_threat_radius" ic="FFFFFFFF" width="1250" height="1250" img="misc\threat_radius.png" />
+
 <sprite id="stronghold_world_warehouse_location" ic="FF23343F" width="244" height="171" img="settlements\locations\warehouse_location.png" left="-100" right="92" top="-77" bottom="85" />
 <sprite id="stronghold_world_troop_quarters_location" ic="FF23343F" width="242" height="190" img="settlements\locations\troop_quarters_location.png" left="-100" right="92" top="-77" bottom="85" />
 <sprite id="stronghold_world_collector_location" ic="FF23343F" width="242" height="190" img="settlements\locations\collector_location.png" left="-100" right="92" top="-77" bottom="85" />
