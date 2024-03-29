@@ -112,13 +112,6 @@
 ::Stronghold.WaterPrice <- 5;
 ::Stronghold.MercenaryPrice <- 5;
 
-// Hamlet defs
-::Stronghold.Hamlet <-
-{
-	Name = "Hamlet",
-	Price = 20
-}
-
 // Cost for each building, multiplied by PriceMult (1000 by default)
 ::Stronghold.Buildings <-
 {

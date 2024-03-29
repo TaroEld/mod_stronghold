@@ -334,6 +334,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		{
 			this.m.Size -= 1;
 		}
+		if (this.m.Size == 4)
+			this.buildHamlet();
 		this.updateTown()
 	}
 
@@ -964,6 +966,92 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		]
 		this.buildAttachedLocation(1, script, validTerrain, [], 2)
 		this.buildRoad(this.m.AttachedLocations[this.m.AttachedLocations.len()-1])
+	}
+
+	function buildHamlet()
+	{
+		local tries = 1;
+		local radius = 3
+		local used = [];
+		local list = this.Const.World.Settlements.Villages_small
+		local playerFaction = this.Stronghold.getPlayerFaction()
+		local dummyContract = ::new("scripts/contracts/contract")
+		local function getTerrainInRegion( _tile )
+		{
+			local terrain = {
+				Local = _tile.Type,
+				Adjacent = [],
+				Region = []
+			};
+			terrain.Adjacent.resize(this.Const.World.TerrainType.COUNT, 0);
+			terrain.Region.resize(this.Const.World.TerrainType.COUNT, 0);
+
+			for( local i = 0; i < 6; i = ++i )
+			{
+				if (!_tile.hasNextTile(i))
+				{
+				}
+				else
+				{
+					++terrain.Adjacent[_tile.getNextTile(i).Type];
+				}
+			}
+
+			this.World.queryTilesInRange(_tile, 1, 4, this.onTileInRegionQueried.bindenv(this), terrain.Region);
+			return terrain;
+		}
+		while (tries++ < 1000)
+		{
+			if (tries % 100 == 0) radius++
+			local tile = dummyContract.getTileToSpawnLocation(this.getTile(), radius, radius+1, [], false)
+			if (used.find(tile.ID) != null)
+			{
+				continue;
+			}
+			used.push(tile.ID);
+
+			local navSettings = this.World.getNavigator().createSettings();
+			local path = this.World.getNavigator().findPath(tile, this.getTile(), navSettings, 0);
+			if (path.isEmpty()) continue;
+
+
+			local terrain = getTerrainInRegion(tile);
+			local candidates = [];
+
+			foreach( settlement in list )
+			{
+				if (settlement.isSuitable(terrain))
+				{
+					candidates.push(settlement);
+				}
+			}
+
+			if (candidates.len() == 0)
+			{
+				continue;
+			}
+
+			local type = candidates[::Math.rand(0, candidates.len() - 1)];
+
+			if ((terrain.Region[this.Const.World.TerrainType.Ocean] >= 3 || terrain.Region[this.Const.World.TerrainType.Shore] >= 3) && !("IsCoastal" in type) && !("IsFlexible" in type))
+			{
+				continue;
+			}
+			local hamlet = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_hamlet", tile.Coords);
+			playerFaction.addSettlement(hamlet);
+			local result = this.new(type.Script)
+			hamlet.assimilateCharacteristics(result)
+			hamlet.getFlags().set("CustomSprite", this.getFlags().get("CustomSprite"));
+			hamlet.updateLook();
+			hamlet.setDiscovered(true);
+			hamlet.buildHouses();
+			this.buildRoad(hamlet);
+			this.getFlags().set("Child", hamlet.getID())
+			hamlet.getFlags().set("Parent", this.getID())
+			playerFaction.getFlags().set("BuildHamlet", true)
+			return
+		}
+		::logError("STRONGHOLD: DID NOT MANAGE TO BUILD HAMLET - PLEASE REPORT BUG");
 	}
 
 	function isEnterable()

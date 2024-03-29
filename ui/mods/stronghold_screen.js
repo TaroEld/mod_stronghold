@@ -27,9 +27,6 @@ var StrongholdScreen = function ()
         "UpgradeModule" : {
             "ButtonName" : "Upgrade",
         },
-        "HamletModule" : {
-            "ButtonName" : "Hamlet",
-        },
         "MiscModule" : {
             "ButtonName" : "Misc",
         },
@@ -282,7 +279,6 @@ StrongholdScreen.prototype.updateData = function(_data)
 
 StrongholdScreen.prototype.loadPlayerAssetsData = function()
 {
-	console.error("loadPlayerAssetsData")
 	this.mAssets.loadFromData(this.mData['Assets']);
 }
 
@@ -295,7 +291,6 @@ StrongholdScreen.prototype.loadTownAssetsData = function()
 		this.getModuleObject("BuildingsModule").Button.enableButton(false);
 		this.getModuleObject("LocationsModule").Button.enableButton(false);
 		this.getModuleObject("UpgradeModule").Button.enableButton(false);
-		this.getModuleObject("HamletModule").Button.enableButton(false);
 		this.getModuleObject("MiscModule").Button.enableButton(false);
 		return;
 	}
@@ -307,12 +302,11 @@ StrongholdScreen.prototype.loadTownAssetsData = function()
 		this.getModuleObject("RosterModule").Button.enableButton(false);
 		this.getModuleObject("LocationsModule").Button.enableButton(false);
 		this.getModuleObject("UpgradeModule").Button.enableButton(false);
-		this.getModuleObject("HamletModule").Button.enableButton(false);
 		this.getModuleObject("MiscModule").Button.enableButton(false);
 		return;
 	}
 	var self = this;
-	$.each(["UpgradeModule","HamletModule","MiscModule","LocationsModule", "BuildingsModule"], function(_idx, _str){
+	$.each(["UpgradeModule", "MiscModule","LocationsModule", "BuildingsModule"], function(_idx, _str){
 		self.getModuleObject(_str).Button.enableButton(self.mData['TownAssets'].IsUpgrading === false);
 	})
 }

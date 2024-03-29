@@ -25,9 +25,6 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			UpgradeModule = {
 				Path = "upgrade_module",
 			},
-			HamletModule = {
-				Path = "hamlet_module",
-			},
 			MiscModule = {
 				Path = "misc_module",
 			},

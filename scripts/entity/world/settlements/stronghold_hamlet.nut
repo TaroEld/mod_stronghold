@@ -120,9 +120,8 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		}
 		local spriteID = this.getFlags().get("CustomSprite");
 		local constSprites = this.Stronghold.VisualsMap[spriteID];
-		local sprites = constSprites.Levels[2];
 		this.m.TroopSprites = constSprites.WorldmapFigure[3];
-		this.m.HouseSprites = sprites.Houses[3];
+		this.m.HouseSprites = sprites.Houses[1];
 	}
 	
 	
@@ -157,7 +156,8 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 
 		local rosterMin = 6
 		local rosterMax = 12
-		local minMaxIncrease = this.getParent().countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].RecruitIncrease
+		local trainingcamp = this.getParent().getLocation("attached_location.militia_trainingcamp" );
+		local minMaxIncrease = trainingcamp != null ? ::Stronghold.Locations["Militia_Trainingcamp"].RecruitIncrease * trainingcamp.getLevel() : 0;
 		rosterMin += minMaxIncrease;
 		rosterMax += minMaxIncrease;
 

@@ -21,15 +21,6 @@ Stronghold.Text = {
 		Mercenaries : "Mercenaries",
 		Price : "Price: {0} crowns.",
 	},
-	HamletModule : {
-		Title : "Build a Hamlet",
-		Name : "Hamlet",
-		Description : "A hamlet serves as additional living space for your retainers. You will be able to construct additional buildings, buy goods, and hire from a variety of recruits. Each base can only have one hamlet.",
-		Requirements : {
-			BaseSize : "Required base size: Stronghold (4/4)",
-			MaxHamlet : "Maximum amount of Hamlets per base: 1"
-		}
-	},
 	MainModule : {
 		Title : "Overview",
 		Assets : {
@@ -251,7 +242,7 @@ Stronghold.Text = {
 			UpgradeDescription : {
 				DailyIncome : "<li>Each trainingcamp generates {0} experience per day, which is divided over all stored brothers below level {1}.</li>",
 				NPC : "<li>Your allied mercenaries and auxiliaries will train here, increasing the strength of mercenary parties and caravans.</li>",
-				Hamlet : "<li>If you build a hamlet, each trainingcamp will also increase the amount of recruits that will line up to join you by {0}.</li>"
+				Hamlet : "<li>If your base has a hamlet, each trainingcamp will also increase the amount of recruits that will line up to join you by {0}.</li>"
 			},
 			getUpgradeDescription : function(_element, _level){
 				var text = Stronghold.Text.format(this.UpgradeDescription.DailyIncome, _element.DailyIncome * _level, _element.MaxBrotherExpLevel + _element.MaxBrotherExpLevelUpgrade);
