@@ -226,16 +226,15 @@
 	Wheat_Fields = {
 		Price = 2.5,
 		UpgradePrice = 2.5,
-		EffectRange = 5, // Distance in tiles for which the effect works
-		StatGain = 2,
+		StatGain = 1,
 		EffectTime = 7,
 	},
 
 	Workshop = {
 		Price = 5, // Price for each attached location, multiplied by PriceMult (1000 by default)
 		UpgradePrice = 2.5,
-		DailyIncome = 20, // Amount of tools generated every day
-		MaxItemSlots = 40 // Amount added to the maximum amount of stored items of this type
+		DailyIncome = 5, // Amount of tools generated every day
+		MaxItemSlots = 35 // Amount added to the maximum amount of stored items of this type
 	},
 };
 

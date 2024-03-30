@@ -252,7 +252,12 @@ Stronghold.Text = {
 			},
 		},
 		Wheat_Fields : {
-			getUpgradeDescription : function(_element){return "placeholder"},
+			UpgradeDescription : {
+				StatBuff : "<li>The brothers in your party get the 'Well Fed' buff, increasing their Resolve, Hitpoints and Fatigue by {0}. This effect lasts for {1} days after leaving the radius of the base.</li>",
+			},
+			getUpgradeDescription : function(_element, _level){
+				var text = Stronghold.Text.format(this.UpgradeDescription.StatBuff, _element.StatGain * _level, _element.EffectTime);
+				return  text},
 		},
 		Herbalists_Grove : {
 			getUpgradeDescription : function(_element, _level){return "placeholder"},

@@ -122,6 +122,33 @@
 	{
 
 	}
+
+	o.onBuild <- function()
+	{
+		local ret = this.attached_location.onBuild();
+		this.onUpgrade();
+		return ret;
+	}
+
+	o.onUpgrade <- function()
+	{
+		foreach (player in ::World.getPlayerRoster().getAll())
+		{
+			this.setSkillOnPlayer(player);
+		}
+	}
+
+	o.setSkillOnPlayer <- function(_player)
+	{
+		local skill = _player.getSkills().getSkillByID("effects.stronghold_well_fed");
+		if (skill == null)
+		{
+			skill = ::new("scripts/skills/effects_world/stronghold_well_fed_effect");
+			_player.getSkills().add(skill);
+		}
+		skill.m.Bonus = ::Stronghold.Locations["Wheat_Fields"].StatGain * this.getLevel();
+		skill.setTimeRemaining(7);
+	}
 })
 
 ::mods_hookExactClass("entity/world/attached_location/workshop_location", function(o)

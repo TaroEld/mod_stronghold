@@ -1,21 +1,5 @@
 ::mods_hookNewObjectOnce("states/world/asset_manager", function (o)
 {
-	//don't consume food if wheat fields attached
-	local consumeFood = o.consumeFood;		
-	o.consumeFood = function()
-	{
-		if(this.Stronghold.getPlayerFaction() == null) return consumeFood()
-		local playerBases = this.Stronghold.getPlayerFaction().getMainBases()
-		foreach(playerBase in playerBases)
-		{	
-			if (playerBase.hasAttachedLocation("attached_location.wheat_fields") && this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < this.Stronghold.Locations["Wheat_Fields"].EffectRange)
-			{
-				return
-			}
-		}	
-		return consumeFood()
-	}
-	
 	local update = o.update;		
 	o.update = function(_worldState)
 	{			
@@ -41,31 +25,16 @@
 					this.World.State.getPlayer().m.BaseMovementSpeed = isRangers ? 111 : 105
 					this.World.State.getPlayer().m.VisionRadius = hasLookout ? 625 : 500 
 				}
-				//same for herbalist grove
-				if (playerBase.hasAttachedLocation("attached_location.herbalist_grove") 
-					&& this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < this.Stronghold.Locations["Herbalists_Grove"].EffectRange)
-				{
-					this.m.HitpointsPerHourMult = 1.4
-				}
-				else
-				{
-					this.m.HitpointsPerHourMult = 1.0
-				}
 
-				local troopQuarters = playerBase.getLocation("attached_location.troop_quarters");
-
-				//stored brothers draw less
-				if (troopQuarters != null && this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
+				local wheatFields = playerBase.getLocation("attached_location.wheat_fields");
+				if (wheatFields != null)
 				{
-					local wageMult = troopQuarters.getWageMult();
-					foreach(bro in playerBase.getLocalRoster().getAll())
+					foreach(bro in ::World.getPlayerRoster().getAll())
 					{
-						this.m.Money -= ::Math.floor(bro.getDailyCost() * wageMult);
+						wheatFields.setSkillOnPlayer(bro);
 					}
 				}
-				
 			}
-
 		}
 		//then run vanilla updte
 		update(_worldState)
