@@ -6,7 +6,7 @@
 		
 		foreach(settlement in this.Stronghold.getPlayerFaction().getMainBases()){
 			if (settlement.hasAttachedLocation("attached_location.stone_watchtower") 
-				&& this.getTile().getDistanceTo(settlement.getTile()) < this.Stronghold.Locations["Stone_Watchtower"].VisionInFogOfWarRange)
+				&& this.getTile().getDistanceTo(settlement.getTile()) <= settlement.getEffectRadius())
 			{
 				this.setVisibleInFogOfWar(true);
 				break;

@@ -64,9 +64,9 @@
 	Size = 1,
 	Price = 5,
 	MaxAttachments = 4,
-	MaxBuildings = 3,
-	UnlockDescription = "You can an additional settlement building.\nYou can construct up to four locations, granting various advantages such as storing brothers and items.\n You will be able to upgrade your base, unlocking more features.",
-	ThreatRadius = 7,
+	MaxBuildings = 2,
+	UnlockDescription = "You can construct up to two settlement buildings.\nYou can construct up to four locations, granting various advantages such as storing brothers and items.\nYou will be able to upgrade your base, unlocking more features.",
+	EffectRadius = 7,
 	Rarity = 1.00, // Rarity dictates the amount of items that spawn in shops, including named items
 	BuyPrice = 1.05, // buy price of items, multiplier
 	SellPrice = 0.95 // sell price of items, multiplier
@@ -76,9 +76,9 @@
 	Size = 2,
 	Price = 5,
 	MaxAttachments = 6,
-	MaxBuildings = 4,
-	UnlockDescription = "You can construct up to two settlement buildings.\nYou can construct up to eight locations.\nBands of mercenaries will join your base and guard it against aggressors.",
-	ThreatRadius = 9,
+	MaxBuildings = 3,
+	UnlockDescription = "You can construct up to three settlement buildings.\nYou can construct up to eight locations.\nBands of mercenaries will join your base and guard it against aggressors.",
+	EffectRadius = 8,
 	Rarity = 1.04,
 	BuyPrice = 1.00,
 	SellPrice = 1.00
@@ -88,9 +88,9 @@
 	Size = 3,
 	Price = 5,
 	MaxAttachments = 8,
-	MaxBuildings = 5,
-	UnlockDescription = "You can construct up to three settlement buildings.\nYou can construct up to eight locations.\nYou can construct roads to other settlements, connecting your base to the world.",
-	ThreatRadius = 11,
+	MaxBuildings = 4,
+	UnlockDescription = "You can construct up to four settlement buildings.\nYou can construct up to eight locations.\nYou can construct roads to other settlements, connecting your base to the world.",
+	EffectRadius = 9,
 	Rarity = 1.08,
 	BuyPrice = 0.95,
 	SellPrice = 1.05
@@ -100,9 +100,9 @@
 	Size = 4,
 	Price = 5,
 	MaxAttachments = 10,
-	MaxBuildings = 6,
-	UnlockDescription = "You can construct up to four settlement buildings, and unlock the arena building.\nYou can construct up to ten locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold.",
-	ThreatRadius = 13,
+	MaxBuildings = 5,
+	UnlockDescription = "You can construct up to five settlement buildings, and unlock the arena building.\nYou can construct up to ten locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold.",
+	EffectRadius = 10,
 	Rarity = 1.12,
 	BuyPrice = 0.9,
 	SellPrice = 1.1
@@ -170,10 +170,9 @@
 	},
 
 	Gold_Mine = {
-		Price = 2,
-		UpgradePrice = 2
-		DailyIncome = 50,
-		AddGoldDirectlyToAssets = false // Add gold generated in base directly to the asset crowns on base enter instead of creating a crowns item
+		Price = 2.5,
+		UpgradePrice = 2.5
+		DailyIncome = 100,
 	},
 
 	Herbalists_Grove = {
@@ -181,7 +180,6 @@
 		UpgradePrice = 2,
 		DailyIncome = 20, // Amount of extra medicine generated every day
 		MaxItemSlots = 40, // Amount added to the maximum amount of stored items of this type
-		EffectRange = 25, // Distance in tiles for which the effect works
 	},
 
 	Ore_Smelter = {
@@ -189,7 +187,6 @@
 		UpgradePrice = 2.5
 		ReforgeMultiplier = 0.1 // Price multiplier applied on the base value of the item being reforged, per level
 	},
-
 
 	Militia_Trainingcamp = {
 		Price = 5,
@@ -204,10 +201,8 @@
 	Stone_Watchtower = {
 		Price = 5,
 		UpgradePrice = 1,
-		EffectRange = 5, // Range in which you can see enemies in fog of war
-		EffectRangePerLevel = 2, // same as threat radius increase per tier
-		VisionIncrease = 30, // Amount of extra vision you get around the base
-		MovementSpeedIncrease = 10 // Amount of extra movement speed you get around the base
+		VisionIncrease = 10, // Amount of extra vision you get around the base
+		MovementSpeedIncrease = 0.05 // Amount of extra movement speed you get around the base, in pct
 	},
 	Troop_Quarters = {
 		Price = 2.5,

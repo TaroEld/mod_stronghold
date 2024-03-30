@@ -10,7 +10,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		BaseSettings = {
 			AutoConsume = true,
 			ShowBanner = true,
-			ShowThreat = true,
+			ShowEffectRadius = true,
 		}
 		OverflowStash = null,
 	},
@@ -108,9 +108,9 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.OverflowStash.clear();
 	}
 
-	function getThreatRadius()
+	function getEffectRadius()
 	{
-		return ::Stronghold.Tiers[this.getSize()].ThreatRadius;
+		return ::Stronghold.Tiers[this.getSize()].EffectRadius;
 	}
 
 	function getWarehouse()
@@ -468,10 +468,10 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		{
 			local c = this.addSprite("threat_radius");
 		}
-		local threatRadius =  this.getSprite("threat_radius");
-		threatRadius.setBrush("stronghold_threat_radius");
-		threatRadius.Scale = this.getThreatRadius() * 0.2;
-		threatRadius.Visible = this.m.BaseSettings.ShowThreat;
+		local effectRadius =  this.getSprite("threat_radius");
+		effectRadius.setBrush("stronghold_threat_radius");
+		effectRadius.Scale = this.getEffectRadius() * 0.2;
+		effectRadius.Visible = this.m.BaseSettings.ShowEffectRadius;
 	}
 
 	function addBuilding( _building, _slot = null )
@@ -1063,10 +1063,10 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 	}
 	
-	function getPriceMult()
-	{
-		return 1.3;
-	}
+	// function getPriceMult()
+	// {
+	// 	return 1.3;
+	// }
 
 	function hasContract( _id )
 	{

@@ -35,7 +35,7 @@ this.warehouse_location <- this.inherit("scripts/entity/world/attached_location"
 
 	function addConsumableItem(_i)
 	{
-		this.m.ConsumableItems[_i.ID] += _i.ToAdd;
+		this.m.ConsumableItems[_i.ID] = ::Math.min(this.m.ConsumableItems[_i.ID] + _i.ToAdd, _i.Max);
 	}
 
 	function consumeConsumableItems()

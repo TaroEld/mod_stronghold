@@ -7,7 +7,7 @@
 		this.m.Level <- 1;
 	}
 
-	function getLevel()
+	o.getLevel <- function()
 	{
 		return this.m.Level;
 	}
@@ -73,13 +73,9 @@
 	{
 		local item = {
 			ID = "supplies.money",
-			Script = "scripts/items/supplies/money_item",
-			ToAdd = this.m.Level * _daysPassed * this.Stronghold.Locations["Gold_Mine"].DailyIncome
+			ToAdd = this.m.Level * _daysPassed * ::Stronghold.Locations.Gold_Mine.DailyIncome,
 			Max = 999999,
-			MaxPerStack = 999999
 		}
-		if (item.ToAdd == 0)
-			return;
 		this.m.Settlement.getWarehouse().addConsumableItem(item);
 	}
 })
@@ -88,9 +84,11 @@
 {
 	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
-		local XpPerDay = this.Stronghold.Locations["Militia_Trainingcamp"].DailyIncome;
-		local totalXP = XpPerDay * _daysPassed ;
-		local validBros = this.m.Settlement.getLocalRoster().getAll().filter( @(a, b) b.getLevel() <= ::Stronghold.Locations["Militia_Trainingcamp"].MaxBrotherExpLevel);
+		local def = ::Stronghold.Locations["Militia_Trainingcamp"];
+		local totalXP = def.DailyIncome * this.m.Level * _daysPassed;
+		local maxLevel = def.MaxBrotherExpLevel + def.MaxBrotherExpLevelUpgrade * this.m.Level;
+
+		local validBros = this.m.Settlement.getLocalRoster().getAll().filter( @(a, b) b.getLevel() <= maxLevel);
 		local XpPerBro = totalXP  / validBros.len();
 		foreach (bro in validBros)
 		{
@@ -113,6 +111,11 @@
 	o.stronghold_updateLocationEffects <- function(_daysPassed)
 	{
 
+	}
+
+	o.getMovementSpeedMult <- function()
+	{
+		return  (1 + (::Stronghold.Locations.Stone_Watchtower.MovementSpeedIncrease * this.getLevel()));
 	}
 })
 
@@ -157,10 +160,8 @@
 	{
 		local item = {
 			ID = "supplies.armor_parts",
-			Script = "scripts/items/supplies/armor_parts_item"
-			Max = this.Stronghold.Locations["Workshop"].MaxItemSlots * this.Stronghold.ToolsPerDay,
-			MaxPerStack = 25,
-			ToAdd = this.m.Level * _daysPassed * this.Stronghold.ToolsPerDay
+			Max = this.Stronghold.Locations.Workshop.MaxItemSlots * this.m.Level,
+			ToAdd = this.m.Level * _daysPassed * ::Stronghold.Locations.Workshop.DailyIncome
 		}
 		this.m.Settlement.getWarehouse().addConsumableItem(item);
 	}

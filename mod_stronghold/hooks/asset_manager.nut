@@ -11,17 +11,39 @@
 			local playerBases = this.Stronghold.getPlayerFaction().getMainBases()
 			local isRangers = this.World.Assets.getOrigin().getID() == "scenario.rangers";
 			local hasLookout = this.World.Retinue.hasFollower("follower.lookout");
+			local player = this.World.State.getPlayer();
 			foreach(playerBase in playerBases)
 			{	
-				if (playerBase.hasAttachedLocation("attached_location.stone_watchtower") 
-					&& this.World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) < this.Stronghold.Locations["Stone_Watchtower"].EffectRange)
+				local troopQuarters = playerBase.getLocation("attached_location.troop_quarters");
+				//stored brothers draw less
+				if (troopQuarters != null && this.World.getTime().Days > this.m.LastDayPaid && this.World.getTime().Hours > 8 && this.m.IsConsumingAssets)
 				{
-					this.World.State.getPlayer().m.BaseMovementSpeed = isRangers ? 111 + this.Stronghold.Locations["Stone_Watchtower"].MovementSpeedIncrease : 105 + this.Stronghold.Locations["Stone_Watchtower"].MovementSpeedIncrease
-					this.World.State.getPlayer().m.VisionRadius = hasLookout ? 625 + this.Stronghold.Locations["Stone_Watchtower"].VisionIncrease : 500 + this.Stronghold.Locations["Stone_Watchtower"].VisionIncrease
+					local wageMult = troopQuarters.getWageMult();
+					foreach(bro in playerBase.getLocalRoster().getAll())
+					{
+						this.m.Money -= ::Math.floor(bro.getDailyCost() * wageMult);
+					}
+				}
+
+				local effectRadius = playerBase.getEffectRadius();
+
+				// do effects that depend on effect range
+				if (::World.State.getPlayer().getTile().getDistanceTo(playerBase.getTile()) > effectRadius)
+					continue;
+
+				local watchtower = playerBase.getLocation("attached_location.stone_watchtower");
+				if (watchtower != null)
+				{
+					if (!("Stronghold_Stone_Watchtower" in player.m.MovementSpeedMultFunctions))
+						player.m.MovementSpeedMultFunctions.Stronghold_Stone_Watchtower <- watchtower.getMovementSpeedMult.bindenv(watchtower);
+					local vision = this.Stronghold.Locations["Stone_Watchtower"].VisionIncrease * watchtower.getLevel();
+					this.World.State.getPlayer().m.VisionRadius = hasLookout ? 625 + vision : 500 + vision;
 				}
 				//if not in radius
 				else
 				{
+					if ("Stronghold_Stone_Watchtower" in player.m.MovementSpeedMultFunctions)
+						delete player.m.MovementSpeedMultFunctions.Stronghold_Stone_Watchtower;
 					this.World.State.getPlayer().m.BaseMovementSpeed = isRangers ? 111 : 105
 					this.World.State.getPlayer().m.VisionRadius = hasLookout ? 625 : 500 
 				}

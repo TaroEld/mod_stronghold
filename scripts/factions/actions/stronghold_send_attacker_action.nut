@@ -25,7 +25,7 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 			if (playerBase.hasSituation("situation.raided") || !::Stronghold.isCooldownExpired(playerBase, "LastUpgradeDoneCooldown"))
 				continue;
 			potentialTargets[playerBase] <- [];
-			local enemyBases = this.World.getAllEntitiesAtPos(playerBase.getPos(), playerBase.getThreatRadius() * 100);
+			local enemyBases = this.World.getAllEntitiesAtPos(playerBase.getPos(), playerBase.getEffectRadius() * 100);
 			foreach (enemyBase in enemyBases)
 			{
 				if (playerBase.isIsolatedFromLocation(enemyBase) || !enemyBase.isLocation() || !enemyBase.isLocationType(::Const.World.LocationType.Lair))
@@ -93,16 +93,11 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 		local watchtower = playerBase.getLocation("attached_location.stone_watchtower")
 		if (watchtower != null)
 		{
-			local threatRadius = ::Stronghold.Locations.Stone_Watchtower.EffectRange  + (watchtower.getLevel() * ::Stronghold.Locations.Stone_Watchtower.EffectRangePerLevel);
-			local distance = this.m.EnemyBase.getTile().getDistanceTo(tile);
-			if (distance <= threatRadius)
-			{
-				local news = this.World.Statistics.createNews();
-				news.set("destination", this.m.TargetBase.getName());
-				news.set("origin", this.m.EnemyBase.getName());
-				news.set("direction", this.Const.Strings.Direction8[this.m.TargetBase.getTile().getDirection8To(this.m.EnemyBase.getTile())]);
-				this.World.Statistics.addNews("stronghold_attackers", news);
-			}
+			local news = this.World.Statistics.createNews();
+			news.set("destination", this.m.TargetBase.getName());
+			news.set("origin", this.m.EnemyBase.getName());
+			news.set("direction", this.Const.Strings.Direction8[this.m.TargetBase.getTile().getDirection8To(this.m.EnemyBase.getTile())]);
+			this.World.Statistics.addNews("stronghold_attackers", news);
 		}
 		return true;
 	}

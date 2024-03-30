@@ -52,7 +52,7 @@ var StrongholdScreenMainModule = function(_parent)
     this.mBaseSettings = {
     	// AutoConsume : null,
     	ShowBanner : true,
-    	ShowThreat : true
+    	ShowEffectRadius : true
     }
 };
 
@@ -135,6 +135,7 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
     	checkbox.on('ifChecked ifUnchecked', null, this, function (_event) {
     		self.changeSetting(_key, checkbox.prop('checked') === true);
     	});
+    	row.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Main." + _key});
     })
 };
 

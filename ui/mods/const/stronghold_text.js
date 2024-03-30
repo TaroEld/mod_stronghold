@@ -9,7 +9,6 @@ Stronghold.Text = {
 		return _string;
 	},
 	Error : "There was an error.",
-	Price : "Price: {price}",
 	Requirements : "Requirements",
 	Advantages : "Advantages",
 	General : {
@@ -36,7 +35,7 @@ Stronghold.Text = {
 			Arrows : "Accumulated Arrows",
 		},
 		BaseSettings : {
-			ShowThreat : "Show the threat radius of your base on the worldmap.",
+			ShowEffectRadius : "Show the effect radius of your base on the worldmap.",
 			ShowBanner : "Show the banner of your base on the worldmap.",
 		},
 		RaidedTitle : "Raided",
@@ -157,7 +156,7 @@ Stronghold.Text = {
 			NoContract : "You can't have an active contract.",
 		},
 		UpgradeDescription : "Upgrade your {0} to a {1} to unlock the following features:",
-		GeneralUnlockDescription : "<li>You can construct an additional building and two additional locations.</li><li>Locations can be upgraded a further level.</li><li>Buy and sell prices improve by 5%, and merchant stock increases in rarity and quantity.</li>",
+		GeneralUnlockDescription : "<li>You can construct an additional building and two additional locations.</li><li>Locations can be upgraded a further level.</li><li>Buy and sell prices improve by 5%, and merchant stock increases in rarity and quantity.</li><li>The effect radius of your base increases.</li>",
 		UnlockDescriptions : {
 			1 : "<li></li>",
 			2 : "<li>You can construct roads to other settlements, connecting your base to the world.</li>",
@@ -213,17 +212,14 @@ Stronghold.Text = {
 		},
 		Stone_Watchtower : {
 			UpgradeDescription : {
-				EffectRange : "<li>The effect range of the following effects is {0} tiles.</li>",
-				FOV : "<li>Reveals enemies in fog of war around the base, and warns you of incoming attacks when the enemy base is within the effect range.</li>",
-				VisionIncrease : "<li>Vision is increased by {0} when around the base.</li>",
-				MovementSpeedIncrease : "<li>Movementspeed is increased by {0} when around the base.</li>",
+				FOV : "<li>Reveals enemies in fog of war around the base, and warns you of incoming attacks when the enemy base is within the effect radius of your base.</li>",
+				VisionIncrease : "<li>Vision is increased by {0} when within the base effect radius.</li>",
+				MovementSpeedIncrease : "<li>Party movement speed is increased by {0}% when within the base effect radius.</li>",
 			},
 			getUpgradeDescription : function(_element, _level){
-				var range = _element.EffectRange + _level * _element.EffectRangePerLevel;
-				var text = Stronghold.Text.format(this.UpgradeDescription.EffectRange, range);
-				text += this.UpgradeDescription.FOV;
-				text += Stronghold.Text.format(this.UpgradeDescription.VisionIncrease, _element.VisionIncrease);
-				text += Stronghold.Text.format(this.UpgradeDescription.MovementSpeedIncrease, _element.MovementSpeedIncrease);
+				var text = this.UpgradeDescription.FOV;
+				text += Stronghold.Text.format(this.UpgradeDescription.VisionIncrease, _element.VisionIncrease * _level);
+				text += Stronghold.Text.format(this.UpgradeDescription.MovementSpeedIncrease,  parseInt(_element.MovementSpeedIncrease * _level * 100));
 				return  text
 			},
 		},
