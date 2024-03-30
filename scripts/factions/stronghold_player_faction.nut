@@ -233,7 +233,8 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 	function updateQuests()
 	{
 		//adds/removes quests when entering town. Takes care of conflicing quests.	
-		if (this.getMainBases().filter(@(a, b) b.isMaxLevel()).len() == 0) return
+		local bases = this.getMainBases().filter(@(a, b) b.getSize() > 2);
+		if (bases.len() == 0) return
 		local contracts = this.getContracts();
 		local find_waterskin = false;
 		local free_mercenaries = false;
