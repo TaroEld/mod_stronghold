@@ -39,7 +39,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/tavern_building"), 5);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 
-		this.getFlags().set("IsPlayerBase", true); // These flags are convenient to use in hooks, as I don't need to check if x in town.m...
+		// These flags are convenient to use in hooks, as I don't need to check if x in town.m...
+		this.getFlags().set("IsPlayerBase", true);
 		this.getFlags().set("IsMainBase", true);
 		// Cooldowns
 		this.getFlags().set("TimeUntilNextMercs", -1);
@@ -1011,6 +1012,27 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local list = this.Const.World.Settlements.Villages_small
 		local playerFaction = this.Stronghold.getPlayerFaction()
 		local dummyContract = ::new("scripts/contracts/contract")
+
+		local dummyDesertVillage =
+		{
+			Script = "scripts/entity/world/settlements/small_steppe_village",
+			function isSuitable( _terrain )
+			{
+				if (_terrain.Local == this.Const.World.TerrainType.Desert && (_terrain.Adjacent[this.Const.World.TerrainType.Desert] >= 4 && _terrain.Adjacent[this.Const.World.TerrainType.Ocean] == 0 && _terrain.Adjacent[this.Const.World.TerrainType.Shore] == 0))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		local function onTileInRegionQueried( _tile, _region )
+		{
+			++_region[_tile.Type];
+		}
 		local function getTerrainInRegion( _tile )
 		{
 			local terrain = {
@@ -1032,7 +1054,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				}
 			}
 
-			this.World.queryTilesInRange(_tile, 1, 4, this.onTileInRegionQueried.bindenv(this), terrain.Region);
+			this.World.queryTilesInRange(_tile, 1, 4, onTileInRegionQueried.bindenv(this), terrain.Region);
 			return terrain;
 		}
 		while (tries++ < 1000)
@@ -1060,6 +1082,10 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 					candidates.push(settlement);
 				}
 			}
+			if (dummyDesertVillage.isSuitable(terrain))
+			{
+				candidates.push(dummyDesertVillage);
+			}
 
 			if (candidates.len() == 0)
 			{
@@ -1075,7 +1101,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			local hamlet = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_hamlet", tile.Coords);
 			playerFaction.addSettlement(hamlet);
 			local result = this.new(type.Script)
-			hamlet.assimilateCharacteristics(result)
+			hamlet.assimilateCharacteristics(result);
+			hamlet.m.Spriteset = this.m.Spriteset;
 			hamlet.updateLook();
 			hamlet.setDiscovered(true);
 			hamlet.buildHouses();
@@ -1109,11 +1136,12 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.OverflowStash.onDeserialize(_in);
 		this.m.Size  = _in.readU8();
 		this.m.IsUpgrading = _in.readBool();
+		this.m.Spriteset = _in.readString();
+
 		this.m.Buildings.resize(7)
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 		this.m.Buildings[6].updateSprite();
 		this.m.BaseSettings = ::Stronghold.Mod.Serialization.flagDeserialize("BaseSettings",  this.m.BaseSettings, null, this.getFlags());
-		this.m.Spriteset = _in.readString();
 		this.updateTown();
 	}
 });

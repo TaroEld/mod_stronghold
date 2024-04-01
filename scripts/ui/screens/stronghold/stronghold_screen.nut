@@ -195,14 +195,17 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		}
 		_ret.BaseSettings <- town.m.BaseSettings;
 		_ret.ItemOverflow <- [];
-		foreach (item in town.m.OverflowStash.getItems())
-		[
-			_ret.ItemOverflow.push({
-				Name = item.getName(),
-				Icon = item.getIcon(),
-				ID = item.getInstanceID()
-			})
-		]
+		if (town.isMainBase())
+		{
+			foreach (item in town.m.OverflowStash.getItems())
+			[
+				_ret.ItemOverflow.push({
+					Name = item.getName(),
+					Icon = item.getIcon(),
+					ID = item.getInstanceID()
+				})
+			]
+		}
 		return _ret
 	}
 

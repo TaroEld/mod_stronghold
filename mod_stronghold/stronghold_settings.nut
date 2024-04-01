@@ -48,6 +48,10 @@
 // Cost to make the raided debuff go away; multiplied with the price mult
 ::Stronghold.RaidedCostPerDay <- 0.5;
 
+::Stronghold.Hamlet <- {
+	Name = "Hamlet"
+}
+
 ::Stronghold.Tiers <- {};
 ::Stronghold.Tiers[1] <- {
 	Name = "Outpost",

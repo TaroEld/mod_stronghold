@@ -56,7 +56,6 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.m.Lighting =   _town.m.Lighting 
 		this.m.Rumors =  _town.m.Rumors 
 		this.m.Culture = _town.m.Culture 
-		this.m.Spriteset = _town.m.Spriteset;
 		this.updateTown()
 	}
 	function getFactionOfType(_type)
@@ -78,6 +77,11 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		::Math.seedRandom(this.Time.getRealTime());
 
 		return true;
+	}
+
+	function onLeave()
+	{
+		this.settlement.onLeave();
 	}
 
 	function getParent(){
@@ -113,7 +117,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 	{
 		local constSprites = this.Stronghold.VisualsMap[this.m.Spriteset];
 		this.m.TroopSprites = constSprites.WorldmapFigure[3];
-		this.m.HouseSprites = sprites.Houses[1];
+		this.m.HouseSprites = constSprites.Houses;
 	}
 	
 	
