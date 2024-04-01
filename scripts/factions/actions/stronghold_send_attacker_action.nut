@@ -21,7 +21,7 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 		local potentialTargetsArray = [];
 		foreach (playerBase in playerBases)
 		{
-			if (playerBase.hasSituation("situation.raided") || !::Stronghold.isCooldownExpired(playerBase, "LastUpgradeDoneCooldown") || !::Stronghold.isCooldownExpired(playerBase, "AttackedCooldown"))
+			if (playerBase.hasSituation("situation.raided") || playerBase.isUpgrading() || !::Stronghold.isCooldownExpired(playerBase, "LastUpgradeDoneCooldown") || !::Stronghold.isCooldownExpired(playerBase, "AttackedCooldown"))
 				continue;
 			potentialTargets[playerBase] <- [];
 			local enemyBases = this.World.getAllEntitiesAtPos(playerBase.getPos(), playerBase.getEffectRadius() * 100);

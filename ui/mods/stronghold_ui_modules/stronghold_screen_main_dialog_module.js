@@ -169,7 +169,7 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
     {
     	var price = this.mData.TownAssets.IsRaidedUntil * this.mModuleData.RaidedCostPerDay;
     	this.mRaidedText.html(Stronghold.Text.format(text.RaidedText, this.mData.TownAssets.IsRaidedUntil, price));
-    	this.mRaidedButton.find(".label").text(Stronghold.Text.format(text.RaidedButton, price))
+    	this.mRaidedButton.find(".label").html(Stronghold.Text.format(text.RaidedButton, price))
     	this.mRaidedButton.attr("disabled", price > this.mData.Assets.Money)
     	this.mRaidedContainer.show();
     }
