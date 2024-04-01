@@ -38,7 +38,6 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/crowd_building"), 5);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 
-		this.m.IsMainBase = false;
 		this.getFlags().set("IsPlayerBase", true);
 		this.getFlags().set("IsMainBase", false);
 	}

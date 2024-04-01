@@ -96,7 +96,7 @@
 		local craftable = o.isCraftable
 		o.isCraftable = function()
 		{
-			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && "isMainBase" in this.World.State.getCurrentTown() && this.World.State.getCurrentTown().isMainBase())
+			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null &&  this.World.State.getCurrentTown().getFlags().get("IsMainBase"))
 			{
 
 				local getStash = this.World.Assets.getStash().getItems
@@ -114,7 +114,7 @@
 		local craft = o.craft
 		o.craft = function()
 		{
-			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && "isMainBase" in this.World.State.getCurrentTown() && this.World.State.getCurrentTown().isMainBase())
+			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && this.World.State.getCurrentTown().getFlags().get("IsMainBase"))
 			{
 				return ("LegendsMod" in this.getroottable() ? consumeStashItemsLegends() : consumeStashItemsVanilla())			
 			}
@@ -126,7 +126,7 @@
 		local getIngredients = o.getIngredients
 		o.getIngredients = function()
 		{
-			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && "isMainBase" in this.World.State.getCurrentTown() && this.World.State.getCurrentTown().isMainBase())
+			if (("State" in this.World) && this.World.State != null && this.World.State.getCurrentTown() != null && this.World.State.getCurrentTown().getFlags().get("IsMainBase"))
 			{
 				local getStash = this.World.Assets.getStash().getItems
 				this.World.Assets.getStash().getItems = getCombinedStash

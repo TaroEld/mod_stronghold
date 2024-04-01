@@ -2,8 +2,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	//custom player base settlement type. spawns custom storage building, modified marketplace that allows for both selling of trash and food and for storing items
 	//many of the stronghold features are handled here
 	m = {
-		IsPlayerBase = true,
-		IsMainBase = true,
 		IsUpgrading = false,
 		Stash = null,
 		Spriteset = "Default",
@@ -41,8 +39,9 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/tavern_building"), 5);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 
-		this.getFlags().set("IsPlayerBase", true);
+		this.getFlags().set("IsPlayerBase", true); // These flags are convenient to use in hooks, as I don't need to check if x in town.m...
 		this.getFlags().set("IsMainBase", true);
+		// Cooldowns
 		this.getFlags().set("TimeUntilNextMercs", -1);
 		this.getFlags().set("TimeUntilNextCaravan", -1);
 		this.getFlags().set("TimeUntilNextPatrol", -1);
@@ -50,7 +49,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function isMainBase()
 	{
-		return this.m.IsMainBase;
+		return this.getFlags().get("IsMainBase");
 	}
 
 	function getHamlet()
