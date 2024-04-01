@@ -137,13 +137,13 @@
 		Price = 10,
 	}
 	Fletcher = {
-		Price = 5,
+		Price = 2.5,
 	}
 	Port = {
 		Price = 5,
 	}
 	Arena = {
-		Price = 15
+		Price = 10
 	}
 };
 
@@ -195,7 +195,7 @@
 	Stone_Watchtower = {
 		Price = 5,
 		UpgradePrice = 1,
-		VisionIncrease = 10, // Amount of extra vision you get around the base
+		VisionIncrease = 20, // Amount of extra vision you get around the base
 		MovementSpeedIncrease = 0.05 // Amount of extra movement speed you get around the base, in pct
 	},
 	Troop_Quarters = {
