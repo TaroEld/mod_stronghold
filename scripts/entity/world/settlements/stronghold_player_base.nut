@@ -53,6 +53,97 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return this.m.IsMainBase;
 	}
 
+	function getHamlet()
+	{
+		local flag = this.m.Flags.get("Child");
+		return flag ? this.World.getEntityByID(flag) : false;
+	}
+
+	function getLocation(_id)
+	{
+		local loc = this.getActiveAttachedLocations().filter(@(_idx, _a) _a.getTypeID() == _id)
+		return loc.len() > 0 ? loc[0] : null;
+	}
+
+	//I dont trust the roster seed
+	function getLocalRoster()
+	{
+		return this.World.getRoster(this.getFlags().get("RosterSeed"));
+	}
+
+	function getEffectRadius()
+	{
+		return ::Stronghold.Tiers[this.getSize()].EffectRadius;
+	}
+
+	function getWarehouse()
+	{
+		return this.getLocation("attached_location.warehouse");
+	}
+
+	function getStash()
+	{
+		return this.getWarehouse().getStash();
+	}
+
+	function getOverflowStash()
+	{
+		return this.m.OverflowStash;
+	}
+
+	function isMaxLevel()
+	{
+		return !this.isUpgrading() && this.getSize() == 4;
+	}
+
+	function getTooltip()
+	{
+		local ret = this.settlement.getTooltip();
+		if (this.isUpgrading())
+		{
+			ret.push({
+				id = 99,
+				type = "description",
+				text = format("\n Currently upgrading to a %s", this.getSizeName(true))
+			})
+		}
+		return ret;
+	}
+
+	function isEnterable()
+	{
+		return true;
+	}
+
+	function updateRoster( _force = false )
+	{
+	}
+
+	function hasContract( _id )
+	{
+		return true;
+	}
+
+	function getSizeName(_nextLevel = false)
+	{
+		local size = ::Math.max(this.getSize(), 1);
+		if (this.isUpgrading()) size = ::Math.max(1, size-1);
+		if (_nextLevel) return this.Stronghold.Tiers[size + 1].Name;
+		return this.Stronghold.Tiers[size].Name;
+	}
+
+	function showStrongholdUIDialog()
+	{
+		::Stronghold.StrongholdScreen.setTown(this);
+		::Stronghold.StrongholdScreen.show();
+	}
+
+	function onChangeSetting(_setting, _bool)
+	{
+		this.m.BaseSettings[_setting] = _bool;
+		this.updateTown();
+	}
+
 	function onBuild()
 	{
 		this.getFlags().set("IsOnDesert", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert]));
@@ -102,6 +193,39 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return true;
 	}
 
+	function consumeItems()
+	{
+		this.getWarehouse().consumeConsumableItems();
+	}
+
+	function updateLocationEffects()
+	{
+		local lastUpdateTime = this.getFlags().get("LastLocationUpdate");
+		local daysPassed = ((this.Time.getVirtualTimeF() - lastUpdateTime) / this.World.getTime().SecondsPerDay).tointeger();
+		if ( daysPassed == 0)
+			return;
+		this.getFlags().set("LastLocationUpdate", this.Time.getVirtualTimeF());
+		foreach (location in this.getActiveAttachedLocations())
+			location.stronghold_updateLocationEffects(daysPassed);
+	}
+
+
+	function rebuildAttachedLocations()
+	{
+		//rebuild attached locations
+		foreach( a in this.m.AttachedLocations )
+		{
+			if (!a.isActive())
+			{
+				if (this.m.Flags.get(a.m.ID) && ((this.m.Flags.get(a.m.ID) + 7 * this.World.getTime().SecondsPerDay) <  this.Time.getVirtualTimeF()))
+				{
+					a.setActive(true);
+					this.m.Flags.remove(a.m.ID);
+				}
+			}
+		}
+	}
+
 	function onLeave()
 	{
 		this.settlement.onLeave();
@@ -114,35 +238,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		this.consumeItemOverflow();
 		this.m.OverflowStash.clear();
-	}
-
-	function getEffectRadius()
-	{
-		return ::Stronghold.Tiers[this.getSize()].EffectRadius;
-	}
-
-	function getWarehouse()
-	{
-		return this.getLocation("attached_location.warehouse");
-	}
-
-	function getStash()
-	{
-		return this.getWarehouse().getStash();
-	}
-
-	function getOverflowStash()
-	{
-		return this.m.OverflowStash;
-	}
-
-	function addItemsToWarehouse()
-	{
-		local stash = this.getStash();
-		local overflowStash = this.getOverflowStash();
-		if (stash.hasEmptySlot())
-			stash.add(item);
-		else overflowStash.add(item);
 	}
 
 	function consumeItemOverflow()
@@ -160,43 +255,13 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 	}
 
-	function updateLocationEffects()
+	function addItemsToWarehouse()
 	{
-		local lastUpdateTime = this.getFlags().get("LastLocationUpdate");
-		local daysPassed = ((this.Time.getVirtualTimeF() - lastUpdateTime) / this.World.getTime().SecondsPerDay).tointeger();
-		if ( daysPassed == 0)
-			return;
-		this.getFlags().set("LastLocationUpdate", this.Time.getVirtualTimeF());
-		foreach (location in this.getActiveAttachedLocations())
-			location.stronghold_updateLocationEffects(daysPassed);
-	}
-
-	function consumeItems()
-	{
-		this.getWarehouse().consumeConsumableItems();
-	}
-
-	function isMaxLevel()
-	{
-		return !this.isUpgrading() && this.getSize() == 4;
-	}
-
-	function getHamlet()
-	{
-		local flag = this.m.Flags.get("Child");
-		return flag ? this.World.getEntityByID(flag) : false;
-	}
-
-	function getLocation(_id)
-	{
-		local loc = this.getActiveAttachedLocations().filter(@(_idx, _a) _a.getTypeID() == _id)
-		return loc.len() > 0 ? loc[0] : null;
-	}
-
-	//I dont trust the roster seed
-	function getLocalRoster()
-	{
-		return this.World.getRoster(this.getFlags().get("RosterSeed"));
+		local stash = this.getStash();
+		local overflowStash = this.getOverflowStash();
+		if (stash.hasEmptySlot())
+			stash.add(item);
+		else overflowStash.add(item);
 	}
 
 	//disables lights when alt location
@@ -295,20 +360,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.fadeAndDie();
 	}
 
-	function getTooltip()
-	{
-		local ret = this.settlement.getTooltip();
-		if (this.isUpgrading())
-		{ 
-			ret.push({
-				id = 99,
-				type = "description",
-				text = format("\n Currently upgrading to a %s", this.getSizeName(true))
-			})
-		}
-		return ret;
-	}
-
 	function debugUpgrade()
 	{
 		this.startUpgrading();
@@ -321,6 +372,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		::Stronghold.setCooldown(this, "LastUpgradeDoneAttackCooldown");
 		this.m.Size += 1;
 		this.updateTown();
+	}
+
+	function isUpgrading()
+	{
+		return this.m.IsUpgrading;
 	}
 
 	function finishUpgrading(_success)
@@ -342,17 +398,15 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.updateTown()
 	}
 
-	function isUpgrading()
+	function isUnderAttack()
 	{
-		return this.m.IsUpgrading;
-	}
-
-	function getSizeName(_nextLevel = false)
-	{
-		local size = ::Math.max(this.getSize(), 1);
-		if (this.isUpgrading()) size = ::Math.max(1, size-1);
-		if (_nextLevel) return this.Stronghold.Tiers[size + 1].Name;
-		return this.Stronghold.Tiers[size].Name;
+		local flag = this.getFlags().get("UnderAttackBy");
+		::logInfo("UnderAttackBy " + flag)
+		if (!flag)
+			return false;
+		local entity = ::World.getEntityByID(flag);
+		::logInfo("UnderAttackBy entity " + entity)
+		return entity != null;
 	}
 	
 	function updateTown()
@@ -561,6 +615,40 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 		this.m.ProduceImported.push(_p);
 	}
+
+
+	function updateImportedProduce()
+	{
+		//needs to select storage building instead of marketplace
+		if (this.m.ProduceImported.len() == 0)
+		{
+			return;
+		}
+		foreach( p in this.m.ProduceImported )
+		{
+			local item = this.new("scripts/items/" + p);
+			this.addItemsToWarehouse(item);
+		}
+		this.m.ProduceImported = [];
+	}
+
+
+	function onAttachedLocationsChanged()
+	{
+		//note destroyed attached locations
+		foreach( a in this.m.AttachedLocations )
+		{
+			if (!a.isActive())
+			{
+				if (!this.m.Flags.get(a.m.ID))
+				{
+					this.m.Flags.set(a.m.ID, this.Time.getVirtualTimeF());
+				}
+			}
+		}
+
+	}
+
 	
 	function buildAttachedLocation( _num, _script, _terrain, _nearbyTerrain, _additionalDistance = 0, _mustBeNearRoad = false, _clearTile = true )
 	{
@@ -754,53 +842,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 			d.Scale = 0.85;
 			c.remove(i);
-		}
-	}
-	
-	function updateImportedProduce()
-	{
-		//needs to select storage building instead of marketplace
-		if (this.m.ProduceImported.len() == 0)
-		{
-			return;
-		}
-		foreach( p in this.m.ProduceImported )
-		{
-			local item = this.new("scripts/items/" + p);
-			this.addItemsToWarehouse(item);
-		}
-		this.m.ProduceImported = [];
-	}
-	
-	function onAttachedLocationsChanged()
-	{
-		//note destroyed attached locations
-		foreach( a in this.m.AttachedLocations )
-		{
-			if (!a.isActive())
-			{
-				if (!this.m.Flags.get(a.m.ID))
-				{
-					this.m.Flags.set(a.m.ID, this.Time.getVirtualTimeF());
-				}
-			}
-		}
-
-	}
-	
-	function rebuildAttachedLocations()
-	{
-		//rebuild attached locations
-		foreach( a in this.m.AttachedLocations )
-		{
-			if (!a.isActive())
-			{
-				if (this.m.Flags.get(a.m.ID) && ((this.m.Flags.get(a.m.ID) + 7 * this.World.getTime().SecondsPerDay) <  this.Time.getVirtualTimeF()))
-				{
-					a.setActive(true);
-					this.m.Flags.remove(a.m.ID);
-				}
-			}
 		}
 	}
 	
@@ -1046,37 +1087,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			return
 		}
 		::logError("STRONGHOLD: DID NOT MANAGE TO BUILD HAMLET - PLEASE REPORT BUG");
-	}
-
-	function isEnterable()
-	{
-		return true;
-	}
-
-	function updateRoster( _force = false )
-	{
-	}
-	
-	// function getPriceMult()
-	// {
-	// 	return 1.3;
-	// }
-
-	function hasContract( _id )
-	{
-		return true;
-	}
-
-	function showStrongholdUIDialog()
-	{
-		::Stronghold.StrongholdScreen.setTown(this);
-		::Stronghold.StrongholdScreen.show();
-	}
-
-	function onChangeSetting(_setting, _bool)
-	{
-		this.m.BaseSettings[_setting] = _bool;
-		this.updateTown();
 	}
 
 	function onSerialize( _out )
