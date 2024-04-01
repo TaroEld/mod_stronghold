@@ -89,12 +89,27 @@
 		local maxLevel = def.MaxBrotherExpLevel + def.MaxBrotherExpLevelUpgrade * this.m.Level;
 
 		local validBros = this.m.Settlement.getLocalRoster().getAll().filter( @(a, b) b.getLevel() <= maxLevel);
-		local XpPerBro = totalXP  / validBros.len();
-		foreach (bro in validBros)
+		if (validBros.len() > 0)
 		{
-			bro.addXP(XpPerBro.tointeger(), false);
-			bro.updateLevel();
+			local XpPerBro = totalXP  / validBros.len();
+			foreach (bro in validBros)
+			{
+				bro.addXP(XpPerBro.tointeger(), false);
+				bro.updateLevel();
+			}
 		}
+	}
+
+	o.onBuild <- function()
+	{
+		local ret = this.attached_location.onBuild();
+		this.m.Settlement.getFlags().set("TimeUntilNextMercs", -1);
+		return ret;
+	}
+
+	o.onUpgrade <- function()
+	{
+		this.m.Settlement.getFlags().set("TimeUntilNextMercs", -1);
 	}
 })
 

@@ -67,14 +67,18 @@
 	o.getDailyMoneyCost = function()
 	{
 		local money = getDailyMoneyCost();
-		if (this.Stronghold.getPlayerBase())
+		if (!this.Stronghold.getPlayerBase())
+			return money;
+
+		foreach(playerBase in this.Stronghold.getPlayerFaction().getMainBases())
 		{
-			foreach(playerBase in this.Stronghold.getPlayerFaction().getMainBases())
+			local troopQuarters = playerBase.getLocation("attached_location.troop_quarters");
+			if (troopQuarters == null)
+				continue;
+
+			foreach (bro in playerBase.getLocalRoster().getAll())
 			{
-				foreach(bro in playerBase.getLocalRoster().getAll())
-				{
-					money += ::Math.floor(bro.getDailyCost()/2);
-				}
+				money += ::Math.floor(bro.getDailyCost() * troopQuarters.getWageMult());
 			}
 		}
 		return money;
