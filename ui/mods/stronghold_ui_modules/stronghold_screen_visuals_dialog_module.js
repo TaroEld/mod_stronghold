@@ -32,7 +32,7 @@ StrongholdScreenVisualsModule.prototype.createDIV = function (_parentDiv)
     this.mContentContainer.addClass("visuals-module");
     
     var spritesHeader = this.mContentContainer.appendRow("");
-    this.mSpriteNameLabel = spritesHeader.find(".sub-title");
+    this.mSpritesetLabel = spritesHeader.find(".sub-title");
     this.mSpritesContainer = this.mContentContainer.appendRow(null, "sprites-container stronghold-generic-background");
 
     MSU.iterateObject(this.mSpriteImages, function(_key, _value){
@@ -86,8 +86,8 @@ StrongholdScreenVisualsModule.prototype.loadFromData = function(_data)
 {
 	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
 		return;
-	this.mBaseSprite = this.mData.TownAssets.SpriteName;
-    this.mCurrentBaseSprite = this.mData.TownAssets.SpriteName;
+	this.mBaseSprite = this.mData.TownAssets.Spriteset;
+    this.mCurrentBaseSprite = this.mData.TownAssets.Spriteset;
 	this.mBaseSpriteIndex = this.getSpriteIndex();
 	this.setSpriteImage()
 }
@@ -103,8 +103,8 @@ StrongholdScreenVisualsModule.prototype.setSpriteImage = function()
     this.mSpriteImages.Tier4.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Base[3] + ".png");
 	this.mSpriteImages.Mercenaries.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.WorldmapFigure[0] + ".png");
 	this.mSpriteImages.Hamlet.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Houses[0] + ".png");
-	var name = Stronghold.Text.format(text.SpriteName, currentArr.Name, currentArr.Author, this.mCurrentBaseSprite == this.mBaseSprite ? text.Current : "")
-	this.mSpriteNameLabel.html(name)
+	var name = Stronghold.Text.format(text.Spriteset, currentArr.Name, currentArr.Author, this.mCurrentBaseSprite == this.mBaseSprite ? text.Current : "")
+	this.mSpritesetLabel.html(name)
 }
 
 StrongholdScreenVisualsModule.prototype.changeSprites = function ()

@@ -91,7 +91,7 @@ StrongholdScreenUpgradeModule.prototype.loadFromData = function()
 {
 	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
 		return;
-    this.mBaseSprite = this.mData.TownAssets.SpriteName;
+    this.mBaseSprite = this.mData.TownAssets.Spriteset;
     this.setSpriteImage();
     this.fillUpgradeDetailsText();
     this.fillRequirementsText();

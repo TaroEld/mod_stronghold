@@ -37,7 +37,10 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/marketplace_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/crowd_building"), 5);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
-		this.getFlags().set("IsSecondaryBase", true)
+
+		this.m.IsMainBase = false;
+		this.getFlags().set("IsPlayerBase", true);
+		this.getFlags().set("IsMainBase", false);
 	}
 	
 	function assimilateCharacteristics(_town)
@@ -54,16 +57,12 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.m.Lighting =   _town.m.Lighting 
 		this.m.Rumors =  _town.m.Rumors 
 		this.m.Culture = _town.m.Culture 
+		this.m.Spriteset = _town.m.Spriteset;
 		this.updateTown()
 	}
 	function getFactionOfType(_type)
 	{
 		return this.Stronghold.getPlayerFaction();
-	}
-	
-	function isMainBase()
-	{
-		return false;
 	}
 	
 	function getSizeName()
@@ -113,13 +112,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 
 	function updateLook()
 	{
-		//backward compatibility
-		if (!this.getFlags().has("CustomSprite"))
-		{
-			this.getFlags().set("CustomSprite", "Default");
-		}
-		local spriteID = this.getFlags().get("CustomSprite");
-		local constSprites = this.Stronghold.VisualsMap[spriteID];
+		local constSprites = this.Stronghold.VisualsMap[this.m.Spriteset];
 		this.m.TroopSprites = constSprites.WorldmapFigure[3];
 		this.m.HouseSprites = sprites.Houses[1];
 	}

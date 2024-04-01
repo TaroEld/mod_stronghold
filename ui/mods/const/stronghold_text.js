@@ -141,7 +141,7 @@ Stronghold.Text = {
 	},
 	VisualsModule : {
 		Title : "Change Visuals",
-		SpriteName : "{0} by {1}{2}", // name by author (current visuals)
+		Spriteset : "{0} by {1}{2}", // name by author (current visuals)
 		Current : " (current visuals)",
 		Button : "Apply Sprites"
 	},

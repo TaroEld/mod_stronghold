@@ -45,18 +45,8 @@
 // Cost of each road segment
 ::Stronghold.RoadCost <- 0.5; 
 
-// Daily production of each item. Note that this is the 'amount' value; one item of tools has an amount of 25, medicine 20, and ammo 50.
-::Stronghold.ToolsPerDay <- 9;
-::Stronghold.MedicinePerDay <- 7;
-::Stronghold.AmmoPerDay <- 20;
-
 // Cost to make the raided debuff go away; multiplied with the price mult
 ::Stronghold.RaidedCostPerDay <- 0.5;
-
-// Maximum amount of each item that can be stored in the warehouse. Also the 'amount' value.
-::Stronghold.MaxAmountOfStoredTools <- 150;
-::Stronghold.MaxAmountOfStoredMedicine <- 100;
-::Stronghold.MaxAmountOfStoredAmmo <- 300;
 
 ::Stronghold.Tiers <- {};
 ::Stronghold.Tiers[1] <- {

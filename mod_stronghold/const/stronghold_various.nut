@@ -75,14 +75,14 @@
 		local player_settlements = playerFaction.getSettlements()
 		foreach (settlement in player_settlements)
 		{
-			if(settlement.getFlags().get("isPlayerBase")){
+			if(settlement.getFlags().get("IsPlayerBase")){
 				return settlement
 			}
 		}
 	}
 	foreach (settlement in this.World.EntityManager.getSettlements())
 	{
-		if(settlement.getFlags().get("isPlayerBase")){
+		if(settlement.getFlags().get("IsPlayerBase")){
 			return settlement
 		}
 	}
@@ -214,36 +214,4 @@
 	contract.m.TargetLevel = 1
 	this.World.Contracts.addContract(contract);
 	contract.start();
-}
-
-::Stronghold.onDestinationAttacked <- function(_dest, _isPlayerAttacking)
-{
-	local isPlayerInitiated = true;
-	local p;
-	local playerBases = ::Stronghold.getFaction().getMainBases();
-	local target = null;
-	foreach(playerBase in playerBases)
-	{
-		if (this.getVecDistance(playerBase.getPos(), this.World.State.getPlayer().getPos()) <= 250)
-		{
-			target = playerBase;
-			break;
-		}
-	}
-	if (target != null)
-	{
-		p = this.World.State.getLocalCombatProperties(playerBase.getPos());
-		isPlayerInitiated = true;
-		p.PlayerDeploymentType = this.Const.Tactical.DeploymentType.LineForward;
-		p.EnemyDeploymentType = this.Const.Tactical.DeploymentType.LineBack;
-		p.LocationTemplate = clone this.Const.Tactical.LocationTemplate;
-		p.LocationTemplate.OwnedByFaction = this.Const.Faction.Player;
-		p.LocationTemplate.Template[0] = "tactical.stronghold_fortress_defense";
-		p.LocationTemplate.Fortification = this.Const.Tactical.FortificationType.WallsAndPalisade;
-		p.LocationTemplate.ShiftX = -10;
-	}
-	else p = this.World.State.getLocalCombatProperties(this.World.State.getPlayer().getPos());
-	p.Music = this.Const.Music.NobleTracks;
-	p.CombatID = "Stronghold";
-	this.World.Contracts.startScriptedCombat(p, isPlayerInitiated, true, true);
 }

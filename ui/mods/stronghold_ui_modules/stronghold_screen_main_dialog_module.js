@@ -149,7 +149,7 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
 
 	this.mChangeNameInput.setInputText(this.mData.TownAssets.Name);
 
-	var baseSprite = this.mData.TownAssets.SpriteName;
+	var baseSprite = this.mData.TownAssets.Spriteset;
 	var currentSprite = Stronghold.Visuals.VisualsMap[baseSprite].Base[this.mData.TownAssets.Size -1];
     this.mBaseSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentSprite + ".png");
     MSU.iterateObject(this.mBaseSettings, function(_key, _value)

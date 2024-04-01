@@ -2,9 +2,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	//custom player base settlement type. spawns custom storage building, modified marketplace that allows for both selling of trash and food and for storing items
 	//many of the stronghold features are handled here
 	m = {
-		isPlayerBase = true,
+		IsPlayerBase = true,
+		IsMainBase = true,
 		IsUpgrading = false,
 		Stash = null,
+		Spriteset = "Default",
 		TroopSprites = "",
 		HouseSprites = [],
 		BaseSettings = {
@@ -38,19 +40,25 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/marketplace_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/tavern_building"), 5);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
-	}
 
-	function onBuild()
-	{
-		this.getFlags().set("CustomSprite", "Default")
-		this.getFlags().set("IsSouthern", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert, this.Const.World.TerrainType.Oasis]) ||  this.getTile().TacticalType == this.Const.World.TerrainTacticalType.DesertHills); // why is desertHills not just a terrain type wtf
-		this.getFlags().set("IsOnSnow", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Snow]));
-		this.getFlags().set("IsOnDesert", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert]));
-		this.getFlags().set("isPlayerBase", true);
+		this.getFlags().set("IsPlayerBase", true);
 		this.getFlags().set("IsMainBase", true);
 		this.getFlags().set("TimeUntilNextMercs", -1);
 		this.getFlags().set("TimeUntilNextCaravan", -1);
 		this.getFlags().set("TimeUntilNextPatrol", -1);
+	}
+
+	function isMainBase()
+	{
+		return this.m.IsMainBase;
+	}
+
+	function onBuild()
+	{
+		this.getFlags().set("IsOnDesert", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert]));
+		this.getFlags().set("IsSouthern", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Desert, this.Const.World.TerrainType.Oasis]) ||  this.getTile().TacticalType == this.Const.World.TerrainTacticalType.DesertHills); // why is desertHills not just a terrain type wtf
+		this.getFlags().set("IsOnSnow", this.Stronghold.isOnTile(this.getTile(), [this.Const.World.TerrainType.Snow]));
+
 		this.getFlags().set("RosterSeed", this.toHash(this));
 		this.getFlags().set("LastProduceUpdate", this.Time.getVirtualTimeF());
 		this.getFlags().set("LastLocationUpdate", this.Time.getVirtualTimeF());
@@ -166,11 +174,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function consumeItems()
 	{
 		this.getWarehouse().consumeConsumableItems();
-	}
-
-	function isMainBase()
-	{
-		return true;
 	}
 
 	function isMaxLevel()
@@ -388,7 +391,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function onVisualsChanged(_newSprite)
 	{
-		this.getFlags().set("CustomSprite", _newSprite);
+		this.m.Spriteset = _newSprite;
 		local numHouses = this.m.HousesTiles.len();
 		foreach( h in this.m.HousesTiles )
 		{
@@ -427,16 +430,10 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function updateLook()
 	{
-		//backward compatibility
-		if (!this.getFlags().has("CustomSprite"))
-		{
-			this.getFlags().set("CustomSprite", "Default");
-		}
 
-		local spriteID = this.getFlags().get("CustomSprite");
 		local isOnSnow = this.getFlags().get("IsOnSnow");
 		local isOnDesert = this.getFlags().get("IsOnDesert");
-		local sprites = this.Stronghold.VisualsMap[spriteID];
+		local sprites = this.Stronghold.VisualsMap[this.m.Spriteset];
 		local i = this.getSize()-1;
 
 		this.m.Sprite = this.isUpgrading() ? sprites.Upgrading[i][0] : sprites.Base[i][0];
@@ -772,8 +769,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			local item = this.new("scripts/items/" + p);
 			this.addItemsToWarehouse(item);
 		}
-
-		this.getWarehouse().getStash().sort();
 		this.m.ProduceImported = [];
 	}
 	
@@ -1041,7 +1036,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			playerFaction.addSettlement(hamlet);
 			local result = this.new(type.Script)
 			hamlet.assimilateCharacteristics(result)
-			hamlet.getFlags().set("CustomSprite", this.getFlags().get("CustomSprite"));
 			hamlet.updateLook();
 			hamlet.setDiscovered(true);
 			hamlet.buildHouses();
@@ -1095,6 +1089,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.OverflowStash.onSerialize(_out);
 		_out.writeU8(this.m.Size);
 		_out.writeBool(this.m.IsUpgrading);
+		_out.writeString(this.m.Spriteset);
 		this.m.Buildings.append(management)
 	}
 	
@@ -1109,6 +1104,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 		this.m.Buildings[6].updateSprite();
 		this.m.BaseSettings = ::Stronghold.Mod.Serialization.flagDeserialize("BaseSettings",  this.m.BaseSettings, null, this.getFlags());
+		this.m.Spriteset = _in.readString();
 		this.updateTown();
 	}
 });
