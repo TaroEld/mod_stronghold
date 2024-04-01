@@ -66,7 +66,7 @@
 	Base = [
 		["luft_basic_01", ""],
 		["luft_basic_02", "luft_basic_02_light"],
-		["luft_basic_04", "luft_basic_03_light"],
+		["luft_basic_03", "luft_basic_03_light"],
 		["luft_basic_04", "luft_basic_04_light"]
 	],
 	Upgrading = [
@@ -126,20 +126,21 @@
 		"luft_fishing_patrol",
 	]
 	Base = [
-		["luft_fishing_01", "luft_fishing_01_light"],
+		["luft_fishing_01", ""],
 		["luft_fishing_02", "luft_fishing_02_light"],
-		["luft_fishing_04", "luft_fishing_03_light"],
+		["luft_fishing_03", "luft_fishing_03_light"],
 		["luft_fishing_04", "luft_fishing_04_light"]
 	],
 	Upgrading = [
-		["luft_fishing_01u", "luft_fishing_01u_light"],
-		["luft_fishing_02u", "luft_fishing_02u_light"],
+		["luft_fishing_01u", ""],
+		["luft_fishing_02u", ""],
 		["luft_fishing_03u", "luft_fishing_03u_light"],
 		["luft_fishing_04u", "luft_fishing_04u_light"]
 	]
 	Houses =  [
 		["luft_fishing_houses_01", "luft_fishing_houses_01_light"],
 		["luft_fishing_houses_02", "luft_fishing_houses_02_light"],
+		["luft_fishing_houses_03", ""]
 	]
 }
 ::Stronghold.VisualsMap["Luft_Fishing"].Background <- clone ::Stronghold.VisualsMap["Default"].Background;
@@ -158,7 +159,7 @@
 	Base = [
 		["luft_necro_01", "luft_necro_01_light"],
 		["luft_necro_02", "luft_necro_02_light"],
-		["luft_necro_04", "luft_necro_03_light"],
+		["luft_necro_03", "luft_necro_03_light"],
 		["luft_necro_04", "luft_necro_04_light"]
 	],
 	Upgrading = [
