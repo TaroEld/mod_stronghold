@@ -72,7 +72,7 @@
 	MaxAttachments = 6,
 	MaxBuildings = 3,
 	UnlockDescription = "You can construct up to three settlement buildings.\nYou can construct up to eight locations.\nBands of mercenaries will join your base and guard it against aggressors.",
-	EffectRadius = 8,
+	EffectRadius = 9,
 	Rarity = 1.04,
 	BuyPrice = 1.00,
 	SellPrice = 1.00
@@ -84,7 +84,7 @@
 	MaxAttachments = 8,
 	MaxBuildings = 4,
 	UnlockDescription = "You can construct up to four settlement buildings.\nYou can construct up to eight locations.\nYou can construct roads to other settlements, connecting your base to the world.",
-	EffectRadius = 9,
+	EffectRadius = 11,
 	Rarity = 1.08,
 	BuyPrice = 0.95,
 	SellPrice = 1.05
@@ -96,7 +96,7 @@
 	MaxAttachments = 10,
 	MaxBuildings = 5,
 	UnlockDescription = "You can construct up to five settlement buildings, and unlock the arena building.\nYou can construct up to ten locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold.",
-	EffectRadius = 10,
+	EffectRadius = 13,
 	Rarity = 1.12,
 	BuyPrice = 0.9,
 	SellPrice = 1.1
