@@ -1,7 +1,6 @@
 this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_action", {
 	m = {
 		PlayerBase = null,
-		TimeUntilNextCaravan = 7,
 	},
 	function create()
 	{
@@ -43,7 +42,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		local closest_dist = 9999;
 		foreach (settlement in settlements)
 		{
-			if (settlement.getFlags().get("isPlayerBase"))
+			if (settlement.getFlags().get("IsPlayerBase"))
 				continue;
 			local settlementFaction = settlement.getFactionOfType(this.Const.FactionType.Settlement);
 			if (settlement.isMilitary() || this.isKindOf(settlement, "city_state"))
@@ -137,7 +136,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		c.addOrder(unload);
 		c.addOrder(despawn);
 
-		::Stronghold.setCooldown(playerBase, "TimeUntilNextCaravan", this.m.TimeUntilNextCaravan);
+		::Stronghold.setCooldown(playerBase, "TimeUntilNextCaravan");
 		return true;
 	}
 

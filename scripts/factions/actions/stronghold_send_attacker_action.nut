@@ -2,7 +2,6 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 	m = {
 		TargetBase = null,
 		EnemyBase = null,
-		AttackedMainBaseCooldown = 7
 	},
 	function create()
 	{
@@ -22,7 +21,7 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 		local potentialTargetsArray = [];
 		foreach (playerBase in playerBases)
 		{
-			if (playerBase.hasSituation("situation.raided") || !::Stronghold.isCooldownExpired(playerBase, "LastUpgradeDoneCooldown"))
+			if (playerBase.hasSituation("situation.raided") || !::Stronghold.isCooldownExpired(playerBase, "LastUpgradeDoneCooldown") || !::Stronghold.isCooldownExpired(playerBase, "AttackedCooldown"))
 				continue;
 			potentialTargets[playerBase] <- [];
 			local enemyBases = this.World.getAllEntitiesAtPos(playerBase.getPos(), playerBase.getEffectRadius() * 100);
@@ -33,7 +32,7 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 				// Faction mods needs to make a compatibility patch
 				if (!(this.World.FactionManager.getFaction(enemyBase.getFaction()).m.Type in ::Stronghold.FactionDefs))
 					continue;
-				if (enemyBase.getFlags().has("AttackedMainBaseCooldown" + playerBase.getID()) && !::Stronghold.isCooldownExpired(enemyBase, "AttackedMainBaseCooldown" + playerBase.getID()))
+				if (!::Stronghold.isCooldownExpired(enemyBase, "AttackerCooldown"))
 					continue
 				potentialTargets[playerBase].push(enemyBase);
 				potentialTargetsArray.push(playerBase); // odds increase by number of enemy bases
@@ -56,10 +55,10 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 	function onExecute( _faction )
 	{
 		local playerBase = this.m.TargetBase;
+
 		local partyDifficulty = (this.m.EnemyBase.m.Resources  +  (30 * playerBase.getSize())) * this.getScaledDifficultyMult();
 
 		local tile = playerBase.getTile();
-		::Stronghold.setCooldown(this.m.EnemyBase, "AttackedMainBaseCooldown" + playerBase.getID(), this.m.AttackedMainBaseCooldown);
 
 		local closest_faction = this.World.FactionManager.getFaction(this.m.EnemyBase.getFaction());
 
@@ -78,14 +77,19 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 		party.getLoot().Money = ::Math.rand(200, 300) * playerBase.getSize();
 		party.getSprite("banner").setBrush(this.m.EnemyBase.getBanner());
 		party.getSprite("selection").Visible = true;
+		party.getFlags().set(::Stronghold.Flags.StrongholdAttacker, true);
 
 		local c = party.getController();
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false);
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false);
+		local wait = this.new("scripts/ai/world/orders/wait_order");
+		wait.setTime(this.World.getTime().SecondsPerDay);
+		c.addOrder(wait);
+
 		local destroy = this.new("scripts/ai/world/orders/stronghold_destroy_order");
 		destroy.setTargetID(playerBase.getID());
 		destroy.setTargetTile(playerBase.getTile());
-		destroy.setTime(120.0);
+		destroy.setTime(this.World.getTime().SecondsPerDay * 3);
 		c.addOrder(destroy);
 		local despawn = this.new("scripts/ai/world/orders/despawn_order");
 		c.addOrder(despawn);
@@ -99,6 +103,11 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 			news.set("direction", this.Const.Strings.Direction8[this.m.TargetBase.getTile().getDirection8To(this.m.EnemyBase.getTile())]);
 			this.World.Statistics.addNews("stronghold_attackers", news);
 		}
+
+		playerBase.getFlags().set(::Stronghold.Flags.UnderAttackBy, party.getID());
+		::Stronghold.setCooldown(playerBase.get(), "AttackedCooldown");
+		::Stronghold.setCooldown(this.m.EnemyBase, "AttackerCooldown");
+
 		return true;
 	}
 

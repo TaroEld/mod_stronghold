@@ -151,13 +151,22 @@
 {
 	return _i * this.World.getTime().SecondsPerDay;
 }
-::Stronghold.setCooldown <- function(_obj, _flag, _i)
+::Stronghold.setCooldown <- function(_obj, _flag, _i = null)
 {
+	if (_i == null)
+	{
+		if (!(_flag in ::Stronghold.Flags))
+			throw "Did not find flag " + _flag + " in ::Stronghold.Flags !";
+		_i = ::Stronghold.Flags[_flag];
+	}
 	return _obj.getFlags().set(_flag, ::Time.getVirtualTimeF() + ::Stronghold.getDays(_i));
 }
 ::Stronghold.isCooldownExpired <- function(_obj, _flag)
 {
-	return ::Time.getVirtualTimeF() > _obj.getFlags().get(_flag);
+	local flag =  _obj.getFlags().get(_flag);
+	if(!flag)
+		return true;
+	return ::Time.getVirtualTimeF() > flag;
 }
 
 ::Stronghold.buildMainBase <- function()

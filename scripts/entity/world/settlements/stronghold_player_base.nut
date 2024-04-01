@@ -315,7 +315,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function startUpgrading()
 	{
 		this.m.IsUpgrading = true;
-		::Stronghold.setCooldown(this, "LastUpgradeDoneCooldown" 7);
+		::Stronghold.setCooldown(this, "LastUpgradeDoneAttackCooldown");
 		this.m.Size += 1;
 		this.updateTown();
 	}

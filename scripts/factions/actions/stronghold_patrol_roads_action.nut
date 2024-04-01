@@ -1,7 +1,7 @@
 this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_action", {
 	//Governs the spawning of stronghold patrols.
 	m = {
-		TimeUntilNextPatrol = 7
+
 	},
 	function create()
 	{
@@ -102,7 +102,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		}
 		local despawn = this.new("scripts/ai/world/orders/despawn_order");
 		c.addOrder(despawn);
-		::Stronghold.setCooldown(playerBase, "TimeUntilNextPatrol", this.m.TimeUntilNextPatrol)
+		::Stronghold.setCooldown(playerBase, "TimeUntilNextPatrol");
 		return true;
 	}
 
