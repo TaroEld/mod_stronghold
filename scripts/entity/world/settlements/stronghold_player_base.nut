@@ -332,6 +332,9 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		local flag = this.getSprite("location_banner")
 		flag.Visible = this.m.BaseSettings.ShowBanner;
+
+		local watchtower = this.getLocation("attached_location.stone_watchtower");
+		if (watchtower) watchtower.updateFogOfWar();
 	}
 
 	function fadeOutAndDie(_force = false)

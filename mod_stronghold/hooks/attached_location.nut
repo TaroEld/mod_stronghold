@@ -132,6 +132,25 @@
 	{
 		return  (1 + (::Stronghold.Locations.Stone_Watchtower.MovementSpeedIncrease * this.getLevel()));
 	}
+
+	o.updateFogOfWar <- function()
+	{
+		local entitiesWithin = this.World.getAllEntitiesAtPos(this.m.Settlement.getPos(), this.m.Settlement.getEffectRadius() * 100);
+		local entitiesJustOutside = this.World.getAllEntitiesAtPos(this.m.Settlement.getPos(), (this.m.Settlement.getEffectRadius() + 2) * 100);
+		foreach (entity in entitiesJustOutside)
+		{
+			if (entity.isLocation())
+				entity.setVisibleInFogOfWar(true);
+			else if (entity.isParty())
+			{
+				if (entitiesWithin.find(entity) != null)
+				{
+					entity.setVisibleInFogOfWar(true);
+				}
+				else entity.setVisibleInFogOfWar(false);
+			}
+		}
+	}
 })
 
 ::mods_hookExactClass("entity/world/attached_location/wheat_fields_location", function(o)
