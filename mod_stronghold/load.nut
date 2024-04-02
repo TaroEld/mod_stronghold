@@ -1,4 +1,3 @@
-::include(::Stronghold.ID + "/stronghold_settings.nut");
 local folders = 
 [
 	"/const",

@@ -44,7 +44,6 @@ this.stronghold_attackers_event <- this.inherit("scripts/events/event", {
 
 	function onPrepare()
 	{
-		::MSU.Log.printStackTrace()
 		local news = this.World.Statistics.popNews("stronghold_attackers");
 		this.m.Destination = news.get("destination");
 		this.m.Origin = news.get("origin");

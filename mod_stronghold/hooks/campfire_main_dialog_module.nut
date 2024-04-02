@@ -5,7 +5,7 @@
 	o.queryData <- function()
 	{
 		local result = queryData()
-		local show = this.Stronghold.getPlayerFaction() == null || this.Stronghold.getPlayerFaction().getMainBases().len() < this.Stronghold.getMaxStrongholdNumber()
+		local show = this.Stronghold.getPlayerFaction() == null;
 		result.Assets.showStrongholdButton <- show;
 		return result;
 	}

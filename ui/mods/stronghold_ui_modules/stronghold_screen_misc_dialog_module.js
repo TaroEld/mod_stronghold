@@ -201,6 +201,21 @@ StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
 		this.setGiftElement(_element);
 	}, this));
 
+	this.mGiftsReputationGain.text(giftText.ReputationGain.replace("{reputation}", this.mModuleData.SendGifts.ReputationGain))
+}
+
+StrongholdScreenMiscModule.prototype.setGiftElement = function(_element)
+{
+	var giftText = this.getModuleText().SendGifts;
+	this.mGiftsFactionImage.attr("src", Path.GFX + _element.ImagePath);
+	this.mGiftsCurrentRelation.html(giftText.CurrentRelation.replace("{num}", _element.RelationNum).replace("{numText}", _element.Relation))
+	this.mGiftsTargetTown.html(giftText.TargetTown.replace("{town}", _element.SettlementName));
+	this.updateGiftRequirements();
+}
+
+StrongholdScreenMiscModule.prototype.updateGiftRequirements = function(_element)
+{
+	var giftText = this.getModuleText().SendGifts;
 	this.mGiftRequirementsTable.empty();
 
 	// Check if player has gifts to send in stash
@@ -218,9 +233,6 @@ StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
 				//.bindTooltip({ contentType: 'ui-item', itemId: _element.ID, itemOwner: 'craft' })
 		})
 	}
-
-	this.mGiftsReputationGain.text(giftText.ReputationGain.replace("{reputation}", this.mModuleData.SendGifts.ReputationGain))
-
 	this.addRequirementRow(this.mGiftRequirementsTable, requirement, this.mModuleData.SendGifts.Gifts.length > 0)
 
 	this.addRequirementRow(this.mGiftRequirementsTable,
@@ -229,17 +241,9 @@ StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
 
 	var price = this.mModuleData.SendGifts.Price;
 	this.addRequirementRow(this.mGiftRequirementsTable,
-		giftText.Requirements.Price.replace("{price}", price),
+		Stronghold.Text.format(Stronghold.Text.General.Price, price),
 		this.mData.Assets.Money > price)
 	this.mGiftsButton.attr("disabled", !this.areRequirementsFulfilled(this.mGiftRequirementsTable))
-}
-
-StrongholdScreenMiscModule.prototype.setGiftElement = function(_element)
-{
-	var giftText = this.getModuleText().SendGifts;
-	this.mGiftsFactionImage.attr("src", Path.GFX + _element.ImagePath);
-	this.mGiftsCurrentRelation.html(giftText.CurrentRelation.replace("{num}", _element.RelationNum).replace("{numText}", _element.Relation))
-	this.mGiftsTargetTown.html(giftText.TargetTown.replace("{town}", _element.SettlementName))
 }
 
 StrongholdScreenMiscModule.prototype.notifyBackendSendGift = function()

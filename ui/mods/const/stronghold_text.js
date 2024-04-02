@@ -78,7 +78,6 @@ Stronghold.Text = {
 			Invalid : "Nobody here can provide training beyond the services of a Training Hall.",
 			Requirements : {
 				FoundTrainer : "Find someone that can provide better training than a mere Training Hall.",
-				Price : "Have sufficient money ({price})",
 				ValidBrother : "Have at least one brother below level 11 that is not already under training."
 			},
 			ConfirmButton : "Train this brother",
@@ -88,16 +87,14 @@ Stronghold.Text = {
 			Title : "Buy a Water Skin",
 			Description : "Buy a Water Skin with mythical properties.",
 			Requirements : {
-				Price : "Have sufficient money ({price})",
 				Unlocked : "Recovered the recipe to create a mythical Water of Life."
 			},
 			ConfirmButton : "Buy the Water Skin",
 		},
 		HireMercenaries : {
 			Title : "Hire Mercenaries",
-			Description : "Hire a group of mercenaries to follow you in your travels. They will follow your party and join in any fights.",
+			Description : "Hire a group of mercenaries to follow you in your travels. They will follow your party and join in any fights for a duration of two weeks.",
 			Requirements : {
-				Price : "Have sufficient money ({price})",
 				Unlocked : "You have attracted mercenary companies to hire.",
 				NoMercenaries : "Currently have no mercenaries following you."
 			},
