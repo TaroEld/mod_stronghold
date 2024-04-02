@@ -124,6 +124,11 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return true;
 	}
 
+	function getPriceMult()
+	{
+		return 1.0 * this.m.Modifiers.PriceMult;
+	}
+
 	function getSizeName(_nextLevel = false)
 	{
 		local size = ::Math.max(this.getSize(), 1);
