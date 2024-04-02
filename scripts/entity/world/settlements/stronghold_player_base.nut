@@ -448,7 +448,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Buildings[6].updateSprite();
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
 
-		this.m.AttachedLocationsMax = this.Stronghold.BaseTiers[this.getSize()].MaxAttachments;
+		this.m.AttachedLocationsMax = this.Stronghold.BaseTiers[this.getSize()].MaxAttachedLocations;
 	}
 
 	function defineName()
