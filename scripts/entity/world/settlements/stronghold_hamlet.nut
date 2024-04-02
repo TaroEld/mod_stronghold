@@ -210,6 +210,8 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 
 	function onSerialize( _out )
 	{
+		local management = this.m.Buildings.pop();
+		this.m.Buildings.resize(6);
 		this.settlement.onSerialize(_out);
 		_out.writeU8(this.m.Size)
 		_out.writeString(this.m.UIBackgroundCenter)
@@ -219,7 +221,7 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		_out.writeString(this.m.UISprite)
 		_out.writeString(this.m.Sprite)
 		_out.writeString(this.m.Lighting)
-		
+		this.m.Buildings.append(management);
 	}
 	
 	function onDeserialize( _in )
@@ -233,6 +235,10 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.m.UISprite = _in.readString()
 		this.m.Sprite = _in.readString()
 		this.m.Lighting = _in.readString()
+
+		this.m.Buildings.resize(7)
+		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
+		this.m.Buildings[6].updateSprite();
 		this.updateTown()
 	}
 });
