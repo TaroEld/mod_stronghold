@@ -230,11 +230,13 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local playerBase = this.getTown()
 		local targetSettlement = this.World.getEntityByID(_target.SettlementID);
 
-		local patrolStrength = 400 +  100 * (playerBase.getSize()-1)
-		patrolStrength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+		local partyStrength = 400 +  100 * (playerBase.getSize()-1);
+		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
+		if (trainingCamp)
+			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
 
 		local party = playerFaction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 100);
-		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, patrolStrength);
+		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.setDescription("A caravan bringing gifts to " + targetSettlement.getName());
 		party.setFootprintType(this.Const.World.FootprintsType.Caravan);
 		party.getSprite("body").setBrush("cart_02")
@@ -397,12 +399,12 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 	{
 		local playerBase = this.getTown();
 		local playerFaction = this.Stronghold.getPlayerFaction();
-		local mercenary_size = 200
-		local trainingcamp = playerBase.getLocation("attached_location.militia_trainingcamp");
-		if (trainingcamp)
-			mercenary_size += this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease * trainingcamp.getLevel();
+		local partyStrength = 200
+		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
+		if (trainingCamp)
+			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
 
-		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
+		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.getSprite("body").setBrush("figure_mercenary_01");
 		party.setDescription("A band of mercenaries accompanying your party.");
 		party.getFlags().set("Stronghold_Mercenaries", true);

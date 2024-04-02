@@ -500,10 +500,12 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	{
 		local playerBase =  this.getHome()
 		local playerFaction = this.Stronghold.getPlayerFaction()
-		local mercenary_size = 200
-		mercenary_size += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease 
+		local partyStrength = 200
+		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
+		if (trainingCamp)
+			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
 
-		local party = playerFaction.spawnEntity(this.World.State.getPlayer().getTile(), "Freed mercenaries", true, this.Const.World.Spawn.Mercenaries, mercenary_size);
+		local party = playerFaction.spawnEntity(this.World.State.getPlayer().getTile(), "Freed mercenaries", true, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.getSprite("body").setBrush("figure_mercenary_01");
 		party.setDescription("A band of mercenaries following you around.");
 		party.setFootprintType(this.Const.World.FootprintsType.CityState);

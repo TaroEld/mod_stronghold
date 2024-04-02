@@ -120,6 +120,11 @@
 	{
 		this.m.Settlement.getFlags().set("TimeUntilNextMercs", -1);
 	}
+
+	o.getAlliedPartyStrengthIncrease <- function()
+	{
+		return this.m.Level * this.Stronghold.Locations["Militia_Trainingcamp"].AlliedPartyStrengthIncrease;
+	}
 })
 
 ::mods_hookExactClass("entity/world/attached_location/ore_smelter", function(o)

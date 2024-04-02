@@ -53,11 +53,13 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 	function onExecute( _faction )
 	{
 		local playerBase = this.m.Settlements.Base
-		local patrol_strength = 200 * (playerBase.getSize()-1)
-		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+		local partyStrength = 200 * (playerBase.getSize()-1);
+		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
+		if (trainingCamp)
+			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
 		
 
-		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
+		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.m.OnCombatWithPlayerCallback = null;
 		party.getSprite("body").setBrush(playerBase.m.troopSprites);
 		party.setDescription("A band of mercenaries patrolling the roads.");
