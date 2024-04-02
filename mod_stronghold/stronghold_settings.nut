@@ -1,59 +1,52 @@
 
-// General multiplier for crown values of prices
-::Stronghold.PriceMult <- 1000; 
 
-// Max amount of main bases, essentially infinite at the moment
-::Stronghold.MaxStrongholdNumber <- 999; 
+// General multiplier for crown values of prices
+
+
 
 // How much renown is required to build the next main base, maxes out at 15000 
-::Stronghold.RenownPerLevel <- [
-		500,
-		1500,
-		3000,
-		5000,
-		7000,
-		9000,
-		11000,
-		13000,
-		15000
-]
+// ::Stronghold.RenownPerLevel <- [
+// 	500,
+// 	1500,
+// 	3000,
+// 	5000,
+// 	7000,
+// 	9000,
+// 	11000,
+// 	13000,
+// 	15000
+// ]
 
-// Base difficulty of the base defence fight
-::Stronghold.InitialFightBaseStrength <- 70; 
-
-// Extra difficulty added per base you already have, includes the first one
-::Stronghold.InitialFightStrengthPerMainBase <- 50; 
-
-// Extra difficulty based on the target level
-::Stronghold.InitialFightStrengthPerTargetLevel <- 30; 
-
-// Extra difficulty for waves two and three of the higher upgrade levels
-::Stronghold.InitialFightStrengthPerWave <- 30; 
-
-::Stronghold.getBaseFightDifficulty <- function(_contract)
-{
-	local wave = _contract.m.TargetLevel / _contract.m.AttacksRemaining;
-	local numBases = this.Stronghold.getPlayerFaction().getMainBases().len();
-	local difficulty = this.Stronghold.InitialFightBaseStrength;
-	difficulty += this.Stronghold.InitialFightStrengthPerTargetLevel * _contract.m.TargetLevel;
-	difficulty += this.Stronghold.InitialFightStrengthPerWave * wave;
-	difficulty += this.Stronghold.InitialFightStrengthPerMainBase * numBases;
-	difficulty = ((difficulty / 2) * _contract.getScaledDifficultyMult()) + (difficulty / 2);
-	return difficulty
+::Stronghold.BaseFight <- {
+	// Base difficulty of the base defence fight
+	InitialFightBaseStrength = 70
+	// Extra difficulty added per base you already have, includes the first one
+	InitialFightStrengthPerMainBase = 50
+	// Extra difficulty based on the target level
+	InitialFightStrengthPerUpgradeTier = 30
+	// Extra difficulty for waves two and three of the higher upgrade levels
+	InitialFightStrengthPerWave = 30
 }
 
-// Cost of each road segment
-::Stronghold.RoadCost <- 0.5; 
+::Stronghold.Misc <- {
+	BaseAttacksEnabled = true,
+	PriceMult = 1000,
+	// Cost of each road segment
+	RoadCost = 0.5,
+	// Cost to make the raided debuff go away; multiplied with the price mult
+	RaidedCostPerDay = 0.5,
+	TrainerPrice = 5,
+	WaterPrice = 5,
+	MercenaryPrice = 5,
+}
 
-// Cost to make the raided debuff go away; multiplied with the price mult
-::Stronghold.RaidedCostPerDay <- 0.5;
 
 ::Stronghold.Hamlet <- {
 	Name = "Hamlet"
 }
 
-::Stronghold.Tiers <- {};
-::Stronghold.Tiers[1] <- {
+::Stronghold.BaseTiers <- {};
+::Stronghold.BaseTiers[1] <- {
 	Name = "Outpost",
 	Size = 1,
 	Price = 5,
@@ -63,48 +56,45 @@
 	EffectRadius = 7,
 	Rarity = 1.00, // Rarity dictates the amount of items that spawn in shops, including named items
 	BuyPrice = 1.05, // buy price of items, multiplier
-	SellPrice = 0.95 // sell price of items, multiplier
+	SellPrice = 0.95, // sell price of items, multiplier
+	BattleCount = 1
 };
-::Stronghold.Tiers[2] <- {
+::Stronghold.BaseTiers[2] <- {
 	Name = "Fort",
 	Size = 2,
 	Price = 5,
 	MaxAttachments = 6,
 	MaxBuildings = 3,
-	UnlockDescription = "You can construct up to three settlement buildings.\nYou can construct up to eight locations.\nBands of mercenaries will join your base and guard it against aggressors.",
 	EffectRadius = 9,
 	Rarity = 1.04,
 	BuyPrice = 1.00,
-	SellPrice = 1.00
+	SellPrice = 1.00,
+	BattleCount = 2
 };
-::Stronghold.Tiers[3] <- {
+::Stronghold.BaseTiers[3] <- {
 	Name = "Castle",
 	Size = 3,
 	Price = 5,
 	MaxAttachments = 8,
 	MaxBuildings = 4,
-	UnlockDescription = "You can construct up to four settlement buildings.\nYou can construct up to eight locations.\nYou can construct roads to other settlements, connecting your base to the world.",
 	EffectRadius = 11,
 	Rarity = 1.08,
 	BuyPrice = 0.95,
-	SellPrice = 1.05
+	SellPrice = 1.05,
+	BattleCount = 3
 };
-::Stronghold.Tiers[4] <- {
+::Stronghold.BaseTiers[4] <- {
 	Name = "Stronghold",
 	Size = 4,
 	Price = 5,
 	MaxAttachments = 10,
 	MaxBuildings = 5,
-	UnlockDescription = "You can construct up to five settlement buildings, and unlock the arena building.\nYou can construct up to ten locations.\nA number of unique contracts will be made available.\nYou can now construct the Hamlet, a town which is connected to your Stronghold.",
 	EffectRadius = 13,
 	Rarity = 1.12,
 	BuyPrice = 0.9,
-	SellPrice = 1.1
+	SellPrice = 1.1,
+	BattleCount = 4
 };
-
-::Stronghold.TrainerPrice <- 5;
-::Stronghold.WaterPrice <- 5;
-::Stronghold.MercenaryPrice <- 5;
 
 // Cost for each building, multiplied by PriceMult (1000 by default)
 ::Stronghold.Buildings <-
@@ -229,11 +219,56 @@
 
 foreach (locationID, location in ::Stronghold.Locations)
 {
-	location.Price *= ::Stronghold.PriceMult;
-	location.UpgradePrice *= ::Stronghold.PriceMult;
+	location.Price = (location.Price * ::Stronghold.Misc.PriceMult).tointeger();
+	location.UpgradePrice = (location.UpgradePrice * ::Stronghold.Misc.PriceMult).tointeger();
 }
 
 foreach (locationID, location in ::Stronghold.Buildings)
 {
-	location.Price *= ::Stronghold.PriceMult;
+	location.Price = (location.Price * ::Stronghold.Misc.PriceMult).tointeger();
 }
+
+
+local settingsPage = ::Stronghold.Mod.ModSettings.addPage("Settings");
+local skip = ["LocationDefs", "BuildingDefs", "Mod", "StrongholdScreen", "UnlockDescription", "ID", "Version", "Name", "Hamlet"];
+
+local keyInc = 0;
+local createSettings;
+createSettings = function(_container)
+{
+	foreach(key, value in _container)
+	{
+		if (skip.find(key) != null)
+			continue;
+		local keyID =  key + keyInc++;
+		switch (typeof value){
+			case "string":
+				local setting = settingsPage.addStringSetting(keyID, value, key);
+				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue());
+				break;
+			case "bool":
+				local setting = settingsPage.addBooleanSetting(keyID, value, key);
+				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue());
+				break;
+			case "integer":
+				local setting = settingsPage.addStringSetting(keyID, value, key);
+				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue().tointeger());
+				break;
+			case "float":
+				local setting = settingsPage.addRangeSetting(keyID, value, 0, 3.0, 0.01, key);
+				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue());
+				break;
+			case "array":
+				local setting = settingsPage.addArraySetting(keyID, value, key);
+				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue());
+				break;
+			case "table":
+				settingsPage.addDivider( "divider2_" + keyID);
+				settingsPage.addTitle( "section_" + keyID, key);
+				createSettings(value);
+			default:
+				break;
+		}
+	}
+}
+createSettings(::Stronghold);

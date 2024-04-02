@@ -73,7 +73,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function getEffectRadius()
 	{
-		return ::Stronghold.Tiers[this.getSize()].EffectRadius;
+		return this.getSize() == 0 ? 0 : ::Stronghold.BaseTiers[this.getSize()].EffectRadius;
 	}
 
 	function getWarehouse()
@@ -128,8 +128,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		local size = ::Math.max(this.getSize(), 1);
 		if (this.isUpgrading()) size = ::Math.max(1, size-1);
-		if (_nextLevel) return this.Stronghold.Tiers[size + 1].Name;
-		return this.Stronghold.Tiers[size].Name;
+		if (_nextLevel) return this.Stronghold.BaseTiers[size + 1].Name;
+		return this.Stronghold.BaseTiers[size].Name;
 	}
 
 	function showStrongholdUIDialog()
@@ -431,7 +431,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.Buildings[6].updateSprite();
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
 
-		this.m.AttachedLocationsMax = this.Stronghold.Tiers[this.getSize()].MaxAttachments;
+		this.m.AttachedLocationsMax = this.Stronghold.BaseTiers[this.getSize()].MaxAttachments;
 	}
 
 	function defineName()

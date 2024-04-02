@@ -28,7 +28,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	{
 		//looks for closest settlement. Nobles and southern nobles have multiple options, so loop through and select the closest one
 		this.m.IsStarted = true;
-		this.m.AttacksRemaining = this.m.TargetLevel
+		this.m.AttacksRemaining = ::Stronghold.BaseTiers[this.m.TargetLevel].BattleCount;
 		this.m.TimeOfNextAttack = this.Time.getVirtualTimeF() +  ::Math.rand(12, 24) * this.World.getTime().SecondsPerHour
 		this.m.Name = format("Defend your %s", this.getHome().getSizeName());
 		this.World.Contracts.setActiveContract(this);
@@ -133,7 +133,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				
-				this.Text = format("Your %s is now under construction. This will take %i %s. Enemies will attack it within the next day.", ::Stronghold.Tiers[this.Contract.m.TargetLevel].Name, this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
+				this.Text = format("Your %s is now under construction. This will take %i %s. Enemies will attack it within the next day.", ::Stronghold.BaseTiers[this.Contract.m.TargetLevel].Name, this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
 				this.Contract.m.BulletpointsObjectives = [
 					format("Defend against %i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
 				];
@@ -230,7 +230,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			ShowDifficulty = false,
 			function start()
 			{
-				this.Text = format("You have defeated the enemies. Your %s is now secure.", this.Stronghold.Tiers[this.Contract.m.TargetLevel].Name)
+				this.Text = format("You have defeated the enemies. Your %s is now secure.", this.Stronghold.BaseTiers[this.Contract.m.TargetLevel].Name)
 			}
 		});
 		
@@ -291,11 +291,23 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		});
 	}
 
+	function getBaseFightDifficulty()
+	{
+		local wave = this.m.TargetLevel / this.m.AttacksRemaining;
+		local numBases = this.Stronghold.getPlayerFaction().getMainBases().len();
+		local difficulty = ::Stronghold.BaseFight.InitialFightBaseStrength;
+		difficulty += ::Stronghold.BaseFight.InitialFightStrengthPerUpgradeTier * this.m.TargetLevel;
+		difficulty += ::Stronghold.BaseFight.InitialFightStrengthPerWave * wave;
+		difficulty += ::Stronghold.BaseFight.InitialFightStrengthPerMainBase * numBases;
+		difficulty = ((difficulty / 2) * this.getScaledDifficultyMult()) + (difficulty / 2);
+		return difficulty
+	}
+
 	function spawnNewAttackers()
 	{
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local playerBase = this.m.Home;
-		local partyDifficulty = this.Stronghold.getBaseFightDifficulty(this);
+		local partyDifficulty = this.getBaseFightDifficulty();
 		local wave = this.m.TargetLevel / this.m.AttacksRemaining;
 		
 		this.m.Destination = this.WeakTableRef(playerBase);
@@ -304,15 +316,18 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Goblins).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Orcs).getSettlements())
 		if(this.Const.DLC.Wildmen) allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Barbarians).getSettlements())
-		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.OrientalBandits).getSettlements())
+		if(this.Const.DLC.Desert) allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.OrientalBandits).getSettlements())
 		allSettlements.extend(this.World.FactionManager.getFactionOfType(this.Const.FactionType.Zombies).getSettlements())
 		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse)){
 			if(noble.getPlayerRelation() < 70 ) allSettlements.extend(noble.getSettlements())
 			
 		}
-		foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.OrientalCityState)){
-			if(noble.getPlayerRelation() < 70 ) allSettlements.extend(noble.getSettlements())
-			
+		if (this.Const.DLC.Desert)
+		{
+			foreach (noble in  this.World.FactionManager.getFactionsOfType(this.Const.FactionType.OrientalCityState)){
+				if(noble.getPlayerRelation() < 70 ) allSettlements.extend(noble.getSettlements())
+
+			}
 		}
 		
 		local closest = 9999

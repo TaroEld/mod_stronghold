@@ -13,6 +13,8 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 
 	function onUpdate( _faction )
 	{
+		if (!::Stronghold.Misc.BaseAttacksEnabled)
+			return;
 		local playerBases = _faction.getMainBases();
 		if (playerBases.len() == 0)
 			return;

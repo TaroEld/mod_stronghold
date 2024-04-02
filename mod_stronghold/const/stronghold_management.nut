@@ -39,8 +39,8 @@
 				})
 				return "Upgrade_Contract_Active";
 			}
-			local advantages = this.Stronghold.Tiers[this.getHome().getSize()].UnlockDescription;
-			this.setCost(this.Stronghold.PriceMult * this.Stronghold.Tiers[this.getHome().getSize() + 1].Price)
+			local advantages = this.Stronghold.BaseTiers[this.getHome().getSize()].UnlockDescription;
+			this.setCost(this.Stronghold.Misc.PriceMult * this.Stronghold.BaseTiers[this.getHome().getSize() + 1].Price)
 			local text =  "You can upgrade your " + this.getHome().getSizeName() + " to a " + this.getHome().getSizeName(true) + ". This would add these options: \n" + advantages +"\nThis costs " + this.getCost() + " crowns.\nWhile upgrading, you won't be able to access most of the management options. \n\nCAREFUL: The closest nobles or enemies will attempt to destroy your base. Defend it!"
 			this.addOverviewScreen(
 				format("Upgrade your %s", this.getHome().getSizeName()),
@@ -210,7 +210,7 @@
 			}
 			else
 			{
-				this.setCost(20 * this.Stronghold.PriceMult)
+				this.setCost(20 * this.Stronghold.Misc.PriceMult)
 				this.addOverviewScreen(
 					"Buy Water Skin",
 					format("You choose to buy a Water Skin. This will cost %i crowns.", this.getCost())
@@ -302,7 +302,7 @@
 			}
 			else
 			{
-				this.setCost(20 * this.Stronghold.PriceMult)
+				this.setCost(20 * this.Stronghold.Misc.PriceMult)
 				this.addOverviewScreen(
 					"Hire mercenaries",
 					format("You can hire a group of local mercenaries to follow you on your travels. They demand %i crowns for one week of their time.", this.getCost())
@@ -325,7 +325,7 @@
 			return _contract.isMainBase() && _contract.getHome().isMaxLevel()
 		},
 		onChosen = function(){
-			this.setCost(10 * this.Stronghold.PriceMult);
+			this.setCost(10 * this.Stronghold.Misc.PriceMult);
 			if (!this.Stronghold.getPlayerFaction().m.Flags.get("Teacher"))
 			{
 				this.m.Screens.push
@@ -464,7 +464,7 @@
 			return (_contract.isMainBase() && _contract.getHome().isMaxLevel() && !_contract.getHome().getFlags().get("Child"))
 		},
 		onChosen = function(){
-			this.setCost(20 * this.Stronghold.PriceMult);
+			this.setCost(20 * this.Stronghold.Misc.PriceMult);
 			this.addOverviewScreen(
 				"Build a Hamlet",
 				format("Your Stronghold has grown large enough that many common people flock to it. It would be wise to construct a hamlet for these people to live at. This would cost %i crowns.", this.getCost())

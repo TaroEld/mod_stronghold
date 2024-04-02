@@ -15,8 +15,8 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 			return  "[color=" + this.Const.UI.Color.NegativeEventValue + "]" + _text + "[/color]"
 		}
 		
-		local priceMult = this.Stronghold.PriceMult;
-		local tier = this.Stronghold.Tiers[1];
+		local priceMult = this.Stronghold.Misc.PriceMult;
+		local tier = this.Stronghold.BaseTiers[1];
 		local buildPrice = tier.Price * priceMult;
 		local name = tier.Name;
 

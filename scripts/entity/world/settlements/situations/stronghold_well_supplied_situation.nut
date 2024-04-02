@@ -58,7 +58,7 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 		local playerBase = this.World.State.getCurrentTown();
 		if (playerBase == null) return
 		this.defineDescription(playerBase);
-		local mults = this.Stronghold.Tiers[playerBase.getSize()]
+		local mults = this.Stronghold.BaseTiers[playerBase.getSize()]
 		_modifiers.RarityMult = mults.Rarity;
 		_modifiers.BuyPriceMult = mults.BuyPrice;
 		_modifiers.SellPriceMult = mults.SellPrice;

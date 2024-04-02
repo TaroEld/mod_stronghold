@@ -12,6 +12,8 @@
 	::Const.Faction.COUNT++
 
 	::Stronghold.Mod <- ::MSU.Class.Mod(::Stronghold.ID, ::Stronghold.Version, ::Stronghold.Name);
+	::include(::Stronghold.ID + "/stronghold_settings.nut");
+
 	::mods_registerJS("dropdown.js");
 	::mods_registerCSS("dropdown.css");
 	::mods_registerJS("mod_stronghold.js");

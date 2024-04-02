@@ -6,8 +6,8 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 		// If level cap is reached, there is no need for the other info
 		_ret.MaxSize <- this.getTown().getSize() == 4;
 		if (_ret.MaxSize) return _ret;
-		local tier = ::Stronghold.Tiers[this.getTown().getSize() + 1];
-		local price = ::Stronghold.PriceMult * tier.Price;
+		local tier = ::Stronghold.BaseTiers[this.getTown().getSize() + 1];
+		local price = ::Stronghold.Misc.PriceMult * tier.Price;
 		local warehouse = this.getTown().getWarehouse();
 		_ret.Requirements <- {
 			Price = this.World.Assets.getMoney() >= price,
@@ -15,7 +15,7 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 			NotUpgrading = !this.getTown().isUpgrading(),
 			NoContract = this.World.Contracts.getActiveContract() == null,
 		}
-		_ret.Price <- ::Stronghold.PriceMult * tier.Price;
+		_ret.Price <- ::Stronghold.Misc.PriceMult * tier.Price;
 		return _ret
 	}
 
@@ -23,8 +23,8 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 	{
 		this.World.State.m.MenuStack.popAll(true);
 
-		local tier = ::Stronghold.Tiers[this.getTown().getSize() + 1];
-		local price = ::Stronghold.PriceMult * tier.Price;
+		local tier = ::Stronghold.BaseTiers[this.getTown().getSize() + 1];
+		local price = ::Stronghold.Misc.PriceMult * tier.Price;
 		::World.Assets.addMoney(-price);
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");

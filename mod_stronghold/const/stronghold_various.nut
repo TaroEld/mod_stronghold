@@ -1,7 +1,3 @@
-// max length of menu options, limitation of the text window size. got it at 11 so leave 2 spaces for 'back' etc
-::Stronghold.MAX_MENU_OPTIONS <- 9; 
-
-::Stronghold.MAX_BASE_SIZE <- 3;
 
 ::Stronghold.PlayerFactionActions <- 
 [
@@ -65,6 +61,7 @@
 	"wildman_background" ,
 	"witchhunter_background"
 ]
+
 
 //----------------------------------------------- quick access functions ---------------------------------------------------
 ::Stronghold.getPlayerBase <- function()
@@ -171,7 +168,7 @@
 
 ::Stronghold.buildMainBase <- function()
 {
-	local buildPrice = ::Stronghold.Tiers[1].Price * ::Stronghold.PriceMult
+	local buildPrice = ::Stronghold.BaseTiers[1].Price * ::Stronghold.Misc.PriceMult
 	//called from retinue menu
 	this.World.Assets.addMoney(-buildPrice);
 	local tile = this.World.State.getPlayer().getTile(); 

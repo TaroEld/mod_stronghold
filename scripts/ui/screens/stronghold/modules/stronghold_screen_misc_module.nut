@@ -56,9 +56,9 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 					FactionName = settlement.getOwner().getName(),
 					ID = settlement.getID(),
 					Segments = cost,
-					Cost = cost * ::Stronghold.PriceMult,
+					Cost = cost * ::Stronghold.Misc.PriceMult,
 					Roadmult = roadmult * 100,
-					IsValid = cost * ::Stronghold.PriceMult < this.World.Assets.getMoney(),
+					IsValid = cost * ::Stronghold.Misc.PriceMult < this.World.Assets.getMoney(),
 					UISprite = settlement.m.UISprite
 				}
 				settlementOptions.push(option);
@@ -306,10 +306,10 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local ret = {
 			Requirements = {
 				FoundTrainer = this.Stronghold.getPlayerFaction().m.Flags.get("Teacher"),
-				Price = ::Stronghold.TrainerPrice * ::Stronghold.PriceMult,
+				Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult,
 				ValidBrother = null //later
 			}
-			Price = ::Stronghold.TrainerPrice * ::Stronghold.PriceMult,
+			Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult,
 			ValidBrothers = []
 		};
 		local roster = [];
@@ -342,7 +342,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		effect.m.XPGainMult = 1.5;
 		effect.m.Icon = "skills/status_effect_75.png";
 		bro.getSkills().add(effect);
-		this.World.Assets.addMoney(-(::Stronghold.TrainerPrice * ::Stronghold.PriceMult));
+		this.World.Assets.addMoney(-(::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult));
 		this.updateData(["Assets", "MiscModule"]);
 		return true;
 	}
@@ -355,9 +355,9 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			Requirements =
 			{
 				Unlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Waterskin"),
-				Price = ::Stronghold.WaterPrice * ::Stronghold.PriceMult,
+				Price = ::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult,
 			},
-			Price = ::Stronghold.WaterPrice * ::Stronghold.PriceMult
+			Price = ::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult
 		};
 		return ret;
 	}
@@ -380,9 +380,9 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			{
 				Unlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Mercenaries"),
 				NoMercenaries = true,
-				Price = ::Stronghold.MercenaryPrice * ::Stronghold.PriceMult,
+				Price = ::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult,
 			},
-			Price = ::Stronghold.MercenaryPrice * ::Stronghold.PriceMult
+			Price = ::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult
 		};
 		foreach ( unit in this.Stronghold.getPlayerFaction().m.Units){
 			if (unit.getFlags().get("Stronghold_Mercenaries")){
