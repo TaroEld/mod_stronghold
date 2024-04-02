@@ -193,6 +193,18 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return true;
 	}
 
+	function onNewDay()
+	{
+		foreach (location in this.getActiveAttachedLocations())
+			location.stronghold_onNewDay()
+	}
+
+	function onNewHour()
+	{
+		foreach (location in this.getActiveAttachedLocations())
+			location.stronghold_onNewHour()
+	}
+
 	function consumeItems()
 	{
 		this.getWarehouse().consumeConsumableItems();
@@ -206,7 +218,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			return;
 		this.getFlags().set("LastLocationUpdate", this.Time.getVirtualTimeF());
 		foreach (location in this.getActiveAttachedLocations())
-			location.stronghold_updateLocationEffects(daysPassed);
+			location.stronghold_onEnterBase(daysPassed);
 	}
 
 

@@ -398,7 +398,9 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local playerBase = this.getTown();
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local mercenary_size = 200
-		mercenary_size += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+		local trainingcamp = playerBase.getLocation("attached_location.militia_trainingcamp");
+		if (trainingcamp)
+			mercenary_size += this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease * trainingcamp.getLevel();
 
 		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, mercenary_size);
 		party.getSprite("body").setBrush("figure_mercenary_01");

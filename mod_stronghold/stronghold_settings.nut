@@ -194,7 +194,10 @@
 		MaxTroops = 6, // Max bros in the base
 		// starts out at 60%, then 40%, 20%, 0%
 		WageCost = 0.8,
-		WageCostPerLevel = 0.2
+		WageCostPerLevel = 0.2,
+		MoodStateStart = ::Const.MoodState.Disgruntled,
+		MoodStatePerLevel = 1,
+		MoodChange = 0.5,
 	}
 	Warehouse = {
 		Price = 2.5,

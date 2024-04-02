@@ -26,11 +26,6 @@
 		this.m.Level = ::Stronghold.Mod.Serialization.flagDeserialize(this.getID().tostring(), {Level = 1}, null, this.getFlags()).Level;
 	}
 
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
-	{
-
-	}
-
 	o.upgrade <- function()
 	{
 		this.m.Level++;
@@ -40,19 +35,33 @@
 	o.onUpgrade <- function()
 	{
 	}
-})
 
-::mods_hookExactClass("entity/world/attached_location/blast_furnace_location", function(o)
-{
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
+	o.onUpgrade <- function()
+	{
+	}
+
+	o.stronghold_onEnterBase <- function(_daysPassed)
+	{
+
+	}
+
+	o.stronghold_onNewDay <- function()
+	{
+	}
+
+	o.stronghold_onNewHour <- function()
 	{
 
 	}
 })
 
+::mods_hookExactClass("entity/world/attached_location/blast_furnace_location", function(o)
+{
+})
+
 ::mods_hookExactClass("entity/world/attached_location/herbalists_grove_location", function(o)
 {
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
+	o.stronghold_onEnterBase <- function(_daysPassed)
 	{
 		local item = {
 			ID = "supplies.medicine",
@@ -69,7 +78,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/gold_mine_location", function(o)
 {
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
+	o.stronghold_onEnterBase <- function(_daysPassed)
 	{
 		local item = {
 			ID = "supplies.money",
@@ -82,7 +91,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/militia_trainingcamp_location", function(o)
 {
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
+	o.stronghold_onEnterBase <- function(_daysPassed)
 	{
 		local def = ::Stronghold.Locations["Militia_Trainingcamp"];
 		local totalXP = def.DailyIncome * this.m.Level * _daysPassed;
@@ -115,22 +124,34 @@
 
 ::mods_hookExactClass("entity/world/attached_location/ore_smelter", function(o)
 {
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
-	{
-
-	}
 })
 
 ::mods_hookExactClass("entity/world/attached_location/stone_watchtower_location", function(o)
 {
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
-	{
-
-	}
-
 	o.getMovementSpeedMult <- function()
 	{
 		return  (1 + (::Stronghold.Locations.Stone_Watchtower.MovementSpeedIncrease * this.getLevel()));
+	}
+
+	o.stronghold_onNewHour <- function()
+	{
+		local isRangers = this.World.Assets.getOrigin().getID() == "scenario.rangers";
+		local hasLookout = this.World.Retinue.hasFollower("follower.lookout");
+		local player = this.World.State.getPlayer();
+
+		if (::World.State.getPlayer().getTile().getDistanceTo(this.getTile()) > this.m.Settlement.getEffectRadius())
+		{
+			if (!("Stronghold_Stone_Watchtower" in player.m.MovementSpeedMultFunctions))
+				player.m.MovementSpeedMultFunctions.Stronghold_Stone_Watchtower <- this.getMovementSpeedMult.bindenv(this);
+			local vision = this.Stronghold.Locations["Stone_Watchtower"].VisionIncrease * this.getLevel();
+			player.m.VisionRadius = hasLookout ? 625 + vision : 500 + vision;
+		}
+		else
+		{
+			if ("Stronghold_Stone_Watchtower" in player.m.MovementSpeedMultFunctions)
+				delete player.m.MovementSpeedMultFunctions.Stronghold_Stone_Watchtower;
+			player.m.VisionRadius = hasLookout ? 625 : 500;
+		}
 	}
 
 	o.updateFogOfWar <- function()
@@ -155,9 +176,15 @@
 
 ::mods_hookExactClass("entity/world/attached_location/wheat_fields_location", function(o)
 {
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
-	{
 
+	o.stronghold_onNewHour <- function()
+	{
+		if (::World.State.getPlayer().getTile().getDistanceTo(this.getTile()) > this.m.Settlement.getEffectRadius())
+			return;
+		foreach(bro in ::World.getPlayerRoster().getAll())
+		{
+			this.setSkillOnPlayer(bro);
+		}
 	}
 
 	o.onBuild <- function()
@@ -190,7 +217,7 @@
 
 ::mods_hookExactClass("entity/world/attached_location/workshop_location", function(o)
 {
-	o.stronghold_updateLocationEffects <- function(_daysPassed)
+	o.stronghold_onEnterBase <- function(_daysPassed)
 	{
 		local item = {
 			ID = "supplies.armor_parts",

@@ -10,7 +10,7 @@ this.collector_location <- this.inherit("scripts/entity/world/attached_location"
 		this.m.SpriteDestroyed = "stronghold_world_collector_location";
 	}
 
-	function stronghold_updateLocationEffects(_daysPassed)
+	function stronghold_onEnterBase(_daysPassed)
 	{
 		local baseArray = [];
 		local basePath = "scripts/items/misc/";
