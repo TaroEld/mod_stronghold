@@ -513,7 +513,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
 		local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
-		follow.setDuration(7);
+		follow.setDuration(999);
 		c.addOrder(follow);
 	}
 

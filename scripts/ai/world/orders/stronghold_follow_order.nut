@@ -38,7 +38,7 @@ this.stronghold_follow_order <- this.inherit("scripts/ai/world/world_behavior", 
 
 	function onExecute( _entity, _hasChanged )
 	{
-		//despawns after a week
+		//despawns after two weeks
 		if (this.Time.getVirtualTimeF() > this.m.Start + this.m.Duration)
 		{
 			local despawn = this.new("scripts/ai/world/orders/despawn_order");
