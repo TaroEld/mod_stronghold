@@ -245,7 +245,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					Text = "This was unwise.",
 					function getResult()
 					{
-						if (this.Contract.m.Target != null || !this.Contract.m.Target.isNull())
+						if (this.Contract.m.Target != null && !this.Contract.m.Target.isNull())
 						{
 							this.Contract.m.Target.die()
 						}
@@ -273,7 +273,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					Text = "We'll get them next time.",
 					function getResult()
 					{
-						if (this.Contract.m.Target != null || !this.Contract.m.Target.isNull())
+						if (this.Contract.m.Target != null && !this.Contract.m.Target.isNull())
 						{
 							this.Contract.m.Target.die()
 						}
