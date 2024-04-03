@@ -221,6 +221,16 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		_out.writeString(this.m.UISprite)
 		_out.writeString(this.m.Sprite)
 		_out.writeString(this.m.Lighting)
+
+		_out.writeU8(this.m.HousesTiles.len());
+		for( local i = 0; i != this.m.HousesTiles.len(); i = ++i )
+		{
+			_out.writeI16(this.m.HousesTiles[i].X);
+			_out.writeI16(this.m.HousesTiles[i].Y);
+			_out.writeU8(this.m.HousesTiles[i].V);
+			_out.writeString(this.m.HousesTiles[i].Sprite);
+			_out.writeString(this.m.HousesTiles[i].Light);
+		}
 		this.m.Buildings.append(management);
 	}
 	
@@ -239,6 +249,19 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.m.Buildings.resize(7)
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 		this.m.Buildings[6].updateSprite();
+
+		this.m.HousesTiles.clear();
+		local numHouses = _in.readU8();
+		for( local i = 0; i != numHouses; i = ++i )
+		{
+			this.m.HousesTiles.push({
+				X = _in.readI16(),
+				Y = _in.readI16(),
+				V = _in.readU8(),
+				Sprite = _in.readString(),
+				Light = _in.readString(),
+			});
+		}
 		this.updateTown()
 	}
 });

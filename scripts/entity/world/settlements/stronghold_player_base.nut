@@ -310,10 +310,10 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				foreach( h in this.m.HousesTiles )
 				{
 					// Only enable light on houses if the specified sprite has a lights version
-					if (h.len() > 1)
+					if (h.Light != "")
 					{
 						local tile = this.World.getTileSquare(h.X, h.Y);
-						local d = tile.spawnDetail(h[1], this.Const.World.ZLevel.Object - 4, this.Const.World.DetailType.Lighting, false, insideScreen);
+						local d = tile.spawnDetail(h.Light, this.Const.World.ZLevel.Object - 4, this.Const.World.DetailType.Lighting, false, insideScreen);
 						d.IgnoreAmbientColor = true;
 						d.Scale = 0.85;
 					}
@@ -473,7 +473,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			tile.clear(this.Const.World.DetailType.Houses | this.Const.World.DetailType.Lighting);
 			tile.IsOccupied = false;
 		}
-		this.m.HousesTiles = [];
+		this.m.HousesTiles.clear();
 
 		this.updateLook();
 		this.buildHouses(numHouses);
@@ -1146,6 +1146,16 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		_out.writeU8(this.m.Size);
 		_out.writeBool(this.m.IsUpgrading);
 		_out.writeString(this.m.Spriteset);
+
+		_out.writeU8(this.m.HousesTiles.len());
+		for( local i = 0; i != this.m.HousesTiles.len(); i = ++i )
+		{
+			_out.writeI16(this.m.HousesTiles[i].X);
+			_out.writeI16(this.m.HousesTiles[i].Y);
+			_out.writeU8(this.m.HousesTiles[i].V);
+			_out.writeString(this.m.HousesTiles[i].Sprite);
+			_out.writeString(this.m.HousesTiles[i].Light);
+		}
 		this.m.Buildings.append(management)
 	}
 	
@@ -1158,11 +1168,23 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.m.IsUpgrading = _in.readBool();
 		this.m.Spriteset = _in.readString();
 
+		this.m.HousesTiles.clear();
+		local numHouses = _in.readU8();
+		for( local i = 0; i != numHouses; i = ++i )
+		{
+			this.m.HousesTiles.push({
+				X = _in.readI16(),
+				Y = _in.readI16(),
+				V = _in.readU8(),
+				Sprite = _in.readString(),
+				Light = _in.readString(),
+			});
+		}
+
 		this.m.Buildings.resize(7)
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 		this.m.Buildings[6].updateSprite();
 		this.m.BaseSettings = ::Stronghold.Mod.Serialization.flagDeserialize("BaseSettings",  this.m.BaseSettings, null, this.getFlags());
-		this.updateTown();
 	}
 });
 
