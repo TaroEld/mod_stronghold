@@ -170,7 +170,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 		_ret.mBuildingAsset <- town.getActiveBuildings().len();
 		_ret.IsRaidedUntil <- isRaidedUntil;
 		_ret.mBuildingAssetMax <- maxBuildingSlots;
-		_ret.mLocationAsset <- town.m.AttachedLocations.len() - town.countAttachedLocations("attached_location.harbor");
+		_ret.mLocationAsset <- town.m.AttachedLocations.len() - town.getLocation("attached_location.harbor") != null ? 1 : 0;
 		_ret.mLocationAssetMax <- town.m.AttachedLocationsMax;
 		_ret.Locations <- {};
 		foreach(locationID, location in ::Stronghold.LocationDefs)
