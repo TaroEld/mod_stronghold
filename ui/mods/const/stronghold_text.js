@@ -247,9 +247,6 @@ Stronghold.Text = {
 				var text = Stronghold.Text.format(this.UpgradeDescription.StatBuff, _element.StatGain * _level, _element.EffectTime);
 				return  text},
 		},
-		Herbalists_Grove : {
-			getUpgradeDescription : function(_element, _level){return "placeholder"},
-		},
 		Gold_Mine : {
 			UpgradeDescription : {
 				DailyIncome : "<li>The gold mine generates {0} crowns a day, which are added to your coffers when you visit the base.</li>",

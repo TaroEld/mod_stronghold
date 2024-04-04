@@ -59,23 +59,6 @@
 {
 })
 
-::mods_hookExactClass("entity/world/attached_location/herbalists_grove_location", function(o)
-{
-	o.stronghold_onEnterBase <- function(_daysPassed)
-	{
-		local item = {
-			ID = "supplies.medicine",
-			Script = "scripts/items/supplies/medicine_item",
-			Max = this.Stronghold.Locations["Herbalists_Grove"].MaxItemSlots * this.m.Level,
-			MaxPerStack = 20,
-			ToAdd = this.Stronghold.Locations["Herbalists_Grove"].DailyIncome * _daysPassed * this.m.Level
-		}
-		if (item.ToAdd == 0)
-			return;
-		this.m.Settlement.getWarehouse().addConsumableItem(item);
-	}
-})
-
 ::mods_hookExactClass("entity/world/attached_location/gold_mine_location", function(o)
 {
 	o.stronghold_onEnterBase <- function(_daysPassed)

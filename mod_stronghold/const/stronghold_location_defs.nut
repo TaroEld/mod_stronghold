@@ -18,12 +18,6 @@
 		Path = "gold_mine_location",
 		Description = "A deep mine build atop a gold ore vein. This rare metal has a tendency to bring out the worst in people."
 	}
-	Herbalists_Grove = {
-		Name = "Herbalists Grove",
-		ID = "attached_location.herbalists_grove",
-		Path = "herbalists_grove_location",
-		Description = ""
-	},
 	Ore_Smelter = {
 		Name = "Ore Smelter",
 		ID = "attached_location.ore_smelters",

@@ -158,14 +158,6 @@
 		UpgradePrice = 2.5
 		DailyIncome = 100,
 	},
-
-	Herbalists_Grove = {
-		Price = 2,
-		UpgradePrice = 2,
-		DailyIncome = 20, // Amount of extra medicine generated every day
-		MaxItemSlots = 40, // Amount added to the maximum amount of stored items of this type
-	},
-
 	Ore_Smelter = {
 		Price = 5,
 		UpgradePrice = 2.5
