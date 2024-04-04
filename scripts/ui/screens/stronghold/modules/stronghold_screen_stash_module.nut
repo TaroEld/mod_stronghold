@@ -197,8 +197,9 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 	function onReforgeIsValid(_idx)
 	{
 		//check if in player base and store
-		local town = this.getTowm();
-		if (!town.hasAttachedLocation("attached_location.ore_smelters"))
+		local town = this.getTown();
+		local location = town.getLocation("attached_location.ore_smelters");
+		if (!location)
 		{
 			return { IsValid = false }
 		}
@@ -208,7 +209,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		{
 			return { IsValid = false }
 		}
-		local price = sourceItem.item.m.Value * this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier;
+		local price = sourceItem.item.m.Value * (1 - (this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier * location.getLevel()));
 
 		return {
 			IsValid = true,
@@ -224,7 +225,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		local sourceItem = this.getStash().removeByIndex(_idx);
 		local name = sourceItem.getName();
 		local type = sourceItem.ClassNameHash;
-		local price = sourceItem.m.Value * this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier;
+		local price = sourceItem.item.m.Value * (1 - (this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier * location.getLevel()));
 
 		//can't savescum quite as easily
 		if (!this.World.Flags.get("ReforgeNamedItemSeed"))

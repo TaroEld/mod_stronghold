@@ -136,7 +136,7 @@ Stronghold.Text = {
 		Title : "Change Visuals",
 		Spriteset : "{0} by {1}{2}", // name by author (current visuals)
 		Current : " (current visuals)",
-		Button : "Apply Sprites"
+		Button : "Apply Sprites",
 	},
 	UpgradeModule : {
 		Title : "Upgrade your base",
