@@ -40,7 +40,7 @@
 		Name = "Troop Quarters",
 		ID = "attached_location.troop_quarters",
 		Path = "troop_quarters_location",
-		Description = ""
+		Description = "A collection of housing units, with space for unwashed mercenaries and their partners for the night."
 	}
 	Warehouse = {
 		Name = "Warehouse",

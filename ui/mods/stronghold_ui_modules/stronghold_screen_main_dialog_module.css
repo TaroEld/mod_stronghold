@@ -8,9 +8,19 @@
 {
 	width: 100%;
 }
+.main-module .base-situation img
+{
+	width : 5rem;
+	height : 5rem;
+	margin-left : 2rem;
+}
 
+.main-module .base-situation .base-situation-text
+{
 
-
+	width : 90%;
+	padding-left : 5rem;
+}
 
 
 .overflow-items-popup

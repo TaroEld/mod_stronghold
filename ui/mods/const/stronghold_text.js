@@ -17,6 +17,7 @@ Stronghold.Text = {
 		Tier3 : "Castle",
 		Tier4 : "Stronghold",
 		Hamlet : "Hamlet",
+		Houses : "Houses",
 		Mercenaries : "Mercenaries",
 		Price : "Price: {0} crowns.",
 	},

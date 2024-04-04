@@ -14,7 +14,7 @@ var StrongholdScreenVisualsModule = function(_parent)
     	Tier3 : null,
     	Tier4 : null,
     	Mercenaries : null,
-    	Hamlet : null
+    	Houses : null
     };
 };
 
@@ -102,7 +102,7 @@ StrongholdScreenVisualsModule.prototype.setSpriteImage = function()
     this.mSpriteImages.Tier3.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Base[2] + ".png");
     this.mSpriteImages.Tier4.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Base[3] + ".png");
 	this.mSpriteImages.Mercenaries.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.WorldmapFigure[0] + ".png");
-	this.mSpriteImages.Hamlet.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Houses[0] + ".png");
+	this.mSpriteImages.Houses.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Houses[0] + ".png");
 	var name = Stronghold.Text.format(text.Spriteset, currentArr.Name, currentArr.Author, this.mCurrentBaseSprite == this.mBaseSprite ? text.Current : "")
 	this.mSpritesetLabel.html(name)
 }
