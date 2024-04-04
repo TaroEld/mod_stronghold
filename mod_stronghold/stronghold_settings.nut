@@ -150,7 +150,7 @@
 	Collector = {
 		Price = 2.5,
 		UpgradePrice = 2.5,
-		Chance = 10, // percentage chance to get an item for each day
+		Chance = 25, // percentage chance to get an item for each day
 	},
 
 	Gold_Mine = {
