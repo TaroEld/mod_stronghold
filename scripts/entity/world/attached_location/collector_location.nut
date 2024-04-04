@@ -27,6 +27,7 @@ this.collector_location <- this.inherit("scripts/entity/world/attached_location"
 			local item = ::new(basePath + ::MSU.Array.rand(baseArray).Path);
 			this.getSettlement().addItemToWarehouse(item);
 		}
+		this.m.Settlement.m.LastEnterLog.Items += generated;
 		return generated;
 	}
 

@@ -3,6 +3,7 @@ this.stronghold_screen_main_module <-  this.inherit("scripts/ui/screens/strongho
 
 	function getUIData(_ret)
 	{
+		_ret.LastEnterLog <- this.getTown().m.LastEnterLog;
 		_ret.RaidedCostPerDay <- ::Stronghold.Misc.RaidedCostPerDay * ::Stronghold.Misc.PriceMult;
 	}
 

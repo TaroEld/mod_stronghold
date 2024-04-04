@@ -22,17 +22,12 @@ Stronghold.Text = {
 	},
 	MainModule : {
 		Title : "Overview",
-		Assets : {
-			Tier : "Tier",
-			Defenders : "Defenders",
-			Roster : "Local Roster",
-			Stash : "Local Stash",
-			Recruits : "Local Recruits",
-			LastVisit : "Days since last visit",
-			Gold : "Accumulated Gold",
-			Tools : "Accumulated Tools",
-			Medicine : "Accumulated Medicine",
-			Arrows : "Accumulated Arrows",
+		LastEnterLog : {
+			Days : "Days since last visit: {0}",
+			Gold : "Accumulated gold: {0}",
+			Tools : "Accumulated tools: {0}",
+			Items : "Other accumulated items: {0}",
+			Experience : "Experience gained: {0}",
 		},
 		BaseSettings : {
 			ShowEffectRadius : "Show the effect radius of your base on the worldmap.",

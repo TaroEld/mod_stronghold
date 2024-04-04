@@ -7,48 +7,7 @@ var StrongholdScreenMainModule = function(_parent)
     this.mAlwaysUpdate = true;
     this.mHeaderRow = null;
     this.mBaseSpriteImage = null;
-    this.mAssets = {
-    	Tier : {
-    		Img : "",
-    		Div : null
-    	},
-    	Defenders : {
-    		Img : "",
-    		Div : null
-    	},
-    	Roster : {
-    		Img : "",
-    		Div : null
-    	},
-    	Stash : {
-    		Img : "",
-    		Div : null
-    	},
-    	Recruits : {
-    		Img : "",
-    		Div : null
-    	},
-    	LastVisit : {
-    		Img : "",
-    		Div : null
-    	},
-    	Gold : {
-    		Img : "",
-    		Div : null
-    	},
-    	Tools : {
-    		Img : "",
-    		Div : null
-    	},
-    	Medicine : {
-    		Img : "",
-    		Div : null
-    	},
-    	Arrows : {
-    		Img : "",
-    		Div : null
-    	},
-    }
+    this.mLastEnterLog = {}; // filled via text
     this.mBaseSettings = {
     	// AutoConsume : null,
     	ShowBanner : true,
@@ -88,18 +47,12 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
 
     var assetsContainer = $('<div class="stronghold-half-width stronghold-generic-background"/>')
     	.appendTo(infoContainer);
-    MSU.iterateObject(this.mAssets, function(_key, _value)
+    MSU.iterateObject(text.LastEnterLog, function(_key, _value)
     {
     	var ret = $('<div class="main-module-asset-row"/>')
     		.appendTo(assetsContainer);
-    	Stronghold.getTextSpan(	text.Assets[_key])
+    	self.mLastEnterLog[_key] = Stronghold.getTextSpan()
     		.appendTo(ret);
-    	$('<img class="main-module-asset-img">')
-    		.attr("src", _value.Img)
-    		.appendTo(ret)
-    	_value.Div = $('<img class="main-module-asset-value">')
-    		.appendTo(ret);
-    	return ret;
     })
     this.mRaidedContainer = this.mContentContainer.appendRow(text.RaidedTitle).hide();
     this.mRaidedImage = $("<img/>").css({"width" : "5rem", "height" : "5rem", "margin-left" : "2rem"}).attr('src', Path.GFX + "ui/settlement_status/settlement_effect_08.png").appendTo(this.mRaidedContainer);
@@ -145,9 +98,10 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
 	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
 		return;
 	var text = this.getModuleText();
-	this.mParent.updateTitle(text.Title);
 
+	this.mParent.updateTitle(text.Title);
 	this.mChangeNameInput.setInputText(this.mData.TownAssets.Name);
+	self.updateLastEnterLog();
 
 	var baseSprite = this.mData.TownAssets.Spriteset;
 	var currentSprite = Stronghold.Visuals.VisualsMap[baseSprite].Base[this.mData.TownAssets.Size -1];
@@ -174,6 +128,15 @@ StrongholdScreenMainModule.prototype.loadFromData = function()
     	this.mRaidedContainer.show();
     }
     else this.mRaidedContainer.hide();
+}
+
+StrongholdScreenMainModule.prototype.updateLastEnterLog = function()
+{
+	var self = this;
+	var text = this.getModuleText();
+	$.each(this.mLastEnterLog, function(_key, _value){
+		_value.html(Stronghold.Text.format(text.LastEnterLog[_key], self.mModuleData.LastEnterLog[_key]));
+	})
 }
 
 StrongholdScreenMainModule.prototype.createOverflowContent = function ()

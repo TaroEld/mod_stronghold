@@ -86,6 +86,7 @@
 			Max = 999999,
 		}
 		this.m.Settlement.getWarehouse().addConsumableItem(item);
+		this.m.Settlement.m.LastEnterLog.Gold += item.ToAdd;
 	}
 })
 
@@ -100,6 +101,7 @@
 		local validBros = this.m.Settlement.getLocalRoster().getAll().filter( @(a, b) b.getLevel() <= maxLevel);
 		if (validBros.len() > 0)
 		{
+			this.m.Settlement.m.LastEnterLog.Experience += totalXP;
 			local XpPerBro = totalXP  / validBros.len();
 			foreach (bro in validBros)
 			{
@@ -230,6 +232,7 @@
 			ToAdd = this.m.Level * _daysPassed * ::Stronghold.Locations.Workshop.DailyIncome
 		}
 		this.m.Settlement.getWarehouse().addConsumableItem(item);
+		this.m.Settlement.m.LastEnterLog.Tools += item.ToAdd;
 	}
 })
 

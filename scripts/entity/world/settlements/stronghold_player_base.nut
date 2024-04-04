@@ -13,6 +13,13 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			ShowEffectRadius = true,
 		}
 		OverflowStash = null,
+		LastEnterLog = {
+			Days = -1,
+			Gold = 0,
+			Tools = 0,
+			Items = 0,
+			Experience = 0,
+		}
 	},
 
 	function create()
@@ -173,6 +180,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	{
 		//updates buildings, shops, quests, attached locations
 		this.location.onEnter();
+		this.m.LastEnterLog.Days = this.m.LastEnterLog.Days == -1 ? 0 : (::World.getTime().Days - this.m.LastEnterLog.Days);
 		this.m.CurrentBuilding = null;
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);
 		this.updateLocationEffects();
@@ -246,6 +254,13 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function onLeave()
 	{
 		this.settlement.onLeave();
+		this.m.LastEnterLog = {
+			Days = ::World.getTime().Days,
+			Gold = 0,
+			Tools = 0,
+			Items = 0,
+			Experience = 0,
+		}
 		foreach( i, e in this.m.Situations )
 		{
 			if (e.getID() == "situation.stronghold_overflow")
@@ -626,7 +641,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		foreach( p in this.m.ProduceImported )
 		{
 			local item = this.new("scripts/items/" + p);
-			this.addItemsToWarehouse(item);
+			this.addItemToWarehouse(item);
+			this.m.Settlement.m.LastEnterLog.Items++;
 		}
 		this.m.ProduceImported = [];
 	}
@@ -1117,6 +1133,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function onSerialize( _out )
 	{
 		::Stronghold.Mod.Serialization.flagSerialize("BaseSettings",  this.m.BaseSettings, this.getFlags());
+		::Stronghold.Mod.Serialization.flagSerialize("LastEnterLog",  this.m.LastEnterLog, this.getFlags());
 		local management = this.m.Buildings.pop()
 		this.m.Buildings.resize(6)
 		this.settlement.onSerialize(_out);
@@ -1164,6 +1181,8 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
 		this.m.Buildings[6].updateSprite();
 		this.m.BaseSettings = ::Stronghold.Mod.Serialization.flagDeserialize("BaseSettings",  this.m.BaseSettings, null, this.getFlags());
+		this.m.LastEnterLog = ::Stronghold.Mod.Serialization.flagDeserialize("LastEnterLog",  this.m.LastEnterLog, null, this.getFlags());
+		this.updateTown();
 	}
 });
 
