@@ -30,7 +30,7 @@ this.troop_quarters_location <- this.inherit("scripts/entity/world/attached_loca
 
 	function getMoodText()
 	{
-		return  format(this.m.MoodText, this.m.MoodTexts[this.getLevel()]);
+		return  format(this.m.MoodText, this.m.MoodTexts[this.getLevel() - 1]);
 	}
 
 	function getMood()
