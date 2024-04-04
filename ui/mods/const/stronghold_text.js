@@ -41,6 +41,8 @@ Stronghold.Text = {
 		OverflowText : "{0} items are overflowing your warehouse. Press this button to add them to your warehouse. <b>Beware!</b> You will need to make space for them, or they will be lost after you leave the base.",
 		PopupButton : "Show items",
 		OverflowButton : "Take items",
+		UpgradingTitle : "Upgrading your base",
+		UpgradingText : "While upgrading the base to the next level, many base features are unavailable. You can expect an attack every 12 to 24 hours, with each wave being stronger than the last.",
 	},
 	MiscModule : {
 		BuildRoad : {

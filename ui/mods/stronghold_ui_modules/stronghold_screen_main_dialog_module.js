@@ -54,89 +54,43 @@ StrongholdScreenMainModule.prototype.createDIV = function (_parentDiv)
     	self.mLastEnterLog[_key] = Stronghold.getTextSpan()
     		.appendTo(ret);
     })
-    this.mRaidedContainer = this.mContentContainer.appendRow(text.RaidedTitle).hide();
-    this.mRaidedImage = $("<img/>").css({"width" : "5rem", "height" : "5rem", "margin-left" : "2rem"}).attr('src', Path.GFX + "ui/settlement_status/settlement_effect_08.png").appendTo(this.mRaidedContainer);
-    this.mRaidedText = Stronghold.getTextDiv().css({"width" : "90%", "padding-left" : "5rem"}).appendTo(this.mRaidedContainer);
-    var footer = this.mRaidedContainer.appendRow(null, "stronghold-flex-center");
-    this.mRaidedButton = footer.createTextButton(text.RaidedButton, $.proxy(function()
-    {
-        this.notifyBackendPayForRaided();
-    }, this), "stronghold-button-4", 4)
+    this.createUpgradingContent();
 
-    this.createOverflowContent()
+    this.createRaidedContent();
 
-    this.mSettingsContainer = this.mContentContainer.appendRow("Settings");
-    var settingsContainer = $('<div class="stronghold-generic-background"/>')
-    	.appendTo(this.mSettingsContainer);
-    this.mSettingsTable = $('<table/>')
-    	.appendTo(settingsContainer)
-    MSU.iterateObject(this.mBaseSettings, function(_key, _value)
-    {
-    	var row = $("<tr/>").appendTo(self.mSettingsTable);
-    	$("<td/>").appendTo(row).append(Stronghold.getTextDiv(text.BaseSettings[_key]));
-    	var checkboxContainer = $("<td/>").appendTo(row);
-    	var checkbox = $('<input type="checkbox"/>')
-    		.appendTo(checkboxContainer);
-    	self.mBaseSettings[_key] = checkbox;
-    	checkbox.iCheck({
-    		checkboxClass: 'icheckbox_flat-orange',
-    		radioClass: 'iradio_flat-orange',
-    		increaseArea: '30%'
-    	});
-    	checkbox.iCheck("check");
+    this.createOverflowContent();
 
-    	checkbox.on('ifChecked ifUnchecked', null, this, function (_event) {
-    		self.changeSetting(_key, checkbox.prop('checked') === true);
-    	});
-    	row.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Main." + _key});
-    })
+    this.createSettingsContent();
 };
 
-StrongholdScreenMainModule.prototype.loadFromData = function()
+StrongholdScreenMainModule.prototype.createUpgradingContent = function ()
 {
-	var self = this;
-	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
-		return;
-	var text = this.getModuleText();
-
-	this.mParent.updateTitle(text.Title);
-	this.mChangeNameInput.setInputText(this.mData.TownAssets.Name);
-	self.updateLastEnterLog();
-
-	var baseSprite = this.mData.TownAssets.Spriteset;
-	var currentSprite = Stronghold.Visuals.VisualsMap[baseSprite].Base[this.mData.TownAssets.Size -1];
-    this.mBaseSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentSprite + ".png");
-    MSU.iterateObject(this.mBaseSettings, function(_key, _value)
-    {
-    	_value.iCheck(self.mData.TownAssets.BaseSettings[_key] === true ? 'check' : 'uncheck');
-    });
-
-    if (this.mData.TownAssets.ItemOverflow.length > 0)
-    {
-    	this.mOverflowText.html(Stronghold.Text.format(text.OverflowText, this.mData.TownAssets.ItemOverflow.length));
-    	this.mOverflowButton.attr("disabled", false)
-    	this.mOverflowContainer.show();
-    }
-    else this.mOverflowContainer.hide();
-
-    if (this.mData.TownAssets.IsRaidedUntil > 0)
-    {
-    	var price = this.mData.TownAssets.IsRaidedUntil * this.mModuleData.RaidedCostPerDay;
-    	this.mRaidedText.html(Stronghold.Text.format(text.RaidedText, this.mData.TownAssets.IsRaidedUntil, price));
-    	this.mRaidedButton.find(".label").html(Stronghold.Text.format(text.RaidedButton, price))
-    	this.mRaidedButton.attr("disabled", price > this.mData.Assets.Money)
-    	this.mRaidedContainer.show();
-    }
-    else this.mRaidedContainer.hide();
+	this.mUpgradingContainer = this.mContentContainer.appendRow(this.getModuleText().UpgradingTitle, 'base-situation').hide();
+	this.mUpgradingImage = $("<img class='base-situation-image'/>")
+		.attr('src', Path.GFX + "ui/settlement_status/settlement_effect_15.png")
+		.appendTo(this.mUpgradingContainer);
+	this.mUpgradingText = Stronghold.getTextDiv(this.getModuleText().UpgradingText)
+		.addClass("base-situation-text")
+		.appendTo(this.mUpgradingContainer);
 }
 
-StrongholdScreenMainModule.prototype.updateLastEnterLog = function()
+StrongholdScreenMainModule.prototype.createRaidedContent = function ()
 {
 	var self = this;
 	var text = this.getModuleText();
-	$.each(this.mLastEnterLog, function(_key, _value){
-		_value.html(Stronghold.Text.format(text.LastEnterLog[_key], self.mModuleData.LastEnterLog[_key]));
-	})
+	this.mRaidedContainer = this.mContentContainer.appendRow(this.getModuleText().RaidedTitle, 'base-situation').hide();
+	this.mRaidedImage = $("<img class='base-situation-image'/>")
+		.attr('src', Path.GFX + "ui/settlement_status/settlement_effect_08.png")
+		.appendTo(this.mRaidedContainer);
+	this.mRaidedText = Stronghold.getTextDiv()
+		.addClass("base-situation-text")
+		.appendTo(this.mRaidedContainer);
+
+	var footer = this.mRaidedContainer.appendRow(null, "stronghold-flex-center");
+	this.mRaidedButton = footer.createTextButton(this.getModuleText().RaidedButton, $.proxy(function()
+	{
+	    this.notifyBackendPayForRaided();
+	}, this), "stronghold-button-4", 4)
 }
 
 StrongholdScreenMainModule.prototype.createOverflowContent = function ()
@@ -163,6 +117,111 @@ StrongholdScreenMainModule.prototype.createOverflowContent = function ()
 	{
 	    this.notifyBackendConsumeOverflow();
 	}, this), "stronghold-button-4", 4)
+}
+
+StrongholdScreenMainModule.prototype.createSettingsContent = function ()
+{
+	var self = this;
+	var text = this.getModuleText();
+	this.mSettingsContainer = this.mContentContainer.appendRow("Settings");
+	var settingsContainer = $('<div class="stronghold-generic-background"/>')
+		.appendTo(this.mSettingsContainer);
+	this.mSettingsTable = $('<table/>')
+		.appendTo(settingsContainer)
+	MSU.iterateObject(this.mBaseSettings, function(_key, _value)
+	{
+		var row = $("<tr/>").appendTo(self.mSettingsTable);
+		$("<td/>").appendTo(row).append(Stronghold.getTextDiv(text.BaseSettings[_key]));
+		var checkboxContainer = $("<td/>").appendTo(row);
+		var checkbox = $('<input type="checkbox"/>')
+			.appendTo(checkboxContainer);
+		self.mBaseSettings[_key] = checkbox;
+		checkbox.iCheck({
+			checkboxClass: 'icheckbox_flat-orange',
+			radioClass: 'iradio_flat-orange',
+			increaseArea: '30%'
+		});
+		checkbox.iCheck("check");
+
+		checkbox.on('ifChecked ifUnchecked', null, this, function (_event) {
+			self.changeSetting(_key, checkbox.prop('checked') === true);
+		});
+		row.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Main." + _key});
+	})
+}
+
+StrongholdScreenMainModule.prototype.loadFromData = function()
+{
+	if (!StrongholdScreenModuleTemplate.prototype.loadFromData.call(this))
+		return;
+	var self = this;
+	var text = this.getModuleText();
+
+	this.mParent.updateTitle(text.Title);
+	this.mChangeNameInput.setInputText(this.mData.TownAssets.Name);
+
+	var baseSprite = this.mData.TownAssets.Spriteset;
+	var currentSprite = Stronghold.Visuals.VisualsMap[baseSprite].Base[this.mData.TownAssets.Size -1];
+    this.mBaseSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentSprite + ".png");
+    MSU.iterateObject(this.mBaseSettings, function(_key, _value)
+    {
+    	_value.iCheck(self.mData.TownAssets.BaseSettings[_key] === true ? 'check' : 'uncheck');
+    });
+
+	this.updateLastEnterLog();
+
+	this.updateUpgrading();
+
+    this.updateRaided();
+
+    this.updateOverflow();
+}
+
+StrongholdScreenMainModule.prototype.updateLastEnterLog = function()
+{
+	var self = this;
+	var text = this.getModuleText();
+	$.each(this.mLastEnterLog, function(_key, _value){
+		_value.html(Stronghold.Text.format(text.LastEnterLog[_key], self.mModuleData.LastEnterLog[_key]));
+	})
+}
+
+StrongholdScreenMainModule.prototype.updateUpgrading= function ()
+{
+	if (this.mData.TownAssets.IsUpgrading === true)
+	{
+		this.mUpgradingContainer.show();
+	}
+	else this.mUpgradingContainer.hide();
+}
+
+
+StrongholdScreenMainModule.prototype.updateRaided = function ()
+{
+	var self = this;
+	var text = this.getModuleText();
+	if (this.mData.TownAssets.IsRaidedUntil > 0)
+	{
+		var price = this.mData.TownAssets.IsRaidedUntil * this.mModuleData.RaidedCostPerDay;
+		this.mRaidedText.html(Stronghold.Text.format(text.RaidedText, this.mData.TownAssets.IsRaidedUntil, price));
+		this.mRaidedButton.find(".label").html(Stronghold.Text.format(text.RaidedButton, price))
+		this.mRaidedButton.attr("disabled", price > this.mData.Assets.Money)
+		this.mRaidedContainer.show();
+	}
+	else this.mRaidedContainer.hide();
+}
+
+
+
+StrongholdScreenMainModule.prototype.updateOverflow = function ()
+{
+	if (this.mData.TownAssets.ItemOverflow.length > 0)
+	{
+		this.mOverflowText.html(Stronghold.Text.format(this.getModuleText().OverflowText, this.mData.TownAssets.ItemOverflow.length));
+		this.mOverflowButton.attr("disabled", false)
+		this.mOverflowContainer.show();
+	}
+	else this.mOverflowContainer.hide();
 }
 
 StrongholdScreenMainModule.prototype.createOverflowItemsPopupContent = function (_parent)
