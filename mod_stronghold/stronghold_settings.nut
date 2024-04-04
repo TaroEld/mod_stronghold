@@ -246,7 +246,7 @@ createSettings = function(_container)
 				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue());
 				break;
 			case "integer":
-				local setting = settingsPage.addStringSetting(keyID, value, key);
+				local setting = settingsPage.addStringSetting(keyID, value.tostring(), key);
 				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue().tointeger());
 				break;
 			case "float":
