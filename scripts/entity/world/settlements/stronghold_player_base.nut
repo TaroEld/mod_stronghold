@@ -287,7 +287,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 	}
 
-	function addItemsToWarehouse()
+	function addItemToWarehouse(item)
 	{
 		local stash = this.getStash();
 		local overflowStash = this.getOverflowStash();
