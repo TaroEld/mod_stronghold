@@ -18,7 +18,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		_ret.StashSpaceMax <- ::Stash.getCapacity(),
 		_ret.TownStashSpaceUsed <- this.getStash() == null ? 0 : this.getStash().getNumberOfFilledSlots(),
 		_ret.TownStashSpaceMax <- this.getStash() == null ? 0 : this.getStash().getCapacity(),
-		_ret.IsRepairOffered <- false
+		_ret.IsRepairOffered <- this.getTown().getLocation("attached_location.blast_furnace") != null;
 
 		this.UIDataHelper.convertItemsToUIData(this.getStash().getItems(), _ret.Shop, this.Const.UI.ItemOwner.Stash, this.m.InventoryFilter);
 		this.UIDataHelper.convertItemsToUIData(::Stash.getItems(), _ret.Stash, this.Const.UI.ItemOwner.Stash, this.m.InventoryFilter);
@@ -82,7 +82,8 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 
 	function onRepairItem( _itemIndex )
 	{
-		if (!this.getTown().isRepairOffered())
+		local location = this.getTown().getLocation("attached_location.blast_furnace");
+		if (location == null)
 		{
 			return null;
 		}
@@ -96,7 +97,8 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 
 		local price = (item.getConditionMax() - item.getCondition()) * this.Const.World.Assets.CostToRepairPerPoint;
 		local value = item.m.Value * (1.0 - item.getCondition() / item.getConditionMax()) * 0.2 * this.World.State.getCurrentTown().getPriceMult() * this.Const.Difficulty.SellPriceMult[this.World.Assets.getEconomicDifficulty()];
-		price = this.Math.max(price, value);
+		price = ::Math.max(price, value) * (1.0 - (this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier * location.getLevel()));
+		price = price.tointeger();
 
 		if (this.World.Assets.getMoney() < price)
 		{

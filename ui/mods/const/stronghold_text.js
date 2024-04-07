@@ -199,7 +199,7 @@ Stronghold.Text = {
 		Blast_Furnace : {
 			UpgradeDescription : {
 				Armorsmith : "<li>The Blast Furnace increases the stock of items at a local armorsmith.</li>",
-				RepairMultiplier : "<li>Item repair costs will be reduced by {0}%.</li>"
+				RepairMultiplier : "<li>You will be able to repair items from your stash, with {0}% lower costs than from an armorsmith or weaponsmith.</li>"
 			},
 			getUpgradeDescription : function(_element, _level){
 				return  this.UpgradeDescription.Armorsmith + Stronghold.Text.format(this.UpgradeDescription.RepairMultiplier,  parseInt(_element.RepairMultiplier * _level * 100));
