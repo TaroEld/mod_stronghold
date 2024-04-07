@@ -25,6 +25,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function create()
 	{
 		this.settlement.create();
+		this.m.DraftList = this.Stronghold.FullDraftList;
 		this.m.Rumors = this.Const.Strings.RumorsFarmingSettlement;
 		this.m.Culture = this.Const.World.Culture.Neutral;
 		this.m.IsMilitary = true;
@@ -122,10 +123,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return true;
 	}
 
-	function updateRoster( _force = false )
-	{
-	}
-
 	function hasContract( _id )
 	{
 		return true;
@@ -165,7 +162,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.getFlags().set("RosterSeed", this.toHash(this));
 		this.getFlags().set("LastProduceUpdate", this.Time.getVirtualTimeF());
 		this.getFlags().set("LastLocationUpdate", this.Time.getVirtualTimeF());
-		this.World.createRoster(this.toHash(this));
+		this.World.createRoster(this.getFlags().get("RosterSeed"));
 		this.updateProperties();
 		this.updateTown();
 		this.buildWarehouseLocation();
@@ -187,6 +184,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.consumeItems();
 		this.updateSituations();
 		this.updateShop();
+		this.updateRoster();
 
 		this.Stronghold.getPlayerFaction().updateQuests();
 		this.rebuildAttachedLocations();
@@ -249,6 +247,93 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				}
 			}
 		}
+	}
+
+	function updateRoster( _force = false )
+	{
+		local daysPassed = (this.Time.getVirtualTimeF() - this.m.LastRosterUpdate) / this.World.getTime().SecondsPerDay;
+
+		if (!_force && this.m.LastRosterUpdate != 0 && daysPassed < 2)
+		{
+			return;
+		}
+
+		if (this.m.RosterSeed != 0)
+		{
+			::Math.seedRandom(this.m.RosterSeed);
+		}
+
+		this.m.RosterSeed = ::Math.floor(this.Time.getRealTime() + ::Math.rand());
+		this.m.LastRosterUpdate = this.Time.getVirtualTimeF();
+		local roster = this.World.getRoster(this.getID());
+		local current = roster.getAll();
+		local iterations = ::Math.max(1, daysPassed / 2);
+		local activeLocations = 0;
+
+		foreach( loc in this.m.AttachedLocations )
+		{
+			if (loc.isActive())
+			{
+				activeLocations = ++activeLocations;
+			}
+		}
+
+		local rosterMin = 6
+		local rosterMax = 12
+		local trainingcamp = this.getLocation("attached_location.militia_trainingcamp" );
+		local minMaxIncrease = trainingcamp != null ? ::Stronghold.Locations["Militia_Trainingcamp"].RecruitIncrease * trainingcamp.getLevel() : 0;
+		rosterMin += minMaxIncrease;
+		rosterMax += minMaxIncrease;
+
+		if (iterations < 7)
+		{
+			for( local i = 0; i < iterations; i = ++i )
+			{
+				for( local maxRecruits = ::Math.rand(::Math.max(0, rosterMax / 2 - 1), rosterMax - 1); current.len() > maxRecruits;  )
+				{
+					local n = ::Math.rand(0, current.len() - 1);
+					roster.remove(current[n]);
+					current.remove(n);
+				}
+			}
+		}
+		else
+		{
+			roster.clear();
+			current = [];
+		}
+
+		local maxRecruits = ::Math.rand(rosterMin, rosterMax);
+		local draftList;
+		draftList = clone this.m.DraftList;
+
+		foreach( loc in this.m.AttachedLocations )
+		{
+			loc.onUpdateDraftList(draftList);
+		}
+
+		foreach( b in this.m.Buildings )
+		{
+			if (b != null)
+			{
+				b.onUpdateDraftList(draftList);
+			}
+		}
+
+		foreach( s in this.m.Situations )
+		{
+			s.onUpdateDraftList(draftList)
+		}
+		this.World.Assets.getOrigin().onUpdateDraftList(draftList);
+
+		while (maxRecruits > current.len())
+		{
+			local bro = roster.create("scripts/entity/tactical/player");
+			bro.setStartValuesEx(draftList);
+			current.push(bro);
+		}
+
+		this.World.Assets.getOrigin().onUpdateHiringRoster(roster);
 	}
 
 	function onLeave()
@@ -571,7 +656,18 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		else
 		{
-			local candidates = [];
+			// crows always goes to slot 5
+			if (_building.m.ID == "building.crowd" && this.m.Buildings[5] != null)
+			{
+				local temp = _building;
+				_building = this.m.Buildings[5];
+				this.m.Buildings[5] = temp;
+				if (_building.m.UIImage.slice(0, 5) == "small")
+				{
+					_building.m.UIImage = _building.m.UIImage.slice(6);
+					_building.m.UIImageNight = _building.m.UIImageNight.slice(6);
+				}
+			}
 
 			for( local i = 0; i < this.m.Buildings.len(); i = ++i )
 			{

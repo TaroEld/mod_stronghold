@@ -109,6 +109,27 @@
 		SouthPath = "",
 		Requirements = []
 	},
+	Barber = {
+		Name = "Barber",
+		Description = "Customize the appearance of your men at the barber. Have their hair cut and their beards trimmed or buy dubious potions to lose weight.",
+		ID = "building.barber",
+		Path = "barber_building",
+		SouthPath = "",
+		Requirements = []
+	},
+	Crowd = {
+		Name = "Recruits",
+		Description = "Hire more or less promising recruits.",
+		ID = "building.crowd",
+		Path = "crowd_building",
+		SouthPath = "crowd_oriental_building",
+		Requirements =
+		[{
+			Text = "Be connected to other settlements via road.",
+			IsValid = @(_town) !_town.isIsolated()
+		}]
+
+	}
 }
 foreach(buildingID, building in ::Stronghold.BuildingDefs)
 {

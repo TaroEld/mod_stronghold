@@ -44,7 +44,6 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 	
 	function assimilateCharacteristics(_town)
 	{
-		this.m.DraftList = _town.m.DraftList
 		this.m.UIDescription = _town.m.UIDescription
 		this.m.Description = _town.m.Description
 		this.m.UIBackgroundCenter =  _town.m.UIBackgroundCenter 
@@ -118,94 +117,6 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		local constSprites = this.Stronghold.VisualsMap[this.m.Spriteset];
 		this.m.TroopSprites = constSprites.WorldmapFigure[3];
 		this.m.HouseSprites = constSprites.Houses;
-	}
-	
-	
-	function updateRoster( _force = false )
-	{
-		local daysPassed = (this.Time.getVirtualTimeF() - this.m.LastRosterUpdate) / this.World.getTime().SecondsPerDay;
-
-		if (!_force && this.m.LastRosterUpdate != 0 && daysPassed < 2)
-		{
-			return;
-		}
-
-		if (this.m.RosterSeed != 0)
-		{
-			::Math.seedRandom(this.m.RosterSeed);
-		}
-
-		this.m.RosterSeed = ::Math.floor(this.Time.getRealTime() + ::Math.rand());
-		this.m.LastRosterUpdate = this.Time.getVirtualTimeF();
-		local roster = this.World.getRoster(this.getID());
-		local current = roster.getAll();
-		local iterations = ::Math.max(1, daysPassed / 2);
-		local activeLocations = 0;
-
-		foreach( loc in this.m.AttachedLocations )
-		{
-			if (loc.isActive())
-			{
-				activeLocations = ++activeLocations;
-			}
-		}
-
-		local rosterMin = 6
-		local rosterMax = 12
-		local trainingcamp = this.getParent().getLocation("attached_location.militia_trainingcamp" );
-		local minMaxIncrease = trainingcamp != null ? ::Stronghold.Locations["Militia_Trainingcamp"].RecruitIncrease * trainingcamp.getLevel() : 0;
-		rosterMin += minMaxIncrease;
-		rosterMax += minMaxIncrease;
-
-		if (iterations < 7)
-		{
-			for( local i = 0; i < iterations; i = ++i )
-			{
-				for( local maxRecruits = ::Math.rand(::Math.max(0, rosterMax / 2 - 1), rosterMax - 1); current.len() > maxRecruits;  )
-				{
-					local n = ::Math.rand(0, current.len() - 1);
-					roster.remove(current[n]);
-					current.remove(n);
-				}
-			}
-		}
-		else
-		{
-			roster.clear();
-			current = [];
-		}
-
-		local maxRecruits = ::Math.rand(rosterMin, rosterMax);
-		local draftList;
-		draftList = clone this.m.DraftList;
-
-		foreach( loc in this.m.AttachedLocations )
-		{
-			loc.onUpdateDraftList(draftList);
-		}
-
-		foreach( b in this.m.Buildings )
-		{
-			if (b != null)
-			{
-				b.onUpdateDraftList(draftList);
-			}
-		}
-
-		foreach( s in this.m.Situations )
-		{
-			s.onUpdateDraftList(draftList)
-		}
-		this.World.Assets.getOrigin().onUpdateDraftList(draftList);
-
-		while (maxRecruits > current.len())
-		{
-			local bro = roster.create("scripts/entity/tactical/player");
-			bro.setStartValuesEx(draftList);
-			current.push(bro);
-		}
-
-		this.World.Assets.getOrigin().onUpdateHiringRoster(roster);
 	}
 
 	function onSerialize( _out )

@@ -135,6 +135,9 @@
 	Arena = {
 		Price = 10
 	}
+	Crowd = {
+		Price = 5
+	}
 };
 
 

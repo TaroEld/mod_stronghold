@@ -1,12 +1,12 @@
 .stronghold-screen .structures-module .structure-row
 {
-	height: 20rem;
+	height: 16rem;
 }
 
 .stronghold-screen .structures-module .structure-image-container
 {
-	height: 10rem;
-	width: 14.4rem;
+	height: 8rem;
+	width: 11.52rem;
 	margin-left: 0.5rem;
 	position: relative;
 
@@ -14,8 +14,8 @@
 
 .stronghold-screen .structures-module .structure-image-container .structure-image
 {
-	height: 8rem;
-	width: 14.4rem;
+	height: 6.4rem;
+	width: 11.52rem;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -23,8 +23,8 @@
 
 .stronghold-screen .structures-module .structure-image-container .structure-selection
 {
-	height: 8rem;
-	width: 14.4rem;
+	height: 6.4rem;
+	width: 11.52rem;
 	position: absolute;
 	top: 0;
 	right: 0;
