@@ -9,12 +9,16 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 		local tier = ::Stronghold.BaseTiers[this.getTown().getSize() + 1];
 		local price = ::Stronghold.Misc.PriceMult * tier.Price;
 		local warehouse = this.getTown().getWarehouse();
+		_ret.CurrentRenown <- ::World.Assets.getBusinessReputation();
+		_ret.RenownRequired <- ::Stronghold.Misc.getNextRenownCost();
 		_ret.Requirements <- {
 			Price = this.World.Assets.getMoney() >= price,
 			Warehouse = warehouse != null && warehouse.m.Level >= this.getTown().getSize()
 			NotUpgrading = !this.getTown().isUpgrading(),
 			NoContract = this.World.Contracts.getActiveContract() == null,
+			Renown = _ret.CurrentRenown > _ret.RenownRequired,
 		}
+
 		_ret.Price <- ::Stronghold.Misc.PriceMult * tier.Price;
 		return _ret
 	}

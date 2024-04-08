@@ -98,6 +98,19 @@
 		return this.World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies)
 }
 
+function getNextRenownCost()
+{
+	local cost = ::Stronghold.Misc.RenownPerLevel[0];
+	foreach (_base in this.getMainBases())
+	{
+		for (local i = 0; i < _base.getLevel(); ++i)
+		{
+			cost += ::Stronghold.Misc.RenownPerLevel[i];
+		}
+	}
+	return cost;
+}
+
 ::Stronghold.getMaxStrongholdNumber <- function()
 {
 	local renown = this.World.Assets.getBusinessReputation();

@@ -5,17 +5,7 @@
 
 
 // How much renown is required to build the next main base, maxes out at 15000 
-// ::Stronghold.RenownPerLevel <- [
-// 	500,
-// 	1500,
-// 	3000,
-// 	5000,
-// 	7000,
-// 	9000,
-// 	11000,
-// 	13000,
-// 	15000
-// ]
+
 
 ::Stronghold.BaseFight <- {
 	// Base difficulty of the base defence fight
@@ -38,8 +28,14 @@
 	TrainerPrice = 5,
 	WaterPrice = 5,
 	MercenaryPrice = 5,
+	// Each level requires this much renown. This stacks with bases, so after upgrading to a stronghold the next base will require 5x this renown.
+	RenownPerLevel <- [
+		500,
+		750,
+		1000,
+		1250
+	]
 }
-
 
 ::Stronghold.Hamlet <- {
 	Name = "Hamlet"

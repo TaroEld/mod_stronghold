@@ -149,6 +149,7 @@ Stronghold.Text = {
 			Warehouse : "Your warehouse needs to be upgraded to the same level of the base.",
 			Price : "Have sufficient money ({0})",
 			NoContract : "You can't have an active contract.",
+			Renown: "Have at least {0} renown (currently : {1})",
 		},
 		UpgradeDescription : "Upgrade your {0} to a {1} to unlock the following features:",
 		GeneralUnlockDescription : "<li>You can construct an additional building and two additional locations.</li><li>Locations can be upgraded a further level.</li><li>Buy and sell prices improve by 5%, and merchant stock increases in rarity and quantity.</li><li>The effect radius of your base increases.</li>",

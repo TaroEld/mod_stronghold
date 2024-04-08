@@ -81,6 +81,7 @@ StrongholdScreenUpgradeModule.prototype.fillRequirementsText = function()
 		return;
 	}
     this.addRequirementRow(this.mRequirementsTable, Stronghold.Text.format(Stronghold.Text.General.Price, this.mModuleData.Price), reqs.Price);
+    this.addRequirementRow(this.mRequirementsTable, Stronghold.Text.format(text.Renown, this.mModuleData.RenownRequired, this.mModuleData.CurrentRenown), reqs.Renown);
     this.addRequirementRow(this.mRequirementsTable, text.Warehouse, reqs.Warehouse);
     this.addRequirementRow(this.mRequirementsTable, text.NoContract, reqs.NoContract);
 
