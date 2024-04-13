@@ -53,10 +53,11 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 	function onExecute( _faction )
 	{
 		local playerBase = this.m.Settlements.Base
-		local partyStrength = 200 * (playerBase.getSize()-1);
+		local partyStrength = 100 * (playerBase.getSize());
 		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
 		if (trainingCamp)
 			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
+		partyStrength *=  this.getReputationToDifficultyLightMult();
 		
 
 		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, partyStrength);

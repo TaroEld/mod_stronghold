@@ -299,7 +299,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		difficulty += ::Stronghold.BaseFight.InitialFightStrengthPerUpgradeTier * this.m.TargetLevel;
 		difficulty += ::Stronghold.BaseFight.InitialFightStrengthPerWave * wave;
 		difficulty += ::Stronghold.BaseFight.InitialFightStrengthPerMainBase * numBases;
-		difficulty = ((difficulty / 2) * this.getScaledDifficultyMult()) + (difficulty / 2);
+		difficulty *= this.getScaledDifficultyMult();
 		return difficulty
 	}
 

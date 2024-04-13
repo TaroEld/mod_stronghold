@@ -67,10 +67,11 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		}
 		if (!closest) return
 		
-		local partyStrength = 100 * (playerBase.getSize()-1)
+		local partyStrength = 75 * (playerBase.getSize())
 		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp");
 		if (trainingCamp)
 			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
+		partyStrength *= this.getReputationToDifficultyLightMult();
 
 		local party = _faction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 50);
 		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, partyStrength);

@@ -230,10 +230,14 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local playerBase = this.getTown()
 		local targetSettlement = this.World.getEntityByID(_target.SettlementID);
 
-		local partyStrength = 400 +  100 * (playerBase.getSize()-1);
+		local partyStrength = 300 +  100 * (playerBase.getSize()-1);
 		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
 		if (trainingCamp)
 			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
+
+		// getReputationToDifficultyLightMult
+		local d = 1.0 + this.Math.minf(2.0, this.World.getTime().Days * 0.014) - 0.1;
+		partyStrength *= (d * this.Const.Difficulty.EnemyMult[this.World.Assets.getCombatDifficulty()]);
 
 		local party = playerFaction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 100);
 		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, partyStrength);
@@ -399,10 +403,13 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 	{
 		local playerBase = this.getTown();
 		local playerFaction = this.Stronghold.getPlayerFaction();
-		local partyStrength = 200
+		local partyStrength = 200;
 		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
 		if (trainingCamp)
 			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
+		// getReputationToDifficultyLightMult
+		local d = 1.0 + this.Math.minf(2.0, this.World.getTime().Days * 0.014) - 0.1;
+		partyStrength *= (d * this.Const.Difficulty.EnemyMult[this.World.Assets.getCombatDifficulty()]);
 
 		local party = playerFaction.spawnEntity(playerBase.getTile(), "Mercenary band of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.getSprite("body").setBrush("figure_mercenary_01");
