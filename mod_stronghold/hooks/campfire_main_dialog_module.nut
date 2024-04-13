@@ -5,8 +5,7 @@
 	o.queryData <- function()
 	{
 		local result = queryData()
-		local show = this.Stronghold.getPlayerFaction() == null;
-		result.Assets.showStrongholdButton <- show;
+		result.Assets.showStrongholdButton <- true;
 		return result;
 	}
 });
