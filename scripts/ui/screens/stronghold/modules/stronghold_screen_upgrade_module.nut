@@ -10,7 +10,7 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 		local price = ::Stronghold.Misc.PriceMult * tier.Price;
 		local warehouse = this.getTown().getWarehouse();
 		_ret.CurrentRenown <- ::World.Assets.getBusinessReputation();
-		_ret.RenownRequired <- ::Stronghold.Misc.getNextRenownCost();
+		_ret.RenownRequired <- ::Stronghold.getNextRenownCost();
 		_ret.Requirements <- {
 			Price = this.World.Assets.getMoney() >= price,
 			Warehouse = warehouse != null && warehouse.m.Level >= this.getTown().getSize()

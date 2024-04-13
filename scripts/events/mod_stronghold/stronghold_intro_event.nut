@@ -18,7 +18,7 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		local priceMult = this.Stronghold.Misc.PriceMult;
 		local tier = this.Stronghold.BaseTiers[1];
 		local buildPrice = tier.Price * priceMult;
-		local renownCost = ::Stronghold.Misc.getNextRenownCost();
+		local renownCost = ::Stronghold.getNextRenownCost();
 		local name = tier.Name;
 
 		local hasMoney = this.World.Assets.getMoney() >= buildPrice;

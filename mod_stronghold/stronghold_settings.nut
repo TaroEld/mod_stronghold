@@ -28,13 +28,8 @@
 	TrainerPrice = 5,
 	WaterPrice = 5,
 	MercenaryPrice = 5,
-	// Each level requires this much renown. This stacks with bases, so after upgrading to a stronghold the next base will require 5x this renown.
-	RenownPerLevel <- [
-		500,
-		750,
-		1000,
-		1250
-	]
+	// Each level requires this much renown. This stacks with bases.
+	RenownCost = 500
 }
 
 ::Stronghold.Hamlet <- {

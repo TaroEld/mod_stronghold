@@ -98,27 +98,17 @@
 		return this.World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies)
 }
 
-function getNextRenownCost()
+::Stronghold.getNextRenownCost <- function()
 {
-	local cost = ::Stronghold.Misc.RenownPerLevel[0];
-	foreach (_base in this.getMainBases())
+	local cost = ::Stronghold.Misc.RenownCost;
+	local f =  this.getPlayerFaction();
+	if (f == null)
+		return cost;
+	foreach (_base in this.getPlayerFaction().getMainBases())
 	{
-		for (local i = 0; i < _base.getLevel(); ++i)
-		{
-			cost += ::Stronghold.Misc.RenownPerLevel[i];
-		}
+		cost += (::Stronghold.Misc.RenownCost * _base.getSize());
 	}
 	return cost;
-}
-
-::Stronghold.getMaxStrongholdNumber <- function()
-{
-	local renown = this.World.Assets.getBusinessReputation();
-	local level = 0;
-	foreach(lvl in this.RenownPerLevel){
-		if (renown > lvl) level++
-	}
-	return level
 }
 
 ::Stronghold.getClosestDistance <- function(_destination, _list)
