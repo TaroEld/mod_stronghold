@@ -268,7 +268,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "Task",
 			Title = this.m.Title,
-			Text = "A band of mercenaries is being transported to a fortress and are awaiting execution. We must help them!",
+			Text = "Word has reached us that a band of mercenaries is being transported to a fortress, awaiting execution for a crime they almost certainly weren't being spotted committing. The mercenary community is in uproar about yet another unfair treatment of entirely honest brothers in arms.\n%randombrother% suggests that we could score some points if we went and helped those poor souls out of their predicatment. We probably shouldn't be seen doing it, though.",
 			Image = "",
 			List = [],
 			ShowEmployer = true,
@@ -359,14 +359,14 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "Success1",
 			Title = "On your return...",
-			Text = "[img]gfx/ui/events/event_53.png[/img]{The mercenaries are rejoiced after being freed. They ask if they can settle down in your stronghold, and you readily agree: you can never have enough strong arms. They offer to follow you for the rest of the week and help you in any battles.}"
+			Text = "[img]gfx/ui/events/event_53.png[/img]{The mercenaries are rejoiced after being freed. They ask if they can settle down in your stronghold, and you readily agree: you can never have enough strong arms.\nAfter this stunt, we are in high favours with the other mercenary companies. They might even follow us on our adventures at discount rates.}"
 			Image = "",
 			Characters = [],
 			List = [],
 			ShowEmployer = true,
 			Options = [
 				{
-					Text = "You can tag along you lot.",
+					Text = "You can tag along.",
 					function getResult()
 					{
 						this.Stronghold.getPlayerFaction().m.Flags.set("Mercenaries", true);
@@ -407,7 +407,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "Failure1",
 			Title = "On your return...",
-			Text = "[img]gfx/ui/events/event_95.png[/img]{You couldn't save the mercenaries in time. They will be abandoned to whatever fate has chosen for them. This one's on you!}"
+			Text = "[img]gfx/ui/events/event_95.png[/img]{You couldn't save the mercenaries in time. They will be abandoned to whatever fate has chosen for them, which most likely means the hangman's noose in short order. This one's on you!}"
 			Image = "",
 			Characters = [],
 			List = [],
@@ -431,7 +431,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "Failure2",
 			Title = "On your return...",
-			Text = "[img]gfx/ui/events/event_53.png[/img]{The mercenaries are rejoiced after being freed. They ask if they can settle down in your stronghold, and you readily agree: you can never have enough strong arms. However, your castellan informs you that your actions have not gone unnoticed. Too many of their soldiers lived to tell their story, and the nobles have declared you their enemy.}"
+			Text = "[img]gfx/ui/events/event_53.png[/img]{The mercenaries are rejoiced after being freed. They ask if they can settle down in your stronghold, and you readily agree: you can never have enough strong arms. However, your castellan informs you that your actions have not gone unnoticed. Too many of their soldiers lived to tell their story, and the nobles have declared you their enemy.\nStill: after this stunt, we are in high favours with the other mercenary companies. They might even follow us on our adventures at discount rates.}"
 			Image = "",
 			Characters = [],
 			List = [],

@@ -30,14 +30,14 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		local isValid = hasRenown && hasMoney && !isTileOccupied && !hasContract;
 
 		local renownText = coloredText(format("\n-Having at least %s renown (currently: %s).", renownCost.tostring(), this.World.Assets.getBusinessReputation().tostring()), hasRenown);
-		local moneyText = coloredText(format("\n-Price: %s crowns."), buildPrice.tostring(), hasMoney);
+		local moneyText = coloredText(format("\n-Price: %s crowns.", buildPrice.tostring()), hasMoney);
 		local tileText = coloredText("\n-Standing on an empty tile.", !isTileOccupied);
 		local contractText = coloredText("\n-Not having an active contract.", !hasContract);
 		local coastalText = isCoastal ? coloredText("you will be able to build a port here.") : coloredText("you won't be able to build a port here, as you're not close enough to the sea.", false);
 
 		local requirementsText = "Welcome to Stronghold. Here you can see what you need to build your base. You will start with a small " + name + ", which can later be upgraded to unlock more features.";
 		requirementsText += format("\n\nBuilding a %s requires: ", name);
-		requirementsText += renownText + inventoryText + moneyText + tileText + contractText;
+		requirementsText += renownText + moneyText + tileText + contractText;
 
 
 		requirementsText += format("\n\n Building a %s will unlock these features: \n%s", name, tier.UnlockDescription);
