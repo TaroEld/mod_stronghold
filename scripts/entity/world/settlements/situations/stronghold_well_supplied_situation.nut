@@ -15,7 +15,7 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 			"My cousin over in %settlement% keeps bragging about how good they have it there. Well stocked market stands and all. Not like this rotten place."
 		];
 		this.m.Descriptions <- [
-			"The few merchants that venture to this settlement have little to gain.","","","With no noble house asking for tariffs, you can get very good prices for your goods.",
+			"The few merchants that venture to this settlement have little to gain.","Your fort is one among many, leading to mediocre prices for your goods.","With no noble house asking for tariffs, you can get very good prices for your goods.","As the lords of a grand stronghold, merchants offer you excellent prices and ship in their most rare wares.",
 		]
 		this.m.IsStacking = false;
 		
@@ -39,8 +39,7 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 	//should be dynamic and check the properties
 	function defineDescription(_town)
 	{
-		local description = "With no noble house asking for tariffs, you can get very good prices for your goods.";
-		return description
+		return this.m.Descriptions[_town.getSize() - 1];
 	}
 
 	function getAddedString( _s )
@@ -57,7 +56,7 @@ this.stronghold_well_supplied_situation <- this.inherit("scripts/entity/world/se
 	{ 
 		local playerBase = this.World.State.getCurrentTown();
 		if (playerBase == null) return
-		this.defineDescription(playerBase);
+		this.m.Description = this.defineDescription(playerBase);
 		local mults = this.Stronghold.BaseTiers[playerBase.getSize()]
 		_modifiers.RarityMult = mults.Rarity;
 		_modifiers.BuyPriceMult = mults.BuyPrice;
