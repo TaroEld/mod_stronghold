@@ -294,11 +294,8 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 	function getBaseFightDifficulty()
 	{
 		local wave = this.m.TargetLevel / this.m.AttacksRemaining;
-		local numBases = this.Stronghold.getPlayerFaction().getMainBases().len();
 		local difficulty = ::Stronghold.BaseFight.InitialFightBaseStrength;
-		difficulty += ::Stronghold.BaseFight.InitialFightStrengthPerUpgradeTier * this.m.TargetLevel;
 		difficulty += ::Stronghold.BaseFight.InitialFightStrengthPerWave * wave;
-		difficulty += ::Stronghold.BaseFight.InitialFightStrengthPerMainBase * numBases;
 		difficulty *= this.getScaledDifficultyMult();
 		return difficulty
 	}
