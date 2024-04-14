@@ -158,7 +158,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 						this.Contract.setState("Return");
 					}
 					::Stronghold.getHostileFaction().copyLooks(selected_faction);
-					local party = this.Contract.m.Enemy_Faction.spawnEntity(selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
+					local party = ::Stronghold.getHostileFaction().spawnEntity(selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
 					this.Const.World.Common.addTroop(party, {
 							Type = this.Const.World.Spawn.Troops.Executioner
 						}, true, 100);
