@@ -15,13 +15,13 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		local basesRequiringCaravan = [];
 		foreach(playerBase in _faction.getDevelopedBases())
 		{
-			if (this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextCaravan") && !playerBase.isUpgrading())
+			if (::Stronghold.isCooldownExpired(playerBase, "TimeUntilNextCaravan") && !playerBase.isUpgrading())
 			{
 				basesRequiringCaravan.push(playerBase)
 			}
 		}
 		if (basesRequiringCaravan.len() == 0) return
-		this.m.PlayerBase = this.Math.randArray(basesRequiringCaravan);
+		this.m.PlayerBase = ::MSU.Array.rand(basesRequiringCaravan);
 		//only works with level 2+ base
 		this.m.Score = 100;
 	}
@@ -42,7 +42,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		local closest_dist = 9999;
 		foreach (settlement in settlements)
 		{
-			if (settlement.getFlags().get("isPlayerBase"))
+			if (settlement.getFlags().get("IsPlayerBase"))
 				continue;
 			local settlementFaction = settlement.getFactionOfType(this.Const.FactionType.Settlement);
 			if (settlement.isMilitary() || this.isKindOf(settlement, "city_state"))
@@ -70,11 +70,14 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		}
 		if (!closest) return
 		
-		local patrol_strength = 100 * (playerBase.getSize()-1)
-		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+		local partyStrength = 75 * (playerBase.getSize())
+		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp");
+		if (trainingCamp)
+			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
+		partyStrength *= this.getReputationToDifficultyLightMult();
 
 		local party = _faction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 50);
-		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, patrol_strength);
+		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, partyStrength);
 
 		//reset values to caravan after adding mercs
 		party.setDescription("A caravan from your stronghold, escorted by mercenaries");
@@ -139,7 +142,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		c.addOrder(unload);
 		c.addOrder(despawn);
 
-		playerBase.getFlags().set("TimeUntilNextCaravan", this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 7)
+		::Stronghold.setCooldown(playerBase, "TimeUntilNextCaravan");
 		return true;
 	}
 

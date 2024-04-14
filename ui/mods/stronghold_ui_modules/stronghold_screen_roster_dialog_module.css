@@ -1,0 +1,781 @@
+
+.stronghold-screen .roster-module .l-row .row.is-bottom
+{
+	top: 5.3rem;
+	bottom: 0;
+	width: 100%;
+}
+
+.stronghold-screen .roster-module .l-row .row.is-bottom > img
+{
+	width: 3.2rem;
+	height: 3.2rem;
+}
+
+.stronghold-screen .roster-module .l-row .row.is-bottom .l-assets-center-container
+{
+	top: 0;
+	left: 3.0rem;
+	right: 0;
+	bottom: 0;
+	width: 21.0rem;
+	height: 3.0rem;
+	position: absolute;
+	margin: auto;
+}
+
+.stronghold-screen .roster-module .l-row .row.is-bottom .l-assets-container
+{
+	width: 10.0rem;
+	height: 3.0rem;
+	position: relative;
+	float: left;
+	margin-right: 1.0rem;
+}
+
+.stronghold-screen .roster-module .l-row .row.is-bottom .l-assets-container:last-child
+{
+	margin-right: 0;
+}
+
+.stronghold-screen .roster-module .l-row .row.is-bottom .l-assets-container img
+{
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 2.8rem;
+	height: 2.8rem;
+	margin: auto;
+	position: absolute;
+}
+
+.stronghold-screen .roster-module .l-row .row.is-bottom .l-assets-container .label
+{
+	top: 0;
+	bottom: 0;
+	left: 3.4rem;
+	width: 6.0rem;
+	height: 3.0rem;
+	margin: auto;
+	position: absolute;
+
+	text-align : left;
+	line-height: 3.4rem;
+}
+
+.stronghold-screen .roster-module > .right-column
+{
+	width: 100%;
+	height: 100%;
+	position: relative;
+	float: left;
+}
+
+
+.stronghold-screen .roster-module > .right-column > .top-row
+{
+	width: 100%;
+	height: 44%; /*48*/
+
+	position: relative;
+	float: left;
+
+	background-image: url("coui://gfx/ui/skin/dialog_panel_01.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	overflow: hidden;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row
+{
+	width: 100%;
+	height: 10%;
+	position: relative;
+	float: left;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row
+{
+	width: 100%;
+	height: 46%;
+	position: relative;
+	float: left;
+}
+
+
+.stronghold-screen .roster-module > .right-column > .top-row > .l-list-container
+{
+	top: 0;
+	left: 0.5rem;
+	right: 0;
+	bottom: 0;
+	position: absolute;
+
+	margin-left: 2.0rem;
+}
+
+
+.stronghold-screen .roster-module > .right-column > .top-row > .scroll-container
+{
+	width: 80%;
+	margin-bottom: 0.0rem;
+	margin-right: 1.0rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-left
+{
+	width: 22%;
+	height: 100%;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	position: relative;
+	float: left;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right
+{
+	width: 78%;
+	height: 100%;
+	position: relative;
+	float: left;
+
+	background-image: url("coui://gfx/ui/skin/custom_background_698_40.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+
+/***********Button Panel**********/
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel
+{
+	position: absolute;
+	left: 1.0rem;
+	top: 20%;
+	z-index: 10;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button
+{
+	width: 5.2rem;
+	height: 4.1rem;
+	position: absolute;
+
+	line-height: 2.6rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .is-wages img
+{
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2.8rem;
+    height: 2.8rem;
+    margin: auto;
+    position: absolute;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .is-wages span
+{
+    top: 0;
+    bottom: 0;
+    left: 3.4rem;
+    width: 3.2rem;
+    height: 3.0rem;
+    margin: auto;
+    position: absolute;
+
+    text-align : left;
+    line-height: 2.6rem;
+}
+
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .is-player-wages
+{
+
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .is-stronghold-wages
+{
+	left: 10rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-stripping-all
+{
+	left: 20.0rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-rename
+{
+	left: 25.0rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-dismiss
+{
+	left: 30.0rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-roster-tooltip
+{
+	left: 49.0rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button-brother
+{
+	width: 13.0rem;
+	height: 4.3rem;
+	position: absolute;
+
+	line-height: 2.6rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button-brother.is-brothers
+{
+	left: 54.0rem;
+	width: 9.8rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button-brother img
+{
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 2.8rem;
+	height: 2.8rem;
+	margin: auto;
+	margin-left: 1.0rem;
+	position: absolute;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button-brother .label
+{
+	top: 0;
+	bottom: 0;
+	left: 3.4rem;
+	width: 11.2rem;
+	height: 3.0rem;
+	margin: auto;
+	margin-left: 1.0rem;
+	position: absolute;
+
+	text-align : left;
+	line-height: 3.0rem;
+}
+/****************************************************/
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-left .title-container
+{
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 100%;
+	position: absolute;
+	margin: auto 0;
+
+	overflow: hidden;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-left .title-container:hover
+{
+	border: 1px solid grey;
+}
+
+.stronghold-screen .roster-module > .right-column > .middle-row > .is-left .title-container .title
+{
+	/* vertical center */
+	top: 66%;
+	width: 100%;
+	position: relative;
+
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+
+	text-align: center;
+	text-overflow: ellipsis;
+	line-height: 2.2rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container
+{
+	width: 22%;
+	height: 100%;
+	padding-right: 0.5rem;
+	position: relative;
+	float: left;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .l-list-container
+{
+	top: 0.0rem;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	position: absolute;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .l-list-container .scroll-container
+{
+	margin-top: 0.1rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .skills-row
+{
+	width: 100%;
+	float: left;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .l-skills-group-container
+{
+	float: left;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .l-skill-groups-container
+{
+	float: left;
+	margin-bottom: 0.5rem;
+}
+
+.stronghold-screen .l-skill-groups-container > img
+{
+	width: 4.0rem;
+	height: 4.0rem;
+	float: left;
+	margin-right: 0.2rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .scroll-background-container
+{
+	height: 100%;
+	width: 100%;
+	pointer-events: auto;
+	position: absolute;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats
+{
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .portrait
+{
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .portrait .portrait-container
+{
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 9.0rem;
+	position: absolute;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .portrait .portrait-container .l-portrait-image-container
+{
+	left:  2.0rem;
+	top: 4.0rem;
+	width: 15.0rem;
+	height: 15.0rem;
+
+	pointer-events: none;
+	position: absolute;
+	margin: auto;
+	z-index: 2;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .portrait .portrait-container img
+{
+	display: block;
+	margin: auto;
+	position: absolute;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .portrait .name-container
+{
+	top: 21.0rem;
+	left: 0rem;
+	right: 0;
+	height: 6.0rem;
+	position: absolute;
+
+	overflow: hidden;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .portrait .name-container .label
+{
+	/* vertical center */
+	top: 50%;
+	width: 100%;
+	position: relative;
+
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+
+	white-space: nowrap;
+	text-align: center;
+	text-overflow: ellipsis;
+	line-height: 2.6rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .background-frame-container
+{
+	width: 78%;
+	height: 100%;
+	position: relative;
+	float: left;
+
+	background-image: url("coui://gfx/ui/skin/dialog_panel_01.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+
+/*////////////////////////////////////////////////////////////*/
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats-container
+{
+	width: 100%;
+	height: 100%; /* AUTO HEIGHT */
+	float: left;
+	position: absolute;
+	bottom: 0.0rem;
+	margin-top: 0.4rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .stats-row
+{
+	width: 100%;
+	height: 12.2%; /* AUTO HEIGHT */
+	position: relative;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .progressbar .label
+{
+	left: -1.5rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .stats-row > .l-stats-row
+{
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 92%;
+	height: 2.6rem;
+	position: absolute;
+	margin: auto;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .l-stats-row > .l-stats-row-icon-column
+{
+	top: 0;
+	left: 0;
+	width: 3.0rem;
+	height: 2.6rem;
+	position: absolute;
+	float: left;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .stats-row img
+{
+	width: 2.6rem;
+	height: 2.6rem;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .l-stats-row > .l-stats-row-progressbar-column
+{
+	top: 0;
+	left: 3.0rem;
+	right: 0;
+	bottom: 0;
+	height: 2.6rem;
+	position: absolute;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .stats-row .stats-progressbar-container
+{
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2.2rem;
+	position: absolute;
+	margin: auto;
+}
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .details-container .stats .talent
+{
+	top: -0.3rem;
+	left: 2.8rem;
+
+	position: absolute;
+	z-index: 20;
+
+	width: 3.6rem;
+	height: 1.8rem;
+}
+/*////////////////////////////////////////////////////////////*/
+
+
+.stronghold-screen .roster-module > .right-column > .bottom-row > .background-frame-container .l-list-container
+{
+	margin-top: 2.0rem;
+}
+
+
+.stronghold-screen > .l-stronghold-pokebro-pc-dialog-container .footer .l-button-bar
+{
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 16.0rem;
+	height: 4.3rem;
+	position: absolute;
+	margin: auto;
+}
+
+.stronghold-screen > .l-stronghold-pokebro-pc-dialog-container .footer .l-leave-button
+{
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 17.5rem;
+	position: absolute;
+
+	line-height: 3.0rem;
+}
+
+.stronghold-screen > .l-stronghold-pokebro-pc-dialog-container .ui-control.brother > .mood-layer img
+{
+	right: -0.6rem;
+	top: 0.3rem;
+	width: 2.1rem;
+	height: 4.5rem;
+	position: absolute;
+
+	pointer-events: none;
+}
+
+
+
+/* Perk Dialog Container */
+.ui-control.popup-dialog > .content-no-float
+{
+	width: 100%;
+	position: relative;
+}
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup
+{
+	width: 69.8rem;
+	height: 54.3rem;
+
+	background-image: url("coui://gfx/ui/skin/popup_background_698x543.png");
+	background-size: 69.8rem 54.3rem;
+	background-repeat: no-repeat;
+}
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup .perk-tree-container
+{
+	top: 3.5rem;
+	left: 1.0rem;
+	right: 1.5rem;
+	bottom: 4.0rem;
+	height: 43.3rem;
+
+	position: relative;
+	overflow: hidden;
+}
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup .perk-tree-container .column
+{
+	position: absolute;
+
+	top: 2.0rem;
+	bottom: 1.0rem;
+	left: 1.0rem;
+	right: 0.0rem;
+
+	width: 100%;
+	height: 100%;
+}
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup .column .row
+{
+	width: 100%;
+	height: 5.0rem;
+	position: absolute;
+}
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup .column .row .center
+{
+   position: absolute;
+
+   /*attemping to center the row but it fails, the issue is fixed in js file*/
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup .is-unlocked
+{
+	opacity: 1;
+}
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup .is-locked
+{
+	opacity: 0.33;
+}
+
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup .row .l-perk-container
+{
+	width: 5.0rem;
+	height: 5.0rem;
+	position: relative;
+	float: left;
+}
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup .l-perk-container .selection-image-layer
+{
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 4.7rem;
+	height: 4.7rem;
+	position: absolute;
+	margin: auto;
+	padding-bottom: 0.1rem;
+	z-index: 1;
+}
+
+.stronghold-screen .ui-control.popup-dialog.perk-popup .l-perk-container .perk-image-layer
+{
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 4.5rem;
+	height: 4.5rem;
+	position: absolute;
+	margin: auto;
+	z-index: 2;
+}
+
+
+
+/* Dismiss Dialog Container */
+.stronghold-screen .ui-control.popup-dialog.dismiss-popup
+{
+	width: 44.9rem;
+	height: 25.0rem;
+
+	background-image: url("coui://gfx/ui/skin/popup_background_449x250.png");
+	background-size: 44.9rem 25.0rem;
+	background-repeat: no-repeat;
+}
+
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container
+{
+	margin-top: -3.5rem;
+	margin-bottom: -0.5rem;
+	width: 100%;
+	/*height: 14.0rem;*/
+	padding: 2.6rem;
+	position: relative;
+	float: left;
+}
+
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container .title-label
+{
+	width: 100%;
+	height: 3.6rem;
+	position: relative;
+	float: left;
+	clear: left;
+
+	text-align: left;
+	line-height: 4.4rem;
+}
+
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container .label
+{
+	width: 100%;
+	position: relative;
+	float: left;
+
+	text-align: left;
+}
+
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container .retirement-package
+{
+	width: 100%;
+	position: relative;
+	float: left;
+
+	text-align: left;
+	margin-top: 1.5rem;
+	margin-bottom: -1.0rem;
+	margin-left: auto;
+	margin-right: auto;
+
+	display: block;
+
+	line-height: 3.0rem;
+}
+
+.stronghold-screen .ui-control.popup-dialog .dismiss-character-container .retirement-package .blub
+{
+	position: absolute;
+	left: 3.2rem;
+	top: -0.8rem;
+}
+
+
+/* Change Name & Title Dialog Container */
+.stronghold-screen .ui-control.popup-dialog.change-name-and-title-popup
+{
+	width: 44.9rem;
+	height: 25.0rem;
+
+	background-image: url("coui://gfx/ui/skin/popup_background_449x250.png");
+	background-size: 44.9rem 25.0rem;
+	background-repeat: no-repeat;
+}
+
+.stronghold-screen .ui-control.popup-dialog .change-name-and-title-container
+{
+	width: 100%;
+	padding: 0.6rem;
+	position: relative;
+	float: left;
+}
+
+.stronghold-screen .ui-control.popup-dialog .change-name-and-title-container .row
+{
+	width: 100%;
+	height: 5.9rem;
+	position: relative;
+	float: left;
+}
+
+.stronghold-screen .ui-control.popup-dialog .change-name-and-title-container .row .label
+{
+	width: 9.0rem;
+	height: 5.9rem;
+	margin-right: 1.0rem;
+	position: relative;
+	float: left;
+
+	line-height: 5.9rem;
+	text-align: right;
+}
+
+.stronghold-screen .ui-control.popup-dialog .change-name-and-title-container .row .l-input
+{
+	width: 30.0rem;
+	height: 4.0rem;
+	margin-top: 1.0rem;
+	margin-bottom: 1.0rem;
+	position: relative;
+	float: left;
+}

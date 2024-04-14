@@ -1,3 +1,35 @@
+.flex-row
+{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    min-height: 5rem;
+
+    /*outline: 2px solid purple;*/
+}
+
+.sub-title
+{
+    width: 100%;
+    height: 4rem;
+    line-height: 4rem;
+    text-align: center;
+    vertical-align: middle;
+/*    border-image: url("coui://gfx/ui/skin/line_gold.png") 0% 0% 100% 0%;
+    border-image-outset: 0 0 0.5rem 0;*/
+   	background-image: url("coui://gfx/ui/skin/custom_background_698_40.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+
+    /*border: 2px solid yellow;*/
+}
+
+.gold-line-bottom
+{
+    border-image: url("coui://gfx/ui/skin/line_gold.png") 0% 0% 100% 0%;
+    border-image-outset: 0 0 0.5rem 0;
+}
 
 .ui-control.dialog.has-one-row-footer > .content
 {
@@ -112,53 +144,6 @@
 {
     height: 50.0rem;
 }
-.rename-town-popup
-{
-    width: 44.9rem;
-    height: 25.0rem;
-
-    background-image: url("coui://gfx/ui/skin/popup_background_449x250.png");
-    background-size: 44.9rem 25.0rem;
-    background-repeat: no-repeat;
-}
-.rename-town-container
-{
-    width: 100%;
-    padding: 0.6rem;
-    position: relative;
-    float: left;
-}
-
-
-.rename-town-container > .row
-{
-    width: 100%;
-    height: 5.9rem;
-    position: relative;
-    float: left;
-}
-
-.rename-town-container > .row >.label
-{
-    width: 9.0rem;
-    height: 5.9rem;
-    margin-right: 1.0rem;
-    position: relative;
-    float: left;
-
-    line-height: 5.9rem;
-    text-align: right;
-}
-
-.rename-town-container >.row >.l-input
-{
-    width: 30.0rem;
-    height: 4.0rem;
-    margin-top: 1.0rem;
-    margin-bottom: 1.0rem;
-    position: relative;
-    float: left;
-}
 
 .world-campfire-screen > .l-main-dialog-container .l-button
 {
@@ -166,11 +151,12 @@
     bottom: 0;
     width: ;
     position: absolute;
-    left: 70.0rem;
+    left: -5rem;
     z-index: 9999;
     width: 25rem;
     height: 10rem;
 }
+
 .world-campfire-screen > .l-main-dialog-container .stronghold-retinue-button.button:hover,
 .world-campfire-screen > .l-main-dialog-container  .stronghold-retinue-button.button.is-selected,
 .world-campfire-screen > .l-main-dialog-container .stronghold-retinue-button.button[disabled]

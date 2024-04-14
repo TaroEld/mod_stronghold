@@ -1,6 +1,8 @@
 this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_action", {
 	//Governs the spawning of stronghold patrols.
-	m = {},
+	m = {
+
+	},
 	function create()
 	{
 		this.m.ID = "stronghold_patrol_roads_action";
@@ -20,7 +22,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		local settlements = this.World.EntityManager.getSettlements();
 
 		foreach(playerBase in playerBases){
-			if (playerBase.isIsolated() || this.Time.getVirtualTimeF() < playerBase.getFlags().get("TimeUntilNextPatrol") || playerBase.isUpgrading()) continue
+			if (playerBase.isIsolated() || !::Stronghold.isCooldownExpired(playerBase, "TimeUntilNextPatrol") || playerBase.isUpgrading()) continue
 
 			local connected = []
 			foreach (settlement in settlements)
@@ -38,7 +40,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 			}
 		}
 		if (nonIsolatedBases.len() == 0) return
-		this.m.Settlements <- this.Math.randArray(nonIsolatedBases);
+		this.m.Settlements <- ::MSU.Array.rand(nonIsolatedBases);
 		//the more friendlies, the more patrols spawn
 		//this.m.Cooldown = (this.World.getTime().SecondsPerDay * 7) / (friendly_factions.len()+1);
 		this.m.Score = 100;
@@ -51,11 +53,14 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 	function onExecute( _faction )
 	{
 		local playerBase = this.m.Settlements.Base
-		local patrol_strength = 200 * (playerBase.getSize()-1)
-		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease
+		local partyStrength = 100 * (playerBase.getSize());
+		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
+		if (trainingCamp)
+			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
+		partyStrength *=  this.getReputationToDifficultyLightMult();
 		
 
-		local party = _faction.stronghold_spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
+		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.m.OnCombatWithPlayerCallback = null;
 		party.getSprite("body").setBrush(playerBase.m.troopSprites);
 		party.setDescription("A band of mercenaries patrolling the roads.");
@@ -67,7 +72,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		local target_settlements = [];
 		while (valid.len() > 0 && index < 5)
 		{
-			local rng = this.Math.rand(0, valid.len() -1)
+			local rng = ::Math.rand(0, valid.len() -1)
 			target_settlements.push(valid[rng])
 			valid.remove(rng)
 			index++
@@ -100,7 +105,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 		}
 		local despawn = this.new("scripts/ai/world/orders/despawn_order");
 		c.addOrder(despawn);
-		playerBase.getFlags().set("TimeUntilNextPatrol", this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 7)
+		::Stronghold.setCooldown(playerBase, "TimeUntilNextPatrol");
 		return true;
 	}
 

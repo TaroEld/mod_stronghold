@@ -26,8 +26,8 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.m.HousesMax = 3;
 		this.m.AttachedLocationsMax = 3;
 		this.m.LocationType = this.Const.World.LocationType.Settlement;
-		this.m.ShopSeed = this.Time.getRealTime() + this.Math.rand();
-		this.m.RosterSeed = this.Time.getRealTime() + this.Math.rand();
+		this.m.ShopSeed = this.Time.getRealTime() + ::Math.rand();
+		this.m.RosterSeed = this.Time.getRealTime() + ::Math.rand();
 		this.m.VisibilityMult = 2.0;
 		this.m.IsVisited = true;
 		this.m.IsUpgrading <- false;
@@ -37,12 +37,13 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/marketplace_building"), 2);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/crowd_building"), 5);
 		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
-		this.getFlags().set("IsSecondaryBase", true)
+
+		this.getFlags().set("IsPlayerBase", true);
+		this.getFlags().set("IsMainBase", false);
 	}
 	
 	function assimilateCharacteristics(_town)
 	{
-		this.m.DraftList = _town.m.DraftList
 		this.m.UIDescription = _town.m.UIDescription
 		this.m.Description = _town.m.Description
 		this.m.UIBackgroundCenter =  _town.m.UIBackgroundCenter 
@@ -58,29 +59,28 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 	}
 	function getFactionOfType(_type)
 	{
-		return this.Stronghold.getPlayerFaction()
-	}
-	
-	function isMainBase()
-	{
-		return false;
+		return this.Stronghold.getPlayerFaction();
 	}
 	
 	function getSizeName()
 	{
-		return this.Stronghold.HamletName
+		return this.Stronghold.Hamlet.Name;
 	}
 	
 	function onEnter()
 	{
 		//updates buildings, shops, quests, attached locations
-		this.World.State.getTownScreen().getMainDialogModule().loadRename()
 		this.location.onEnter();
 		this.updateRoster();
 		this.updateShop();
-		this.Math.seedRandom(this.Time.getRealTime());
+		::Math.seedRandom(this.Time.getRealTime());
 
 		return true;
+	}
+
+	function onLeave()
+	{
+		this.settlement.onLeave();
 	}
 
 	function getParent(){
@@ -94,7 +94,8 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		return [];
 	}
 	
-	function updateTown(){
+	function updateTown()
+	{
 		//updates town after upgrading and loading the game. Necessary to update the sprites, names etc.
 		
 		//different looks
@@ -108,103 +109,19 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		}
 		this.getLabel("name").Text = this.getName();
 		this.getLabel("name").Visible = true;
-		if (this.m.Buildings[6] == null)
-		{
-			this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
-		}
 		this.m.Buildings[6].updateSprite()
-		
 	}
-	
-	
-	function updateRoster( _force = false )
+
+	function updateLook()
 	{
-		local daysPassed = (this.Time.getVirtualTimeF() - this.m.LastRosterUpdate) / this.World.getTime().SecondsPerDay;
-
-		if (!_force && this.m.LastRosterUpdate != 0 && daysPassed < 2)
-		{
-			return;
-		}
-
-		if (this.m.RosterSeed != 0)
-		{
-			this.Math.seedRandom(this.m.RosterSeed);
-		}
-
-		this.m.RosterSeed = this.Math.floor(this.Time.getRealTime() + this.Math.rand());
-		this.m.LastRosterUpdate = this.Time.getVirtualTimeF();
-		local roster = this.World.getRoster(this.getID());
-		local current = roster.getAll();
-		local iterations = this.Math.max(1, daysPassed / 2);
-		local activeLocations = 0;
-
-		foreach( loc in this.m.AttachedLocations )
-		{
-			if (loc.isActive())
-			{
-				activeLocations = ++activeLocations;
-			}
-		}
-
-		local rosterMin = 6
-		local rosterMax = 12
-		local minMaxIncrease = this.getParent().countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].RecruitIncrease
-		rosterMin += minMaxIncrease;
-		rosterMax += minMaxIncrease;
-
-		if (iterations < 7)
-		{
-			for( local i = 0; i < iterations; i = ++i )
-			{
-				for( local maxRecruits = this.Math.rand(this.Math.max(0, rosterMax / 2 - 1), rosterMax - 1); current.len() > maxRecruits;  )
-				{
-					local n = this.Math.rand(0, current.len() - 1);
-					roster.remove(current[n]);
-					current.remove(n);
-				}
-			}
-		}
-		else
-		{
-			roster.clear();
-			current = [];
-		}
-
-		local maxRecruits = this.Math.rand(rosterMin, rosterMax);
-		local draftList;
-		draftList = clone this.m.DraftList;
-
-		foreach( loc in this.m.AttachedLocations )
-		{
-			loc.onUpdateDraftList(draftList);
-		}
-
-		foreach( b in this.m.Buildings )
-		{
-			if (b != null)
-			{
-				b.onUpdateDraftList(draftList);
-			}
-		}
-
-		foreach( s in this.m.Situations )
-		{
-			s.onUpdateDraftList(draftList)
-		}
-		this.World.Assets.getOrigin().onUpdateDraftList(draftList);
-
-		while (maxRecruits > current.len())
-		{
-			local bro = roster.create("scripts/entity/tactical/player");
-			bro.setStartValuesEx(draftList);
-			current.push(bro);
-		}
-
-		this.World.Assets.getOrigin().onUpdateHiringRoster(roster);
+		local constSprites = this.Stronghold.VisualsMap[this.m.Spriteset];
+		this.m.TroopSprites = constSprites.WorldmapFigure[3];
+		this.m.HouseSprites = constSprites.Houses;
 	}
 
 	function onSerialize( _out )
 	{
+		local management = this.m.Buildings.pop();
 		this.m.Buildings.resize(6);
 		this.settlement.onSerialize(_out);
 		_out.writeU8(this.m.Size)
@@ -215,14 +132,21 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		_out.writeString(this.m.UISprite)
 		_out.writeString(this.m.Sprite)
 		_out.writeString(this.m.Lighting)
-		this.m.Buildings.resize(7);
-		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
-		this.m.Buildings[6].updateSprite();
+
+		_out.writeU8(this.m.HousesTiles.len());
+		for( local i = 0; i != this.m.HousesTiles.len(); i = ++i )
+		{
+			_out.writeI16(this.m.HousesTiles[i].X);
+			_out.writeI16(this.m.HousesTiles[i].Y);
+			_out.writeU8(this.m.HousesTiles[i].V);
+			_out.writeString(this.m.HousesTiles[i].Sprite);
+			_out.writeString(this.m.HousesTiles[i].Light);
+		}
+		this.m.Buildings.append(management);
 	}
 	
 	function onDeserialize( _in )
 	{
-		this.m.Buildings.resize(6);
 		this.settlement.onDeserialize(_in);
 		this.m.Size  = _in.readU8();
 		this.m.UIBackgroundCenter = _in.readString()
@@ -232,8 +156,24 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.m.UISprite = _in.readString()
 		this.m.Sprite = _in.readString()
 		this.m.Lighting = _in.readString()
-		this.m.Buildings.resize(7);
-		this.updateTown();
+
+		this.m.Buildings.resize(7)
+		this.addBuilding(this.new("scripts/entity/world/settlements/buildings/stronghold_management_building"), 6);
+		this.m.Buildings[6].updateSprite();
+
+		this.m.HousesTiles.clear();
+		local numHouses = _in.readU8();
+		for( local i = 0; i != numHouses; i = ++i )
+		{
+			this.m.HousesTiles.push({
+				X = _in.readI16(),
+				Y = _in.readI16(),
+				V = _in.readU8(),
+				Sprite = _in.readString(),
+				Light = _in.readString(),
+			});
+		}
+		this.updateTown()
 	}
 });
 

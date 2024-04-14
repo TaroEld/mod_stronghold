@@ -1,0 +1,3 @@
+<brush name="gfx/stronghold_tactical.png" version="17" b1="2" b5="0">
+	 <sprite id="stronghold_well_fed" ic="FF3B526E" img="skills\stronghold_well_fed.png" />
+</brush>

@@ -10,7 +10,7 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 	{
 		this.faction.create();
 		this.m.Type = this.Const.FactionType.Player;
-		this.m.HairColor = this.Math.rand(0, this.Const.HairColors.Lineage.len() - 1);
+		this.m.HairColor = ::Math.rand(0, this.Const.HairColors.Lineage.len() - 1);
 		this.m.Base = "world_base_09";
 		this.m.TacticalBase = "bust_base_military";
 		this.m.CombatMusic = this.Const.Music.NobleTracks;
@@ -233,7 +233,8 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 	function updateQuests()
 	{
 		//adds/removes quests when entering town. Takes care of conflicing quests.	
-		if (this.getMainBases().filter(@(a, b) b.isMaxLevel()).len() == 0) return
+		local bases = this.getMainBases().filter(@(a, b) b.getSize() > 2);
+		if (bases.len() == 0) return
 		local contracts = this.getContracts();
 		local find_waterskin = false;
 		local free_mercenaries = false;

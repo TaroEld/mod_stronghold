@@ -1,0 +1,73 @@
+.stronghold-screen .structures-module .structure-row
+{
+	height: 16rem;
+}
+
+.stronghold-screen .structures-module .structure-image-container
+{
+	height: 8rem;
+	width: 11.52rem;
+	margin-left: 0.5rem;
+	position: relative;
+
+}
+
+.stronghold-screen .structures-module .structure-image-container .structure-image
+{
+	height: 6.4rem;
+	width: 11.52rem;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.stronghold-screen .structures-module .structure-image-container .structure-selection
+{
+	height: 6.4rem;
+	width: 11.52rem;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.stronghold-screen .structures-module .structure-image-container:hover .structure-selection
+{
+	display: block;
+}
+
+
+.stronghold-screen .structures-module .description-row
+{
+	height: 25rem;
+}
+.stronghold-screen .structures-module .description-row .active-structure-image-container
+{
+/*	height: 20rem;*/
+}
+
+.stronghold-screen .structures-module .active-structure-image
+{
+	height: 10rem;
+/*	width: 20rem;*/
+}
+
+.stronghold-screen .structures-module .description-row .active-structure-text-container
+{
+	flex: 1;
+	margin-left: 0.5rem;
+}
+
+
+.stronghold-screen .structures-module .footer-button-bar
+{
+    position: absolute;
+    bottom: 0;
+    justify-content: center;
+}
+
+.stronghold-screen .structures-module .footer-button-bar > div
+{
+    width: 17.5rem;
+    height: 4.3rem;
+    /*border: 1px solid blue;*/
+} 

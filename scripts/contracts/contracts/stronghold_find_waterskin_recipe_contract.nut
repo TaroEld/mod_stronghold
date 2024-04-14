@@ -9,7 +9,7 @@ this.stronghold_find_waterskin_recipe_contract <- this.inherit("scripts/contract
 	},
 	function create()
 	{
-		this.m.DifficultyMult = this.Math.rand(116, 130) * 0.01;
+		this.m.DifficultyMult = ::Math.rand(116, 130) * 0.01;
 		this.m.Flags = this.new("scripts/tools/tag_collection");
 		this.m.TempFlags = this.new("scripts/tools/tag_collection");
 		this.createStates();
@@ -290,7 +290,7 @@ this.stronghold_find_waterskin_recipe_contract <- this.inherit("scripts/contract
 				this.List.push({
 					id = 10,
 					icon = "ui/items/consumables/youth_01.png",
-					text = "You gain the recipe for a Water Flask"
+					text = "You gain the recipe for the Water of Life."
 				});
 
 			}

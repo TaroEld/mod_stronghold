@@ -1,0 +1,127 @@
+.stronghold-screen .misc-module
+{
+}
+
+.stronghold-screen .misc-module .l-list-container
+{
+
+}
+
+.stronghold-screen .misc-module .misc-option
+{
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	margin-bottom: 3rem;
+    padding-top:2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+}
+
+
+.stronghold-screen .misc-module .build-road-container .road-cost
+{
+	width: 3rem;
+	height: 3rem;
+}
+
+.stronghold-screen .misc-module .road-town-img
+{
+	width: 25.2rem;
+	height: 19.9rem;
+}
+.stronghold-screen .misc-module .gifts-image-container
+{
+	width: 14rem;
+}
+.stronghold-screen .misc-module .gifts-image-container > img
+{
+	width: 8.9rem;
+	height: 12rem;
+}
+.misc-gift
+{
+	width:4.5rem;
+	height:4.5rem;
+}
+.gifts-details-container
+{
+	display: flex;
+}
+.gifts-details
+{
+	flex:1;
+}
+.gifts-details > span
+{
+	display: block;
+}
+
+/*Train brother*/
+.train-brother-img-container
+{
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.train-brother-img
+{
+	width: 20%;
+}
+.train-brother-popup
+{
+	width: 102.4rem;
+    height: 76.8rem;
+    background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.train-brother-popup-main
+{
+	overflow:auto;
+	height: 80em;
+	width:100%;
+}
+.train-brother-popup-scroll
+{
+	display:flex;
+	flex-wrap: wrap;
+	height:100%;
+	padding-left: 5rem;
+}
+
+.train-brother-popup-entry
+{
+	position:relative;
+	width: 15rem;
+	height: 15rem;
+	display:flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.train-brother-popup-entry > div
+{
+	width: 100%;
+	margin-left: 0.5rem;
+}
+.train-brother-popup-entry > img.st-portrait
+{
+	height:50%;
+}
+.train-brother-popup-entry-selection
+{
+	width: 15rem;
+	height: 15rem;
+	position: absolute;
+	top:0;
+	left:0;
+}
+
+.train-brother-popup-entry:hover .train-brother-popup-entry-selection
+{
+	display: block;
+}
+

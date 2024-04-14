@@ -8,11 +8,11 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		Title = "Free the mercenaries",
 		LastCombatTime = 0.0,
 		Destination = null,
-		Enemy_Faction = null
+		Enemy_Faction = null,
 	},
 	function create()
 	{
-		this.m.DifficultyMult = this.Math.rand(116, 130) * 0.01;
+		this.m.DifficultyMult = ::Math.rand(116, 130) * 0.01;
 		this.m.Flags = this.new("scripts/tools/tag_collection");
 		this.m.TempFlags = this.new("scripts/tools/tag_collection");
 		this.createStates();
@@ -67,7 +67,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					this.Contract.m.Target.getSprite("selection").Visible = true;
 					this.Contract.m.Target.setVisibleInFogOfWar(true);
 					this.Contract.m.Target.setOnCombatWithPlayerCallback(this.onTargetAttacked.bindenv(this));
-					this.Contract.m.Enemy_Faction = this.Contract.m.Target.getFaction()
+					this.Contract.m.Enemy_Faction = this.Contract.m.Target.getFaction();
 				}
 				else
 				{
@@ -157,8 +157,8 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 						this.logInfo("COULD NOT FIND EITHER START OR END SETTLEMENT")
 						this.Contract.setState("Return");
 					}
-					
-					local party = selected_faction.stronghold_spawnEntity(selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
+					::Stronghold.getHostileFaction().copyLooks(selected_faction);
+					local party = ::Stronghold.getHostileFaction().spawnEntity(selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
 					this.Const.World.Common.addTroop(party, {
 							Type = this.Const.World.Spawn.Troops.Executioner
 						}, true, 100);
@@ -191,10 +191,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					"Hunt down the noble caravan",
 					"Don't let it reach " + selected_end_settlememt.getName() + " ."
 					];
-					
 				}
-				
-								
 			}
 			
 			
@@ -220,7 +217,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			{
 				if (this.Time.getVirtualTimeF() >= this.Contract.m.LastCombatTime + 5.0)
 				{
-					this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).setIsTemporaryEnemy(true);
 					this.Contract.m.LastCombatTime = this.Time.getVirtualTimeF();
 					this.World.Contracts.showCombatDialog(_isPlayerAttacking);
 				}
@@ -228,7 +224,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			
 			function onActorRetreated( _actor, _combatID )
 			{
-				if (!_actor.isNonCombatant() && _actor.getFaction() == this.World.FactionManager.getFaction(this.Contract.m.Enemy_Faction).getID())
+				if (!_actor.isNonCombatant() && _actor.getFaction() == ::World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies).getID())
 				{
 					this.Contract.m.Flags.set("Survivors", this.Flags.get("Survivors") + 1);
 				}
@@ -272,7 +268,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "Task",
 			Title = this.m.Title,
-			Text = "A band of mercenaries is being transported to a fortress and are awaiting execution. We must help them!",
+			Text = "Word has reached us that a band of mercenaries is being transported to a fortress, awaiting execution for a crime they almost certainly weren't being spotted committing. The mercenary community is in uproar about yet another unfair treatment of entirely honest brothers in arms.\n%randombrother% suggests that we could score some points if we went and helped those poor souls out of their predicatment. We probably shouldn't be seen doing it, though.",
 			Image = "",
 			List = [],
 			ShowEmployer = true,
@@ -363,14 +359,14 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "Success1",
 			Title = "On your return...",
-			Text = "[img]gfx/ui/events/event_53.png[/img]{The mercenaries are rejoiced after being freed. They ask if they can settle down in your stronghold, and you readily agree: you can never have enough strong arms. They offer to follow you for the rest of the week and help you in any battles.}"
+			Text = "[img]gfx/ui/events/event_53.png[/img]{The mercenaries are rejoiced after being freed. They ask if they can settle down in your stronghold, and you readily agree: you can never have enough strong arms.\nAfter this stunt, we are in high favours with the other mercenary companies. They might even follow us on our adventures at discount rates.}"
 			Image = "",
 			Characters = [],
 			List = [],
 			ShowEmployer = true,
 			Options = [
 				{
-					Text = "You can tag along you lot.",
+					Text = "You can tag along.",
 					function getResult()
 					{
 						this.Stronghold.getPlayerFaction().clearContracts()
@@ -410,7 +406,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "Failure1",
 			Title = "On your return...",
-			Text = "[img]gfx/ui/events/event_95.png[/img]{You couldn't save the mercenaries in time. They will be abandoned to whatever fate has chosen for them. This one's on you!}"
+			Text = "[img]gfx/ui/events/event_95.png[/img]{You couldn't save the mercenaries in time. They will be abandoned to whatever fate has chosen for them, which most likely means the hangman's noose in short order. This one's on you!}"
 			Image = "",
 			Characters = [],
 			List = [],
@@ -434,7 +430,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "Failure2",
 			Title = "On your return...",
-			Text = "[img]gfx/ui/events/event_53.png[/img]{The mercenaries are rejoiced after being freed. They ask if they can settle down in your stronghold, and you readily agree: you can never have enough strong arms. However, your castellan informs you that your actions have not gone unnoticed. Too many of their soldiers lived to tell their story, and the nobles have declared you their enemy.}"
+			Text = "[img]gfx/ui/events/event_53.png[/img]{The mercenaries are rejoiced after being freed. They ask if they can settle down in your stronghold, and you readily agree: you can never have enough strong arms. However, your castellan informs you that your actions have not gone unnoticed. Too many of their soldiers lived to tell their story, and the nobles have declared you their enemy.\nStill: after this stunt, we are in high favours with the other mercenary companies. They might even follow us on our adventures at discount rates.}"
 			Image = "",
 			Characters = [],
 			List = [],
@@ -489,9 +485,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			}
 			this.World.FactionManager.getFaction(this.getFaction()).setActive(true);
 			this.m.Home.getSprite("selection").Visible = false;
-
 		}
-
 	}
 	
 	function cancel()
@@ -508,10 +502,12 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	{
 		local playerBase =  this.getHome()
 		local playerFaction = this.Stronghold.getPlayerFaction()
-		local mercenary_size = 200
-		mercenary_size += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease 
+		local partyStrength = 200
+		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
+		if (trainingCamp)
+			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
 
-		local party = playerFaction.spawnEntity(this.World.State.getPlayer().getTile(), "Freed mercenaries", true, this.Const.World.Spawn.Mercenaries, mercenary_size);
+		local party = playerFaction.spawnEntity(this.World.State.getPlayer().getTile(), "Freed mercenaries", true, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.getSprite("body").setBrush("figure_mercenary_01");
 		party.setDescription("A band of mercenaries following you around.");
 		party.setFootprintType(this.Const.World.FootprintsType.CityState);
@@ -521,7 +517,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
 		local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
-		follow.setDuration(7);
+		follow.setDuration(999);
 		c.addOrder(follow);
 	}
 
@@ -566,11 +562,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		{
 			this.m.Target = this.WeakTableRef(this.World.getEntityByID(target));
 		}
-		
-		
 		this.contract.onDeserialize(_in);
-
 	}
-
 });
 

@@ -1,0 +1,223 @@
+.stronghold-screen .stash-module
+{
+	display: block !important;
+}
+.stronghold-screen .stash-module .l-tab-container
+{
+    top: -1.0rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 88.0rem;
+    height: 3.0rem;
+    position: absolute;
+    margin: auto;
+}
+
+.stronghold-screen .stash-module  .column
+{
+    height: 100%;
+    position: relative;
+    float : left;
+}
+
+.stronghold-screen .stash-module  .column.is-left,
+.stronghold-screen .stash-module  .column.is-right
+{
+    width: 40.0rem;
+    background-image: url("coui://gfx/ui/skin/dialog_panel_02.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.stronghold-screen .stash-module  .column.is-middle
+{
+    width: 6.4rem;
+}
+
+.stronghold-screen .stash-module  .row
+{
+    left: 0;
+    right: 0;
+    position: absolute;
+}
+
+.stronghold-screen .stash-module  .row.is-header
+{
+    top: -0.1rem;
+    height: 3.0rem;
+
+    line-height: 4.6rem;
+    text-align: center;
+}
+
+.stronghold-screen .stash-module  .row.is-content
+{
+    top: 3.4rem;
+    bottom: 3.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-footer
+{
+    bottom: 0;
+    height: 3.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .button-container
+{
+    position: absolute;
+
+    left: 0.8rem;
+    width: 6.4rem;
+    height: 55.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .l-button.is-sort
+{
+    width: 5.2rem;
+    height: 4.1rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .l-button.is-all-filter
+{
+    position: absolute;
+
+    width: 5.2rem;
+    height: 4.1rem;
+    top: 4.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .l-button.is-weapons-filter
+{
+    position: absolute;
+
+    width: 5.2rem;
+    height: 4.1rem;
+    top: 8.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .l-button.is-armor-filter
+{
+    position: absolute;
+
+    width: 5.2rem;
+    height: 4.1rem;
+    top: 12.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .l-button.is-usable-filter
+{
+    position: absolute;
+
+    width: 5.2rem;
+    height: 4.1rem;
+    top: 16.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .l-button.is-misc-filter
+{
+    position: absolute;
+
+    width: 5.2rem;
+    height: 4.1rem;
+    top: 20.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .l-button.small-items-button
+{
+    position: absolute;
+
+    width: 5.2rem;
+    height: 4.1rem;
+    top: 30.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .slot-count-container
+{
+    position: absolute;
+
+    width: 12.6rem;
+    height: 2.4rem;
+    top: 40.0rem;
+    left: -1.0rem;
+}
+
+.stronghold-screen .stash-module  .row.is-content .slot-count-container.town
+{
+	top: 45rem;
+}
+.stronghold-screen .stash-module  .row.is-content .slot-count-container .slot-count-header
+{
+	width:6.4rem;
+	height:2rem;
+	text-align: center;
+}
+
+.stronghold-screen .stash-module  .row.is-content .slot-count-container img
+{
+    width: 2.0rem;
+    height: 2.0rem;
+    position: absolute;
+}
+
+.stronghold-screen .stash-module  .row.is-content .slot-count-container .label
+{
+    width: 5.4rem;
+    height: 2.0rem;
+    position: absolute;
+    left: 1.8rem;
+
+    line-height: 2.0rem;
+}
+
+.stronghold-screen .stash-module  .l-list-container
+{
+    top: -0.1rem;
+    bottom: 0;
+    position: absolute;
+    height: 51.8rem;
+}
+
+.stronghold-screen .stash-module  .l-list-container.is-left
+{
+    left: 5.0rem;
+    right: 1.6rem;
+}
+
+.stronghold-screen .stash-module  .l-list-container.is-right
+{
+    left: 5.0rem;
+    right: 1.6rem;
+}
+
+.stronghold-screen .stash-module  .l-list-container .scroll-container
+{
+    margin-bottom: 0.0rem;
+}
+
+
+.stronghold-screen .stash-module .ui-control.item.is-proxy
+{
+    z-index: 100;
+}
+
+.stronghold-screen .stash-module.small-items  .ui-control.item.is-list-item
+{
+    width:5.18rem;
+    height:5.18rem;
+}
+
+.stronghold-screen .stash-module.small-items  .ui-control.item > .image-layer
+{
+    width: 5rem;
+    height: 5rem;
+    left: 0.1rem;
+    top: 0.1rem;
+}
+/*.stronghold-screen .stash-module .image-layer.small-item
+{
+    width: 5rem;
+    height: 5rem;
+    left: 0.1rem;
+    top: 0.1rem;
+}*/

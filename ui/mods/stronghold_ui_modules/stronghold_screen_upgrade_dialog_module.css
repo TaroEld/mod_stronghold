@@ -1,0 +1,35 @@
+.stronghold-screen .upgrade-module .upgrade-base-row
+{
+    height: 28rem;
+}
+
+.stronghold-screen .upgrade-module .upgrade-details-container
+{
+    flex: 1;
+}
+
+.stronghold-screen .upgrade-module .upgrade-sprite-container
+{
+    width: 28.0rem;
+} 
+
+.stronghold-screen .upgrade-module .upgrade-sprite-image
+{
+    width: 25.2rem;
+    height: 19.9rem;
+}
+
+.stronghold-screen .upgrade-module .footer-button-bar
+{
+    position: absolute;
+    bottom: 0;
+    justify-content: center;
+}
+
+.stronghold-screen .upgrade-module .footer-button-bar .upgrade-base-button
+{
+    align-self: center;
+    width: 17.5rem;
+    height: 4.3rem;
+    /*border: 1px solid blue;*/
+} 

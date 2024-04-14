@@ -1,0 +1,66 @@
+.main-module table {
+	wdith:100%;
+	display: flex;
+	flex-direction: column;
+	padding-right: 2rem;
+}
+.main-module table td
+{
+	width: 100%;
+}
+.main-module .base-situation img
+{
+	width : 5rem;
+	height : 5rem;
+	margin-left : 2rem;
+}
+
+.main-module .base-situation .base-situation-text
+{
+
+	width : 90%;
+	padding-left : 5rem;
+}
+
+
+.overflow-items-popup
+{
+	width: 102.4rem;
+    height: 76.8rem;
+    background-image: url("coui://gfx/mods/msu/skin/generic_background_large_border.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.overflow-items-popup-main
+{
+	overflow:auto;
+	height: 80em;
+	width:100%;
+}
+.overflow-items-popup-scroll
+{
+	display:flex;
+	flex-wrap: wrap;
+	height:100%;
+	padding-left: 5rem;
+}
+
+.overflow-items-popup-entry
+{
+	position:relative;
+	width: 15rem;
+	height: 15rem;
+	display:flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.overflow-items-popup-entry > div
+{
+	width: 100%;
+	margin-left: 0.5rem;
+}
+.overflow-items-popup-entry > img.st-portrait
+{
+	height:50%;
+}

@@ -13,7 +13,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 	},
 	function create()
 	{
-		this.m.DifficultyMult = this.Math.rand(116, 130) * 0.01;
+		this.m.DifficultyMult = ::Math.rand(116, 130) * 0.01;
 		this.m.Flags = this.new("scripts/tools/tag_collection");
 		this.m.TempFlags = this.new("scripts/tools/tag_collection");
 		this.createStates();
@@ -326,7 +326,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 								for( local y = 0; y < size.Y; y = ++y )
 								{
 									local tile = this.Tactical.getTileSquare(x, y);
-									tile.Level = this.Math.min(1, tile.Level);
+									tile.Level = ::Math.min(1, tile.Level);
 									tile.clear()
 									tile.removeObject()
 								}
@@ -494,7 +494,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 			return 0;
 		});
 		
-		local numslots = this.Math.min(10, roster.len())
+		local numslots = ::Math.min(10, roster.len())
 		for (local x = 0; x < numslots; x++)
 		{
 			options.push(roster[x])

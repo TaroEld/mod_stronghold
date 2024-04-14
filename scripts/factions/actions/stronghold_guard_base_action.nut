@@ -17,18 +17,13 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 	{
 		local basesRequiringMercs = [];
 		local mercIDs = [];
-		foreach(unit in _faction.m.Units){
-			if (unit.getFlags().get("Stronghold_Guards")){
-				mercIDs.push(unit.getFlags().get("Stronghold_Base_ID"))
-			}
-		}
-		foreach(playerBase in _faction.getMainBases()){
-			if (mercIDs.find(playerBase.getID()) == null && this.Time.getVirtualTimeF() > playerBase.getFlags().get("TimeUntilNextMercs")){
-				basesRequiringMercs.push(playerBase)
-			}
+		foreach(playerBase in _faction.getMainBases())
+		{
+			if (mercIDs.find(playerBase.getID()) == null && ::Stronghold.isCooldownExpired(playerBase, "TimeUntilNextMercs"))
+				basesRequiringMercs.push(playerBase);
 		}
 		if (basesRequiringMercs.len() == 0) return
-		this.m.PlayerBase = this.Math.randArray(basesRequiringMercs);
+		this.m.PlayerBase = ::MSU.Array.rand(basesRequiringMercs);
 		//only works with level 2+ base
 		this.m.Score = 100;
 	}
@@ -49,19 +44,21 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 			}
 		}
 
-		local patrol_strength = 100 * (playerBase.getSize())
-		patrol_strength += playerBase.countAttachedLocations( "attached_location.militia_trainingcamp" ) * this.Stronghold.Locations["Militia_Trainingcamp"].MercenaryStrengthIncrease;
-		patrol_strength *= this.getScaledDifficultyMult();
+		local partyStrength = 50 * (playerBase.getSize() + 1);
+		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
+		if (trainingCamp)
+			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
+		partyStrength *=  this.getReputationToDifficultyLightMult();
 
 
-		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary guards of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, patrol_strength);
+		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary guards of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.m.OnCombatWithPlayerCallback = null;
-		party.getSprite("body").setBrush(playerBase.m.troopSprites);
+		party.getSprite("body").setBrush(playerBase.m.TroopSprites);
 		party.setDescription(format("A band of mercenaries defending the %s.", playerBase.getSizeName()));
 		party.setFootprintType(this.Const.World.FootprintsType.Mercenaries);
 		party.getFlags().set("Stronghold_Guards", true);
 		party.getFlags().set("Stronghold_Base_ID", playerBase.getID());
-		playerBase.getFlags().set("TimeUntilNextMercs", this.Time.getVirtualTimeF() + this.World.getTime().SecondsPerDay * 7)
+		::Stronghold.setCooldown(playerBase, "TimeUntilNextMercs");
 		local c = party.getController();
 
 		local totalTime = this.World.getTime().SecondsPerDay * 7
