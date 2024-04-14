@@ -224,16 +224,18 @@ Stronghold.Text = {
 			UpgradeDescription : {
 				Slots : "<li>This location provides housing for your brothers, allowing you to leave up to {0} brothers at your base.</li>",
 				WageCost : "<li>Brothers at the base cost only {0}% of their normal daily wage.</li>",
+				Mood : "<li>The mood of brothers housed at the base tends towards being {0} over time.</li>",
 			},
 			getUpgradeDescription : function(_element, _level){
 				var text = Stronghold.Text.format(this.UpgradeDescription.Slots, _element.MaxTroops * _level);
 				text += Stronghold.Text.format(this.UpgradeDescription.WageCost, parseInt((_element.WageCost - _level * _element.WageCostPerLevel) * 100));
+				text += Stronghold.Text.format(this.UpgradeDescription.Mood, _element.MoodStateNames[_element.MoodStateStart + _element.MoodStatePerLevel * _level]);
 				return  text
 			},
 		},
 		Militia_Trainingcamp : {
 			UpgradeDescription : {
-				DailyIncome : "<li>Each trainingcamp generates {0} experience per day, which is divided over all stored brothers below level {1}.</li>",
+				DailyIncome : "<li>The trainingcamp generates {0} experience per day, which is divided over all stored brothers below level {1}.</li>",
 				NPC : "<li>Your allied mercenaries and auxiliaries will train here, increasing the strength of mercenary parties and caravans.</li>",
 				Hamlet : "<li>If your base has a hamlet, each trainingcamp will also increase the amount of recruits that will line up to join you by {0}.</li>"
 			},

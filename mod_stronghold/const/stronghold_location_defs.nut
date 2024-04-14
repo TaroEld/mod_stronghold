@@ -40,7 +40,8 @@
 		Name = "Troop Quarters",
 		ID = "attached_location.troop_quarters",
 		Path = "troop_quarters_location",
-		Description = "A collection of housing units, with space for unwashed mercenaries and their partners for the night."
+		Description = "A collection of housing units, with space for unwashed mercenaries and their partners for the night.",
+		MoodStateNames = ::Const.MoodStateName
 	}
 	Warehouse = {
 		Name = "Warehouse",
@@ -66,5 +67,5 @@ foreach(locationID, location in ::Stronghold.LocationDefs)
 {
 	location.ConstID <- locationID;
 	location.Requirements <- []
-	::MSU.Table.merge(location, ::Stronghold.Locations[locationID]);
+	::MSU.Table.merge(location, ::Stronghold.Locations[locationID], true, true);
 }
