@@ -306,7 +306,7 @@ StrongholdScreen.prototype.loadTownAssetsData = function()
 		return;
 	}
 	var self = this;
-	$.each(["UpgradeModule", "MiscModule","LocationsModule", "BuildingsModule"], function(_idx, _str){
+	$.each(["UpgradeModule", "MiscModule", "LocationsModule", "BuildingsModule"], function(_idx, _str){
 		self.getModuleObject(_str).Button.enableButton(self.mData['TownAssets'].IsUpgrading === false);
 	})
 }

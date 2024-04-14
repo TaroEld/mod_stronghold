@@ -111,26 +111,6 @@
 	return cost;
 }
 
-::Stronghold.getClosestDistance <- function(_destination, _list)
-{
-	local chosen = null;
-	local closestDist = 9999;
-	foreach (obj in _list)
-	{
-		if (obj == null) continue
-		local dist = obj.getTile().getDistanceTo(_destination.getTile())
-		if (chosen == null || dist < closestDist)
-		{
-			chosen = obj;
-			closestDist = dist;
-		}
-	}
-	return
-	{
-		settlement = obj
-	}
-}
-
 //modded from vanilla to allow for longer range
 ::Stronghold.isOnTile <- function(_tile, _tileTypes)
 {

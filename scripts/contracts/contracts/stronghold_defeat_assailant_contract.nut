@@ -133,7 +133,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				
-				this.Text = format("Your %s is now under construction. This will take %i %s. Enemies will attack it within the next day.", ::Stronghold.BaseTiers[this.Contract.m.TargetLevel].Name, this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
+				this.Text = format("The construction of your %s has begun. Your hired engineers expect that this will take %i %s, during which you won't be able to enter all its buildings and locations. The ruckus has drawn the attention of nearby enemies, and you can expect them to send an attack party within the next day.", ::Stronghold.BaseTiers[this.Contract.m.TargetLevel].Name, this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
 				this.Contract.m.BulletpointsObjectives = [
 					format("Defend against %i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
 				];
