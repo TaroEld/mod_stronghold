@@ -72,7 +72,7 @@
 		local player_settlements = playerFaction.getSettlements()
 		foreach (settlement in player_settlements)
 		{
-			if(settlement.getFlags().get("IsPlayerBase")){
+			if(settlement.getFlags().get("IsMainBase")){
 				return settlement
 			}
 		}
