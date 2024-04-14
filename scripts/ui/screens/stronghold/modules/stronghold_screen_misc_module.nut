@@ -4,10 +4,6 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			// Cache it, reload it only after a road was build
 			Map = {}
 		},
-		Gifts = {
-			FactionMap = {},
-			DistanceMap = {},
-		}
 	},
 
 	function getUIData( _ret )
@@ -91,67 +87,22 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		this.World.Assets.addMoney(-_target.Cost);
 		this.getTown().buildRoad(targetSettlement, _target.Roadmult * 0.01);
 		this.m.Road.Map = {};
-		this.updateConnectedToByRoad();
+		::Stronghold.updateConnectedToByRoad();
 		this.updateData(["Assets", "MiscModule"]);
 	}
 
-	function updateConnectedToByRoad()
-	{
-		local settlements = this.World.EntityManager.getSettlements();
-		local navSettings = this.World.getNavigator().createSettings();
-		foreach (settlement in settlements)
-		{
-			local myTile = settlement.getTile();
-			foreach( s in settlements )
-			{
-				if (s.getID() == settlement.getID() || settlement.isConnectedTo(s))
-				{
-					continue;
-				}
-
-				navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost_Flat;
-				local path = this.World.getNavigator().findPath(myTile, s.getTile(), navSettings, 0);
-
-				if (!path.isEmpty())
-				{
-					settlement.m.ConnectedTo.push(s.getID());
-					s.m.ConnectedTo.push(settlement.getID());
-				}
-			}
-
-			if (!settlement.isIsolated())
-			{
-				foreach( s in settlements )
-				{
-					if (s.getID() == settlement.getID() || settlement.isConnectedToByRoads(s))
-					{
-						continue;
-					}
-
-					navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost;
-					navSettings.RoadOnly = true;
-					local path = this.World.getNavigator().findPath(myTile, s.getTile(), navSettings, 0);
-
-					if (!path.isEmpty())
-					{
-						settlement.m.ConnectedToByRoads.push(s.getID());
-						s.m.ConnectedToByRoads.push(settlement.getID());
-					}
-				}
-			}
-		}
-	}
-
-
 	function getGiftUIData()
 	{
+		::Stronghold.updateConnectedToByRoad();
 		// SendGifts = main key
 		local ret =
 		{
-			Price = 3000,
+			Price = ::Stronghold.Misc.GiftFlatCost,
 			Gifts = [],
 			ReputationGain = 0,
-			Factions = []
+			Factions = [],
+			HasValidFactions = false,
+			HasValidTargets = false
 		}
 
 		foreach (i, item in this.getTown().getStash().getItems())
@@ -174,12 +125,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		factions.extend(this.World.FactionManager.getFactionsOfType(this.Const.FactionType.OrientalCityState));
 		foreach (faction in factions)
 		{
-			if (faction.getID() in this.m.Gifts.FactionMap)
-			{
-				ret.Factions.push(this.m.Gifts.FactionMap[faction.getID()]);
-				continue;
-			}
-			if (faction.getPlayerRelation() > 80)
+			if (faction.getPlayerRelation() == 100)
 				continue
 			local militarySettlements = [];
 			foreach (settlement in faction.getSettlements())
@@ -206,7 +152,6 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 					SettlementID = chosenSettlement.Settlement.getID()
 				}
 				ret.Factions.push(innerRet);
-				this.m.Gifts.FactionMap[faction.getID()] <- innerRet;
 			}
 		}
 		ret.Factions.sort(function(_d1, _d2){
@@ -222,6 +167,27 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			return 0;
 		});
 		return ret;
+	}
+
+	function getDistanceToTowns(_origin, _destinations)
+	{
+		local chosenSettlement = null;
+		local closestDist = 9999;
+
+		foreach (settlement in _destinations)
+		{
+			if (settlement == null) continue
+			local distance = settlement.getTile().getDistanceTo(_origin.getTile())
+			if (chosenSettlement == null || distance < closestDist)
+			{
+				chosenSettlement = settlement;
+				closestDist = distance;
+			}
+		}
+		return {
+			Settlement = chosenSettlement,
+			Distance = closestDist
+		}
 	}
 
 	function onSendGift(_target)
@@ -283,27 +249,6 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		c.addOrder(despawn)
 		this.updateData(["Assets", "MiscModule"]);
 		return true;
-	}
-
-	function getDistanceToTowns(_origin, _destinations)
-	{
-		local chosenSettlement = null;
-		local closestDist = 9999;
-
-		foreach (settlement in _destinations)
-		{
-			if (settlement == null) continue
-			local distance = settlement.getTile().getDistanceTo(_origin.getTile())
-			if (chosenSettlement == null || distance < closestDist)
-			{
-				chosenSettlement = settlement;
-				closestDist = distance;
-			}
-		}
-		return {
-			Settlement = chosenSettlement,
-			Distance = closestDist
-		}
 	}
 
 	function getTrainingUIData()

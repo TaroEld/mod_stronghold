@@ -167,10 +167,10 @@ StrongholdScreenModuleTemplate.prototype.addRequirementRow = function(_table, _r
     {
     	if ((typeof _requirement) === "string")
     		_requirement = Stronghold.getTextSpanSmall(_requirement)
-    	Stronghold.getTextSpanSmall(_requirement)
+    	_requirement
     		.appendTo(container)
     		.addClass(font)
-    		.children()
+    		.find("*")
     			.addClass(font);
     }
     return {

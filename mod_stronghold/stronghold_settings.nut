@@ -29,7 +29,9 @@
 	WaterPrice = 5,
 	MercenaryPrice = 5,
 	// Each level requires this much renown. This stacks with bases.
-	RenownCost = 500
+	RenownCost = 500,
+	// Flat cost to send a gift caravan
+	GiftFlatCost = 3000,
 }
 
 ::Stronghold.Hamlet <- {

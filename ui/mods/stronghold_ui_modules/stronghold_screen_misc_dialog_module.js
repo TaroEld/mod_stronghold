@@ -137,16 +137,16 @@ StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 {
 	var text = this.getModuleText().SendGifts;
 	this.mSendGiftsContentContainer = this.mSendGiftsContainer.appendRow(text.Title);
-	Stronghold.getTextSpan(text.Description)
-		.appendTo(this.mSendGiftsContentContainer)
+	this.mSendGiftsDescription = Stronghold.getTextSpan()
+		.appendTo(this.mSendGiftsContentContainer);
 
 
 	var leftContent = $('<div class="stronghold-half-width"/>')
 		.appendTo(this.mSendGiftsContentContainer)
-	leftContent.appendRow("Gift Target");
+	leftContent.appendRow(text.TargetTitle, null, true);
 	var rightContent = $('<div class="stronghold-half-width"/>')
 		.appendTo(this.mSendGiftsContentContainer)
-	var requirementsContainer = rightContent.appendRow(Stronghold.Text.Requirements);
+	var requirementsContainer = rightContent.appendRow(Stronghold.Text.Requirements, null, true);
 	this.mGiftRequirementsTable = $("<table>")
 		.appendTo(requirementsContainer);
 
@@ -196,10 +196,12 @@ StrongholdScreenMiscModule.prototype.createSendGiftsContent = function ()
 StrongholdScreenMiscModule.prototype.loadSendGiftsData = function()
 {
 	var giftText = this.getModuleText().SendGifts;
+	this.mSendGiftsDescription.html(Stronghold.Text.format(giftText.Description, this.mModuleData.SendGifts.Price));
 	this.mGiftsTargetDropdown.set(this.mModuleData.SendGifts.Factions, this.mModuleData.SendGifts.Factions[0], $.proxy(function(_element)
 	{
 		this.setGiftElement(_element);
 	}, this));
+	this.updateGiftRequirements();
 
 	this.mGiftsReputationGain.text(giftText.ReputationGain.replace("{reputation}", this.mModuleData.SendGifts.ReputationGain))
 }
@@ -210,7 +212,6 @@ StrongholdScreenMiscModule.prototype.setGiftElement = function(_element)
 	this.mGiftsFactionImage.attr("src", Path.GFX + _element.ImagePath);
 	this.mGiftsCurrentRelation.html(giftText.CurrentRelation.replace("{num}", _element.RelationNum).replace("{numText}", _element.Relation))
 	this.mGiftsTargetTown.html(giftText.TargetTown.replace("{town}", _element.SettlementName));
-	this.updateGiftRequirements();
 }
 
 StrongholdScreenMiscModule.prototype.updateGiftRequirements = function(_element)

@@ -55,6 +55,7 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 			module.Module.connectUI(this.m.JSHandle);
 		}
 		this.sendVisuals();
+		this.m.JSHandle.asyncCall("initData",  this.getUIDataObject());
 	}
 
 	function setTown( _t )

@@ -199,6 +199,8 @@ StrongholdScreen.prototype.createModuleOptionsButtons = function()
             self.switchModule(_key);
         }, '', 2);
     })
+    // Text exceeds bounds
+    this.mModules.StashModule.Button.removeClass("text-font-normal").addClass("text-font-medium");
 }
 
 StrongholdScreen.prototype.registerModules = function ()
@@ -245,9 +247,14 @@ StrongholdScreen.prototype.switchModule = function ( _module )
     this.updateTitle(this.mActiveModule.mTitle);
 };
 
+// Just to get the object in there
+StrongholdScreen.prototype.initData = function(_data)
+{
+    this.mData = _data;
+}
+
 StrongholdScreen.prototype.loadFromData = function(_data)
 {
-    var self = this;
     this.mData = _data;
     this.loadPlayerAssetsData();
     this.loadTownAssetsData();

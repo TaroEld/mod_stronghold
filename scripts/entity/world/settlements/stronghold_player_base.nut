@@ -173,10 +173,13 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 	}
 	
+
 	function onEnter()
 	{
 		//updates buildings, shops, quests, attached locations
 		this.location.onEnter();
+		// Update player assets so that we can actually see what we gained and lost from the town
+		::Stronghold.StrongholdScreen.updateData(["Assets"]);
 		this.m.LastEnterLog.Days = this.m.LastEnterLog.Days == -1 ? 0 : (::World.getTime().Days - this.m.LastEnterLog.Days);
 		this.m.CurrentBuilding = null;
 		this.addSituation(this.new("scripts/entity/world/settlements/situations/stronghold_well_supplied_situation"), 9999);

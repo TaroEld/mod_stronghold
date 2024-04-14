@@ -58,10 +58,11 @@ Stronghold.Text = {
 		},
 		SendGifts : {
 			Title : "Send Gifts",
-			Description : 'You can choose to send a delegation carrying gifts to a faction. This will consume the treasures you have in your warehouse, and will increase relations with that faction depending on the value of the gifts. The caravan will demand 5000 crowns to transport the goods.<br>The caravan will be traveling on roads towards the target town, and while it will be protected by a number of mercenaries, you might want to accompany it.',
+			TargetTitle : "Target Faction",
+			Description : 'You can choose to send a delegation carrying gifts to a faction. This will consume the treasures you have in your warehouse, and will increase relations with that faction depending on the value of the gifts. The caravan will demand {0} crowns to transport the goods.<br>The caravan will be traveling on roads towards the target town, and while it will be protected by a number of mercenaries, you might want to accompany it.',
 			SendTo : "Send Gifts to: ",
 			Requirements: {
-				Faction : "At least one faction is connected to you by roads and not friendly",
+				Faction : "At least one faction is connected to you by roads and not already allied",
 				Price : "Price: {price} (for transportation of the gifts)",
 				HaveGifts : "Have gifts (treasure items) in your warehouse.",
 			},

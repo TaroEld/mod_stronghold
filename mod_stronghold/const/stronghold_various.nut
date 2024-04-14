@@ -182,7 +182,8 @@
 	local playerBase = this.World.spawnLocation("scripts/entity/world/settlements/stronghold_player_base", tile.Coords);
 	playerFaction.addSettlement(playerBase);
 	playerBase.startUpgrading();
-	playerBase.onBuild()
+	playerBase.onBuild();
+	::Stronghold.updateConnectedToByRoad();
 	
 
 	//spawn assailant quest
@@ -194,4 +195,51 @@
 	contract.m.TargetLevel = 1
 	this.World.Contracts.addContract(contract);
 	contract.start();
+}
+
+::Stronghold.updateConnectedToByRoad <- function()
+{
+	local settlements = this.World.EntityManager.getSettlements();
+	local navSettings = this.World.getNavigator().createSettings();
+	foreach (settlement in settlements)
+	{
+		local myTile = settlement.getTile();
+		foreach( s in settlements )
+		{
+			if (s.getID() == settlement.getID() || settlement.isConnectedTo(s))
+			{
+				continue;
+			}
+
+			navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost_Flat;
+			local path = this.World.getNavigator().findPath(myTile, s.getTile(), navSettings, 0);
+
+			if (!path.isEmpty())
+			{
+				settlement.m.ConnectedTo.push(s.getID());
+				s.m.ConnectedTo.push(settlement.getID());
+			}
+		}
+
+		if (!settlement.isIsolated())
+		{
+			foreach( s in settlements )
+			{
+				if (s.getID() == settlement.getID() || settlement.isConnectedToByRoads(s))
+				{
+					continue;
+				}
+
+				navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost;
+				navSettings.RoadOnly = true;
+				local path = this.World.getNavigator().findPath(myTile, s.getTile(), navSettings, 0);
+
+				if (!path.isEmpty())
+				{
+					settlement.m.ConnectedToByRoads.push(s.getID());
+					s.m.ConnectedToByRoads.push(settlement.getID());
+				}
+			}
+		}
+	}
 }
