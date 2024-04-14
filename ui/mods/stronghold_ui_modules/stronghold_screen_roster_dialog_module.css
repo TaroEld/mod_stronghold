@@ -196,22 +196,22 @@
 
 .stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .is-stronghold-wages
 {
-	left: 7rem;
+	left: 10rem;
 }
 
 .stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-stripping-all
 {
-	left: 15.0rem;
+	left: 20.0rem;
 }
 
 .stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-rename
 {
-	left: 20.0rem;
+	left: 25.0rem;
 }
 
 .stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-dismiss
 {
-	left: 25.0rem;
+	left: 30.0rem;
 }
 
 .stronghold-screen .roster-module > .right-column > .middle-row > .is-right .button-panel .l-button.is-roster-tooltip
