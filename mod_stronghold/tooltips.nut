@@ -11,6 +11,7 @@
 			Roster = {
 				PlayerWages =  ::MSU.Class.BasicTooltip("Player Party Wages", "The wages of all the brothers in your party."),
 				StrongholdWages = ::MSU.Class.BasicTooltip("Base Wages", "The wages of all the brothers in this base, reduced by the effect of the Troop Quarters location."),
+				StripAll = ::MSU.Class.BasicTooltip("Strip Gear", "Strip all items from this brother and add them to the stash."),
 			},
 			Stash = {
 				SmallIcons = ::MSU.Class.BasicTooltip("Toggle small icons", "Toggle between smaller and normal icons."),
