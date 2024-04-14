@@ -1058,6 +1058,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		foreach(tile in roadTiles)
 		{
 			if (tile.Type != this.Const.World.TerrainType.Ocean){
+				tile.clear(this.Const.World.DetailType.Road);
 				tile.spawnDetail(this.Const.World.RoadBrushes.get(tile.RoadDirections), this.Const.World.ZLevel.Road, this.Const.World.DetailType.Road, false);
 			}
 		}
