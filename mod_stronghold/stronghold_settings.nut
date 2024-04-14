@@ -161,14 +161,14 @@
 		UpgradePrice = 2.5,
 		MaxBrotherExpLevel = 7, //
 		MaxBrotherExpLevelUpgrade = 1,
-		DailyIncome = 200, // Amount of Experience generated each day
-		AlliedPartyStrengthIncrease = 100, // Amount of strength added to new mercenary and caravan parties
+		DailyIncome = 50, // Amount of Experience generated each day
+		AlliedPartyStrengthIncrease = 50, // Amount of strength added to new mercenary and caravan parties
 		RecruitIncrease = 2 // Amount of recruits added to the Hamlet roster
 	},
 
 	Stone_Watchtower = {
 		Price = 5,
-		UpgradePrice = 1,
+		UpgradePrice = 1.5,
 		VisionIncrease = 20, // Amount of extra vision you get around the base
 		MovementSpeedIncrease = 0.05 // Amount of extra movement speed you get around the base, in pct
 	},
