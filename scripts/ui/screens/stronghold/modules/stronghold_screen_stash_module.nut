@@ -133,6 +133,9 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		local destinationStash = sourceItemOwner == "world-town-screen-shop-dialog-module.stash" ? this.getStash() : ::Stash;
 		local sourceItem = sourceStash.getItemAtIndex(sourceItemIdx);
 
+		if (!destinationStash.hasEmptySlot())
+			return {Result = this.Const.UI.Error.NotEnoughStashSpace};
+
 		if (sourceItem == null)
 		{
 			this.logError("onSwapItem(stash) #2");

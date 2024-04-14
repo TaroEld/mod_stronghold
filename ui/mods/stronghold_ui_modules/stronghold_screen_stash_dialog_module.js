@@ -377,7 +377,8 @@ StrongholdScreenStashModule.prototype.swapItem = function (_sourceItemIdx, _sour
     	    }
     	    else if (data.Result == ErrorCode.NotEnoughStashSpace)
     	    {
-    	        self.mStashSlotSizeContainer.shakeLeftRight();
+    	    	var container = _targetItemOwner ==  WorldTownScreenShop.ItemOwner.Shop ? self.mTownStashSlotSizeContainer : self.mStashSlotSizeContainer;
+    	        container.shakeLeftRight();
     	    }
     	    else
     	    {
