@@ -240,7 +240,7 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
     {
         self.transferItemsToStash();
     }, '', 3);
-    this.mStripAllButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.strippingnaked' });
+    this.mStripAllButton.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Roster.StripAll"});
 
     // button 5 - to rename bro
     var layout = $('<div class="l-button is-rename"/>');
