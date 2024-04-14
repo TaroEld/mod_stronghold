@@ -18,7 +18,6 @@ var StrongholdScreenRosterModule = function(_parent)
     this.mPerkRows = null;
 
     // stuffs
-    this.mSimpleRosterTooltip   = false;
     this.mSelectedBrother =
     {
         Index : 0,
@@ -259,19 +258,6 @@ StrongholdScreenRosterModule.prototype.createDIV = function (_parentDiv)
         self.openDismissPopupDialog(null);
     }, '', 3);
     this.mDismissButton.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.CharacterScreen.LeftPanelHeaderModule.Dismiss });
-
-    var layout = $('<div class="l-button is-roster-tooltip"/>');
-    panelLayout.append(layout);
-    this.mTooltipButton = layout.createImageButton(Path.GFX + 'ui/icons/scroll_02.png', function ()
-    {
-        self.mSimpleRosterTooltip = !self.mSimpleRosterTooltip;
-        self.notifyBackendTooltipButtonPressed(self.mSimpleRosterTooltip);
-        if(self.mSimpleRosterTooltip === false)
-            self.mTooltipButton.changeButtonImage(Path.GFX + 'ui/icons/scroll_02.png');
-        else
-            self.mTooltipButton.changeButtonImage(Path.GFX + 'ui/icons/scroll_02_sw.png');
-    }, '', 3);
-    this.mTooltipButton.bindTooltip({ contentType: 'ui-element', elementId: 'pokebro.simplerostertooltip' });
 
 
     // last button - assets brother, to display the number of player in roster, also can be pressed to move to inventory screen
