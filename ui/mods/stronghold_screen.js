@@ -13,7 +13,7 @@ var StrongholdScreen = function ()
             "ButtonName" : "Visuals",
         },
         "StashModule" : {
-            "ButtonName" : "Stash",
+            "ButtonName" : "Warehouse",
         },
         "RosterModule" : {
             "ButtonName" : "Roster",

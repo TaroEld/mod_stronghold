@@ -173,7 +173,7 @@ Stronghold.Text = {
 		},
 		Collector : {
 			UpgradeDescription : {
-				Description : "<li>Each day, the collector has a {0}% chance to find items and add them to your base stash.</li>",
+				Description : "<li>Each day, the collector has a {0}% chance to find items and add them to your warehouse.</li>",
 				Rarity : "<li>Upgrading the collector adds rarer items to the lootpool</li>",
 			},
 			getUpgradeDescription : function(_element, _level){
@@ -200,7 +200,7 @@ Stronghold.Text = {
 		Blast_Furnace : {
 			UpgradeDescription : {
 				Armorsmith : "<li>The Blast Furnace increases the stock of items at a local armorsmith.</li>",
-				RepairMultiplier : "<li>You will be able to repair items from your stash, with {0}% lower costs than from an armorsmith or weaponsmith.</li>"
+				RepairMultiplier : "<li>You will be able to repair items from your stash and warehouse while in base, with {0}% lower costs than from an armorsmith or weaponsmith.</li>"
 			},
 			getUpgradeDescription : function(_element, _level){
 				return  this.UpgradeDescription.Armorsmith + Stronghold.Text.format(this.UpgradeDescription.RepairMultiplier,  parseInt(_element.RepairMultiplier * _level * 100));

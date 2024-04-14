@@ -3,7 +3,7 @@ var StrongholdScreenStashModule = function(_parent)
 {
 	StrongholdScreenModuleTemplate.call(this, _parent);
 	this.mID = "StashModule"
-	this.mTitle = "Your Stash"
+	this.mTitle = "Your Warehouse"
 	this.mActiveBuilding = null;
 	    // event listener
     this.mEventListener = null;
