@@ -1,16 +1,11 @@
 ::Stronghold <- {
 	ID = "mod_stronghold",
 	Name = "Stronghold",
-	Version = "2.0.0-beta"
+	Version = "2.0.0-beta-1"
 };
 ::mods_registerMod(::Stronghold.ID, ::Stronghold.Version, ::Stronghold.Name);
 ::mods_queue(::Stronghold.ID, "mod_msu", function()
 {	
-	::Const.FactionType.StrongholdEnemies <- ::Const.FactionType.COUNT;
-	::Const.FactionType.COUNT++
-	::Const.Faction.StrongholdEnemies <- ::Const.Faction.COUNT;
-	::Const.Faction.COUNT++
-
 	::Stronghold.Mod <- ::MSU.Class.Mod(::Stronghold.ID, ::Stronghold.Version, ::Stronghold.Name);
 	::include(::Stronghold.ID + "/stronghold_settings.nut");
 

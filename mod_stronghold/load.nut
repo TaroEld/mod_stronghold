@@ -1,3 +1,4 @@
+::include(::Stronghold.ID + "/vanilla_additions.nut");
 local folders = 
 [
 	"/const",
