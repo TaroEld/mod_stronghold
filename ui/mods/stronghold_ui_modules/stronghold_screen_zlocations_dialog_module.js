@@ -62,7 +62,7 @@ StrongholdScreenLocationsModule.prototype.showBuildRequirements = function ()
 	)
 	// Total locations in town
 	this.addRequirementRow(this.mActiveStructureRequirementsTable,
-		Stronghold.Text.format(this.getModuleText().MaxTotal, this.mData.TownAssets.mLocationAsset, this.mData.TownAssets.mLocationAssetMax, this.mData.TownAssets.mLocationAsset),
+		Stronghold.Text.format(this.getModuleText().MaxTotal, this.mData.TownAssets.Size, this.mData.TownAssets.mLocationAssetMax, this.mData.TownAssets.mLocationAsset),
 		this.mData.TownAssets.mLocationAsset < this.mData.TownAssets.mLocationAssetMax
 	)
 	$.each(this.mActiveStructure.Requirements, $.proxy(function(_, _requirement){
