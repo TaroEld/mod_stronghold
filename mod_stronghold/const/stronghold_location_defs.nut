@@ -62,10 +62,10 @@
 		Description = "The workshop is proficient in making all kinds of tools and other supplies needed to keep carts and machines working."
 	},
 }
-
 foreach(locationID, location in ::Stronghold.LocationDefs)
 {
 	location.ConstID <- locationID;
-	location.Requirements <- []
+	location.ImagePath <- location.Path + ".png";
+	location.Requirements <- [];
 	::MSU.Table.merge(location, ::Stronghold.Locations[locationID], true, true);
 }

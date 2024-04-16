@@ -20,7 +20,6 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 				})
 			}
 			_ret[buildingID] <- {
-				ImagePath = building.Path + ".png",
 				HasStructure = hasBuilding,
 			}
 			::MSU.Table.merge(_ret[buildingID], building, true);

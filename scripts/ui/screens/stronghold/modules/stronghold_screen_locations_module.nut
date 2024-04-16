@@ -15,8 +15,6 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 				})
 			}
 			_ret[locationID] <- {
-				ConstID = locationID,
-				ImagePath = location.Path + ".png",
 				HasStructure = locationInTown != null,
 				Level = 0,
 				Requirements = requirements,

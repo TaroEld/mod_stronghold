@@ -3,7 +3,7 @@ var Stronghold = {
 	Visuals :
 	{
 	    SpritePath : "ui/settlement_sprites/",
-	    BuildingSpritePath : "ui/buildings/",
+	    BuildingSpritePath : "",
 	    LocationSpritePath : "ui/locations/",
 	    SelectionImagePath : "ui/selection.png",
 	    SelectionGoldImagePath : "ui/selection-gold.png",
