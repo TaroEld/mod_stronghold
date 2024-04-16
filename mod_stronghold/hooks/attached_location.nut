@@ -55,9 +55,9 @@
 	}
 })
 
-::mods_hookExactClass("entity/world/attached_location/blast_furnace_location", function(o)
-{
-})
+// ::mods_hookExactClass("entity/world/attached_location/blast_furnace_location", function(o)
+// {
+// })
 
 ::mods_hookExactClass("entity/world/attached_location/gold_mine_location", function(o)
 {
@@ -112,9 +112,9 @@
 	}
 })
 
-::mods_hookExactClass("entity/world/attached_location/ore_smelter", function(o)
-{
-})
+// ::mods_hookExactClass("entity/world/attached_location/ore_smelters_location", function(o)
+// {
+// })
 
 ::mods_hookExactClass("entity/world/attached_location/stone_watchtower_location", function(o)
 {
