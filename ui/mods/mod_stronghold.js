@@ -1,4 +1,5 @@
 var Stronghold = {
+	Hooks : {},
 	Visuals :
 	{
 	    SpritePath : "ui/settlement_sprites/",
@@ -168,32 +169,32 @@ WorldCampfireScreenAssets.prototype.createStrongholdDIV = function (_parentDiv)
     return layout;
 };
 
-var retinue_createDIV = WorldCampfireScreenAssets.prototype.createDIV
+Stronghold.Hooks.retinue_createDIV = WorldCampfireScreenAssets.prototype.createDIV
 WorldCampfireScreenAssets.prototype.createDIV = function (_parentDiv)
 {
-	retinue_createDIV.call(this, _parentDiv)
+	Stronghold.Hooks.retinue_createDIV.call(this, _parentDiv)
 	this.createStrongholdDIV(_parentDiv);
 };
 
-var retinue_loadFromData = WorldCampfireScreenAssets.prototype.loadFromData
+Stronghold.Hooks.retinue_loadFromData = WorldCampfireScreenAssets.prototype.loadFromData
 WorldCampfireScreenAssets.prototype.loadFromData = function (_data){
 	if(this.mStrongholdButton != null && 'showStrongholdButton' in _data && _data['showStrongholdButton'] === false){
 		this.mStrongholdButton.remove();
 		this.mStrongholdButton = null;
 	}
-	retinue_loadFromData.call(this, _data)
+	Stronghold.Hooks.retinue_loadFromData.call(this, _data)
 }
-var hire_show = WorldCampfireScreenHireDialogModule.prototype.show
+Stronghold.Hooks.hire_show = WorldCampfireScreenHireDialogModule.prototype.show
 WorldCampfireScreenHireDialogModule.prototype.show = function (_withSlideAnimation)
 {
-	hire_show.call(this, _withSlideAnimation)
+	Stronghold.Hooks.hire_show.call(this, _withSlideAnimation)
 	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.toggleDisplay(false);
 }
 
-var hire_hide = WorldCampfireScreenHireDialogModule.prototype.hide
+Stronghold.Hooks.hire_hide = WorldCampfireScreenHireDialogModule.prototype.hide
 WorldCampfireScreenHireDialogModule.prototype.hide = function ()
 {
-	hire_hide.call(this)
+	Stronghold.Hooks.hire_hide.call(this)
 	if(this.mAssets.mStrongholdButton != null) this.mAssets.mStrongholdButton.toggleDisplay(true);
 }
 
@@ -205,29 +206,29 @@ WorldCampfireScreen.prototype.notifyBackendStrongholdButtonPressed = function ()
     }
 };
 
-var retinue_bindTooltips = WorldCampfireScreenAssets.prototype.bindTooltips
+Stronghold.Hooks.retinue_bindTooltips = WorldCampfireScreenAssets.prototype.bindTooltips
 WorldCampfireScreenAssets.prototype.bindTooltips = function ()
 {
-    retinue_bindTooltips.call(this)
+    Stronghold.Hooks.retinue_bindTooltips.call(this)
     if (this.mStrongholdButton != null){
         this.mStrongholdButton.bindTooltip({ contentType: 'ui-element', elementId: "stronghold-retinue-button" });
     } 
 };
 
-var retinue_unbindTooltips = WorldCampfireScreenAssets.prototype.unbindTooltips
+Stronghold.Hooks.retinue_unbindTooltips = WorldCampfireScreenAssets.prototype.unbindTooltips
 WorldCampfireScreenAssets.prototype.unbindTooltips = function ()
 {
-    retinue_unbindTooltips.call(this)
+    Stronghold.Hooks.retinue_unbindTooltips.call(this)
     if (this.mStrongholdButton != null){
         this.mStrongholdButton.unbindTooltip();
     }
 
 };
 
-var retinue_destroyDIV = WorldCampfireScreenAssets.prototype.destroyDIV
+Stronghold.Hooks.retinue_destroyDIV = WorldCampfireScreenAssets.prototype.destroyDIV
 WorldCampfireScreenAssets.prototype.destroyDIV = function ()
 {
-    retinue_destroyDIV.call(this)
+    Stronghold.Hooks.retinue_destroyDIV.call(this)
     if (this.mStrongholdButton != null){
     	this.mStrongholdButton.remove();
     	this.mStrongholdButton = null;
