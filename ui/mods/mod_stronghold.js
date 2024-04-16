@@ -234,3 +234,19 @@ WorldCampfireScreenAssets.prototype.destroyDIV = function ()
     	this.mStrongholdButton = null;
     }
 };
+
+// make the slot five (bottom) building smol if it's not crowd building
+Stronghold.Hooks.WorldTownScreenMainDialogModule_createSlot = WorldTownScreenMainDialogModule.prototype.createSlot;
+WorldTownScreenMainDialogModule.prototype.createSlot = function(_data, _i, _content)
+{
+	Stronghold.Hooks.WorldTownScreenMainDialogModule_createSlot.call(this, _data, _i, _content);
+	if (_i != 5 || _data == null)
+		return
+	var slot_five = _content.find(".slot5");
+	slot_five.on("load", function() {
+		var newWidth = slot_five[0].naturalWidth;
+		var newHeight = slot_five[0].naturalHeight;
+		var scale = _data.stronghold_small === true ? 0.5 : 1.0
+		slot_five.css({ 'width': newWidth * scale, 'height': newHeight * scale});
+	});
+}

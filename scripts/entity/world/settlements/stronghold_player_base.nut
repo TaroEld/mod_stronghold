@@ -141,6 +141,16 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		return this.Stronghold.BaseTiers[size].Name;
 	}
 
+	function getUIInformation()
+	{
+		local ret = this.settlement.getUIInformation();
+		if (this.m.Buildings[5] != null && this.m.Buildings[5].m.ID != "building.crowd")
+		{
+			ret.Slots[5].stronghold_small <- true;
+		}
+		return ret;
+	}
+
 	function showStrongholdUIDialog()
 	{
 		::Stronghold.StrongholdScreen.setTown(this);
@@ -192,15 +202,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.Stronghold.getPlayerFaction().updateQuests();
 		this.rebuildAttachedLocations();
 
-		//jank way to update sprite
-		if (this.m.Buildings[5] != null)
-		{
-			if (this.m.Buildings[5].m.UIImage.slice(0, 5) != "small")
-			{
-				this.m.Buildings[5].m.UIImage = "small_" + this.m.Buildings[5].m.UIImage;
-				this.m.Buildings[5].m.UIImageNight = "small_" + this.m.Buildings[5].m.UIImageNight;
-			}
-		}
 		if (!this.m.OverflowStash.isEmpty())
 			this.addSituation(::new("scripts/entity/world/settlements/situations/stronghold_overflow_situation.nut"))
 		::Math.seedRandom(this.Time.getRealTime());
@@ -660,7 +661,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		else
 		{
 			// crows always goes to slot 5
-			if (_building.m.ID == "building.crowd" && this.m.Buildings[5] != null)
+			if (_building.m.ID == "building.crowd")
 			{
 				local temp = _building;
 				_building = this.m.Buildings[5];
