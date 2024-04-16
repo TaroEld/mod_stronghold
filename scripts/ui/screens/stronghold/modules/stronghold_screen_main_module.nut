@@ -12,6 +12,11 @@ this.stronghold_screen_main_module <-  this.inherit("scripts/ui/screens/strongho
 		this.getTown().m.Name = _data;
 		this.getTown().getFlags().set("CustomName", true);
 		this.getTown().getLabel("name").Text = _data;
+		foreach(unit in ::Stronghold.getPlayerFaction().m.Units){
+			if (unit.getFlags().get("Stronghold_Guards") && unit.getFlags().get("Stronghold_Base_ID") == this.getTown().getID()){
+				unit.setName("Mercenary guards of " + _data);
+			}
+		}
 		this.updateData(["TownAssets", "MainModule"]);
 	}
 
