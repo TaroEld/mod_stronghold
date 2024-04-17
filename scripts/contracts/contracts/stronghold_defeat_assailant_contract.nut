@@ -133,7 +133,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				
-				this.Text = format("The construction of your %s has begun. Your hired engineers expect that this will take %i %s, during which you won't be able to enter all its buildings and locations. The ruckus has drawn the attention of nearby enemies, and you can expect them to send an attack party within the next day.", ::Stronghold.BaseTiers[this.Contract.m.TargetLevel].Name, this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
+				this.Text = format("[img]gfx/ui/events/event_31.png[/img]The construction of your %s has begun. Your hired engineers expect that this will take %i %s, during which you won't be able to enter all its buildings and locations. The ruckus has drawn the attention of nearby enemies, and you can expect them to send an attack party within the next day.", ::Stronghold.BaseTiers[this.Contract.m.TargetLevel].Name, this.Contract.m.TargetLevel, this.Contract.m.TargetLevel == 1 ? " day" : " days") ;
 				this.Contract.m.BulletpointsObjectives = [
 					format("Defend against %i more %s", this.Contract.m.AttacksRemaining, this.Contract.m.AttacksRemaining == 1 ? "attack." : "attacks.")
 				];
@@ -163,14 +163,14 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				this.Contract.spawnNewAttackers()
-				this.Text = "Your scouts have informed you that the enemies are imminent, hailing from the " + this.Const.Strings.Direction8[this.Contract.m.Home.getTile().getDirection8To(this.Contract.m.Target.getTile())]
+				this.Text = "[img]gfx/ui/events/event_10.png[/img]Your scouts have informed you that the enemies are imminent, hailing from the " + this.Const.Strings.Direction8[this.Contract.m.Home.getTile().getDirection8To(this.Contract.m.Target.getTile())]
 			}
 		});
 		this.m.Screens.push({
 		
 			ID = "Victory_More_Left",
 			Title = "Victory!",
-			Text = "You have defeated the enemies, but it is not over yet. You can expect another attack during the next day.",
+			Text = "[img]gfx/ui/events/event_26.png[/img]You have defeated the enemies, but it is not over yet. You can expect another attack during the next day.",
 			Image = "",
 			List = [],
 			Options = [
@@ -230,14 +230,14 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			ShowDifficulty = false,
 			function start()
 			{
-				this.Text = format("You have defeated the enemies. Your %s is now secure.", this.Stronghold.BaseTiers[this.Contract.m.TargetLevel].Name)
+				this.Text = format("[img]gfx/ui/events/event_24.png[/img]You have defeated all the enemies. Your %s is now secure.", this.Stronghold.BaseTiers[this.Contract.m.TargetLevel].Name)
 			}
 		});
 		
 		this.m.Screens.push({
 			ID = "FailureBuild",
 			Title = "Failure!",
-			Text = "{You ran from the battle. Your fortress has been wiped from the map. You are a failure!}",
+			Text = "[img]gfx/ui/events/event_68.png[/img]You ran from the battle. Your fortress has been wiped from the map. You are a failure!",
 			Image = "",
 			List = [],
 			Options = [
@@ -265,7 +265,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "FailureInterrupt",
 			Title = "Failure!",
-			Text = "{You ran from the battle. Your upgrade has been interrupted, and your base knocked back to the previous level.}",
+			Text = "[img]gfx/ui/events/event_68.png[/img]You ran from the battle. Your upgrade has been interrupted, and your base knocked back to the previous level.",
 			Image = "",
 			List = [],
 			Options = [
