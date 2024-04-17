@@ -117,9 +117,25 @@ this.stronghold_screen_roster_module <-  this.inherit("scripts/ui/screens/strong
 		local ret = [];
 		foreach (perkID in _perks)
 		{
-			ret.push(this.UIDataHelper.convertPerkToUIData(perkID));
+			ret.push(this.convertPerkToUIData(perkID));
 		}
 		return ret;
+	}
+
+	// copy of the data_helper function until legends fixes their thing
+	function convertPerkToUIData(_perkID)
+	{
+		local perk = this.Const.Perks.findById(_perkID);
+
+		if (perk != null)
+		{
+			return {
+				id = perk.ID,
+				name = perk.Name,
+				description = perk.Tooltip,
+				imagePath = perk.Icon
+			};
+		}
 	}
 
 	function getUIData( _ret )
