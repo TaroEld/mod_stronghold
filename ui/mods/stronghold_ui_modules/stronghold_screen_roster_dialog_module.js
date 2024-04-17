@@ -1271,6 +1271,12 @@ StrongholdScreenRosterModule.prototype.createSlotDropHandler = function ( _slot 
 	        return false;
 	    }
 
+	    // block moving player
+	    if (brother.data("player") === true)
+	    {
+	        return false;
+	    }
+
 	    // do the swapping
 	    self.swapSlots(drag.data('idx'), drag.data('tag'), drop.data('idx'), drop.data('tag'));
 	};
