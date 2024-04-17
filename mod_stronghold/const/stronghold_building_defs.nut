@@ -130,7 +130,7 @@
 		Requirements =
 		[{
 			Text = "Be connected to other settlements via road.",
-			IsValid = @(_town) !_town.isIsolated()
+			IsValid = @(_town) !_town.isIsolatedFromRoads()
 		}]
 		ImagePath = "ui/settlements/crowd_03.png",
 	}
