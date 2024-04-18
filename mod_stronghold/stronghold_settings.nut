@@ -9,9 +9,9 @@
 
 ::Stronghold.BaseFight <- {
 	// Base difficulty of the base defence fight
-	InitialFightBaseStrength = 100
-	// Extra difficulty for waves two and three of the higher upgrade levels
-	InitialFightStrengthPerWave = 50
+	BaseDifficulty = 150
+	// Extra difficulty for waves two, three, four of the higher upgrade levels
+	WaveDifficulty = 75
 }
 
 ::Stronghold.Misc <- {
