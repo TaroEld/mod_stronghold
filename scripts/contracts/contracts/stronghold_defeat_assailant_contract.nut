@@ -353,8 +353,9 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		party.setVisibleInFogOfWar(true);
 		party.setImportant(true);
 		party.setDiscovered(true);
+		local wave = this.m.TargetLevel + 1 - this.m.AttacksRemaining;
 		party.getLoot().ArmorParts = ::Math.rand(10, 30) * wave;
-		party.getLoot().Medicine = ::Math.rand(1, 3) * wave;
+		party.getLoot().Medicine = ::Math.rand(3, 6) * wave;
 		party.getLoot().Ammo = ::Math.rand(0, 30) * wave ;
 		party.getLoot().Money = ::Math.rand(200, 300) * wave;
 		party.getSprite("banner").setBrush(closest_settlement.getBanner());
