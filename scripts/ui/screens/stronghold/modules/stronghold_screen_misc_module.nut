@@ -33,9 +33,9 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 
 			if (settlement == null || settlement == town)
 				continue
-			if (settlement.getName() in this.m.Road.Map)
+			if (settlement.getID() in this.m.Road.Map)
 			{
-				settlementOptions.push(this.m.Road.Map[settlement.getName()]);
+				settlementOptions.push(this.m.Road.Map[settlement.getID()]);
 				continue;
 			}
 
@@ -58,7 +58,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 					UISprite = settlement.m.UISprite
 				}
 				settlementOptions.push(option);
-				this.m.Road.Map[settlement.getName()] <- option;
+				this.m.Road.Map[settlement.getID()] <- option;
 				distances.push(dist);
 				distances.sort();
 			}
