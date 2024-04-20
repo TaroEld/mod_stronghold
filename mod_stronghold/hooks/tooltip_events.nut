@@ -21,30 +21,39 @@
 			}
 		}
 
-		if (!town.hasAttachedLocation("attached_location.blast_furnace"))
-			return result;
-
-		local price = (_item.getConditionMax() - _item.getCondition()) * this.Const.World.Assets.CostToRepairPerPoint;
-		local value = _item.m.Value * (1.0 - _item.getCondition() / _item.getConditionMax()) * 0.2 * this.World.State.getCurrentTown().getPriceMult() * this.Const.Difficulty.SellPriceMult[this.World.Assets.getEconomicDifficulty()];
-		price = ::Math.max(price, value) * (1.0 - (this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier * town.getLocation("attached_location.blast_furnace").getLevel()));
-		price = price.tointeger();
-
-		if (this.World.Assets.getMoney() >= price)
+		if (town.hasAttachedLocation("attached_location.blast_furnace"))
 		{
-			result.push({
-				id = 3,
-				type = "hint",
-				icon = "ui/icons/mouse_right_button_alt.png",
-				text = "Pay [img]gfx/ui/tooltips/money.png[/img]" + price + " to have it repaired"
-			});
+			local price = (_item.getConditionMax() - _item.getCondition()) * this.Const.World.Assets.CostToRepairPerPoint;
+			local value = _item.m.Value * (1.0 - _item.getCondition() / _item.getConditionMax()) * 0.2 * this.World.State.getCurrentTown().getPriceMult() * this.Const.Difficulty.SellPriceMult[this.World.Assets.getEconomicDifficulty()];
+			price = ::Math.max(price, value) * (1.0 - (this.Stronghold.Locations["Blast_Furnace"].RepairMultiplier * town.getLocation("attached_location.blast_furnace").getLevel()));
+			price = price.tointeger();
+
+			if (this.World.Assets.getMoney() >= price)
+			{
+				result.push({
+					id = 3,
+					type = "hint",
+					icon = "ui/icons/mouse_right_button_alt.png",
+					text = "Pay [img]gfx/ui/tooltips/money.png[/img]" + price + " to have it repaired"
+				});
+			}
+			else
+			{
+				result.push({
+					id = 3,
+					type = "hint",
+					icon = "ui/tooltips/warning.png",
+					text = "Not enough crowns to pay for repairs!"
+				});
+			}
 		}
-		else
+		if (town.hasAttachedLocation("attached_location.ore_smelters") && _item.isItemType(this.Const.Items.ItemType.Named))
 		{
 			result.push({
 				id = 3,
 				type = "hint",
-				icon = "ui/tooltips/warning.png",
-				text = "Not enough crowns to pay for repairs!"
+				icon = "ui/icons/mouse_right_button.png",
+				text = "Press SHIFT + Right Mouse Button to reforge this named item "
 			});
 		}
 		return result
