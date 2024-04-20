@@ -62,7 +62,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 
 		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary patrol of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.m.OnCombatWithPlayerCallback = null;
-		party.getSprite("body").setBrush(playerBase.m.troopSprites);
+		party.getSprite("body").setBrush(playerBase.m.TroopSprites);
 		party.setDescription("A band of mercenaries patrolling the roads.");
 		party.setFootprintType(this.Const.World.FootprintsType.Mercenaries);
 		party.getFlags().set("Stronghold_Patrol", true);
