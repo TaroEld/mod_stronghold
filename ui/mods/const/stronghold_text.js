@@ -89,7 +89,7 @@ Stronghold.Text = {
 			Title : "Buy a Water Skin",
 			Description : "Buy a Water Skin with mythical properties.",
 			Requirements : {
-				Unlocked : "Recovered the recipe to create a mythical Water of Life."
+				Unlocked : "Recovered the recipe to create a mythical Water of Life. [Quest reward]"
 			},
 			ConfirmButton : "Buy the Water Skin",
 		},
@@ -97,7 +97,7 @@ Stronghold.Text = {
 			Title : "Hire Mercenaries",
 			Description : "Hire a group of mercenaries to follow you in your travels. They will follow your party and join in any fights for a duration of two weeks.",
 			Requirements : {
-				Unlocked : "You have attracted mercenary companies to hire.",
+				Unlocked : "You have attracted mercenary companies to hire. [Quest reward]",
 				NoMercenaries : "Currently have no mercenaries following you."
 			},
 			ConfirmButton : "Hire the mercenaries",
