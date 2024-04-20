@@ -34,6 +34,15 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 		this.World.Assets.addMoney(-price)
 		local building = this.new("scripts/entity/world/settlements/buildings/" + _data[0]);
 		this.getTown().addBuilding(building);
+		building.onUpdateShopList();
+
+		if (building.getStash() != null)
+		{
+			foreach( s in this.getTown().m.Situations )
+			{
+				s.onUpdateShop(building.getStash());
+			}
+		}
 		this.updateData(["TownAssets", "Assets", "BuildingsModule"]);
 	}
 
