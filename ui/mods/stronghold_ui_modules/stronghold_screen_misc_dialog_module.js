@@ -276,7 +276,7 @@ StrongholdScreenMiscModule.prototype.createTrainBrotherContent = function ()
 	var self = this;
 	var text = this.getModuleText().TrainBrother;
 	this.mTrainBrotherContentContainer = this.mTrainBrotherContainer.appendRow(text.Title);
-	this.mTrainBrotherDescriptionText = Stronghold.getTextDiv(text.Description)
+	this.mTrainBrotherDescriptionText = Stronghold.getTextDiv()
 		.appendTo(this.mTrainBrotherContentContainer)
 		.css("width", "100%")
 
@@ -394,6 +394,7 @@ StrongholdScreenMiscModule.prototype.selectBrotherToTrain = function(_entry)
 StrongholdScreenMiscModule.prototype.loadTrainBrotherData = function()
 {
 	var text = this.getModuleText().TrainBrother;
+	this.mTrainBrotherDescriptionText.html(Stronghold.Text.format(text.Description, this.mModuleData.TrainBrother.XPGainMult, this.mModuleData.TrainBrother.Duration));
 	this.mTrainBrotherImg.hide();
 	this.mTrainBrotherName.text("");
 	this.mTrainBrotherLevel.text("");

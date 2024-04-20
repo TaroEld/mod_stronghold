@@ -22,6 +22,8 @@
 	// Cost to make the raided debuff go away; multiplied with the price mult
 	RaidedCostPerDay = 0.5,
 	TrainerPrice = 20,
+	TrainerBuffDurationInDays = 10,
+	TrainerBuffDurationExpMult = 1.5,
 	WaterPrice = 15,
 	MercenaryPrice = 10,
 	// Each level requires this much renown. This stacks with bases.

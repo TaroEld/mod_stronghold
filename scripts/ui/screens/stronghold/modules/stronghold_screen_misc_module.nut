@@ -260,6 +260,8 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 				Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult
 			}
 			Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult,
+			Duration = ::Stronghold.Misc.TrainerBuffDurationInDays,
+			XPGainMult = ::Stronghold.Misc.TrainerBuffDurationExpMult,
 			ValidBrothers = []
 		};
 		local roster = [];
@@ -343,6 +345,12 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 				attrKey = "RangedDefense";
 		}
 		b[attrKey] += toAdd;
+
+		local effect = this.new("scripts/skills/effects_world/new_trained_effect");
+		effect.m.Duration = ::Stronghold.Misc.TrainerBuffDurationInDays;
+		effect.m.XPGainMult = ::Stronghold.Misc.TrainerBuffDurationExpMult;
+		effect.m.Icon = "skills/status_effect_75.png";
+
 		bro.getSkills().update();
 		bro.setDirty(true);
 
