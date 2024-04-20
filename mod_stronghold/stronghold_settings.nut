@@ -94,7 +94,7 @@
 		Price = 0,
 	}
 	Kennel = {
-		Price = 2.5,
+		Price = 2,
 	}
 	Taxidermist = {
 		Price = 5,
@@ -121,7 +121,7 @@
 		Price = 2.5,
 	}
 	Port = {
-		Price = 5,
+		Price = 10,
 	}
 	Arena = {
 		Price = 10
