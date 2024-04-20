@@ -87,18 +87,18 @@ this.stronghold_player_faction <- this.inherit("scripts/factions/faction", {
 				u.die();
 			}
 
-			if (!_ignoreDelay && this.m.Settlements.len() != 0)
-			{
+			// if (!_ignoreDelay && this.m.Settlements.len() != 0)
+			// {
 
-				if (u.isAlive() && !u.getController().hasOrders())
-				{
-					local move = this.new("scripts/ai/world/orders/move_order");
-					move.setDestination(playerBase.getTile());
-					local despawn = this.new("scripts/ai/world/orders/despawn_order");
-					u.getController().addOrder(move);
-					u.getController().addOrder(despawn);
-				}
-			}
+			// 	if (u.isAlive() && !u.getController().hasOrders())
+			// 	{
+			// 		local move = this.new("scripts/ai/world/orders/move_order");
+			// 		move.setDestination(playerBase.getTile());
+			// 		local despawn = this.new("scripts/ai/world/orders/despawn_order");
+			// 		u.getController().addOrder(move);
+			// 		u.getController().addOrder(despawn);
+			// 	}
+			// }
 		}
 		
 		//check and execute the orders
