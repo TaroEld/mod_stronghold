@@ -53,6 +53,23 @@
     background-repeat: no-repeat;
 }
 
+.stronghold-small-popup
+{
+    width: 44.9rem;
+    height: 25.0rem;
+    background-image: url("coui://gfx/ui/skin/popup_background_449x250.png");
+    background-size: 44.9rem 25.0rem;
+    background-repeat: no-repeat;
+}
+.stronghold-small-popup .content
+{
+    width:95%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+
+
 .stronghold-half-width
 {
 	width:50%;

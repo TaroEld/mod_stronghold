@@ -514,7 +514,7 @@ StrongholdScreenMiscModule.prototype.createRemoveBaseContent = function()
 	var footer = this.mRemoveBaseContentContainer.appendRow(null, "stronghold-flex-center stronghold-row-background");
 	this.mRemoveBaseButton = footer.createTextButton(text.Title, function()
 	{
-	    self.createPopup(text.Title, null, null, 'change-name-and-title-popup');
+	    self.createPopup(text.Title, null, null, 'stronghold-small-popup');
 	    self.mPopupDialog.addPopupDialogContent(Stronghold.getTextDiv(text.Warning))
 		self.mPopupDialog.addPopupDialogOkButton(function (_dialog)
 		{
