@@ -11,16 +11,16 @@
 		"figure_mercenary_01",
 	]
 	Base = [
+		["stronghold_00", "stronghold_00_light"],
 		["stronghold_01", "stronghold_01_light"],
 		["stronghold_02", "stronghold_02_light"],
-		["stronghold_03", "stronghold_03_light"],
-		["stronghold_04", "stronghold_04_light"]
+		["stronghold_03", "stronghold_03_light"]
 	],
 	Upgrading = [
-		["stronghold_01u", "stronghold_01_light"],
-		["stronghold_02u", "stronghold_02u_light"],
-		["stronghold_03u", "stronghold_03_light"],
-		["stronghold_04u", "stronghold_04_light"]
+		["stronghold_00u", "stronghold_00_light"],
+		["stronghold_01u", "stronghold_01u_light"],
+		["stronghold_02u", "stronghold_02_light"],
+		["stronghold_03u", "stronghold_03_light"]
 	]
 	Houses =  [
 		["world_houses_03_01", "world_houses_03_01_light"]
