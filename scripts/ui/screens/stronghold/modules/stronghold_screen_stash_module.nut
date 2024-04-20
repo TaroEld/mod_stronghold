@@ -88,7 +88,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 			return null;
 		}
 
-		local item = ::Stash.getItemAtIndex(_itemIndex).item;
+		local item = this.getStash().getItemAtIndex(_itemIndex).item;
 
 		if (item.getConditionMax() <= 1 || item.getCondition() >= item.getConditionMax())
 		{
@@ -109,11 +109,11 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		item.setCondition(item.getConditionMax());
 		item.setToBeRepaired(false);
 		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + this.Math.rand(0, 6) + ".wav", 1.0);
-		local result = {
-			Item = this.UIDataHelper.convertItemToUIData(item, true, this.Const.UI.ItemOwner.Stash),
-			Assets = this.m.Parent.queryAssetsInformation()
-		};
 		this.World.Statistics.getFlags().increment("ItemsRepaired");
+		this.updateData(["Assets", "TownAssets", "StashModule"]);
+		local result = {
+			Item = this.UIDataHelper.convertItemToUIData(item, true, this.Const.UI.ItemOwner.Stash)
+		};
 		return result;
 	}
 
@@ -228,6 +228,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 	function onReforgeNamedItem(_idx)
 	{
 		local sourceItem = this.getStash().removeByIndex(_idx);
+		local location = this.getTown().getLocation("attached_location.ore_smelters");
 		local name = sourceItem.getName();
 		local type = sourceItem.ClassNameHash;
 		local price = sourceItem.item.m.Value * (1 - (this.Stronghold.Locations["Ore_Smelter"].ReforgeMultiplier * location.getLevel()));
@@ -245,12 +246,6 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		this.World.Assets.addMoney(-price);
 		this.getStash().add(replacementItem);
 		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + ::Math.rand(0, 6) + ".wav", 1.0);
-		this.updateData(["Assets", "StashModule"]);
-	}
-
-	function updateStashes()
-	{
-		local ret = this.getUIData({});
-		this.m.JSHandle.asyncCall("updateStashes", ret);
+		this.updateData(["Assets", "TownAssets", "StashModule"]);
 	}
 })

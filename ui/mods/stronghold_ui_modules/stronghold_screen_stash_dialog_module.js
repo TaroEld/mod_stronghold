@@ -427,22 +427,20 @@ StrongholdScreenStashModule.prototype.createItemSlot = function (_owner, _index,
             {
                 case WorldTownScreenShop.ItemOwner.Stash:
                 {
-                    if (repairItem === true)
-                    {
-                        //console.info('destroy');
-                        self.repairItem(itemIdx);
-                    }
-                    else
-                    {
-                        //console.error('sell');
-                        self.swapItem(itemIdx, owner, null, WorldTownScreenShop.ItemOwner.Shop);
-                    }
+                    //console.error('sell');
+                    self.swapItem(itemIdx, owner, null, WorldTownScreenShop.ItemOwner.Shop);
                 } break;
                 case WorldTownScreenShop.ItemOwner.Shop:
                 {
-                	if (reforgeItem == true){
+                	if (reforgeItem == true)
+                	{
                     	self.checkIfReforgeIsValid(itemIdx)
                     	return false
+                    }
+                    else if (repairItem === true)
+                    {
+                        //console.info('destroy');
+                        self.repairItem(itemIdx);
                     }
                     else{
                     	self.swapItem(itemIdx, owner, null, WorldTownScreenShop.ItemOwner.Stash);
@@ -519,6 +517,24 @@ StrongholdScreenStashModule.prototype.checkIfReforgeIsValid = function (_sourceI
     });
 };
 
+StrongholdScreenStashModule.prototype.repairItem = function(_itemIdx)
+{
+    var self = this;
+    this.notifyBackendRepairItem(_itemIdx, function(_result)
+    {
+        if(_result.Item != null)
+        {
+            self.updateSlotItem(WorldTownScreenShop.ItemOwner.Shop, self.mShopSlots, _result.Item, _itemIdx, WorldTownScreenShop.ItemFlag.Updated);
+        }
+    });
+}
+
+StrongholdScreenStashModule.prototype.notifyBackendRepairItem = function (_itemIdx, _callback)
+{
+    SQ.call(this.mSQHandle, 'onRepairItem', _itemIdx, _callback);
+};
+
+
 
 var copyFunctionList = [
 	"loadStashData",
@@ -530,7 +546,6 @@ var copyFunctionList = [
 	"querySlotByIndex",
 	"createItemSlots",
 	"clearItemSlots",
-	"repairItem",
 	"updateStashList",
 	"updateShopList",
 	"updateSlotItem",
