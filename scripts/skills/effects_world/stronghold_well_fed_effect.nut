@@ -93,7 +93,6 @@ this.stronghold_well_fed_effect <- this.inherit("scripts/skills/skill", {
 
 	function onNewDay()
 	{
-		::logInfo("onNewDay" + this.m.TimeRemaining)
 		this.m.TimeRemaining -= 1;
 		if (this.m.TimeRemaining == 0)
 			this.removeSelf()
