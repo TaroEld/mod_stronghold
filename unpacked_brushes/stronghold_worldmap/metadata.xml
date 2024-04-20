@@ -118,20 +118,23 @@
 <sprite id="luft_fishing_patrol" img="settlements\fishing\luft_fishing_patrol.png" ic="FF295956" offsetY="20" width="68" height="106" left="-17" right="23" top="-39" bottom="7" />
 
 
-
-<sprite id="luft_necro_01" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_01.png" height="199" width="252"/>
-<sprite id="luft_necro_01_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_01_light.png" height="199" width="252"/>
-<sprite id="luft_necro_01u" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_01u.png" height="199" width="252"/>
+<sprite id="luft_necro_01" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02.png" height="199" width="252"/>
+<sprite id="luft_necro_01_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02_light.png" height="199" width="252"/>
+<sprite id="luft_necro_01u" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02u.png" height="199" width="252"/>
 
 <sprite id="luft_necro_02" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02.png" height="199" width="252"/>
 <sprite id="luft_necro_02_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02_light.png" height="199" width="252"/>
 <sprite id="luft_necro_02u" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02u.png" height="199" width="252"/>
-<sprite id="luft_necro_02u_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_02u_light.png" height="199" width="252"/>
 
 <sprite id="luft_necro_03" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_03.png" height="199" width="252"/>
 <sprite id="luft_necro_03_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_03_light.png" height="199" width="252"/>
 <sprite id="luft_necro_03u" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_03u.png" height="199" width="252"/>
 <sprite id="luft_necro_03u_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_03u_light.png" height="199" width="252"/>
+
+<sprite id="luft_necro_04" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_04.png" height="199" width="252"/>
+<sprite id="luft_necro_04_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_04_light.png" height="199" width="252"/>
+<sprite id="luft_necro_04u" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_04u.png" height="199" width="252"/>
+<sprite id="luft_necro_04u_light" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_04u_light.png" height="199" width="252"/>
 
 <sprite id="luft_necro_houses_01" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_houses_01.png"/>
 <sprite id="luft_necro_houses_02" offsetY="10" ic="FF313B3F" img="settlements\necro\luft_necro_houses_02.png" />

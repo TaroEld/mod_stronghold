@@ -148,7 +148,7 @@
 ::Stronghold.VisualsMap["Luft_Necro"] <-
 {
 	ID = "Luft_Necro",
-	Name = "Necromancer's Lair",
+	Name = "Necromancer's Lair [unfinished]",
 	Author = "Luftwaffle",
 	WorldmapFigure = [
 		"luft_necro_patrol",
@@ -163,8 +163,8 @@
 		["luft_necro_04", "luft_necro_04_light"]
 	],
 	Upgrading = [
-		["luft_necro_01u", "luft_necro_01u_light"],
-		["luft_necro_02u", "luft_necro_02u_light"],
+		["luft_necro_01u", ""],
+		["luft_necro_02u", ""],
 		["luft_necro_03u", "luft_necro_03u_light"],
 		["luft_necro_04u", "luft_necro_04u_light"]
 	]
