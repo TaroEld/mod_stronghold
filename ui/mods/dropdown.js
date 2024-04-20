@@ -40,11 +40,14 @@ var createDropDownMenu = function(_parentDiv, _classes, _childrenArray, _default
 				if(_element.Name === undefined)
 					console.error("Passed an object as dropdown member but it does not have a .Name member to use as label!")
 				child.text(_element.Name)
+				child.attr('disabled', _element.Disabled === true);
 			}
 			else child.text(_element)
 
 			child.on("click", function(_event)
 			{
+				if ($(this).attr("disabled"))
+					return;
 				var dropDown = $(this).closest(".dropdown");
 				dropDown.find(".dropdown-child").removeClass("is-selected");
 				$(this).addClass("is-selected");
