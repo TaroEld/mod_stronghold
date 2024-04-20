@@ -97,7 +97,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		// SendGifts = main key
 		local ret =
 		{
-			Price = ::Stronghold.Misc.GiftFlatCost,
+			Price = ::Stronghold.Misc.GiftFlatCost * ::Stronghold.Misc.PriceMult,
 			Gifts = [],
 			ReputationGain = 0,
 			Factions = [],
