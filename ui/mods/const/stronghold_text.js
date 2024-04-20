@@ -73,14 +73,17 @@ Stronghold.Text = {
 		},
 		TrainBrother : {
 			Title : "Train a brother",
-			Description : "Provide focused training to one of your recruits which exceeds the skills of a Training Hall.",
-			Invalid : "Nobody here can provide training beyond the services of a Training Hall.",
+			Description : "Hire the trainer to train one of your brothers. The training must be gruesome, as no brother is willing to undergo it more than once.<br>The brother will gain one talent star in the selected attribute. Only attributes that have fewer than three talent stars can be selected.<br> Values are applied retroactively (a brother above level 1 will get the attributes he would have had if he trained at level 1 and leveled up afterwards).<br>Furthermore, the brother will get a special trained effect, highly increasing his experience gain for a number of battles.",
+			Invalid : "Nobody here can provide the training you're looking for.",
 			Requirements : {
-				FoundTrainer : "Find someone that can provide better training than a mere Training Hall.",
-				ValidBrother : "Have at least one brother below level 11 that is not already under training."
+				FoundTrainer : "Find someone that can provide the training you're looking for. [Quest reward]",
 			},
 			ConfirmButton : "Train this brother",
-			ChooseButton : "Choose brother"
+			ChooseButton : "Choose brother",
+			AttributeNames : ["Hitpoints", "Resolve", "Fatigue", "Initiative", "Melee Skill", "Ranged Skill", "Melee Defense", "Ranged Defense"],
+			SuccessTalent : "Your brother successfully underwent the training. His talent in {0} increased to {1}.<br>",
+			SuccessAttribute : "His current {0} increased by {1}.",
+			NoChangeAttribute : "His current {0} stayed the same.",
 		},
 		BuyWater : {
 			Title : "Buy a Water Skin",

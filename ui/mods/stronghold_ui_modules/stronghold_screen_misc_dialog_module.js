@@ -254,7 +254,7 @@ StrongholdScreenMiscModule.prototype.notifyBackendSendGift = function()
 	data.ReputationGain = this.mModuleData.SendGifts.ReputationGain;
 	SQ.call(this.mSQHandle, 'onSendGift', data, function(_ret){
 		var text = _ret === true ? self.getModuleText().SendGifts.OnSend.replace("{town}", self.mGiftsTargetDropdown.data("activeElement").SettlementName) : Stronghold.Text.Error;
-		self.createPopup(self.getModuleText().SendGifts.Title, null, null, 'change-name-and-title-popup');
+		self.createPopup(self.getModuleText().SendGifts.Title, null, null, 'stronghold-small-popup');
 		self.mPopupDialog.addPopupDialogContent(Stronghold.getTextDiv(text))
 
 		self.mPopupDialog.addPopupDialogOkButton(function (_dialog)
@@ -284,7 +284,8 @@ StrongholdScreenMiscModule.prototype.createTrainBrotherContent = function ()
 	var leftContent = $('<div class="stronghold-half-width"/>')
 		.appendTo(this.mTrainBrotherContentContainer)
 	leftContent.appendRow("Brother", null, true);
-	this.mTrainChooseBrotherButton = leftContent.createTextButton(text.ChooseButton, function()
+	var buttonRow = leftContent.appendRow();
+	this.mTrainChooseBrotherButton = buttonRow.createTextButton(text.ChooseButton, function()
 	{
 	    self.createPopup(text.ChooseButton, null, null, 'train-brother-popup');
 	    var mainContainer =  $('<div class="train-brother-popup-main"/>')
@@ -300,14 +301,23 @@ StrongholdScreenMiscModule.prototype.createTrainBrotherContent = function ()
 		})
 	}, "stronghold-button-4", 4)
 
+	this.mTrainChooseAttributeButton = createDropDownMenu(buttonRow);
+	this.mTrainChooseAttributeButton.data("maxHeight", 30);
+	this.mTrainChooseAttributeButton.css("margin-top", "1rem");
+	this.mTrainChooseAttributeButton.bindTooltip({ contentType: 'msu-generic', modId: "mod_stronghold", elementId: "Screen.Module.Misc.TrainBrotherChooseAttribute"})
+
+
+
 	var imgContainer = $('<div class = "train-brother-img-container">')
 		.appendTo(leftContent)
 	this.mTrainBrotherImg = $('<img class="train-brother-img"/>')
 		.appendTo(imgContainer)
 	this.mTrainBrotherName = Stronghold.getTextDiv()
 		.appendTo(leftContent)
+		.css("text-align", "center")
 	this.mTrainBrotherLevel = Stronghold.getTextDiv()
 		.appendTo(leftContent)
+		.css("text-align", "center")
 
 
 	//Right Side
@@ -358,33 +368,63 @@ StrongholdScreenMiscModule.prototype.createTrainBrotherPopupContent = function (
 
 StrongholdScreenMiscModule.prototype.selectBrotherToTrain = function(_entry)
 {
+	var text = this.getModuleText().TrainBrother;
 	this.mTrainBrotherImg.attr("src", Path.PROCEDURAL + _entry.ImagePath);
 	this.mTrainBrotherImg.show();
 	this.mTrainBrotherName.text(_entry.Name);
 	this.mTrainBrotherLevel.text("Level: " + _entry.Level);
-	this.mTrainBrotherID = _entry.ID;
 	this.mTrainBrotherConfirmButton.attr("disabled", false);
+	var dropdownItems = [];
+	var def = null;
+	$.each(_entry.Talents, function(_idx, _talent){
+		var ret = {
+			Name : text.AttributeNames[_idx] + ": " + _talent + "*",
+			Idx : _idx,
+			Disabled : _talent === 3,
+			BrotherID : _entry.ID
+		}
+		if (def == null && ret.Disabled === false)
+			def = ret;
+		dropdownItems.push(ret);
+	})
+	this.mTrainChooseAttributeButton.set(dropdownItems, def);
+	this.mTrainChooseAttributeButton.show();
 }
 
 StrongholdScreenMiscModule.prototype.loadTrainBrotherData = function()
 {
-
 	var text = this.getModuleText().TrainBrother;
-	this.mTrainBrotherDescriptionText.text(text.Description);
 	this.mTrainBrotherImg.hide();
 	this.mTrainBrotherName.text("");
 	this.mTrainBrotherLevel.text("");
-	this.mTrainBrotherID = -1;
 	this.mTrainBrotherConfirmButton.attr("disabled", true);
 
 	this.mTrainBrotherRequirementsTable.empty()
 	var reqs = this.buildRequirements(this.mTrainBrotherRequirementsTable, this.mModuleData.TrainBrother.Requirements, text.Requirements);
 	this.mTrainChooseBrotherButton.attr("disabled", !reqs)
+	this.mTrainChooseAttributeButton.set();
+	this.mTrainChooseAttributeButton.hide();
 }
 
 StrongholdScreenMiscModule.prototype.notifyBackendTrainBrother = function()
 {
-	SQ.call(this.mSQHandle, 'onTrainBrother', this.mTrainBrotherID);
+	var self = this;
+	var text = this.getModuleText().TrainBrother;
+	var data = this.mTrainChooseAttributeButton.get();
+	SQ.call(this.mSQHandle, 'onTrainBrother', data, function(_ret){
+		var content = Stronghold.Text.format(text.SuccessTalent, text.AttributeNames[data.Idx], _ret.Talent);
+		if (_ret.ToAdd > 0)
+			content += Stronghold.Text.format(text.SuccessAttribute, text.AttributeNames[data.Idx], _ret.ToAdd);
+		else content += Stronghold.Text.format(text.NoChangeAttribute, text.AttributeNames[data.Idx]);
+		self.createPopup(text.Title, null, null, 'stronghold-small-popup');
+		self.mPopupDialog.addPopupDialogContent(Stronghold.getTextDiv(content))
+
+		self.mPopupDialog.addPopupDialogOkButton(function (_dialog)
+		{
+		    self.reloadData();
+		    self.destroyPopup();
+		});
+	});
 }
 
 // End train brother

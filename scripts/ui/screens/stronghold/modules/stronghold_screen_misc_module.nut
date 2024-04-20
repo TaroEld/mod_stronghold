@@ -257,8 +257,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local ret = {
 			Requirements = {
 				FoundTrainer = this.Stronghold.getPlayerFaction().m.Flags.get("Teacher"),
-				Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult,
-				ValidBrother = null //later
+				Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult
 			}
 			Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult,
 			ValidBrothers = []
@@ -267,8 +266,9 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		roster.extend(this.World.getPlayerRoster().getAll());
 		roster.extend(this.getTown().getLocalRoster().getAll());
 		roster = roster.filter(function(idx, bro){
-			return bro != null && bro.getLevel() < 11 && !bro.getSkills().hasSkill("effects.trained")
+			return bro != null && !bro.getFlags().get("stronghold_trained");
 		});
+
 		foreach (bro in roster)
 		{
 			local uiData = {
@@ -278,27 +278,82 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 				ImagePath = bro.getImagePath(),
 				ImageOffsetX = bro.getImageOffsetX(),
 				ImageOffsetY = bro.getImageOffsetY(),
+				Talents = bro.getTalents(),
 			}
 			ret.ValidBrothers.push(uiData)
 		}
-		ret.Requirements.ValidBrother = ret.ValidBrothers.len() > 0;
 		return ret;
 	}
 
-	function onTrainBrother(_entityID)
+	function onTrainBrother(_obj)
 	{
-		local bro = ::Tactical.getEntityByID(_entityID);
-		local effect = this.new("scripts/skills/effects_world/new_trained_effect");
-		effect.m.Duration = 10;
-		effect.m.XPGainMult = 1.5;
-		effect.m.Icon = "skills/status_effect_75.png";
-		bro.getSkills().add(effect);
+		local bro = ::Tactical.getEntityByID(_obj.BrotherID);
+		local talentIndex = _obj.Idx
+		local talents = bro.m.Talents;
+		local attributeToChange = bro.m.Attributes[talentIndex];
+		local maxIdx = attributeToChange.len() - 1;
+
+		local oldTalent = talents[talentIndex];
+		local newTalent = oldTalent + 1;
+		talents[talentIndex] = newTalent;
+
+		local toAdd = 0;
+		local attributeDefs = this.Const.AttributesLevelUp[talentIndex];
+		local nameHash = ::toHash(bro.getName());
+		local oldArray = [];
+		::Math.seedRandom(nameHash); // seed both times the same
+		for( local i = this.Const.XP.MaxLevelWithPerkpoints - 2; i > -1 ; i-- )
+		{
+			oldArray.insert(0, this.Math.rand(attributeDefs.Min + (oldTalent== 3 ? 2 : oldTalent), attributeDefs.Max + (oldTalent == 3 ? 1 : 0)));
+		}
+		local newArray = [];
+		::Math.seedRandom(nameHash); // seed both times the same
+		for( local i = this.Const.XP.MaxLevelWithPerkpoints - 2; i > -1 ; i-- )
+		{
+			newArray.insert(0, this.Math.rand(attributeDefs.Min + (newTalent== 3 ? 2 : newTalent), attributeDefs.Max + (newTalent == 3 ? 1 : 0)));
+		}
+		for( local i = this.Const.XP.MaxLevelWithPerkpoints - 2; i > -1 ; i-- )
+		{
+			if (i > maxIdx)
+				toAdd += (newArray[i] - oldArray[i]);
+			else
+				attributeToChange[i] = newArray[i];
+		}
+		toAdd = ::Math.max(0, toAdd); // can't reduce value
+		local b = bro.getBaseProperties();
+		local attrKey;
+		switch (talentIndex)
+		{
+			case ::Const.Attributes.Hitpoints:
+				bro.m.Hitpoints += toAdd;
+				attrKey = "Hitpoints";
+			case ::Const.Attributes.Bravery:
+				attrKey = "Bravery";
+			case ::Const.Attributes.Fatigue:
+				attrKey = "Stamina";
+			case ::Const.Attributes.Initiative:
+				attrKey = "Initiative";
+			case ::Const.Attributes.MeleeSkill:
+				attrKey = "MeleeSkill";
+			case ::Const.Attributes.RangedSkill:
+				attrKey = "RangedSkill";
+			case ::Const.Attributes.MeleeDefense:
+				attrKey = "MeleeDefense";
+			case ::Const.Attributes.RangedDefense:
+				attrKey = "RangedDefense";
+		}
+		b[attrKey] += toAdd;
+		bro.getSkills().update();
+		bro.setDirty(true);
+
+		bro.getFlags().set("stronghold_trained", true);
 		this.World.Assets.addMoney(-(::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult));
-		this.updateData(["Assets", "MiscModule"]);
-		return true;
+		this.updateData(["Assets"]);
+		return {
+			Talent = newTalent,
+			ToAdd = toAdd,
+		};
 	}
-
-
 
 	function getWaterUIData()
 	{

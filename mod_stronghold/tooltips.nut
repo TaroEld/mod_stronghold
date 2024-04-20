@@ -7,6 +7,7 @@
 			},
 			Misc = {
 				RoadZoom = ::MSU.Class.BasicTooltip("Show location", "[img]gfx/ui/icons/mouse_left_button.png[/img]Left click to move camera to location.\n [img]gfx/ui/icons/mouse_right_button.png[/img]Right click to return to your base."),
+				TrainBrotherChooseAttribute = ::MSU.Class.BasicTooltip("Choose Talent", "Choose the talent that you want to increase. Only talents below three stars may be chosen."),
 			},
 			Roster = {
 				PlayerWages =  ::MSU.Class.BasicTooltip("Player Party Wages", "The wages of all the brothers in your party."),

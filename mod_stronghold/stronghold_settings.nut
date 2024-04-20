@@ -21,13 +21,13 @@
 	RoadCost = 0.5,
 	// Cost to make the raided debuff go away; multiplied with the price mult
 	RaidedCostPerDay = 0.5,
-	TrainerPrice = 5,
-	WaterPrice = 5,
-	MercenaryPrice = 5,
+	TrainerPrice = 20,
+	WaterPrice = 15,
+	MercenaryPrice = 10,
 	// Each level requires this much renown. This stacks with bases.
 	RenownCost = 500,
 	// Flat cost to send a gift caravan
-	GiftFlatCost = 3000,
+	GiftFlatCost = 3,
 }
 
 ::Stronghold.Hamlet <- {
