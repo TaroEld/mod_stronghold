@@ -89,7 +89,8 @@ Stronghold.Text = {
 			Title : "Buy a Water Skin",
 			Description : "Buy a Water Skin with mythical properties.",
 			Requirements : {
-				Unlocked : "Recovered the recipe to create a mythical Water of Life. [Quest reward]"
+				Unlocked : "Recovered the recipe to create a mythical Water of Life. [Quest reward]",
+				EmptySlot : "Have an empty slot in your player inventory."
 			},
 			ConfirmButton : "Buy the Water Skin",
 		},

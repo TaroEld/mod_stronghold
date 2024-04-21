@@ -434,6 +434,7 @@ StrongholdScreenMiscModule.prototype.notifyBackendTrainBrother = function()
 
 StrongholdScreenMiscModule.prototype.createBuyWaterContent = function ()
 {
+	var self = this;
 	var text = this.getModuleText().BuyWater;
 	this.mBuyWaterContentContainer = this.mBuyWaterContainer.appendRow(text.Title);
 	this.mBuyWaterDescriptionText = Stronghold.getTextSpan(text.Description)

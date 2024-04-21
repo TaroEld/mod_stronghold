@@ -370,6 +370,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			{
 				Unlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Waterskin"),
 				Price = ::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult,
+				EmptySlot = ::Stash.hasEmptySlot()
 			},
 			Price = ::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult
 		};
@@ -378,10 +379,10 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 
 	function onWaterSkinBought()
 	{
-		this.World.Assets.getStash().makeEmptySlots(1);
 		local item = this.new("scripts/items/special/fountain_of_youth_item");
 		this.World.Assets.getStash().add(item);
-		this.updateData(["Assets", "MiscModule"]);
+		this.World.Assets.addMoney(-(::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult));
+		this.updateData(["Assets", "MiscModule", "StashModule"]);
 	}
 
 	// Mercenaries
