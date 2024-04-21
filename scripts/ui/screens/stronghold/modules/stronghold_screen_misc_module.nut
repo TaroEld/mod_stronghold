@@ -329,20 +329,28 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			case ::Const.Attributes.Hitpoints:
 				bro.m.Hitpoints += toAdd;
 				attrKey = "Hitpoints";
+				break;
 			case ::Const.Attributes.Bravery:
 				attrKey = "Bravery";
+				break;
 			case ::Const.Attributes.Fatigue:
 				attrKey = "Stamina";
+				break;
 			case ::Const.Attributes.Initiative:
 				attrKey = "Initiative";
+				break;
 			case ::Const.Attributes.MeleeSkill:
 				attrKey = "MeleeSkill";
+				break;
 			case ::Const.Attributes.RangedSkill:
 				attrKey = "RangedSkill";
+				break;
 			case ::Const.Attributes.MeleeDefense:
 				attrKey = "MeleeDefense";
+				break;
 			case ::Const.Attributes.RangedDefense:
 				attrKey = "RangedDefense";
+				break;
 		}
 		b[attrKey] += toAdd;
 
