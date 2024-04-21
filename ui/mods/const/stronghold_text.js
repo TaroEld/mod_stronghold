@@ -263,7 +263,7 @@ Stronghold.Text = {
 				DailyIncome : "<li>The gold mine generates {0} crowns a day, which are added to your coffers when you visit the base.</li>",
 			},
 			getUpgradeDescription : function(_element, _level){
-				return Stronghold.Text.format(this.UpgradeDescription.DailyIncome, _element.DailyIncome)
+				return Stronghold.Text.format(this.UpgradeDescription.DailyIncome, _element.DailyIncome * _level)
 			},
 		}
 	}
