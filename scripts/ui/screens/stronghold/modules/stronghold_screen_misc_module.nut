@@ -358,6 +358,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		effect.m.Duration = ::Stronghold.Misc.TrainerBuffDurationInDays;
 		effect.m.XPGainMult = ::Stronghold.Misc.TrainerBuffDurationExpMult;
 		effect.m.Icon = "skills/status_effect_75.png";
+		bro.getSkills().add(effect);
 
 		bro.getSkills().update();
 		bro.setDirty(true);
