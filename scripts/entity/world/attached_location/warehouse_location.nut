@@ -80,7 +80,7 @@ this.warehouse_location <- this.inherit("scripts/entity/world/attached_location"
 
 	function resize()
 	{
-		this.getStash().resize(::Stronghold.Locations.Warehouse.MaxItemSlots * this.m.Level + 1);
+		this.getStash().resize(::Stronghold.Locations.Warehouse.MaxItemSlots * (this.m.Level + 1));
 	}
 
 	function onSerialize(_out)
@@ -94,6 +94,8 @@ this.warehouse_location <- this.inherit("scripts/entity/world/attached_location"
 	{
 		this.attached_location.onDeserialize(_in);
 		this.m.Stash.onDeserialize(_in);
+		this.getStash().m.Capacity = this.getStash().m.Items.len();
+
 		this.m.ConsumableItems = ::Stronghold.Mod.Serialization.flagDeserialize(this.getID().tostring(),  this.m.ConsumableItems, null, this.getFlags());
 	}
 })

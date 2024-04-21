@@ -266,15 +266,21 @@ StrongholdScreenStashModule.prototype.updateShopList = function (_data)
     }
 
 	// create more slots?
-	if(_data.length > this.mShopSlots.length)
+	if(this.mTownStashSpaceMax > this.mShopSlots.length)
 	{
-		this.createItemSlots(WorldTownScreenShop.ItemOwner.Shop, _data.length - this.mShopSlots.length, this.mShopSlots, this.mShopListScrollContainer);
+		this.createItemSlots(WorldTownScreenShop.ItemOwner.Shop, this.mTownStashSpaceMax - this.mShopSlots.length, this.mShopSlots, this.mShopListScrollContainer);
+	}
+
+	// remove slots?
+	if(this.mShopSlots.length > this.mTownStashSpaceMax)
+	{
+		this.mShopSlots.length = this.mTownStashSpaceMax;
 	}
 
     // check shop for changes
 	var maxLength = this.mShopList.length >= _data.length ? this.mShopList.length : _data.length;
 
-    for(var i = 0; i < maxLength; ++i)
+    for(var i = 0; (i < maxLength) && (i < this.mShopSlots.length); ++i)
     {
         var oldItem = this.mShopList[i];
         var newItem = _data[i];
@@ -330,8 +336,11 @@ StrongholdScreenStashModule.prototype.updateSlotItem = function (_owner, _itemAr
         case WorldTownScreenShop.ItemFlag.Updated:
         {
             this.removeItemFromSlot(slot);
-            this.assignItemToSlot(_owner, slot, _item);
-            this.updateItemPriceLabel(slot, _item, _owner === WorldTownScreenShop.ItemOwner.Stash);
+            if (_item != null)
+        	{
+        		this.assignItemToSlot(_owner, slot, _item);
+        		this.updateItemPriceLabel(slot, _item, _owner === WorldTownScreenShop.ItemOwner.Stash);
+        	}
 			break;
         }
         case WorldTownScreenShop.ItemFlag.Removed:
@@ -547,8 +556,6 @@ var copyFunctionList = [
 	"createItemSlots",
 	"clearItemSlots",
 	"updateStashList",
-	"updateShopList",
-	"updateSlotItem",
 	"isStashSpaceLeft",
 	"getStashStatistics",
 	"notifyBackendSwapItem",
