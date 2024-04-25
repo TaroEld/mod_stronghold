@@ -4,7 +4,11 @@
 	"scripts/factions/actions/stronghold_guard_base_action", 
 	"scripts/factions/actions/stronghold_send_caravan_action", 
 	"scripts/factions/actions/stronghold_patrol_roads_action",
-	"scripts/factions/actions/stronghold_send_attacker_action",
+];
+
+::Stronghold.EnemyFactionActions <-
+[
+	"scripts/factions/actions/stronghold_send_attacker_action"
 ];
 
 

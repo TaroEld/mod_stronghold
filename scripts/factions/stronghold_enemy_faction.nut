@@ -17,6 +17,19 @@ this.stronghold_enemy_faction <- this.inherit("scripts/factions/faction", {
 		this.m.IsHidden = true;
 		this.m.PlayerRelation = 0.0;
 		this.m.IsRelationDecaying = false;
+		this.addTrait(this.Stronghold.EnemyFactionActions);
+	}
+
+	function addTrait( _t )
+	{
+		//add orders to the faction, during upgrades
+		this.m.Deck = []
+		foreach( c in _t )
+		{
+			local card = this.new(c);
+			card.setFaction(this);
+			this.m.Deck.push(card);
+		}
 	}
 
 	function copyLooks(_faction)

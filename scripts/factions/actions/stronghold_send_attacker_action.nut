@@ -7,7 +7,7 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 	{
 		this.m.ID = "stronghold_send_attacker_action";
 		this.m.Cooldown = 3;
-		this.m.IsSettlementsRequired = true;
+		this.m.IsSettlementsRequired = false;
 		this.faction_action.create();
 	}
 
@@ -15,21 +15,39 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 	{
 		if (!::Stronghold.Misc.BaseAttacksEnabled)
 			return;
-		local playerBases = _faction.getMainBases();
+		local playerFaction = ::Stronghold.getPlayerFaction();
+		if (playerFaction == null)
+			return;
+		local playerBases = playerFaction.getMainBases();
 		if (playerBases.len() == 0)
 			return;
+
 
 		local potentialTargets = {};
 		local potentialTargetsArray = [];
 		foreach (playerBase in playerBases)
 		{
-			if (playerBase.hasSituation("situation.raided") || playerBase.isUpgrading() || !::Stronghold.isCooldownExpired(playerBase, "LastUpgradeDoneCooldown") || !::Stronghold.isCooldownExpired(playerBase, "AttackedCooldown"))
+			if (::Stronghold.Mod.Debug.isEnabled())
+			{
+				::Stronghold.Mod.Debug.printLog("Evaluating base attack for player base " + playerBase.getName());
+				::Stronghold.Mod.Debug.printLog("LastUpgradeDoneAttackCooldown " + ::Stronghold.isCooldownExpired(playerBase, "LastUpgradeDoneAttackCooldown"));
+				::Stronghold.Mod.Debug.printLog("AttackedCooldown " + ::Stronghold.isCooldownExpired(playerBase, "AttackedCooldown"));
+			}
+			if (playerBase.hasSituation("situation.raided") || playerBase.isUpgrading() || !::Stronghold.isCooldownExpired(playerBase, "LastUpgradeDoneAttackCooldown") || !::Stronghold.isCooldownExpired(playerBase, "AttackedCooldown"))
 				continue;
 			potentialTargets[playerBase] <- [];
-			local enemyBases = this.World.getAllEntitiesAtPos(playerBase.getPos(), playerBase.getEffectRadius() * 100);
+			local enemyBases = this.World.getAllEntitiesAtPos(playerBase.getPos(), playerBase.getEffectRadius() * 120);
+			::Stronghold.Mod.Debug.printLog("Number of enemyBases " + enemyBases.len());
 			foreach (enemyBase in enemyBases)
 			{
-				if (playerBase.isIsolatedFromLocation(enemyBase) || !enemyBase.isLocation() || !enemyBase.isLocationType(::Const.World.LocationType.Lair))
+				if (::Stronghold.Mod.Debug.isEnabled() && enemyBase.isLocation())
+				{
+					::Stronghold.Mod.Debug.printLog("Evaluating base attack for enemy base " + enemyBase.getName());
+					::Stronghold.Mod.Debug.printLog("isIsolatedFromLocation " + playerBase.isIsolatedFromLocation(enemyBase));
+					::Stronghold.Mod.Debug.printLog("isLocationType " + enemyBase.isLocationType(::Const.World.LocationType.Lair));
+					::Stronghold.Mod.Debug.printLog("AttackerCooldown " + ::Stronghold.isCooldownExpired(enemyBase, "AttackerCooldown"))
+				};
+				if (!enemyBase.isLocation() || playerBase.isIsolatedFromLocation(enemyBase) || !enemyBase.isLocationType(::Const.World.LocationType.Lair))
 					continue;
 				// Faction mods needs to make a compatibility patch
 				if (!(this.World.FactionManager.getFaction(enemyBase.getFaction()).m.Type in ::Stronghold.FactionDefs))
@@ -57,6 +75,7 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 	function onExecute( _faction )
 	{
 		local playerBase = this.m.TargetBase;
+		::Stronghold.Mod.Debug.printLog("SENDING base attack for player base " + playerBase.getName() + " from : " + this.m.EnemyBase.getName());
 
 		local partyDifficulty = (this.m.EnemyBase.m.Resources  +  (30 * playerBase.getSize())) * this.getScaledDifficultyMult();
 
