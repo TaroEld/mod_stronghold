@@ -36,10 +36,6 @@
 	{
 	}
 
-	o.onUpgrade <- function()
-	{
-	}
-
 	o.stronghold_onEnterBase <- function(_daysPassed)
 	{
 

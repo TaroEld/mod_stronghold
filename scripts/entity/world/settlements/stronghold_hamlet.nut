@@ -41,6 +41,11 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.getFlags().set("IsPlayerBase", true);
 		this.getFlags().set("IsMainBase", false);
 	}
+
+	function updateImportedProduce()
+	{
+		this.settlement.updateImportedProduce();
+	}
 	
 	function assimilateCharacteristics(_town)
 	{

@@ -272,15 +272,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local roster = this.World.getRoster(this.getID());
 		local current = roster.getAll();
 		local iterations = ::Math.max(1, daysPassed / 2);
-		local activeLocations = 0;
-
-		foreach( loc in this.m.AttachedLocations )
-		{
-			if (loc.isActive())
-			{
-				activeLocations = ++activeLocations;
-			}
-		}
 
 		local rosterMin = 6
 		local rosterMax = 12
@@ -761,9 +752,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				}
 			}
 		}
-
 	}
-
 	
 	function buildAttachedLocation( _num, _script, _terrain, _nearbyTerrain, _additionalDistance = 0, _mustBeNearRoad = false, _clearTile = true )
 	{

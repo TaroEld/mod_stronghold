@@ -1,12 +1,4 @@
 
-
-// General multiplier for crown values of prices
-
-
-
-// How much renown is required to build the next main base, maxes out at 15000 
-
-
 ::Stronghold.BaseFight <- {
 	// Base difficulty of the base defence fight
 	BaseDifficulty = 150
