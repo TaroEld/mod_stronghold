@@ -96,7 +96,7 @@ Stronghold.Text = {
 		},
 		HireMercenaries : {
 			Title : "Hire Mercenaries",
-			Description : "Hire a group of mercenaries to follow you in your travels. They will follow your party and join in any fights for a duration of two weeks.",
+			Description : "Hire a group of mercenaries to follow you in your travels. They will follow your party and join in any fights for a duration of {0} days.}.",
 			Requirements : {
 				Unlocked : "You have attracted mercenary companies to hire. [Quest reward]",
 				NoMercenaries : "Currently have no mercenaries following you."

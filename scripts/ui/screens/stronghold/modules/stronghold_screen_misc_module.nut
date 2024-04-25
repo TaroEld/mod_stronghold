@@ -406,7 +406,8 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 				NoMercenaries = true,
 				Price = ::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult,
 			},
-			Price = ::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult
+			Price = ::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult,
+			Duration = ::Stronghold.Misc.MercenaryFollowDays,
 		};
 		foreach ( unit in this.Stronghold.getPlayerFaction().m.Units){
 			if (unit.getFlags().get("Stronghold_Mercenaries")){
@@ -439,8 +440,9 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
 		local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
-		follow.setDuration(14);
+		follow.setDuration(::Stronghold.Misc.MercenaryFollowDays);
 		c.addOrder(follow);
+		this.World.Assets.addMoney(-(::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult));
 		this.updateData(["Assets", "MiscModule"]);
 	}
 

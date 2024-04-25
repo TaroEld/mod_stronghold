@@ -468,9 +468,10 @@ StrongholdScreenMiscModule.prototype.notifyBackendBuyWater = function()
 
 StrongholdScreenMiscModule.prototype.createHireMercenariesContent = function ()
 {
+	var self = this;
 	var text = this.getModuleText().HireMercenaries;
 	this.mHireMercenariesContentContainer = this.mHireMercenariesContainer.appendRow(text.Title);
-	this.mHireMercenariesDescriptionText = Stronghold.getTextSpan(text.Description)
+	this.mHireMercenariesDescriptionText = Stronghold.getTextSpan()
 		.appendTo(this.mHireMercenariesContentContainer)
 	var requirementsContainer = this.mHireMercenariesContentContainer.appendRow(Stronghold.Text.Requirements, null, true);
 	this.mHireMercenariesRequirementsTable = $("<table>")
@@ -485,6 +486,7 @@ StrongholdScreenMiscModule.prototype.createHireMercenariesContent = function ()
 StrongholdScreenMiscModule.prototype.loadHireMercenariesData = function()
 {
 	var text = this.getModuleText().HireMercenaries;
+	this.mHireMercenariesDescriptionText.html(Stronghold.Text.format(text.Description, this.mModuleData.HireMercenaries.Duration));
 	this.mHireMercenariesRequirementsTable.empty()
 	var reqs = this.buildRequirements(this.mHireMercenariesRequirementsTable, this.mModuleData.HireMercenaries.Requirements, text.Requirements);
 	this.mHireMercenariesConfirmButton.attr("disabled", !reqs)

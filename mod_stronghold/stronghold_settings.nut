@@ -18,10 +18,12 @@
 	TrainerBuffDurationExpMult = 1.5,
 	WaterPrice = 15,
 	MercenaryPrice = 10,
+	MercenaryFollowDays = 14,
 	// Each level requires this much renown. This stacks with bases.
 	RenownCost = 500,
 	// Flat cost to send a gift caravan
 	GiftFlatCost = 3,
+
 }
 
 ::Stronghold.Hamlet <- {
