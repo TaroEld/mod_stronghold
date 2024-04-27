@@ -664,6 +664,14 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				}
 			}
 
+			// port
+			if (_building.m.ID == "building.port")
+			{
+				local temp = _building;
+				_building = this.m.Buildings[3];
+				this.m.Buildings[3] = temp;
+			}
+
 			for( local i = 0; i < this.m.Buildings.len(); i = ++i )
 			{
 				if (this.m.Buildings[i] == null)
