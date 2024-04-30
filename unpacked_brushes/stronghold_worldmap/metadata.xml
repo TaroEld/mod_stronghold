@@ -13,9 +13,9 @@
 <sprite id="stronghold_00_light" offsetY="10" ic="FF313B3F" img="settlements\default\stronghold_00_light.png" height="199" width="252"/>
 <sprite id="stronghold_00u" offsetY="10" ic="FF313B3F" img="settlements\default\stronghold_00u.png" height="199" width="252"/>
 
-<sprite id="stronghold_01" offsetY="10" ic="FF313B3F" img="settlements\default\stronghold_02.png" />
+<sprite id="stronghold_01" offsetY="10" ic="FF313B3F" img="settlements\default\stronghold_01.png" />
 <sprite id="stronghold_01_light" offsetY="10" ic="FF6AF7EE" width="252" height="199" img="settlements\default\stronghold_01_light.png" left="-104" right="112" top="-60" bottom="84" />
-<sprite id="stronghold_01u" offsetY="10" ic="FF313B3F" img="settlements\default\stronghold_02u.png"/>
+<sprite id="stronghold_01u" offsetY="10" ic="FF313B3F" img="settlements\default\stronghold_01u.png"/>
 <sprite id="stronghold_01u_light" offsetY="10" ic="FF6AF7EE" width="252" height="199" img="settlements\default\stronghold_01_light.png" left="-104" right="112" top="-60" bottom="84" />
 
 <sprite id="stronghold_02" offsetY="15" ic="FF374145" width="255" height="224" img="settlements\default\stronghold_02.png" left="-127" right="128" top="-106" bottom="112" />
