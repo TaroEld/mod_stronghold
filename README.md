@@ -1,4 +1,4 @@
-#Stronghold
+# Stronghold
 
 Welcome to Stronghold! I made this mod to respond to the frequent requests of a base building aspect in Battle Brothers. In this document, you’ll get an overview of various aspects of the mod.
 
@@ -6,8 +6,8 @@ Welcome to Stronghold! I made this mod to respond to the frequent requests of a 
 ## How to install the mod
 
 Like most other Battle Brothers mods, just download the .zip file and place it in the Battle Brothers/data/ folder. Do not unzip the contents of the file, keep them as a zip. If you’ve got the game on Steam, you can right-click it in the library and go to manage -> browse local files to quickly find the install location.
-You’ll also need the [modding script hooks](https://www.nexusmods.com/battlebrothers/mods/42) mod, as well as [MSU](https://www.nexusmods.com/battlebrothers/mods/479).
-Furthermore, you’ll need at least the Blazing Deserts DLC, and probably some of the other major ones. I haven't really tested it without mods.
+You’ll also need [modding script hooks](https://www.nexusmods.com/battlebrothers/mods/42) mod, as well as [MSU](https://www.nexusmods.com/battlebrothers/mods/479).
+Furthermore, you’ll need at least the Blazing Deserts DLC, and probably some of the other major ones. I haven't really tested it without the DLC.
 
 ## How to build your first base
 To be able to build your first base, you’ll need to open the retinue menu. You’ll find the icon of a stronghold in the top left. Click on it.
@@ -31,7 +31,7 @@ Stronghold features a fully realized UI screen in which you can manage your base
 This page gives you an overview of your base.
 The top shows the current name of your base. Change the text and press enter to change the name.
 In the top right corner, you'll see what has been gained since you last entered your base. (More on that in the [locations](#locations) page.)
-In the middle, you can find any current events.
+In the middle, you can find any current events, should there be any.
 On the bottom, you can find some settings that apply to this base.
 
 ### Visuals
@@ -109,8 +109,11 @@ Buy water of life: You will be able to buy a water of life for 20000 crowns. Wit
 Recruit the trainer: A special training regimen will be made available. Like the training hall, it lasts for a specific amount of battles, and boosts exp gained by 50%. This allows you to easily level up brothers in the endgame.
 
 ### The boon:
-As the owner of the base, you will get good trade deals and merchants will be willing to carry more items than usual. This is represented via the permanent settlement situation. This buff scales by size:
-TODO
+The base has a permanent settlement situation that changes prices and inventories of merchants. While it starts out as a negative in an Outpost, it increases to a substantial buff over the tiers:
+- Outpost: 5% higher buying price, 5% lower selling price, no changes to inventory
+- Fort: no changes to buying and selling prices, 4% better inventory
+- Castle: 5% lower buying price, 5% higher selling price, 8% better inventory
+- Stronghold: 10% lower buying price, 10% higher selling price, 12% better inventory
 
 ### Guards
 Your base will naturally hire mercenaries to defend it. They will spawn once a week, and patrol around your attached locations. They will attack enemy parties, and will join you in fights close to them. They won’t stray too far from the base.
@@ -120,4 +123,8 @@ Thanks to MSU, many balancing factors of the mod are available to be changed in 
 You can notify me on the [BB mod server](https://discord.gg/E4K2JZ5KM4) if you want more settings to be available.
 
 
-That’s it! If you need clarification or think that this guide lacks things, write to me on [Nexus](https://www.nexusmods.com/battlebrothers/mods/324) or [Discord](https://discord.gg/E4K2JZ5KM4). Thanks for playing.
+That’s it! If you need clarification or think that this guide lacks things, write to me on [Nexus](https://www.nexusmods.com/battlebrothers/mods/324) or [Discord](https://discord.gg/E4K2JZ5KM4). Thanks for playing, and thanks to all the people that have reported bugs and given suggestions during the development progress.
+
+### Credits:
+Necro for the Roster tab (I stole his PokeBro mod)
+Luft for the new base visual assets
