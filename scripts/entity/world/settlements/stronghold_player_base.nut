@@ -739,6 +739,10 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		}
 		foreach( p in this.m.ProduceImported )
 		{
+			if (typeof p != "string")
+			{
+				continue;
+			}
 			local item = this.new("scripts/items/" + p);
 			this.addItemToWarehouse(item);
 			this.m.LastEnterLog.Items++;
