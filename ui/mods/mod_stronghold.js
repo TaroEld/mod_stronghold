@@ -1,4 +1,5 @@
 var Stronghold = {
+	ID : "mod_stronghold",
 	Hooks : {},
 	Visuals :
 	{

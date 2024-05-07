@@ -12,3 +12,4 @@ foreach (folder in folders)
 	}
 }
 ::include(::Stronghold.ID + "/tooltips.nut");
+::include(::Stronghold.ID + "/keybinds.nut");

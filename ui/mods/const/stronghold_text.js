@@ -196,7 +196,7 @@ Stronghold.Text = {
 		Ore_Smelter : {
 			UpgradeDescription : {
 				Weaponsmith : "<li>The Ore Smelter increases the stock of items at a local weaponsmith.</li>",
-				Reforge : "<li>You will be able to reforge named items, with a cost of {0}% of its base value. To reforge a named item, put it in the warehouse and shift-rightclick on it.</li>"
+				Reforge : "<li>You will be able to reforge named items, with a cost of {0}% of its base value. To reforge a named item, put it in the warehouse and shift-rightclick on it. [MSU keybind, can be changed in the setting menu.]</li>"
 			},
 			getUpgradeDescription : function(_element, _level){
 				return  this.UpgradeDescription.Weaponsmith +  Stronghold.Text.format(this.UpgradeDescription.Reforge, parseInt((1 - _element.ReforgeMultiplier * _level) * 100));

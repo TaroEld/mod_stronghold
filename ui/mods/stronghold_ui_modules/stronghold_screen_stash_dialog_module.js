@@ -427,8 +427,8 @@ StrongholdScreenStashModule.prototype.createItemSlot = function (_owner, _index,
         var isEmpty = (data !== null && 'isEmpty' in data) ? data.isEmpty : true;
         var owner = (data !== null && 'owner' in data) ? data.owner : null;
         var itemIdx = (data !== null && 'index' in data) ? data.index : null;
-		var repairItem = KeyModiferConstants.AltKey in _event && _event[KeyModiferConstants.AltKey] === true;
-		var reforgeItem = KeyModiferConstants.ShiftKey in _event && _event[KeyModiferConstants.ShiftKey] === true;
+		var repairItem = MSU.Keybinds.isMousebindPressed(Stronghold.ID, "repair", _event)
+		var reforgeItem = MSU.Keybinds.isMousebindPressed(Stronghold.ID, "reforge", _event)
 
         if(isEmpty === false && owner !== null && itemIdx !== null)
         {
