@@ -91,32 +91,18 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		party.getFlags().set("IsCaravan", true);
 		
 		//add food, plus imported produce from target town
-		local collected_loot = []
-		if (closest.getProduce().len() != 0)
+		local produce = closest.getProduce().filter(function(_idx, _item){
+			return _item.slice(0, 3) == "sup" && _item != "supplies/ammo_item" && _item != "supplies/medicine_item" && _item != "supplies/armor_parts_item";
+		});
+		if (produce.len() == 0)
 		{
-			foreach (i in closest.getProduce())
-			{
-				//jank way of checking if produce is food
-				if (i.slice(0, 3) == "sup" && i != "supplies/ammo_item" && i != "supplies/medicine_item" && i != "supplies/armor_parts_item")
-				{
-					collected_loot.push(i)
-				}
-			}
+			produce.push("supplies/bread_item");
+			produce.push("supplies/ground_grains_item");
 		}
-		//add bread and grain if not enough produce is found
-		if (collected_loot.len() < 9)
+		for (local i = 0; i < 6; ++i)
 		{
-			for (local i = collected_loot.len(); i < 10; i++)
-			{
-				if (i%2 == 0){party.addToInventory("supplies/bread_item")}
-				else {party.addToInventory("supplies/ground_grains_item")}
-			}
+			party.addToInventory(::MSU.Array.rand(produce));
 		}
-		foreach ( item in collected_loot){
-			party.addToInventory(item)
-		}
-		
-		
 
 		local c = party.getController();
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false);
