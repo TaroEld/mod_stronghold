@@ -224,30 +224,31 @@ createSettings = function(_container)
 		if (skip.find(key) != null)
 			continue;
 		local keyID =  key + keyInc++;
+		local keyClosure = key;
 		switch (typeof value){
 			case "string":
-				local setting = settingsPage.addStringSetting(keyID, value, key);
-				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue());
+				local setting = settingsPage.addStringSetting(keyID, value, keyClosure);
+				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue());
 				break;
 			case "bool":
-				local setting = settingsPage.addBooleanSetting(keyID, value, key);
-				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue());
+				local setting = settingsPage.addBooleanSetting(keyID, value, keyClosure);
+				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue());
 				break;
 			case "integer":
-				local setting = settingsPage.addStringSetting(keyID, value.tostring(), key);
-				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue().tointeger());
+				local setting = settingsPage.addStringSetting(keyID, value.tostring(), keyClosure);
+				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue().tointeger());
 				break;
 			case "float":
-				local setting = settingsPage.addRangeSetting(keyID, value, 0, 3.0, 0.01, key);
-				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue());
+				local setting = settingsPage.addRangeSetting(keyID, value, 0, 3.0, 0.01, keyClosure);
+				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue());
 				break;
 			case "array":
-				local setting = settingsPage.addArraySetting(keyID, value, key);
-				setting.addAfterChangeCallback(@(_value) _container[key] = this.getValue());
+				local setting = settingsPage.addArraySetting(keyID, value, keyClosure);
+				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue());
 				break;
 			case "table":
 				settingsPage.addDivider( "divider2_" + keyID);
-				settingsPage.addTitle( "section_" + keyID, key);
+				settingsPage.addTitle( "section_" + keyID, keyClosure);
 				createSettings(value);
 			default:
 				break;
