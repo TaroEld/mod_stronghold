@@ -721,7 +721,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function addImportedProduce( _p )
 	{
 		//bigger caravan gainz, otherwise limited to 6
-		if (this.m.ProduceImported.len() >= 9)
+		if (this.m.ProduceImported.len() >= 6)
 		{
 			this.m.ProduceImported.remove(0);
 		}
