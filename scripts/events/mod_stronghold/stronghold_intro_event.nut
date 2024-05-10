@@ -24,7 +24,7 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 		local hasMoney = this.World.Assets.getMoney() >= buildPrice;
 		local isTileOccupied = this.World.State.getPlayer().getTile().IsOccupied;
 		local hasContract = this.World.Contracts.getActiveContract() != null;
-		local isCoastal = this.Stronghold.isOnTile(this.World.State.getPlayer().getTile(), [this.Const.World.TerrainType.Ocean, this.Const.World.TerrainType.Shore]);
+		local isCoastal = this.isCoastal(this.World.State.getPlayer().getTile());
 		local hasRenown = this.World.Assets.getBusinessReputation() > renownCost;
 
 		local isValid = hasRenown && hasMoney && !isTileOccupied && !hasContract;
@@ -123,6 +123,116 @@ this.stronghold_intro_event <- this.inherit("scripts/events/event", {
 			}
  
 		});
+	}
+
+	function isCoastal (_tile)
+	{
+		local mapSize = this.World.getMapSize();
+		local isCoastal = false;
+		local deepOceanTile = null;
+
+		for( local i = 0; i < 6; i = ++i )
+		{
+			if (!_tile.hasNextTile(i))
+			{
+			}
+			else if (_tile.getNextTile(i).Type == this.Const.World.TerrainType.Ocean || _tile.getNextTile(i).Type == this.Const.World.TerrainType.Shore)
+			{
+				isCoastal = true;
+				break;
+			}
+		}
+
+		if (isCoastal)
+		{
+			if (deepOceanTile == null)
+			{
+				deepOceanTile = this.findAccessibleOceanEdge(_tile, 0, mapSize.X, 0, 1);
+			}
+
+			if (deepOceanTile == null)
+			{
+				deepOceanTile = this.findAccessibleOceanEdge(_tile, 0, 1, 0, mapSize.Y);
+			}
+
+			if (deepOceanTile == null)
+			{
+				deepOceanTile = this.findAccessibleOceanEdge(_tile, mapSize.X - 1, mapSize.X, 0, mapSize.Y);
+			}
+
+			if (deepOceanTile == null)
+			{
+				deepOceanTile = this.findAccessibleOceanEdge(_tile, 0, mapSize.X, mapSize.Y - 1, mapSize.Y);
+			}
+
+			if (deepOceanTile == null)
+			{
+				isCoastal = false;
+			}
+		}
+		return isCoastal;
+	}
+
+	function findAccessibleOceanEdge(_tile, _minX, _maxX, _minY, _maxY )
+	{
+		local myTile = _tile;
+		local navSettings = this.World.getNavigator().createSettings();
+		navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost_Ship;
+		local tiles = [];
+
+		for( local x = _minX; x < _maxX; x = ++x )
+		{
+			for( local y = _minY; y < _maxY; y = ++y )
+			{
+				if (!this.World.isValidTileSquare(x, y))
+				{
+				}
+				else
+				{
+					local tile = this.World.getTileSquare(x, y);
+
+					if (tile.Type != this.Const.World.TerrainType.Ocean || tile.IsOccupied)
+					{
+					}
+					else
+					{
+						local isDeepSea = true;
+
+						for( local i = 0; i != 6; i = ++i )
+						{
+							if (tile.hasNextTile(i) && tile.getNextTile(i).Type != this.Const.World.TerrainType.Ocean)
+							{
+								isDeepSea = false;
+								break;
+							}
+						}
+
+						if (!isDeepSea)
+						{
+						}
+						else
+						{
+							tiles.push(tile);
+						}
+					}
+				}
+			}
+		}
+
+		while (tiles.len() != 0)
+		{
+			local idx = this.Math.rand(0, tiles.len() - 1);
+			local tile = tiles[idx];
+			tiles.remove(idx);
+			local path = this.World.getNavigator().findPath(myTile, tile, navSettings, 0);
+
+			if (!path.isEmpty())
+			{
+				return tile;
+			}
+		}
+
+		return null;
 	}
 	
 	function onPrepare()
