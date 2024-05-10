@@ -122,7 +122,7 @@
 	{
 		if (_tile.Type == tileType)
 			return true;
-		for( local i = 0; i != 6; i = ++i )
+		for (local i = 0; i != 6; i++)
 		{
 			if (_tile.hasNextTile(i) && _tile.getNextTile(i).Type == tileType)
 				return true;
@@ -245,5 +245,23 @@
 				}
 			}
 		}
+	}
+}
+
+::Stronghold.getDistanceOnRoads <- function( _start, _dest )
+{
+	local navSettings = this.World.getNavigator().createSettings();
+	navSettings.ActionPointCosts = this.Const.World.TerrainTypeNavCost;
+	navSettings.RoadMult = 0.2;
+	navSettings.RoadOnly = true;
+	local path = this.World.getNavigator().findPath(_start, _dest, navSettings, 0);
+
+	if (!path.isEmpty())
+	{
+		return path.getSize();
+	}
+	else
+	{
+		return _start.getDistanceTo(_dest);
 	}
 }

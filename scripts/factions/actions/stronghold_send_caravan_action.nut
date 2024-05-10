@@ -31,44 +31,53 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		this.m.PlayerBase = null
 	}
 
+	function getValidSettlements(_idx, _settlement)
+	{
+		local playerFaction = ::Stronghold.getPlayerFaction();
+		local playerBase = this.m.PlayerBase;
+		if (_settlement.getFlags().get("IsPlayerBase"))
+			return false;
+		if (!playerBase.isConnectedToByRoads(_settlement))
+			return false;
+
+		local settlementFaction = _settlement.getFactionOfType(this.Const.FactionType.Settlement);
+		if (_settlement.isMilitary() || this.isKindOf(_settlement, "city_state"))
+			settlementFaction = _settlement.getOwner();
+		if (settlementFaction == null || !settlementFaction.isAlliedWith(playerFaction.getID()))
+			return false;
+		return true;
+	}
+
 	function onExecute( _faction )
 	{
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local playerBase = this.m.PlayerBase;
 		
 		//check for closest connected settlements. connected settlements are updated after roads are built
-		local settlements = this.World.EntityManager.getSettlements();
-		local closest = false;
+		local settlements = this.World.EntityManager.getSettlements().filter(this.getValidSettlements.bindenv(this));
+		local candidates = [];
 		local closest_dist = 9999;
 		foreach (settlement in settlements)
 		{
-			if (settlement.getFlags().get("IsPlayerBase"))
-				continue;
-			local settlementFaction = settlement.getFactionOfType(this.Const.FactionType.Settlement);
-			if (settlement.isMilitary() || this.isKindOf(settlement, "city_state"))
-				settlementFaction = settlement.getOwner();
+			local dist = ::Stronghold.getDistanceOnRoads(playerBase.getTile(), settlement.getTile());
 
-			if (settlementFaction == null)
-				continue;
-
-			if (!settlementFaction.isAlliedWith(playerFaction.getID()))
-				continue;
-
-			if (!playerBase.isConnectedToByRoads(settlement))
-				continue;
-
-			if (!closest)
+			if (candidates.len() == 0)
 			{
-				closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
-				closest = settlement
+				closest_dist = dist;
 			}
-			else if (settlement.getTile().getDistanceTo(playerBase.getTile()) < closest_dist && ::Math.rand(0, 10) > 5)
+			else if (dist < closest_dist)
 			{
-				closest_dist = settlement.getTile().getDistanceTo(playerBase.getTile())
-				closest = settlement
+				closest_dist = dist;
 			}
+			else if (::Math.abs(closest_dist - dist) > 10)
+			{
+				continue;
+			}
+			candidates.push(settlement);
 		}
-		if (!closest) return
+		local target = ::MSU.Array.rand(candidates);
+		if (target == null)
+			return
 		
 		local partyStrength = 75 * (playerBase.getSize())
 		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp");
@@ -91,7 +100,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		party.getFlags().set("IsCaravan", true);
 		
 		//add food, plus imported produce from target town
-		local produce = closest.getProduce().filter(function(_idx, _item){
+		local produce = target.getProduce().filter(function(_idx, _item){
 			return _item.slice(0, 3) == "sup" && _item != "supplies/ammo_item" && _item != "supplies/medicine_item" && _item != "supplies/armor_parts_item";
 		});
 		if (produce.len() == 0)
@@ -109,7 +118,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false);
 		
 		local move = this.new("scripts/ai/world/orders/move_order");
-		move.setDestination(closest.getTile());
+		move.setDestination(target.getTile());
 		move.setRoadsOnly(true);
 		
 		local wait = this.new("scripts/ai/world/orders/wait_order");
