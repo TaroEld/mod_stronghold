@@ -3,7 +3,7 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 	},
 	function getUIData( _ret )
 	{
-		foreach(locationID, location in ::Stronghold.LocationDefs)
+		foreach(locationID, location in ::Stronghold.Locations)
 		{
 			local locationInTown =  this.getTown().getLocation(location.ID)
 			local requirements = [];
@@ -22,6 +22,8 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 			if (locationInTown != null)
 				_ret[locationID].Level = locationInTown.m.Level
 			::MSU.Table.merge(_ret[locationID], location, true);
+			_ret[locationID].Price *= ::Stronghold.Misc.PriceMult;
+			_ret[locationID].UpgradePrice *= ::Stronghold.Misc.PriceMult;
 		}
 		return _ret
 	}
@@ -29,8 +31,8 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 	function addLocation(_data)
 	{
 		local home = this.getTown();
-		local locationDef = ::Stronghold.LocationDefs[_data];
-		this.World.Assets.addMoney(-locationDef.Price)
+		local locationDef = ::Stronghold.Locations[_data];
+		this.World.Assets.addMoney(-locationDef.Price * ::Stronghold.Misc.PriceMult)
 		local script = "scripts/entity/world/attached_location/" + locationDef.Path
 		local validTerrain =
 		[
@@ -58,17 +60,17 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 
 	function upgradeLocation(_data)
 	{
-		local locationDef = ::Stronghold.LocationDefs[_data];
+		local locationDef = ::Stronghold.Locations[_data];
 		local location = this.getTown().getLocation(locationDef.ID);
 		location.upgrade();
-		this.World.Assets.addMoney(-locationDef.UpgradePrice);
+		this.World.Assets.addMoney(-locationDef.UpgradePrice * ::Stronghold.Misc.PriceMult);
 		this.getTown().removeLocation(_data);
 		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
 	}
 
 	function removeLocation(_data)
 	{
-		local locationDef = ::Stronghold.LocationDefs[_data];
+		local locationDef = ::Stronghold.Locations[_data];
 		this.getTown().removeLocation(locationDef.ID);
 		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
 	}

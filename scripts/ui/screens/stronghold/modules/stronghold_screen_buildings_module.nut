@@ -3,7 +3,7 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 
 	function getUIData( _ret )
 	{
-		foreach(buildingID, building in ::Stronghold.BuildingDefs)
+		foreach(buildingID, building in ::Stronghold.Buildings)
 		{
 			local hasBuilding = this.getTown().hasBuilding(building.ID) || ("SouthID" in building && this.getTown().hasBuilding(building.SouthID))
 			local requirements = [
@@ -24,15 +24,16 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 			}
 			::MSU.Table.merge(_ret[buildingID], building, true);
 			_ret[buildingID].Requirements = requirements;
+			_ret[buildingID].Price *= ::Stronghold.Misc.PriceMult;
 		}
 		return _ret
 	}
 
 	function addBuilding(_data)
 	{
-		local price = _data[1].tointeger();
-		this.World.Assets.addMoney(-price)
-		local building = this.new("scripts/entity/world/settlements/buildings/" + _data[0]);
+		local locationDef = ::Stronghold.Locations[_data];
+		this.World.Assets.addMoney(-locationDef.Price * ::Stronghold.Misc.PriceMult)
+		local building = this.new("scripts/entity/world/settlements/buildings/" + locationDef.Path);
 		this.getTown().addBuilding(building);
 		building.onUpdateShopList();
 

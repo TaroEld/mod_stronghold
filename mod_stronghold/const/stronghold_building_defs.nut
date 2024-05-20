@@ -135,8 +135,3 @@
 		ImagePath = "ui/settlements/crowd_03.png",
 	}
 }
-foreach(buildingID, building in ::Stronghold.BuildingDefs)
-{
-	building.ConstID <- buildingID;
-	::MSU.Table.merge(building, ::Stronghold.Buildings[buildingID]);
-}

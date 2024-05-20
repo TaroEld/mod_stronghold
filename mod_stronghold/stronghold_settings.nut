@@ -200,59 +200,85 @@
 	},
 };
 
-foreach (locationID, location in ::Stronghold.Locations)
-{
-	location.Price = (location.Price * ::Stronghold.Misc.PriceMult).tointeger();
-	location.UpgradePrice = (location.UpgradePrice * ::Stronghold.Misc.PriceMult).tointeger();
-}
-
-foreach (locationID, location in ::Stronghold.Buildings)
-{
-	location.Price = (location.Price * ::Stronghold.Misc.PriceMult).tointeger();
-}
-
-
 local settingsPage = ::Stronghold.Mod.ModSettings.addPage("Settings");
-local skip = ["LocationDefs", "BuildingDefs", "Mod", "StrongholdScreen", "UnlockDescription", "ID", "Version", "Name", "Hamlet"];
 
 local keyInc = 0;
+local function initDefs()
+{
+	foreach(locationID, location in ::Stronghold.LocationDefs)
+	{
+		location.ConstID <- locationID;
+		location.ImagePath <- location.Path + ".png";
+		location.Requirements <- [];
+		::MSU.Table.merge(::Stronghold.Locations[locationID], location, true);
+	}
+
+	foreach(buildingID, building in ::Stronghold.BuildingDefs)
+	{
+		building.ConstID <- buildingID;
+		::MSU.Table.merge(::Stronghold.Buildings[buildingID], building, true);
+	}
+}
+::include(::Stronghold.ID + "/const/stronghold_building_defs.nut");
+::include(::Stronghold.ID + "/const/stronghold_location_defs.nut");
+initDefs();
+::include(::Stronghold.ID + "/const/stronghold_settings_defs.nut");
+local ref = ::Stronghold.SettingsDefs;
+local refStack = [];
+local function reduce(_arr, _key)
+{
+	if (_arr.len() == 0)
+		return _key;
+	local ret = "";
+	foreach (entry in _arr)
+	{
+		ret += entry[1] + ".";
+	}
+	return ret.slice(0, ret.len() - 1) + "." + _key;
+}
 local createSettings;
 createSettings = function(_container)
 {
 	foreach(key, value in _container)
 	{
-		if (skip.find(key) != null)
+		if (!(key.tostring() in ref))
 			continue;
-		local keyID =  key + keyInc++;
+		local keyID =  reduce(refStack, key);
 		local keyClosure = key;
+		local inner = ref[key.tostring()];
 		switch (typeof value){
 			case "string":
-				local setting = settingsPage.addStringSetting(keyID, value, keyClosure);
+				local setting = settingsPage.addStringSetting(keyID, value, inner.SettingsName, inner.SettingsDescription);
 				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue());
 				break;
 			case "bool":
-				local setting = settingsPage.addBooleanSetting(keyID, value, keyClosure);
+				local setting = settingsPage.addBooleanSetting(keyID, value, inner.SettingsName, inner.SettingsDescription);
 				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue());
 				break;
 			case "integer":
-				local setting = settingsPage.addStringSetting(keyID, value.tostring(), keyClosure);
+				local setting = settingsPage.addStringSetting(keyID, value.tostring(), inner.SettingsName, inner.SettingsDescription);
 				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue().tointeger());
 				break;
 			case "float":
-				local setting = settingsPage.addRangeSetting(keyID, value, 0, 3.0, 0.01, keyClosure);
-				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue());
+				local setting = settingsPage.addStringSetting(keyID, value.tostring(), inner.SettingsName, inner.SettingsDescription);
+				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue().tofloat());
 				break;
 			case "array":
-				local setting = settingsPage.addArraySetting(keyID, value, keyClosure);
+				local setting = settingsPage.addArraySetting(keyID, value, inner.SettingsName, inner.SettingsDescription);
 				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue());
 				break;
 			case "table":
 				settingsPage.addDivider( "divider2_" + keyID);
-				settingsPage.addTitle( "section_" + keyID, keyClosure);
+				settingsPage.addTitle( "section_" + keyID, inner.SettingsName);
+				refStack.push([ref, key]);
+				ref = inner;
 				createSettings(value);
+				ref = refStack.pop()[0];
 			default:
 				break;
 		}
 	}
 }
 createSettings(::Stronghold);
+delete ::Stronghold.SettingsDefs;
+refStack = null;
