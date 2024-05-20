@@ -69,7 +69,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 
 	function getLocation(_id)
 	{
-		local loc = this.getActiveAttachedLocations().filter(@(_idx, _a) _a.getTypeID() == _id)
+		local loc = this.m.AttachedLocations.filter(@(_idx, _a) _a.getTypeID() == _id)
 		return loc.len() > 0 ? loc[0] : null;
 	}
 
