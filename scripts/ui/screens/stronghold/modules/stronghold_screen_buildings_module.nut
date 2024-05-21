@@ -31,9 +31,9 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 
 	function addBuilding(_data)
 	{
-		local locationDef = ::Stronghold.Locations[_data];
-		this.World.Assets.addMoney(-locationDef.Price * ::Stronghold.Misc.PriceMult)
-		local building = this.new("scripts/entity/world/settlements/buildings/" + locationDef.Path);
+		local buildingDef = ::Stronghold.Buildings[_data];
+		this.World.Assets.addMoney(-buildingDef.Price * ::Stronghold.Misc.PriceMult)
+		local building = this.new("scripts/entity/world/settlements/buildings/" + buildingDef.Path);
 		this.getTown().addBuilding(building);
 		building.onUpdateShopList();
 
@@ -49,7 +49,8 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 
 	function removeBuilding(_data)
 	{
-		this.getTown().removeBuilding(_data);
+		local buildingDef = ::Stronghold.Buildings[_data];
+		this.getTown().removeBuilding(buildingDef.ID);
 		this.updateData(["TownAssets", "Assets", "BuildingsModule"]);
 	}
 })
