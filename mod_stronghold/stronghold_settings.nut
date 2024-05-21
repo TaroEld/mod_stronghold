@@ -1,7 +1,7 @@
 
 ::Stronghold.BaseFight <- {
 	// Base difficulty of the base defence fight
-	BaseDifficulty = 150
+	BaseDifficulty = 100
 	// Extra difficulty for waves two, three, four of the higher upgrade levels
 	WaveDifficulty = 75
 }
