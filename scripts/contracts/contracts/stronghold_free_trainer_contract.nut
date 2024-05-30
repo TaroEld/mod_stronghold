@@ -298,6 +298,7 @@ this.stronghold_free_trainer_contract <- this.inherit("scripts/contracts/contrac
 					function getResult()
 					{
 						local properties = this.World.State.getLocalCombatProperties(this.World.State.getPlayer().getPos());
+						properties.Entities = [];
 						properties.CombatID = "ChosenTrainer";
 						properties.Music = this.Const.Music.ArenaTracks;
 						properties.PlayerDeploymentType = this.Const.Tactical.DeploymentType.Arena;
