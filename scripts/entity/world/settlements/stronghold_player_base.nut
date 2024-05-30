@@ -516,11 +516,9 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function isUnderAttack()
 	{
 		local flag = this.getFlags().get("UnderAttackBy");
-		::logInfo("UnderAttackBy " + flag)
 		if (!flag)
 			return false;
 		local entity = ::World.getEntityByID(flag);
-		::logInfo("UnderAttackBy entity " + entity)
 		return entity != null;
 	}
 	
