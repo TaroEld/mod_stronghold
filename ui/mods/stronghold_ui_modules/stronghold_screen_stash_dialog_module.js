@@ -257,6 +257,16 @@ StrongholdScreenStashModule.prototype.loadFromData = function (_data)
 	this.updateStashFreeSlotsLabel();
 };
 
+StrongholdScreenStashModule.prototype.updateStashList = function (_data)
+{
+    if(this.mStashList === null || !jQuery.isArray(this.mStashList) || this.mStashList.length === 0 || this.mStashList.length !== _data.length)
+    {
+        this.loadStashData(_data);
+        return;
+    }
+    return WorldTownScreenShopDialogModule.prototype.updateStashList.call(this, _data);
+};
+
 StrongholdScreenStashModule.prototype.updateShopList = function (_data)
 {
     if(this.mShopList === null || !jQuery.isArray(this.mShopList) || this.mShopList.length === 0)
@@ -555,7 +565,6 @@ var copyFunctionList = [
 	"querySlotByIndex",
 	"createItemSlots",
 	"clearItemSlots",
-	"updateStashList",
 	"isStashSpaceLeft",
 	"getStashStatistics",
 	"notifyBackendSwapItem",
