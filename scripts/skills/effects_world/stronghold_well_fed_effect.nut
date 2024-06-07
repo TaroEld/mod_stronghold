@@ -87,8 +87,8 @@ this.stronghold_well_fed_effect <- this.inherit("scripts/skills/skill", {
 	{
 		local bonus = this.getBonus();
 		_properties.Bravery += bonus;
-		_properties.Hitpoints -= bonus;
-		_properties.Stamina -= bonus;
+		_properties.Hitpoints  += bonus;
+		_properties.Stamina  += bonus;
 	}
 
 	function onNewDay()
