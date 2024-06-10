@@ -242,7 +242,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 		::Math.seedRandom(this.World.Flags.get("ReforgeNamedItemSeed"));
 
 		local replacementItem = this.new(this.IO.scriptFilenameByHash(type));
-		replacementItem.setName(name);
+		replacementItem.m.Name = name;
 		this.World.Assets.addMoney(-price);
 		this.getStash().add(replacementItem);
 		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + ::Math.rand(0, 6) + ".wav", 1.0);
