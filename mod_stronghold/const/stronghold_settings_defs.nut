@@ -76,7 +76,7 @@
 	        }
 	    }
 	    Training_Hall = {
-	        SettingsName = "Training_Hall"
+	        SettingsName = "Training Hall"
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
@@ -257,15 +257,15 @@
 	    }
 	}
 	BaseFight = {
-	    SettingsName = "BaseFight"
+	    SettingsName = "Build/Upgrade Fights"
 	    SettingsDescription = ""
 	    BaseDifficulty = {
-	        SettingsName = "BaseDifficulty"
+	        SettingsName = "Base Difficulty"
 	        SettingsDescription = ""
 	    }
 	    WaveDifficulty = {
-	        SettingsName = "WaveDifficulty"
-	        SettingsDescription = ""
+	        SettingsName = "Difficulty per wave"
+	        SettingsDescription = "The added difficulty per wave. For example, when upgrading to a Fort, the first fight will have Base Difficulty + 1x Wave Difficulty, the second fight will have Base Difficulty + 2x Wave Difficulty."
 	    }
 	}
 	Locations = {
@@ -312,7 +312,7 @@
 	        SettingsDescription = ""
 	        MoodStateStart = {
 	            SettingsName = "Mood State"
-	            SettingsDescription = "Default mood state for stored brothers"
+	            SettingsDescription = "Default mood state for stored brothers."
 	        }
 	        MoodChange = {
 	            SettingsName = "Mood change per day"
@@ -331,20 +331,20 @@
 	            SettingsDescription = ""
 	        }
 	        WageCost = {
-	            SettingsName = "Wage Cost multiplier"
-	            SettingsDescription = "Default wage cost multiplier"
+	            SettingsName = "Wage Cost Multiplier"
+	            SettingsDescription = "Default wage cost Multiplier."
 	        }
 	        MaxTroops = {
 	            SettingsName = "Maximum stored brothers"
 	            SettingsDescription = "Max. brothers that can be stored per level of the location."
 	        }
 	        WageCostPerLevel = {
-	            SettingsName = "Wage Cost multiplier per level"
+	            SettingsName = "Wage Cost Multiplier per level"
 	            SettingsDescription = "The normal wage of brothers is multiplied by the 'Wage Cost multiplier' minus this value."
 	        }
 	    }
 	    Stone_Watchtower = {
-	        SettingsName = "Stone_Watchtower"
+	        SettingsName = "Stone Watchtower"
 	        SettingsDescription = ""
 	        MovementSpeedIncrease = {
 	            SettingsName = "Movement Speed Increase"
@@ -380,7 +380,7 @@
 	        }
 	    }
 	    Gold_Mine = {
-	        SettingsName = "Gold_Mine"
+	        SettingsName = "Gold Mine"
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
@@ -396,7 +396,7 @@
 	        }
 	    }
 	    Ore_Smelter = {
-	        SettingsName = "Ore_Smelter"
+	        SettingsName = "Ore Smelter"
 	        SettingsDescription = ""
 	        ReforgeMultiplier = {
 	            SettingsName = "Reforge price multiplier"
@@ -428,7 +428,7 @@
 	        }
 	    }
 	    Militia_Trainingcamp = {
-	        SettingsName = "Militia_Trainingcamp"
+	        SettingsName = "Militia Trainingcamp"
 	        SettingsDescription = ""
 	        MaxBrotherExpLevel = {
 	            SettingsName = "Max brother level"
@@ -505,18 +505,18 @@
 	    }
 	    GiftFlatCost = {
 	        SettingsName = "Send gifts cost"
-	        SettingsDescription = "The base cost to send gifts to an allied faction"
+	        SettingsDescription = "The base cost to send gifts to an allied faction."
 	    }
 	    RenownCost = {
 	        SettingsName = "Renown per level"
 	        SettingsDescription = "The required renown to upgrade and/or build a base, per level."
 	    }
 	    TrainerBuffDurationExpMult = {
-	        SettingsName = "TrainerBuffDurationExpMult"
-	        SettingsDescription = ""
+	        SettingsName = "Trainer Buff Multiplier"
+	        SettingsDescription = "The experience multiplier of the trainer buff."
 	    }
 	    MercenaryFollowDays = {
-	        SettingsName = "MercenaryFollowDays"
+	        SettingsName = "Mercenary Services Duration"
 	        SettingsDescription = ""
 	    }
 	    PriceMult = {
@@ -528,7 +528,7 @@
 	        SettingsDescription = "The price to buy water of life after the quest."
 	    }
 	    TrainerBuffDurationInDays = {
-	        SettingsName = "TrainerBuffDurationInDays"
+	        SettingsName = "Trainer Buff duration in days"
 	        SettingsDescription = ""
 	    }
 	}
