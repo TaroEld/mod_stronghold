@@ -555,16 +555,170 @@ StrongholdScreenStashModule.prototype.notifyBackendRepairItem = function (_itemI
 
 
 
+// copypasted functions
+StrongholdScreenStashModule.prototype.loadStashData = function (_data)
+{
+    if(_data === undefined || _data === null || !jQuery.isArray(_data))
+    {
+        return;
+    }
+
+	this.mStashList = _data;
+
+    if(this.mStashSlots === null)
+    {
+        this.mStashSlots = [];
+    }
+
+    // call by ref hack
+    var arrayRef = { val: this.mStashSlots };
+    var containerRef = { val: this.mStashListScrollContainer };
+
+    this.assignItems(WorldTownScreenShop.ItemOwner.Stash, _data, arrayRef.val, containerRef.val);
+};
+
+StrongholdScreenStashModule.prototype.loadShopData = function (_data)
+{
+    if(_data === undefined || _data === null || !jQuery.isArray(_data))
+    {
+        return;
+    }
+
+	this.mShopList = _data;
+
+    if(this.mShopSlots === null)
+    {
+        this.mShopSlots = [];
+    }
+
+    // call by ref hack
+    var arrayRef = { val: this.mShopSlots };
+    var containerRef = { val: this.mShopListScrollContainer };
+
+    this.assignItems(WorldTownScreenShop.ItemOwner.Shop, _data, arrayRef.val, containerRef.val);
+};
+
+StrongholdScreenStashModule.prototype.assignItems = function (_owner, _items, _itemArray, _itemContainer)
+{
+	this.destroyItemSlots(_itemArray, _itemContainer);
+
+    if(_items.length > 0)
+    {
+    	this.createItemSlots(_owner, _items.length, _itemArray, _itemContainer);
+
+        for(var i = 0; i < _items.length; ++i)
+        {
+            // ignore empty slots
+            if(_items[i] !== undefined && _items[i] !== null)
+            {
+                this.assignItemToSlot(_owner, _itemArray[i], _items[i]);
+            }
+        }
+
+        this.updateItemPriceLabels(_itemArray, _items, _owner === WorldTownScreenShop.ItemOwner.Stash);
+
+        if(_owner === WorldTownScreenShop.ItemOwner.Stash)
+        {
+            this.updateStashFreeSlotsLabel();
+        }
+    }
+};
+
+StrongholdScreenStashModule.prototype.destroyItemSlots = function (_itemArray, _itemContainer)
+{
+    this.clearItemSlots(_itemArray);
+
+    _itemContainer.empty();
+    _itemArray.length = 0;
+};
+
+StrongholdScreenStashModule.prototype.removeItemFromSlot = function(_slot)
+{
+    // remove item image
+	_slot.assignListItemImage();
+    _slot.assignListItemOverlayImage();
+	_slot.assignListItemTooltip();
+};
+
+
+StrongholdScreenStashModule.prototype.assignItemToSlot = function(_owner, _slot, _item)
+{
+    var remove = false;
+
+    if(!('id' in _item) || !('imagePath' in _item))
+    {
+        remove = true;
+    }
+
+    if(remove === true)
+    {
+        this.removeItemFromSlot(_slot);
+    }
+    else
+    {
+        // update item data
+        var itemData = _slot.data('item') || {};
+        itemData.id = _item.id;
+        _slot.data('item', itemData);
+
+        // assign image
+        _slot.assignListItemImage(Path.ITEMS + _item.imagePath);
+        if(_item['imageOverlayPath']) _slot.assignListItemOverlayImage(Path.ITEMS + _item['imageOverlayPath']);
+        else _slot.assignListItemOverlayImage();
+
+        // show amount
+        if(_item.showAmount === true && _item.amount != '')
+        {
+			_slot.assignListItemAmount('' + _item.amount, _item['amountColor']);
+        }
+
+        // show price
+        if('price' in _item && _item.price !== null)
+        {
+            _slot.assignListItemPrice(_item.price);
+        }
+
+        // bind tooltip
+        _slot.assignListItemTooltip(itemData.id, _owner);
+    }
+};
+
+StrongholdScreenStashModule.prototype.querySlotByIndex = function(_itemArray, _index)
+{
+    if(_itemArray === null || _itemArray.length === 0 || _index < 0 || _index >= _itemArray.length)
+    {
+        return null;
+    }
+
+    return _itemArray[_index];
+};
+
+StrongholdScreenStashModule.prototype.clearItemSlots = function (_itemArray)
+{
+    if(_itemArray === null || _itemArray.length === 0)
+    {
+        return;
+    }
+
+    for(var i = 0; i < _itemArray.length; ++i)
+    {
+        // remove item image
+        this.removeItemFromSlot(_itemArray[i]);
+    }
+};
+
+StrongholdScreenStashModule.prototype.createItemSlots = function (_owner, _size, _itemArray, _itemContainer)
+{
+    var screen = $('.world-town-screen');
+    for(var i = 0; i < _size; ++i)
+    {
+        _itemArray.push(this.createItemSlot(_owner, _itemArray.length, _itemContainer, screen));
+    }
+};
+
+
+
 var copyFunctionList = [
-	"loadStashData",
-	"loadShopData",
-	"assignItems",
-	"destroyItemSlots",
-	"removeItemFromSlot",
-	"assignItemToSlot",
-	"querySlotByIndex",
-	"createItemSlots",
-	"clearItemSlots",
 	"isStashSpaceLeft",
 	"getStashStatistics",
 	"notifyBackendSwapItem",
