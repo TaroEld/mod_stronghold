@@ -53,6 +53,8 @@ StrongholdScreenUpgradeModule.prototype.setSpriteImage = function()
 {
     var currentArr = Stronghold.Visuals.VisualsMap[this.mBaseSprite];
     var baseSize = this.mData.TownAssets.Size;
+    if (baseSize == 4)
+    	baseSize--;
     this.mBaseUpgradeSpriteImage.attr('src', Path.GFX + Stronghold.Visuals.SpritePath + currentArr.Base[baseSize] + ".png");
 } 
 
@@ -65,6 +67,8 @@ StrongholdScreenUpgradeModule.prototype.fillUpgradeDetailsText = function()
 	text += this.getModuleText().GeneralUnlockDescription;
 	text += this.getModuleText().UnlockDescriptions[this.mData.TownAssets.Size + 1];
 	text += "</ul>";
+	if (this.mData.TownAssets.Size === 4)
+		text = "";
     this.mAdvantagesTextContainer.html(text);
 }
 
@@ -100,5 +104,6 @@ StrongholdScreenUpgradeModule.prototype.loadFromData = function()
 
 StrongholdScreenUpgradeModule.prototype.notifyBackendUpgradeBase = function()
 {
+	this.mParent.switchModule
 	SQ.call(this.mSQHandle, 'onUpgradeBase');
 }
