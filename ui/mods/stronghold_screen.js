@@ -73,6 +73,7 @@ StrongholdScreen.prototype.show = function (_data)
     }
     this.mContainer.removeClass('display-none').addClass('display-block');
     this.switchModule("MainModule");
+    this.checkSidebarButtonAvailable();
     this.notifyBackendOnShown();
 };
 
@@ -257,7 +258,7 @@ StrongholdScreen.prototype.loadFromData = function(_data)
 {
     this.mData = _data;
     this.loadPlayerAssetsData();
-    this.loadTownAssetsData();
+    this.checkSidebarButtonAvailable();
 }
 
 StrongholdScreen.prototype.updateData = function(_data)
@@ -275,7 +276,7 @@ StrongholdScreen.prototype.updateData = function(_data)
         }
         else if (typeID == "TownAssets")
         {
-        	this.loadTownAssetsData();
+        	this.checkSidebarButtonAvailable();
         }
         else if (typeID in this.mModules)
         {
@@ -289,7 +290,7 @@ StrongholdScreen.prototype.loadPlayerAssetsData = function()
 	this.mAssets.loadFromData(this.mData['Assets']);
 }
 
-StrongholdScreen.prototype.loadTownAssetsData = function()
+StrongholdScreen.prototype.checkSidebarButtonAvailable = function()
 {
 	if (this.mData['TownAssets'].IsRaidedUntil > -1)
 	{
@@ -310,12 +311,14 @@ StrongholdScreen.prototype.loadTownAssetsData = function()
 		this.getModuleObject("LocationsModule").Button.enableButton(false);
 		this.getModuleObject("UpgradeModule").Button.enableButton(false);
 		this.getModuleObject("MiscModule").Button.enableButton(false);
-		return;
 	}
-	var self = this;
-	$.each(["UpgradeModule", "MiscModule", "LocationsModule", "BuildingsModule"], function(_idx, _str){
-		self.getModuleObject(_str).Button.enableButton(self.mData['TownAssets'].IsUpgrading === false);
-	})
+	if (this.mData['TownAssets'].IsUpgrading)
+	{
+		this.getModuleObject("UpgradeModule").Button.enableButton(false);
+		this.getModuleObject("MiscModule").Button.enableButton(false);
+		this.getModuleObject("LocationsModule").Button.enableButton(false);
+		this.getModuleObject("BuildingsModule").Button.enableButton(false);
+	}
 }
 
 
