@@ -292,33 +292,23 @@ StrongholdScreen.prototype.loadPlayerAssetsData = function()
 
 StrongholdScreen.prototype.checkSidebarButtonAvailable = function()
 {
-	if (this.mData['TownAssets'].IsRaidedUntil > -1)
-	{
-		this.getModuleObject("StashModule").Button.enableButton(false);
-		this.getModuleObject("RosterModule").Button.enableButton(false);
-		this.getModuleObject("BuildingsModule").Button.enableButton(false);
-		this.getModuleObject("LocationsModule").Button.enableButton(false);
-		this.getModuleObject("UpgradeModule").Button.enableButton(false);
-		this.getModuleObject("MiscModule").Button.enableButton(false);
-		return;
-	}
-	this.getModuleObject("StashModule").Button.enableButton(this.mData.TownAssets.Locations.Warehouse.HasStructure);
-	this.getModuleObject("RosterModule").Button.enableButton(this.mData.TownAssets.Locations.Troop_Quarters.HasStructure);
-	if (this.mData['TownAssets'].IsMainBase === false)
-	{
-		this.getModuleObject("StashModule").Button.enableButton(false);
-		this.getModuleObject("RosterModule").Button.enableButton(false);
-		this.getModuleObject("LocationsModule").Button.enableButton(false);
-		this.getModuleObject("UpgradeModule").Button.enableButton(false);
-		this.getModuleObject("MiscModule").Button.enableButton(false);
-	}
-	if (this.mData['TownAssets'].IsUpgrading)
-	{
-		this.getModuleObject("UpgradeModule").Button.enableButton(false);
-		this.getModuleObject("MiscModule").Button.enableButton(false);
-		this.getModuleObject("LocationsModule").Button.enableButton(false);
-		this.getModuleObject("BuildingsModule").Button.enableButton(false);
-	}
+	var notRaided = !(this.mData['TownAssets'].IsRaidedUntil > -1);
+	var isMainBase = this.mData['TownAssets'].IsMainBase;
+	var notUpgrading = !this.mData['TownAssets'].IsUpgrading;
+	var hasWarehouse = this.mData.TownAssets.Locations.Warehouse.HasStructure;
+	var hasRoster = this.mData.TownAssets.Locations.Troop_Quarters.HasStructure;
+
+	// all except hamlet can also
+	this.getModuleObject("BuildingsModule").Button.enableButton(notRaided && notUpgrading);
+
+	// can while upgrading, needs location
+	this.getModuleObject("StashModule").Button.enableButton(notRaided && isMainBase && hasWarehouse);
+	this.getModuleObject("RosterModule").Button.enableButton(notRaided && isMainBase && hasRoster);
+
+
+	this.getModuleObject("LocationsModule").Button.enableButton(notRaided && isMainBase && notUpgrading);
+	this.getModuleObject("UpgradeModule").Button.enableButton(notRaided && isMainBase && notUpgrading);
+	this.getModuleObject("MiscModule").Button.enableButton(notRaided && isMainBase && notUpgrading);
 }
 
 
