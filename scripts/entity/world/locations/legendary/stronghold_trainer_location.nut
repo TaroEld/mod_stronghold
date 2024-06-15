@@ -10,7 +10,7 @@ this.stronghold_trainer_location <- this.inherit("scripts/entity/world/location"
 	{
 		this.location.create();
 		this.m.TypeID = "location.stronghold_trainer";
-		this.m.LocationType = this.Const.World.LocationType.Lair;
+		this.m.LocationType = this.Const.World.LocationType.Passive;
 		this.m.IsShowingDefenders = false;
 		this.m.IsShowingBanner = false;
 		this.m.IsAttackable = false;
@@ -31,6 +31,5 @@ this.stronghold_trainer_location <- this.inherit("scripts/entity/world/location"
 		local body = this.addSprite("body");
 		body.setBrush("world_wildmen_03_snow");
 	}
-
 });
 
