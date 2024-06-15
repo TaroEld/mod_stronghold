@@ -1230,6 +1230,16 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		::logError("STRONGHOLD: DID NOT MANAGE TO BUILD HAMLET - PLEASE REPORT BUG");
 	}
 
+	function onFinish()
+	{
+		this.settlement.onFinish();
+		foreach (location in this.getAttachedLocations())
+			location.fadeOutAndDie();
+		if (this.getHamlet() != false)
+			this.getHamlet().fadeOutAndDie(true);
+		this.World.deleteRoster(this.getFlags().get("RosterSeed"));
+	}
+
 	function onSerialize( _out )
 	{
 		::Stronghold.Mod.Serialization.flagSerialize("BaseSettings",  this.m.BaseSettings, this.getFlags());

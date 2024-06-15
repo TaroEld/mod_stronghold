@@ -474,12 +474,6 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		{
 			this.World.Contracts.removeContract(contract);
 		}
-		local hamlet = this.getTown().getHamlet();
-		if (hamlet != false){
-			playerFaction.removeSettlement(hamlet);
-			hamlet.fadeOutAndDie(true);
-		}
-		playerFaction.removeSettlement(this.getTown());
 		this.getTown().fadeOutAndDie(true);
 	}
 })

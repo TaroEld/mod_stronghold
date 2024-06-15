@@ -406,18 +406,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			this.m.Target.die();
 		}
 		if (this.m.TargetLevel == 1) {
-			local playerFaction = ::Stronghold.getPlayerFaction();
-			local contracts = playerFaction.getContracts();
-			foreach (contract in contracts)
-			{
-				this.World.Contracts.removeContract(contract);
-			}
-			local hamlet = this.m.Home.getHamlet();
-			if (hamlet != false){
-				playerFaction.removeSettlement(hamlet);
-				hamlet.fadeOutAndDie(true);
-			}
-			playerFaction.removeSettlement(this.m.Home);
 			this.m.Home.fadeOutAndDie(true);
 		} else {
 			this.m.Home.finishUpgrading(false);
