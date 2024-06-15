@@ -468,16 +468,18 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 
 	function removeBase()
 	{
-		local playerFaction = this.Stronghold.getPlayerFaction()
-		local contracts = playerFaction.getContracts()
+		local playerFaction = ::Stronghold.getPlayerFaction();
+		local contracts = playerFaction.getContracts();
 		foreach (contract in contracts)
 		{
-			this.World.Contracts.removeContract(contract)
+			this.World.Contracts.removeContract(contract);
 		}
-		local toRemove = this.getTown()
-		if ("getHamlet" in toRemove && toRemove.getHamlet() != false){
-			toRemove.getHamlet().fadeOutAndDie(true)
+		local hamlet = this.getTown().getHamlet();
+		if (hamlet != false){
+			playerFaction.removeSettlement(hamlet);
+			hamlet.fadeOutAndDie(true);
 		}
-		toRemove.fadeOutAndDie(true)
+		playerFaction.removeSettlement(this.getTown());
+		this.getTown().fadeOutAndDie(true);
 	}
 })
