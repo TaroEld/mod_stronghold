@@ -12,4 +12,17 @@
 		entityManager.getSettlements = getSettlements;
 		return ret;
 	})
+
+	local getDistanceToSettlements = ::mods_getMember(o,  "getDistanceToSettlements");
+	::mods_override(o, "getDistanceToSettlements", function(_from)
+	{
+		local entityManager = this.World.EntityManager.get();
+		local getSettlements = entityManager.getSettlements;
+		entityManager.getSettlements = function(){
+			return getSettlements().filter(@(_idx, _settlement) _settlement.getFlags().get("IsPlayerBase") != true);
+		}
+		local ret = getDistanceToSettlements(_from);
+		entityManager.getSettlements = getSettlements;
+		return ret;
+	})
 })
