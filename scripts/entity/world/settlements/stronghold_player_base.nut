@@ -341,6 +341,12 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			Items = 0,
 			Experience = 0,
 		}
+		this.consumeItemOverflow();
+		this.m.OverflowStash.clear();
+	}
+
+	function consumeItemOverflow()
+	{
 		foreach( i, e in this.m.Situations )
 		{
 			if (e.getID() == "situation.stronghold_overflow")
@@ -348,12 +354,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				this.m.Situations.remove(i);
 			}
 		}
-		this.consumeItemOverflow();
-		this.m.OverflowStash.clear();
-	}
-
-	function consumeItemOverflow()
-	{
 		local stash = this.getStash();
 		local playerStash = ::Stash;
 		local overflowItems = this.getOverflowStash().getItems();
