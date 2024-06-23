@@ -193,10 +193,10 @@
 	},
 
 	Workshop = {
-		Price = 5, // Price for each attached location, multiplied by PriceMult (1000 by default)
+		Price = 2.5, // Price for each attached location, multiplied by PriceMult (1000 by default)
 		UpgradePrice = 2.5,
 		DailyIncome = 5, // Amount of tools generated every day
-		MaxItemSlots = 35 // Amount added to the maximum amount of stored items of this type
+		MaxItemSlots = 50 // Amount added to the maximum amount of stored items of this type
 	},
 };
 
