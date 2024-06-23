@@ -342,7 +342,6 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 			Experience = 0,
 		}
 		this.consumeItemOverflow();
-		this.m.OverflowStash.clear();
 	}
 
 	function consumeItemOverflow()
@@ -365,6 +364,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		{
 			playerStash.add(overflowItems.pop());
 		}
+		this.m.OverflowStash.clear();
 	}
 
 	function addItemToWarehouse(item)
