@@ -69,7 +69,6 @@ this.stronghold_destroy_order <- this.inherit("scripts/ai/world/orders/destroy_o
 
 	function onDestinationAttacked(_dest, _isPlayerAttacking)
 	{
-		local isPlayerInitiated = true;
 		local p;
 		local playerBases = ::Stronghold.getPlayerFaction().getMainBases();
 		local target = null;
@@ -81,10 +80,9 @@ this.stronghold_destroy_order <- this.inherit("scripts/ai/world/orders/destroy_o
 				break;
 			}
 		}
-		if (target != null)
+		if (target != null && _isPlayerAttacking)
 		{
 			p = this.World.State.getLocalCombatProperties(target.getPos());
-			isPlayerInitiated = true;
 			p.PlayerDeploymentType = this.Const.Tactical.DeploymentType.LineForward;
 			p.EnemyDeploymentType = this.Const.Tactical.DeploymentType.LineBack;
 			p.LocationTemplate = clone this.Const.Tactical.LocationTemplate;
@@ -96,7 +94,7 @@ this.stronghold_destroy_order <- this.inherit("scripts/ai/world/orders/destroy_o
 		else p = this.World.State.getLocalCombatProperties(this.World.State.getPlayer().getPos());
 		p.Music = this.Const.Music.NobleTracks;
 		p.CombatID = "Stronghold";
-		this.World.Contracts.startScriptedCombat(p, isPlayerInitiated, true, true);
+		this.World.Contracts.startScriptedCombat(p, _isPlayerAttacking, true, true);
 	}
 
 	function setController(_a)
