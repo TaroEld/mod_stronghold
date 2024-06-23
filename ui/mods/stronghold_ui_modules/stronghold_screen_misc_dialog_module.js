@@ -114,12 +114,13 @@ StrongholdScreenMiscModule.prototype.loadBuildRoadData = function()
 StrongholdScreenMiscModule.prototype.setRoadElement = function(_element)
 {
 	var text = this.getModuleText().BuildRoad
+	var isValid = this.mData.Assets.Money > _element.Cost;
 	this.mRoadFactionText.html(Stronghold.Text.format(text.Faction, _element.FactionName));
 	this.mRoadDistanceText.html(Stronghold.Text.format(text.Distance,  _element.Score));
 	this.mRoadPiecesText.html(Stronghold.Text.format(text.Segments, _element.Segments))
 	this.mRoadCostText.html(Stronghold.Text.format(Stronghold.Text.General.Price, _element.Cost));
-	this.mRoadCostImg.attr("src", Path.GFX + (_element.IsValid ? "ui/icons/unlocked_small.png" : "ui/icons/locked_small.png"))
-	this.mRoadButton.attr("disabled", !_element.IsValid || !this.areRequirementsFulfilled(this.mRoadRequirementsTable));
+	this.mRoadCostImg.attr("src", Path.GFX + (isValid ? "ui/icons/unlocked_small.png" : "ui/icons/locked_small.png"))
+	this.mRoadButton.attr("disabled", !isValid || !this.areRequirementsFulfilled(this.mRoadRequirementsTable));
 	this.RoadTownImg.attr("src", Path.GFX + _element.UISprite)
 }
 
