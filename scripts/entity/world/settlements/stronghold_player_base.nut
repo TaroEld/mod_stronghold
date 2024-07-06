@@ -64,7 +64,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function getHamlet()
 	{
 		local flag = this.m.Flags.get("Child");
-		return flag ? this.World.getEntityByID(flag) : false;
+		return flag ? this.World.getEntityByID(flag) : null;
 	}
 
 	function getLocation(_id)
@@ -578,7 +578,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 				unit.getSprite("body").setBrush(this.m.TroopSprites);
 			}
 		}
-		if (this.getHamlet() != false)
+		if (this.getHamlet() != null)
 			this.getHamlet().onVisualsChanged(_newSprite)
 	}
 
@@ -1235,7 +1235,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		this.settlement.onFinish();
 		foreach (location in this.getAttachedLocations())
 			location.fadeOutAndDie();
-		if (this.getHamlet() != false)
+		if (this.getHamlet() != null)
 			this.getHamlet().fadeOutAndDie(true);
 		this.World.deleteRoster(this.getFlags().get("RosterSeed"));
 	}

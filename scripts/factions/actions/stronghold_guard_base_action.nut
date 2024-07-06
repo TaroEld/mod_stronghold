@@ -65,7 +65,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		local locations = []
 		locations.extend(playerBase.m.AttachedLocations)
 		local hamlet = playerBase.getHamlet()
-		if (hamlet != false) {
+		if (hamlet != null) {
 		    locations.push(hamlet)
 		}	
 		local guard;
