@@ -42,6 +42,12 @@ this.stronghold_hamlet <- this.inherit("scripts/entity/world/settlements/strongh
 		this.getFlags().set("IsMainBase", false);
 	}
 
+	function getStash()
+	{
+		//overwrite player_base one
+		return null;
+	}
+
 	function updateImportedProduce()
 	{
 		this.settlement.updateImportedProduce();
