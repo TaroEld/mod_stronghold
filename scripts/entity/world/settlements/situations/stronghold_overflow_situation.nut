@@ -17,5 +17,10 @@ this.stronghold_overflow_situation <- this.inherit("scripts/entity/world/settlem
 	{
 		return true;
 	}
+
+	function onUpdate( _modifiers )
+	{
+	}
+
 });
 
