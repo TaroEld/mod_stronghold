@@ -98,10 +98,10 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			{
 				if (_combatID == "Stronghold")
 				{
-					if(this.Contract.m.Origin.getSize() == 1)
-						this.Contract.m.Origin.getFlags().set("UpgradeInterrupted", true);
-					else
+					if (this.Contract.m.Origin.getSize() == 1)
 						this.Contract.m.Origin.getFlags().set("BuildInterrupted", true);
+					else
+						this.Contract.m.Origin.getFlags().set("UpgradeInterrupted", true);
 				}
 			}			
 		});
@@ -237,7 +237,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "FailureBuild",
 			Title = "Failure!",
-			Text = "[img]gfx/ui/events/event_68.png[/img]You ran from the battle. Your fortress has been wiped from the map. You are a failure!",
+			Text = "[img]gfx/ui/events/event_68.png[/img]You ran from the battle. Your fortress has been wiped from the map. Perhaps you bit off more than you could chew.",
 			Image = "",
 			List = [],
 			Options = [
