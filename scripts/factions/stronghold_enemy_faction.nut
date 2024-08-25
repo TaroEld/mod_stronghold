@@ -22,13 +22,22 @@ this.stronghold_enemy_faction <- this.inherit("scripts/factions/faction", {
 
 	function addTrait( _t )
 	{
-		//add orders to the faction, during upgrades
-		this.m.Deck = []
-		foreach( c in _t )
+		// on deserialize
+		if (typeof _t == "integer")
 		{
-			local card = this.new(c);
-			card.setFaction(this);
-			this.m.Deck.push(card);
+			this.m.Traits.push(_t);
+		}
+		// on init
+		else
+		{
+			//add orders to the faction, during upgrades
+			this.m.Deck = []
+			foreach( c in _t )
+			{
+				local card = this.new(c);
+				card.setFaction(this);
+				this.m.Deck.push(card);
+			}
 		}
 	}
 
@@ -38,6 +47,14 @@ this.stronghold_enemy_faction <- this.inherit("scripts/factions/faction", {
 		this.m.TacticalBase = _faction.m.TacticalBase;
 		this.m.CombatMusic = _faction.m.CombatMusic;
 		this.m.Footprints = _faction.m.Footprints;
+		this.m.Traits =  clone _faction.m.Traits;
+		this.m.Banner = _faction.m.Banner;
+		this.m.Name = _faction.m.Name;
+	}
+
+	function getBannerSmall()
+	{
+		return "banner_noble_" + (this.m.Banner < 10 ? "0" + this.m.Banner : this.m.Banner);
 	}
 
 	function isAlliedWithPlayer()
