@@ -55,7 +55,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 			return true;
 
 
-		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary guards of " + playerBase.getName(), true, this.Const.World.Spawn.StrongholdMercenaries, partyStrength);
+		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary guards of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.m.OnCombatWithPlayerCallback = null;
 		party.getSprite("body").setBrush(playerBase.m.TroopSprites);
 		party.setDescription(format("A band of mercenaries defending the %s.", playerBase.getSizeName()));
