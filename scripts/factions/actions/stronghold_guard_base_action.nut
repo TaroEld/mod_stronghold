@@ -38,6 +38,8 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 	{
 		local playerBase = this.m.PlayerBase
 		if (playerBase == null) return //failsave
+		// set it first to avoid spamming things
+		::Stronghold.setCooldown(playerBase, "TimeUntilNextMercs");
 		foreach(unit in _faction.m.Units){
 			if (unit.getFlags().get("Stronghold_Guards") && unit.getFlags().get("Stronghold_Base_ID") == playerBase.getID()){
 				unit.fadeOutAndDie();
@@ -60,7 +62,6 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		party.setFootprintType(this.Const.World.FootprintsType.Mercenaries);
 		party.getFlags().set("Stronghold_Guards", true);
 		party.getFlags().set("Stronghold_Base_ID", playerBase.getID());
-		::Stronghold.setCooldown(playerBase, "TimeUntilNextMercs");
 		local c = party.getController();
 
 		local totalTime = this.World.getTime().SecondsPerDay * 7
