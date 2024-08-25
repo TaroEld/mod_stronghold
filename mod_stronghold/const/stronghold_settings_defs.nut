@@ -124,135 +124,135 @@
 	        }
 	        MaxAttachedLocations = {
 	            SettingsName = "Maximum attached locations"
-	            SettingsDescription = ""
+	            SettingsDescription = "The maximum amount of locations that can be built for this base tier."
 	        }
 	        SellPrice = {
 	            SettingsName = "Sell Price Multiplier"
-	            SettingsDescription = ""
+	            SettingsDescription = "The price multiplier on selling items at this base tier."
 	        }
 	        EffectRadius = {
 	            SettingsName = "Effect Radius in tiles"
-	            SettingsDescription = ""
+	            SettingsDescription = "The radius of the white effect circle on the map, which affects things like enemy attacks and location effects."
 	        }
 	        BuyPrice = {
 	            SettingsName = "Buy Price Multiplier"
-	            SettingsDescription = ""
+	            SettingsDescription = "The price multiplier on buying items at this base tier."
 	        }
 	        Rarity = {
 	            SettingsName = "Rarity Multiplier"
-	            SettingsDescription = ""
+	            SettingsDescription = "The 'rarity' multiplier affects how many items will spawn in shops."
 	        }
 	        MaxBuildings = {
 	            SettingsName = "Maximum Buildings"
-	            SettingsDescription = ""
+	            SettingsDescription = "The maximum amount of buildings that can be built for this base tier."
 	        }
 	    }
 	    "2" : {
 	        SettingsName = "Tier 2"
 	        SettingsDescription = ""
-	        BuyPrice = {
-	            SettingsName = "Buy Price Multiplier"
-	            SettingsDescription = ""
-	        }
 	        Price = {
 	            SettingsName = "Price"
 	            SettingsDescription = ""
 	        }
-	        MaxAttachedLocations = {
-	            SettingsName = "Maximum attached locations"
-	            SettingsDescription = ""
-	        }
 	        BattleCount = {
 	            SettingsName = "Amount of battles"
-	            SettingsDescription = "The amount of battles you will have to fight to upgrade the base to this level."
+	            SettingsDescription = "The amount of battles you will have to fight to build this base."
 	        }
-	        EffectRadius = {
-	            SettingsName = "Effect Radius in tiles"
-	            SettingsDescription = ""
+	        MaxAttachedLocations = {
+	            SettingsName = "Maximum attached locations"
+	            SettingsDescription = "The maximum amount of locations that can be built for this base tier."
 	        }
 	        SellPrice = {
 	            SettingsName = "Sell Price Multiplier"
-	            SettingsDescription = ""
+	            SettingsDescription = "The price multiplier on selling items at this base tier."
+	        }
+	        EffectRadius = {
+	            SettingsName = "Effect Radius in tiles"
+	            SettingsDescription = "The radius of the white effect circle on the map, which affects things like enemy attacks and location effects."
+	        }
+	        BuyPrice = {
+	            SettingsName = "Buy Price Multiplier"
+	            SettingsDescription = "The price multiplier on buying items at this base tier."
 	        }
 	        Rarity = {
 	            SettingsName = "Rarity Multiplier"
-	            SettingsDescription = ""
+	            SettingsDescription = "The 'rarity' multiplier affects how many items will spawn in shops."
 	        }
 	        MaxBuildings = {
 	            SettingsName = "Maximum Buildings"
-	            SettingsDescription = ""
+	            SettingsDescription = "The maximum amount of buildings that can be built for this base tier."
 	        }
 	    }
 	    "3" : {
 	        SettingsName = "Tier 3"
 	        SettingsDescription = ""
-	        BuyPrice = {
-	            SettingsName = "Buy Price Multiplier"
-	            SettingsDescription = ""
-	        }
 	        Price = {
 	            SettingsName = "Price"
 	            SettingsDescription = ""
 	        }
-	        MaxAttachedLocations = {
-	            SettingsName = "Maximum attached locations"
-	            SettingsDescription = ""
-	        }
 	        BattleCount = {
 	            SettingsName = "Amount of battles"
-	            SettingsDescription = "The amount of battles you will have to fight to upgrade the base to this level."
+	            SettingsDescription = "The amount of battles you will have to fight to build this base."
 	        }
-	        EffectRadius = {
-	            SettingsName = "Effect Radius in tiles"
-	            SettingsDescription = ""
+	        MaxAttachedLocations = {
+	            SettingsName = "Maximum attached locations"
+	            SettingsDescription = "The maximum amount of locations that can be built for this base tier."
 	        }
 	        SellPrice = {
 	            SettingsName = "Sell Price Multiplier"
-	            SettingsDescription = ""
+	            SettingsDescription = "The price multiplier on selling items at this base tier."
+	        }
+	        EffectRadius = {
+	            SettingsName = "Effect Radius in tiles"
+	            SettingsDescription = "The radius of the white effect circle on the map, which affects things like enemy attacks and location effects."
+	        }
+	        BuyPrice = {
+	            SettingsName = "Buy Price Multiplier"
+	            SettingsDescription = "The price multiplier on buying items at this base tier."
 	        }
 	        Rarity = {
 	            SettingsName = "Rarity Multiplier"
-	            SettingsDescription = ""
+	            SettingsDescription = "The 'rarity' multiplier affects how many items will spawn in shops."
 	        }
 	        MaxBuildings = {
 	            SettingsName = "Maximum Buildings"
-	            SettingsDescription = ""
+	            SettingsDescription = "The maximum amount of buildings that can be built for this base tier."
 	        }
 	    }
 	    "4" : {
 	        SettingsName = "Tier 4"
 	        SettingsDescription = ""
-	        BuyPrice = {
-	            SettingsName = "Buy Price Multiplier"
-	            SettingsDescription = ""
-	        }
 	        Price = {
 	            SettingsName = "Price"
 	            SettingsDescription = ""
 	        }
-	        MaxAttachedLocations = {
-	            SettingsName = "Maximum attached locations"
-	            SettingsDescription = ""
-	        }
 	        BattleCount = {
 	            SettingsName = "Amount of battles"
-	            SettingsDescription = "The amount of battles you will have to fight to upgrade the base to this level."
+	            SettingsDescription = "The amount of battles you will have to fight to build this base."
 	        }
-	        EffectRadius = {
-	            SettingsName = "Effect Radius in tiles"
-	            SettingsDescription = ""
+	        MaxAttachedLocations = {
+	            SettingsName = "Maximum attached locations"
+	            SettingsDescription = "The maximum amount of locations that can be built for this base tier."
 	        }
 	        SellPrice = {
 	            SettingsName = "Sell Price Multiplier"
-	            SettingsDescription = ""
+	            SettingsDescription = "The price multiplier on selling items at this base tier."
+	        }
+	        EffectRadius = {
+	            SettingsName = "Effect Radius in tiles"
+	            SettingsDescription = "The radius of the white effect circle on the map, which affects things like enemy attacks and location effects."
+	        }
+	        BuyPrice = {
+	            SettingsName = "Buy Price Multiplier"
+	            SettingsDescription = "The price multiplier on buying items at this base tier."
 	        }
 	        Rarity = {
 	            SettingsName = "Rarity Multiplier"
-	            SettingsDescription = ""
+	            SettingsDescription = "The 'rarity' multiplier affects how many items will spawn in shops."
 	        }
 	        MaxBuildings = {
 	            SettingsName = "Maximum Buildings"
-	            SettingsDescription = ""
+	            SettingsDescription = "The maximum amount of buildings that can be built for this base tier."
 	        }
 	    }
 	}
