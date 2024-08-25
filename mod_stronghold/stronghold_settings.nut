@@ -23,6 +23,8 @@
 	RenownCost = 500,
 	// Flat cost to send a gift caravan
 	GiftFlatCost = 3,
+	// guards that defend the base, multiplied by base tier, location added, scaled with light mult
+	GuardStrength = 50
 
 }
 

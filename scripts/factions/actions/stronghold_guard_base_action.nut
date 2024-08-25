@@ -44,11 +44,13 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 			}
 		}
 
-		local partyStrength = 50 * (playerBase.getSize() + 1);
+		local partyStrength = ::Stronghold.Misc.GuardStrength * (playerBase.getSize() + 1);
 		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
 		if (trainingCamp)
 			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
 		partyStrength *=  this.getReputationToDifficultyLightMult();
+		if (partyStrength == 0)
+			return true;
 
 
 		local party = _faction.spawnEntity(playerBase.getTile(), "Mercenary guards of " + playerBase.getName(), true, this.Const.World.Spawn.Mercenaries, partyStrength);

@@ -531,5 +531,9 @@
 	        SettingsName = "Trainer Buff duration in days"
 	        SettingsDescription = ""
 	    }
+	    GuardStrength = {
+	        SettingsName = "Default guard strength"
+	        SettingsDescription = "The default 'strength' of the mercenary base guards. This number is multiplied by the base tier, increased by the training hall location effect (if it is built) and finally multiplied by a scaling multiplier."
+	    }
 	}
 }
