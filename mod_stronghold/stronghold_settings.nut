@@ -248,6 +248,7 @@ createSettings = function(_container)
 		local keyID =  reduce(refStack, key);
 		local keyClosure = key;
 		local inner = ref[key.tostring()];
+		local valref = value;
 		switch (typeof value){
 			case "string":
 				local setting = settingsPage.addStringSetting(keyID, value, inner.SettingsName, inner.SettingsDescription);
@@ -259,11 +260,33 @@ createSettings = function(_container)
 				break;
 			case "integer":
 				local setting = settingsPage.addStringSetting(keyID, value.tostring(), inner.SettingsName, inner.SettingsDescription);
-				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue().tointeger());
+				setting.addAfterChangeCallback(function(_value){
+					try
+					{
+						_container[keyClosure] = this.getValue().tointeger();
+					}
+					catch (error)
+					{
+						::logError("Tried setting " + keyID + " to a non-integer value " + this.getValue() + " , resetting...");
+						this.set(valref.tostring(), true, true, true, false, false);
+						_container[keyClosure] = valref;
+					}
+				})
 				break;
 			case "float":
 				local setting = settingsPage.addStringSetting(keyID, value.tostring(), inner.SettingsName, inner.SettingsDescription);
-				setting.addAfterChangeCallback(@(_value) _container[keyClosure] = this.getValue().tofloat());
+				setting.addAfterChangeCallback(function(_value){
+					try
+					{
+						_container[keyClosure] = this.getValue().tofloat();
+					}
+					catch (error)
+					{
+						::logError("Tried setting " + keyID + " to a non-float value " + this.getValue() + " , resetting...");
+						this.set(valref.tostring(), true, true, true, false, false);
+						_container[keyClosure] = valref;
+					}
+				})
 				break;
 			case "array":
 				local setting = settingsPage.addArraySetting(keyID, value, inner.SettingsName, inner.SettingsDescription);
