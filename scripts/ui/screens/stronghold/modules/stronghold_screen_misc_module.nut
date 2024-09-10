@@ -42,19 +42,20 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			local dist = town.getTile().getDistanceTo(settlement.getTile());
 			if (town.m.ConnectedToByRoads.len() != 0 && (dist > 60 || (distances.len() > 10 && dist > distances[10])))  continue;
 			local results = town.getRoadCost(settlement);
-			local cost = results[0]
+			local segments = results[0]
 			local roadmult = results[1]
-			if (cost && cost != 0)
+			if (segments && segments != 0)
 			{
+				local cost = segments * ::Stronghold.Misc.RoadCost * ::Stronghold.Misc.PriceMult;
 				option = {
 					Score = dist,
 					Name = settlement.getName(),
 					FactionName = settlement.getOwner().getName(),
 					ID = settlement.getID(),
-					Segments = cost,
-					Cost = cost * ::Stronghold.Misc.PriceMult,
+					Segments = segments,
+					Cost = cost,
 					Roadmult = roadmult * 100,
-					IsValid = cost * ::Stronghold.Misc.PriceMult < this.World.Assets.getMoney(),
+					IsValid = cost < this.World.Assets.getMoney(),
 					UISprite = settlement.m.UISprite
 				}
 				settlementOptions.push(option);

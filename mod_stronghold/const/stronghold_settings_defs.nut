@@ -501,7 +501,7 @@
 	    }
 	    RoadCost = {
 	        SettingsName = "Cost per road piece"
-	        SettingsDescription = ""
+	        SettingsDescription = "Requires a restart of the game to update the prices for roads."
 	    }
 	    GiftFlatCost = {
 	        SettingsName = "Send gifts cost"
