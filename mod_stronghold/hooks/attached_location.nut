@@ -125,7 +125,7 @@
 		local hasLookout = this.World.Retinue.hasFollower("follower.lookout");
 		local player = this.World.State.getPlayer();
 
-		if (::World.State.getPlayer().getTile().getDistanceTo(this.getTile()) > this.m.Settlement.getEffectRadius())
+		if (::World.State.getPlayer().getTile().getDistanceTo(this.getTile()) < this.m.Settlement.getEffectRadius())
 		{
 			if (!("Stronghold_Stone_Watchtower" in player.m.MovementSpeedMultFunctions))
 				player.m.MovementSpeedMultFunctions.Stronghold_Stone_Watchtower <- this.getMovementSpeedMult.bindenv(this);
