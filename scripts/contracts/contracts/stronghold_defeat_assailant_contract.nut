@@ -62,6 +62,12 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 					this.World.Contracts.m.IsEventVisible = true;
 					this.World.State.showEventScreen(this.Contract, true, true)
 				} 
+				// If settings are set to 0 combats, skip contract
+				else if (::Stronghold.BaseTiers[this.Contract.m.TargetLevel].BattleCount == 0)
+				{
+					this.Contract.setScreen("Victory_None_Left");
+					this.World.Contracts.showActiveContract();
+				}
 				else if (!this.Contract.m.HasSpawnedUnit && this.Time.getVirtualTimeF() > this.Contract.m.TimeOfNextAttack && this.Contract.m.AttacksRemaining > 0)
 				{
 					this.Contract.setScreen("Enemies_Incoming")
