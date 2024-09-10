@@ -168,7 +168,7 @@
 		Price = 5,
 		UpgradePrice = 1.5,
 		VisionIncrease = 20, // Amount of extra vision you get around the base
-		MovementSpeedIncrease = 0.05 // Amount of extra movement speed you get around the base, in pct
+		MovementSpeedIncrease = 0.1 // Amount of extra movement speed you get around the base, in pct
 	},
 	Troop_Quarters = {
 		Price = 2.5,
