@@ -96,7 +96,7 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 		party.getLoot().ArmorParts = ::Math.rand(10, 30) * playerBase.getSize();
 		party.getLoot().Medicine = ::Math.rand(1, 3) * playerBase.getSize();
 		party.getLoot().Ammo = ::Math.rand(0, 30) * playerBase.getSize() ;
-		party.getLoot().Money = ::Math.rand(200, 300) * playerBase.getSize();
+		party.getLoot().Money = ::Math.rand(partyDifficulty * 0.75, partyDifficulty * 1.5);
 		party.getSprite("banner").setBrush(this.m.EnemyBase.getBanner());
 		party.getSprite("selection").Visible = true;
 		party.getFlags().set(::Stronghold.Flags.StrongholdAttacker, true);
