@@ -82,9 +82,10 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 		local tile = playerBase.getTile();
 
 		local closest_faction = this.World.FactionManager.getFaction(this.m.EnemyBase.getFaction());
+		::Stronghold.getHostileFaction().copyLooks(closest_faction);
 
 		local factionType = ::Stronghold.FactionDefs[closest_faction.m.Type];
-		local party = closest_faction.spawnEntity(this.m.EnemyBase.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
+		local party = ::Stronghold.getHostileFaction().spawnEntity(this.m.EnemyBase.getTile(), factionType.Name, false, factionType.Spawnlist, partyDifficulty);
 		party.setDescription(factionType.Description);
 		party.setFootprintType(factionType.Footprint);
 		party.setMovementSpeed(70.0);
