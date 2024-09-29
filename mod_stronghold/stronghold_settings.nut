@@ -24,8 +24,10 @@
 	// Flat cost to send a gift caravan
 	GiftFlatCost = 3,
 	// guards that defend the base, multiplied by base tier, location added, scaled with light mult
-	GuardStrength = 50
-
+	GuardStrength = 50,
+	PatrolStrength = 100,
+	CaravanStrength = 75,
+	BaseAttackStrengthMultiplier = 1.0,
 }
 
 ::Stronghold.Hamlet <- {

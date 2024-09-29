@@ -535,5 +535,17 @@
 	        SettingsName = "Default guard strength"
 	        SettingsDescription = "The default 'strength' of the mercenary base guards. This number is multiplied by the base tier, increased by the training hall location effect (if it is built) and finally multiplied by a scaling multiplier."
 	    }
+	    PatrolStrength = {
+	        SettingsName = "Default patrol strength"
+	        SettingsDescription = "The default 'strength' of the mercenary road patrols. This number is multiplied by the base tier, increased by the training hall location effect (if it is built) and finally multiplied by a scaling multiplier."
+	    }
+	    CaravanStrength = {
+	        SettingsName = "Default caravan strength"
+	        SettingsDescription = "The default 'strength' of the mercenary caravan guards. This number is multiplied by the base tier, increased by the training hall location effect (if it is built) and finally multiplied by a scaling multiplier."
+	    }
+	    BaseAttackStrengthMultiplier = {
+	        SettingsName = "Base attack strength multiplier"
+	        SettingsDescription = "A multiplier for the total strength of the periodic base attacks that happen when your base is within range of an enemy camp."
+	    }
 	}
 }

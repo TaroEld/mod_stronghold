@@ -197,7 +197,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local playerBase = this.getTown()
 		local targetSettlement = this.World.getEntityByID(_target.SettlementID);
 
-		local partyStrength = 300 +  100 * (playerBase.getSize()-1);
+		local partyStrength = (::Stronghold.Misc.CaravanStrength * playerBase.getSize()) + (_target.ReputationGain * 10);
 		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
 		if (trainingCamp)
 			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
@@ -206,7 +206,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local d = 1.0 + this.Math.minf(2.0, this.World.getTime().Days * 0.014) - 0.1;
 		partyStrength *= (d * this.Const.Difficulty.EnemyMult[this.World.Assets.getCombatDifficulty()]);
 
-		local party = playerFaction.spawnEntity(playerBase.getTile(), "Caravan of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 100);
+		local party = playerFaction.spawnEntity(playerBase.getTile(), "Giftbearers of " + playerBase.getName(), true, this.Const.World.Spawn.Caravan, 100);
 		this.Const.World.Common.assignTroops(party, this.Const.World.Spawn.Mercenaries, partyStrength);
 		party.setDescription("A caravan bringing gifts to " + targetSettlement.getName());
 		party.setFootprintType(this.Const.World.FootprintsType.Caravan);

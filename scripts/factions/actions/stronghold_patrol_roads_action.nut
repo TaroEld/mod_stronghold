@@ -53,7 +53,7 @@ this.stronghold_patrol_roads_action <- this.inherit("scripts/factions/faction_ac
 	function onExecute( _faction )
 	{
 		local playerBase = this.m.Settlements.Base
-		local partyStrength = 100 * (playerBase.getSize());
+		local partyStrength = ::Stronghold.Misc.PatrolStrength * playerBase.getSize();
 		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp" );
 		if (trainingCamp)
 			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();

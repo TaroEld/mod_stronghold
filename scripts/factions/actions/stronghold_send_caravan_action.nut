@@ -79,7 +79,7 @@ this.stronghold_send_caravan_action <- this.inherit("scripts/factions/faction_ac
 		if (target == null)
 			return
 		
-		local partyStrength = 75 * (playerBase.getSize())
+		local partyStrength = ::Stronghold.Misc.CaravanStrength * playerBase.getSize();
 		local trainingCamp = playerBase.getLocation( "attached_location.militia_trainingcamp");
 		if (trainingCamp)
 			partyStrength += trainingCamp.getAlliedPartyStrengthIncrease();
