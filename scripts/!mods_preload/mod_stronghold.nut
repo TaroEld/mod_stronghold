@@ -7,11 +7,8 @@
 ::mods_queue(::Stronghold.ID, "mod_msu", function()
 {	
 	::Stronghold.Mod <- ::MSU.Class.Mod(::Stronghold.ID, ::Stronghold.Version, ::Stronghold.Name);
-	if ("GitHubTags" in ::MSU.System.Registry.ModSourceDomain)
-	{
-		::Stronghold.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHubTags, "https://github.com/TaroEld/mod_stronghold");
-		::Stronghold.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHubTags);
-	}
+	::Stronghold.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.GitHubTags, "https://github.com/TaroEld/mod_stronghold/");
+	::Stronghold.Mod.Registry.setUpdateSource(::MSU.System.Registry.ModSourceDomain.GitHubTags);
 	::Stronghold.Mod.Registry.addModSource(::MSU.System.Registry.ModSourceDomain.NexusMods, "https://www.nexusmods.com/battlebrothers/mods/324");
 
 	::include(::Stronghold.ID + "/stronghold_settings.nut");
