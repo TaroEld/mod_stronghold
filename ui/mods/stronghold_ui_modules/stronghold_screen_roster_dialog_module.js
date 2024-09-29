@@ -436,14 +436,14 @@ StrongholdScreenRosterModule.prototype.loadFromData = function ()
 	this.mStronghold.NumActive = this.mData.mRosterAsset;
     this.mStronghold.NumActiveMax = this.mData.TownAssets.mRosterAssetMax;
     this.mStronghold.BrothersList = this.mModuleData.TownRoster;
-    this.onBrothersListLoaded(this.mStronghold, Stronghold.Roster.RosterOwner.Stronghold);
     this.updateBaseSlots(this.mStronghold, Stronghold.Roster.RosterOwner.Stronghold);
+    this.onBrothersListLoaded(this.mStronghold, Stronghold.Roster.RosterOwner.Stronghold);
 
     this.mPlayer.NumActive = this.mData.mBrothersAsset;
     this.mPlayer.NumActiveMax = this.mData.mBrothersAssetMax;
     this.mPlayer.BrothersList = this.mModuleData.PlayerRoster;
-    this.onBrothersListLoaded(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
     this.updateBaseSlots(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
+    this.onBrothersListLoaded(this.mPlayer, Stronghold.Roster.RosterOwner.Player);
     this.updateWages();
     for (var i = 0; i < this.mPlayer.BrothersList.length; i++) {
     	if (this.mPlayer.BrothersList[i] !== undefined && this.mPlayer.BrothersList[i] !== null)
