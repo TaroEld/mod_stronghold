@@ -137,16 +137,6 @@ this.stronghold_screen <- ::inherit("scripts/mods/msu/ui_screen", {
 	{
 		local town = this.getTown();
 		local maxBuildingSlots = town.getSize() + 4;
-		local currentBuildings = 0
-		foreach (building in town.m.Buildings){
-			if (building != null)
-				currentBuildings++
-		}
-		local currentLocations = 0;
-		foreach (location in town.m.AttachedLocations){
-			if (location != null && location.m.ID != "attached_location.harbor")
-				currentLocations++
-		}
 		local isRaidedUntil = -1;
 		if (town.hasSituation("situation.raided"))
 		{
