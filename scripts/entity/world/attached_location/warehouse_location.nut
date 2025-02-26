@@ -40,6 +40,10 @@ this.warehouse_location <- this.inherit("scripts/entity/world/attached_location"
 
 	function consumeConsumableItems()
 	{
+		local function maxZero(_v)
+		{
+			return ::Math.max(_v, 0);
+		}
 		local assets = ::World.Assets;
 		foreach (_id, _amount in this.m.ConsumableItems)
 		{
@@ -48,26 +52,26 @@ this.warehouse_location <- this.inherit("scripts/entity/world/attached_location"
 			switch (_id)
 			{
 				case ("supplies.money"):
-					assets.addMoney(_amount);
+					::Stronghold.addRoundedMoney(_amount);
 					this.m.ConsumableItems[_id] = 0;
 					break;
 
 				case ("supplies.medicine"):
 					local current = assets.m.Medicine;
 					assets.addMedicine(_amount);
-					this.m.ConsumableItems[_id] = assets.m.Medicine - current;
+					this.m.ConsumableItems[_id] = maxZero(this.m.ConsumableItems[_id] - (assets.m.Medicine - current))
 					break;
 
 				case ("supplies.ammo"):
 					local current = assets.m.Ammo;
 					assets.addAmmo(_amount);
-					this.m.ConsumableItems[_id] = assets.m.Ammo - current;
+					this.m.ConsumableItems[_id] = maxZero(this.m.ConsumableItems[_id] - (assets.m.Ammo - current))
 					break;
 
 				case ("supplies.armor_parts"):
 					local current = assets.m.ArmorParts;
 					assets.addArmorParts(_amount);
-					this.m.ConsumableItems[_id] = assets.m.ArmorParts - current;
+					this.m.ConsumableItems[_id] = maxZero(this.m.ConsumableItems[_id] - (assets.m.ArmorParts - current));
 					break;
 			}
 		}
