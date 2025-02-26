@@ -105,7 +105,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 			return null;
 		}
 
-		this.World.Assets.addMoney(-price);
+		::Stronghold.addRoundedMoney(-price);
 		item.setCondition(item.getConditionMax());
 		item.setToBeRepaired(false);
 		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + this.Math.rand(0, 6) + ".wav", 1.0);
@@ -243,7 +243,7 @@ this.stronghold_screen_stash_module <-  this.inherit("scripts/ui/screens/strongh
 
 		local replacementItem = this.new(this.IO.scriptFilenameByHash(type));
 		replacementItem.m.Name = name;
-		this.World.Assets.addMoney(-price);
+		::Stronghold.addRoundedMoney(-price);
 		this.getStash().add(replacementItem);
 		this.Sound.play("sounds/ambience/buildings/blacksmith_hammering_0" + ::Math.rand(0, 6) + ".wav", 1.0);
 		this.updateData(["Assets", "TownAssets", "StashModule"]);

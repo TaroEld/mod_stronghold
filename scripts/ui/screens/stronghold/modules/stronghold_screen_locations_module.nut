@@ -32,7 +32,7 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 	{
 		local home = this.getTown();
 		local locationDef = ::Stronghold.Locations[_data];
-		this.World.Assets.addMoney(-locationDef.Price * ::Stronghold.Misc.PriceMult)
+		::Stronghold.addRoundedMoney(-locationDef.Price * ::Stronghold.Misc.PriceMult);
 		local script = "scripts/entity/world/attached_location/" + locationDef.Path
 		local validTerrain =
 		[
@@ -63,7 +63,7 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 		local locationDef = ::Stronghold.Locations[_data];
 		local location = this.getTown().getLocation(locationDef.ID);
 		location.upgrade();
-		this.World.Assets.addMoney(-locationDef.UpgradePrice * ::Stronghold.Misc.PriceMult);
+		::Stronghold.addRoundedMoney(-locationDef.UpgradePrice * ::Stronghold.Misc.PriceMult);
 		this.getTown().removeLocation(_data);
 		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
 	}

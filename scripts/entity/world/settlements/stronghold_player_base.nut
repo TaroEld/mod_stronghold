@@ -1094,7 +1094,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 	function buildWarehouseLocation()
 	{
 		local locationDef = ::Stronghold.Locations["Warehouse"];
-		this.World.Assets.addMoney(-locationDef.Price)
+		::Stronghold.addRoundedMoney(-locationDef.Price)
 		local script = "scripts/entity/world/attached_location/" + locationDef.Path
 		local validTerrain =
 		[

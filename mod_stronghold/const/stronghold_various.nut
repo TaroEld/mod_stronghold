@@ -157,7 +157,7 @@
 {
 	local buildPrice = ::Stronghold.BaseTiers[1].Price * ::Stronghold.Misc.PriceMult
 	//called from retinue menu
-	this.World.Assets.addMoney(-buildPrice);
+	::Stronghold.addRoundedMoney(-buildPrice);
 	local tile = this.World.State.getPlayer().getTile(); 
 	tile.IsOccupied = true;
 	tile.TacticalType = this.Const.World.TerrainTacticalType.Urban;
@@ -264,4 +264,11 @@
 	{
 		return _start.getDistanceTo(_dest);
 	}
+}
+
+::Stronghold.addRoundedMoney <- function(_money)
+{
+	_money = _money < 0 ? ::Math.ceil(_money) : ::Math.round(_money);
+	::World.Assets.addMoney(_money);
+	return _money;
 }

@@ -30,7 +30,7 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 
 		local targetLevel = this.getTown().getSize();
 		local price = ::Stronghold.Misc.PriceMult * ::Stronghold.BaseTiers[targetLevel].Price;
-		::World.Assets.addMoney(-price);
+		::Stronghold.addRoundedMoney(-price);
 
 		local playerFaction = this.Stronghold.getPlayerFaction();
 		local contract = this.new("scripts/contracts/contracts/stronghold_defeat_assailant_contract");

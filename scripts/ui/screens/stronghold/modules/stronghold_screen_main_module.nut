@@ -29,7 +29,7 @@ this.stronghold_screen_main_module <-  this.inherit("scripts/ui/screens/strongho
 	{
 		local situation = this.getTown().getSituationByID("situation.raided");
 		local price = (::Stronghold.Misc.RaidedCostPerDay * ::Stronghold.Misc.PriceMult) * _days;
-		this.World.Assets.addMoney(-price);
+		::Stronghold.addRoundedMoney(-price);
 		this.getTown().removeSituationByID("situation.raided");
 		this.updateData(["TownAssets", "MainModule"]);
 	}

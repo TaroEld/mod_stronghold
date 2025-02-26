@@ -85,7 +85,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 	function onBuildRoad(_target)
 	{
 		local targetSettlement = this.World.getEntityByID(_target.ID);
-		this.World.Assets.addMoney(-_target.Cost);
+		::Stronghold.addRoundedMoney(-_target.Cost);
 		this.getTown().buildRoad(targetSettlement, _target.Roadmult * 0.01);
 		this.m.Road.Map = {};
 		::Stronghold.updateConnectedToByRoad();
@@ -365,7 +365,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		bro.setDirty(true);
 
 		bro.getFlags().set("stronghold_trained", true);
-		this.World.Assets.addMoney(-(::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult));
+		::Stronghold.addRoundedMoney(-(::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult));
 		this.updateData(["Assets"]);
 		return {
 			Talent = newTalent,
@@ -391,7 +391,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 	{
 		local item = this.new("scripts/items/special/fountain_of_youth_item");
 		this.World.Assets.getStash().add(item);
-		this.World.Assets.addMoney(-(::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult));
+		::Stronghold.addRoundedMoney(-(::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult));
 		this.updateData(["Assets", "MiscModule", "StashModule"]);
 	}
 
@@ -443,7 +443,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
 		follow.setDuration(::Stronghold.Misc.MercenaryFollowDays);
 		c.addOrder(follow);
-		this.World.Assets.addMoney(-(::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult));
+		::Stronghold.addRoundedMoney(-(::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult));
 		this.updateData(["Assets", "MiscModule"]);
 	}
 

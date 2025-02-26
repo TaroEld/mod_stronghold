@@ -32,7 +32,7 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 	function addBuilding(_data)
 	{
 		local buildingDef = ::Stronghold.Buildings[_data];
-		this.World.Assets.addMoney(-buildingDef.Price * ::Stronghold.Misc.PriceMult)
+		::Stronghold.addRoundedMoney(-buildingDef.Price * ::Stronghold.Misc.PriceMult);
 		local building = this.new("scripts/entity/world/settlements/buildings/" + buildingDef.Path);
 		this.getTown().addBuilding(building);
 		building.onUpdateShopList();
