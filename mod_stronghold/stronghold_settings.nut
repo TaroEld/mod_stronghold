@@ -262,31 +262,33 @@ createSettings = function(_container)
 				break;
 			case "integer":
 				local setting = settingsPage.addStringSetting(keyID, value.tostring(), inner.SettingsName, inner.SettingsDescription);
-				setting.addAfterChangeCallback(function(_value){
+				setting.addAfterChangeCallback(function(_oldValue){
 					try
 					{
-						_container[keyClosure] = this.getValue().tointeger();
+						local newValue = this.getValue().tointeger();
+						_container[keyClosure] = newValue;
 					}
 					catch (error)
 					{
 						::logError("Tried setting " + keyID + " to a non-integer value " + this.getValue() + " , resetting...");
-						this.set(valref.tostring(), true, true, true, false, false);
-						_container[keyClosure] = valref;
+						this.set(_oldValue, true, true, true, false, false);
+						_container[keyClosure] = valref.tointeger();
 					}
 				})
 				break;
 			case "float":
 				local setting = settingsPage.addStringSetting(keyID, value.tostring(), inner.SettingsName, inner.SettingsDescription);
-				setting.addAfterChangeCallback(function(_value){
+				setting.addAfterChangeCallback(function(_oldValue){
 					try
 					{
-						_container[keyClosure] = this.getValue().tofloat();
+						local newValue = this.getValue().tofloat();
+						_container[keyClosure] = newValue;
 					}
 					catch (error)
 					{
 						::logError("Tried setting " + keyID + " to a non-float value " + this.getValue() + " , resetting...");
-						this.set(valref.tostring(), true, true, true, false, false);
-						_container[keyClosure] = valref;
+						this.set(_oldValue.tostring(), true, true, true, false, false);
+						_container[keyClosure] = _oldValue.tofloat();
 					}
 				})
 				break;
