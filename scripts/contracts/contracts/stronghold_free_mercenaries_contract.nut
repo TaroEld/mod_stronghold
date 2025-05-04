@@ -4,6 +4,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 	//get hired mercenaries on success + flag in base to hire more in the future 
 	m = {
 		Reward = 0,
+		Origin = null,
 		Target = null,
 		Title = "Free the mercenaries",
 		LastCombatTime = 0.0,
@@ -67,133 +68,24 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					this.Contract.m.Target.getSprite("selection").Visible = true;
 					this.Contract.m.Target.setVisibleInFogOfWar(true);
 					this.Contract.m.Target.setOnCombatWithPlayerCallback(this.onTargetAttacked.bindenv(this));
-					this.Contract.m.Enemy_Faction = this.Contract.m.Target.getFaction();
-				}
-				else
-				{
-					
-					local playerBase = this.Contract.m.Home;
-					local noble_factions = this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse);
-					local selected_faction = null;
-					local selected_start_settlement = null;
-					local selected_end_settlememt = null;
-					local total_dist = 0;
-					
-					foreach (faction in noble_factions)
+					local originTown = null;
+					local originID = this.Contract.m.Flags.get("OriginID");
+					foreach(settlement in ::World.EntityManager.getSettlements())
 					{
-						local settlements = faction.getSettlements()
-						if (settlements.len() < 2)
+						if (settlement.getID() == originID)
 						{
-							continue;
-						}
-						local start_settlement = null
-						local end_settlement = null
-						local longestDistanceBetweenSettlements = 0
-						local distFurthestFromBase = 0
-						foreach (settlement in settlements)
-						{
-							if (!settlement.isIsolated() && settlement.getTile().getDistanceTo(playerBase.getTile()) > distFurthestFromBase)
-							{
-								start_settlement = settlement
-								distFurthestFromBase = settlement.getTile().getDistanceTo(playerBase.getTile())
-							}
-						}
-						if (start_settlement == null) continue
-						foreach (settlement in settlements)
-						{
-							if (settlement != start_settlement && settlement.isMilitary() && settlement.isConnectedToByRoads(start_settlement) && settlement.getTile().getDistanceTo(start_settlement.getTile()) > longestDistanceBetweenSettlements)
-							{
-								end_settlement = settlement
-								longestDistanceBetweenSettlements = settlement.getTile().getDistanceTo(start_settlement.getTile())
-							}
-						}
-						if (end_settlement == null) continue
-						if (selected_faction == null || longestDistanceBetweenSettlements > total_dist)
-						{
-							selected_faction = faction;
-							total_dist = longestDistanceBetweenSettlements;
-							selected_start_settlement = start_settlement
-							selected_end_settlememt = end_settlement
+							originTown = settlement;
+							break;
 						}
 					}
-					if (selected_end_settlememt == null || selected_start_settlement == null)
-					{
-						local settlements = this.World.EntityManager.getSettlements()
-						local start_settlement = null
-						local end_settlement = null
-						local longestDistanceBetweenSettlements = 0
-						local distFurthestFromBase = 0
-						foreach (settlement in settlements)
-						{
-							if (!settlement.isIsolated() && settlement.m.Culture != this.Const.World.Culture.Southern && settlement.getTile().getDistanceTo(playerBase.getTile()) > distFurthestFromBase)
-							{
-								start_settlement = settlement
-								distFurthestFromBase = settlement.getTile().getDistanceTo(playerBase.getTile())
-							}
-						}
-						if (start_settlement != null)
-						{
-							foreach (settlement in settlements)
-							{
-								if (settlement != start_settlement && settlement.isAlliedWith( start_settlement ) && settlement.isMilitary() && settlement.isConnectedToByRoads(start_settlement) 
-									&& settlement.getTile().getDistanceTo(start_settlement.getTile()) > longestDistanceBetweenSettlements)
-								{
-									end_settlement = settlement
-									longestDistanceBetweenSettlements = settlement.getTile().getDistanceTo(start_settlement.getTile())
-								}
-							}
-						}
-						if (end_settlement != null)
-						{
-							selected_faction = start_settlement.getFactionOfType(this.Const.FactionType.NobleHouse);
-							total_dist = longestDistanceBetweenSettlements;
-							selected_start_settlement = start_settlement
-							selected_end_settlememt = end_settlement
-						}
-					}
-					//failsafe
-					if (selected_end_settlememt == null || selected_start_settlement == null)
-					{
-						this.logInfo("COULD NOT FIND EITHER START OR END SETTLEMENT")
-						this.Contract.setState("Return");
-					}
-					::Stronghold.getHostileFaction().copyLooks(selected_faction);
-					local party = ::Stronghold.getHostileFaction().spawnEntity(selected_start_settlement.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
-					this.Const.World.Common.addTroop(party, {
-							Type = this.Const.World.Spawn.Troops.Executioner
-						}, true, 100);
-					party.setDescription("An army of noble soldiers, escorting prisoners.");
-					party.setFootprintType(this.Const.World.FootprintsType.Nobles);
-					party.setAttackableByAI(false);
-					party.setVisibleInFogOfWar(true);
-					party.setImportant(true);
-					party.setDiscovered(true);
-					party.setMovementSpeed(100);
-					local c = party.getController();
-					c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false);
-					c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false);
-					local move = this.new("scripts/ai/world/orders/move_order");
-					move.setDestination(selected_end_settlememt.getTile());
-					move.setRoadsOnly(true);
-					local despawn = this.new("scripts/ai/world/orders/despawn_order");
-					c.addOrder(move);
-					c.addOrder(despawn);
-					this.Contract.m.Flags.set("Survivors", 0);
+					local originTownName = originTown == null ? "" : originTown.getName();
 
-					this.Contract.m.Target = this.WeakTableRef(party);
-					this.Contract.m.Enemy_Faction = party.getFaction();
-					this.Contract.m.Destination = this.WeakTableRef(selected_end_settlememt);
-					
-					this.Contract.m.Target.getSprite("selection").Visible = true;
-					this.Contract.m.Target.setOnCombatWithPlayerCallback(this.onTargetAttacked.bindenv(this));
-					this.Contract.m.Target.setVisibleInFogOfWar(true);
 					this.Contract.m.BulletpointsObjectives = [
-					"Hunt down the noble caravan",
-					"Don't let it reach " + selected_end_settlememt.getName() + " ."
+						"Hunt down the noble caravan moving from " + originTownName + " to " + this.Contract.m.Destination.getName(),
+						"Don't let it reach its destination, and don't let anyone flee the battle!"
 					];
 				}
 			}
-			
 			
 			function update()
 			{
@@ -309,8 +201,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 					Text = "Yes.",
 					function getResult()
 					{
-						this.Contract.setState("Running");
-						return 0;
+						return "Details"
 					}
 
 				},
@@ -331,6 +222,76 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			function start()
 			{
 				this.Contract.m.IsNegotiated = true;
+			}
+		});
+
+		this.m.Screens.push({
+			ID = "Details",
+			Title = this.m.Title,
+			Text = "",
+			Image = "",
+			List = [],
+			ShowEmployer = true,
+			Options = [
+				{
+					Text = "Understood.",
+					function getResult()
+					{
+						if (this.Contract.m.Target == null)
+						{
+							this.Contract.setSuccessFlag();
+							this.World.Contracts.finishActiveContract();
+							return 0;
+						}
+						this.Contract.setState("Running");
+						return 0;
+					}
+
+				}
+			],
+			function start()
+			{
+				local params = this.Contract.determineOriginAndDestination();
+				//failsafe
+				params.Origin = null
+				if (params.Origin == null || params.Destination == null)
+				{
+					this.Text = "Stronghold failed to find suitable settlements for this quest. It will be auto-completed. You can now hire mercenaries.";
+					return;
+				}
+				::Stronghold.getHostileFaction().copyLooks(params.Faction);
+				local party = ::Stronghold.getHostileFaction().spawnEntity(params.Origin.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
+				this.Const.World.Common.addTroop(party, {
+						Type = this.Const.World.Spawn.Troops.Executioner
+					}, true, 100);
+				party.setDescription("An army of noble soldiers, escorting prisoners.");
+				party.setFootprintType(this.Const.World.FootprintsType.Nobles);
+				party.setAttackableByAI(false);
+				party.setVisibleInFogOfWar(true);
+				party.setImportant(true);
+				party.setDiscovered(true);
+				party.setMovementSpeed(100);
+				local c = party.getController();
+				c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false);
+				c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false);
+				local wait = this.new("scripts/ai/world/orders/wait_order");
+				wait.setTime(3 * this.World.getTime().SecondsPerDay);
+				local move = this.new("scripts/ai/world/orders/move_order");
+				move.setDestination(params.Destination.getTile());
+				move.setRoadsOnly(true);
+				local despawn = this.new("scripts/ai/world/orders/despawn_order");
+				c.addOrder(wait);
+				c.addOrder(move);
+				c.addOrder(despawn);
+				this.Contract.m.Flags.set("Survivors", 0);
+
+				this.Contract.m.Target = this.WeakTableRef(party);
+				this.Contract.m.Enemy_Faction = party.getFaction();
+
+				this.Contract.m.Flags.set("OriginID", params.Origin.getID());
+				this.Contract.m.Destination = this.WeakTableRef(params.Destination);
+
+				this.Text = "The caravan will prepare for three days at " + params.Origin.getName() + " before starting to move towards " + params.Destination.getName() + ". Make sure you move in time!"
 			}
 		});
 		
@@ -458,6 +419,94 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 
 			}
 		});
+	}
+
+	function determineOriginAndDestination()
+	{
+		local playerBase = this.m.Home;
+		local noble_factions = this.World.FactionManager.getFactionsOfType(this.Const.FactionType.NobleHouse);
+		local selected_faction = null;
+		local selected_start_settlement = null;
+		local selected_end_settlememt = null;
+		local total_dist = 0;
+
+		foreach (faction in noble_factions)
+		{
+			local settlements = faction.getSettlements()
+			if (settlements.len() < 2)
+			{
+				continue;
+			}
+			local start_settlement = null
+			local end_settlement = null
+			local longestDistanceBetweenSettlements = 0
+			local distFurthestFromBase = 0
+			foreach (settlement in settlements)
+			{
+				if (!settlement.isIsolated() && settlement.getTile().getDistanceTo(playerBase.getTile()) > distFurthestFromBase)
+				{
+					start_settlement = settlement
+					distFurthestFromBase = settlement.getTile().getDistanceTo(playerBase.getTile())
+				}
+			}
+			if (start_settlement == null) continue
+			foreach (settlement in settlements)
+			{
+				if (settlement != start_settlement && settlement.isMilitary() && settlement.isConnectedToByRoads(start_settlement) && settlement.getTile().getDistanceTo(start_settlement.getTile()) > longestDistanceBetweenSettlements)
+				{
+					end_settlement = settlement
+					longestDistanceBetweenSettlements = settlement.getTile().getDistanceTo(start_settlement.getTile())
+				}
+			}
+			if (end_settlement == null) continue
+			if (selected_faction == null || longestDistanceBetweenSettlements > total_dist)
+			{
+				selected_faction = faction;
+				total_dist = longestDistanceBetweenSettlements;
+				selected_start_settlement = start_settlement
+				selected_end_settlememt = end_settlement
+			}
+		}
+		if (selected_end_settlememt == null || selected_start_settlement == null)
+		{
+			local settlements = this.World.EntityManager.getSettlements()
+			local start_settlement = null
+			local end_settlement = null
+			local longestDistanceBetweenSettlements = 0
+			local distFurthestFromBase = 0
+			foreach (settlement in settlements)
+			{
+				if (!settlement.isIsolated() && settlement.m.Culture != this.Const.World.Culture.Southern && settlement.getTile().getDistanceTo(playerBase.getTile()) > distFurthestFromBase)
+				{
+					start_settlement = settlement
+					distFurthestFromBase = settlement.getTile().getDistanceTo(playerBase.getTile())
+				}
+			}
+			if (start_settlement != null)
+			{
+				foreach (settlement in settlements)
+				{
+					if (settlement != start_settlement && settlement.isAlliedWith( start_settlement ) && settlement.isMilitary() && settlement.isConnectedToByRoads(start_settlement)
+						&& settlement.getTile().getDistanceTo(start_settlement.getTile()) > longestDistanceBetweenSettlements)
+					{
+						end_settlement = settlement
+						longestDistanceBetweenSettlements = settlement.getTile().getDistanceTo(start_settlement.getTile())
+					}
+				}
+			}
+			if (end_settlement != null)
+			{
+				selected_faction = start_settlement.getFactionOfType(this.Const.FactionType.NobleHouse);
+				total_dist = longestDistanceBetweenSettlements;
+				selected_start_settlement = start_settlement
+				selected_end_settlememt = end_settlement
+			}
+		}
+		return {
+			Origin = selected_start_settlement,
+			Destination = selected_end_settlememt,
+			Faction = selected_faction
+		}
 	}
 
 	function setSuccessFlag()
