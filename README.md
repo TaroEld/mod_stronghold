@@ -106,7 +106,7 @@ You can have more than one base. Each tier of a base adds 500 renown to the cost
 After leveling up your base to a Castle (tier 3), three contracts will be made available. These feature tough battles, they are to be considered endgame content. After completing each contract, a specific feature will be unlocked.
 Free the mercenaries: After completing this contract, you will be able to hire mercenaries to follow you around. These mercenaries will stay for a week, and join you in battles (excluded: legendary locations).
 Buy water of life: You will be able to buy a water of life for 20000 crowns. With this, you can heal brothers of permanent wounds.
-Recruit the trainer: A special training regimen will be made available. Like the training hall, it lasts for a specific amount of battles, and boosts exp gained by 50%. This allows you to easily level up brothers in the endgame.
+Recruit the trainer: A special training regimen will be made available. This will add one talent star to a brother.
 
 ### The boon:
 The base has a permanent settlement situation that changes prices and inventories of merchants. While it starts out as a negative in an Outpost, it increases to a substantial buff over the tiers:

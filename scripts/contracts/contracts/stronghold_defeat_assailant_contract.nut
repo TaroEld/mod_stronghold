@@ -202,7 +202,6 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 			}
 		});
 		this.m.Screens.push({
-		
 			ID = "Victory_None_Left",
 			Title = "Victory!",
 			Text = "",
@@ -225,9 +224,7 @@ this.stronghold_defeat_assailant_contract <- this.inherit("scripts/contracts/con
 						}
 						this.World.Contracts.finishActiveContract();
 						return 0;
-
 					}
-
 				},
 			],
 			ShowObjectives = false,
