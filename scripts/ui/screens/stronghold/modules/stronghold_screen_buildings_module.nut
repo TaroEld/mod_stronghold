@@ -8,7 +8,7 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 			local hasBuilding = this.getTown().hasBuilding(building.ID) || ("SouthID" in building && this.getTown().hasBuilding(building.SouthID))
 			local requirements = [
 				{
-					Text = "Maximum amount of buildings for this base level: " + this.getTown().getActiveBuildings().len() - 2 + " / " + this.getTown().getMaxBuildings() - 2, // minus two for management building and marketplace
+					Text = "Maximum amount of buildings for this base level: " + (this.getTown().getActiveBuildings().len() - 2) + " / " + (this.getTown().getMaxBuildings() - 2), // minus two for management building and marketplace
 					IsValid = this.getTown().getActiveBuildings().len() < this.getTown().getMaxBuildings()
 				}
 			]
