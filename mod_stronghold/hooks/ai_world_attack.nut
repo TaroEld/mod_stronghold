@@ -4,10 +4,10 @@
 	onEvaluate = function(_entity)
 	{
 		local ret = onEvaluate(_entity);
-		if (this.m.Target == null || !_entity.getFlags().get("Stronghold_Guards"))
+		if (this.m.Target == null || !_entity.getFlags().get(::Stronghold.Flags.StrongholdGuards))
 			return ret;
 
-		local town = ::World.getEntityByID(_entity.getFlags().get("Stronghold_Base_ID"));
+		local town = ::World.getEntityByID(_entity.getFlags().get(::Stronghold.Flags.BaseID));
 		if (!town.isUnderAttack())
 			return ret;
 

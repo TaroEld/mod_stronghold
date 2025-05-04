@@ -587,7 +587,7 @@ this.stronghold_player_base <- this.inherit("scripts/entity/world/settlement", {
 		local units = [];
 		foreach(unit in this.Stronghold.getPlayerFaction().m.Units)
 		{
-			if (unit.getFlags().get("Stronghold_Base_ID") == this.getID())
+			if (unit.getFlags().get(::Stronghold.Flags.BaseID) == this.getID())
 			{
 				units.push(this.WeakTableRef(unit));
 			}

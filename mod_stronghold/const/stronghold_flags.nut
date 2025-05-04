@@ -2,6 +2,8 @@
 ::Stronghold.Flags <- {
 	StrongholdAttacker = "StrongholdAttacker",
 	UnderAttackBy = "UnderAttackBy",
+	StrongholdGuards = "Stronghold_Guards", // backwards compatible
+	BaseID = "Stronghold_Base_ID", // backwards compatible
 
 	// cooldowns
 	TimeUntilNextMercs = 7, // When next defenders are spawned

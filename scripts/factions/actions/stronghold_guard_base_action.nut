@@ -41,7 +41,7 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		// set it first to avoid spamming things
 		::Stronghold.setCooldown(playerBase, "TimeUntilNextMercs");
 		foreach(unit in _faction.m.Units){
-			if (unit.getFlags().get("Stronghold_Guards") && unit.getFlags().get("Stronghold_Base_ID") == playerBase.getID()){
+			if (unit.getFlags().get(::Stronghold.Flags.StrongholdGuards) && unit.getFlags().get(::Stronghold.Flags.BaseID) == playerBase.getID()){
 				unit.fadeOutAndDie();
 			}
 		}
@@ -60,8 +60,8 @@ this.stronghold_guard_base_action <- this.inherit("scripts/factions/faction_acti
 		party.getSprite("body").setBrush(playerBase.m.TroopSprites);
 		party.setDescription(format("A band of mercenaries defending the %s.", playerBase.getSizeName()));
 		party.setFootprintType(this.Const.World.FootprintsType.Mercenaries);
-		party.getFlags().set("Stronghold_Guards", true);
-		party.getFlags().set("Stronghold_Base_ID", playerBase.getID());
+		party.getFlags().set(::Stronghold.Flags.StrongholdGuards, true);
+		party.getFlags().set(::Stronghold.Flags.BaseID, playerBase.getID());
 		local c = party.getController();
 
 		local totalTime = this.World.getTime().SecondsPerDay * 7
