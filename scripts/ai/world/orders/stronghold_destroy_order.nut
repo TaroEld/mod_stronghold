@@ -94,6 +94,18 @@ this.stronghold_destroy_order <- this.inherit("scripts/ai/world/orders/destroy_o
 		else p = this.World.State.getLocalCombatProperties(this.World.State.getPlayer().getPos());
 		p.Music = this.Const.Music.NobleTracks;
 		p.CombatID = "Stronghold";
+		foreach (e in p.Entities)
+		{
+			if (e.Party.getFlags().get(::Stronghold.Flags.StrongholdGuards)) {
+				e.Callback <- function(_entity, _) {
+					_entity.setFaction(1);
+					_entity.isPlayerControlled = @() true;
+					_entity.setAIAgent(this.new("scripts/ai/tactical/player_agent"));
+					_entity.m.AIAgent.setActor(_entity);
+					_entity.isGuest <- @() true;
+				}
+			}
+		}
 		this.World.Contracts.startScriptedCombat(p, _isPlayerAttacking, true, true);
 	}
 
