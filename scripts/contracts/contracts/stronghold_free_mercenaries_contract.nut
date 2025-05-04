@@ -118,7 +118,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			{
 				if (!_actor.isNonCombatant() && _actor.getFaction() == ::World.FactionManager.getFactionOfType(this.Const.FactionType.StrongholdEnemies).getID())
 				{
-					this.Contract.m.Flags.set("Survivors", this.Flags.get("Survivors") + 1);
+					this.Contract.m.Flags.set("Survivors", this.Contract.m.Flags.get("Survivors") + 1);
 				}
 			}
 			
@@ -253,7 +253,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 			{
 				local params = this.Contract.determineOriginAndDestination();
 				//failsafe
-				params.Origin = null
 				if (params.Origin == null || params.Destination == null)
 				{
 					this.Text = "Stronghold failed to find suitable settlements for this quest. It will be auto-completed. You can now hire mercenaries.";
