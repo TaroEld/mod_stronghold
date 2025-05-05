@@ -98,7 +98,9 @@ this.stronghold_destroy_order <- this.inherit("scripts/ai/world/orders/destroy_o
 		{
 			if (e.Party.getFlags().get(::Stronghold.Flags.StrongholdGuards)) {
 				e.Callback <- function(_entity, _) {
-					_entity.setFaction(1);
+					if (!(::MSU.isKindOf(_entity, "human")))
+						return;
+					_entity.setFaction(2);
 					_entity.isPlayerControlled = @() true;
 					_entity.setAIAgent(this.new("scripts/ai/tactical/player_agent"));
 					_entity.m.AIAgent.setActor(_entity);
