@@ -1,7 +1,7 @@
 ::Stronghold <- {
 	ID = "mod_stronghold",
 	Name = "Stronghold",
-	Version = "2.16.1"
+	Version = "2.16.2"
 };
 ::mods_registerMod(::Stronghold.ID, ::Stronghold.Version, ::Stronghold.Name);
 ::mods_queue(::Stronghold.ID, "mod_msu", function()
