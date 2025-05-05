@@ -20,7 +20,7 @@ If you fulfill all the requirements, you’ll be able to click the Yes button:
 
 After accepting, your new base will appear at your current location. You’ll also get a contract, which states that enemies will attack you. These enemies hail from the closest lair or settlement to your base. Nobles are included, unless you have more than 70 relation with them. A small band of mercenaries will spawn to assist you in the battle, and wait for the enemies at your base.
 
-Make sure to meet the attackers around your base, so that the mercenaries can join you, and you’ll be fighting on a special terrain.
+Make sure to meet the attackers around your base, so that the mercenaries can join you, and you’ll be fighting on a special terrain. By default, you will control the allied mercenaries. You can change this by unchecking the "Control allies during base fights" setting.
 Once all attacks have been repelled, your base is now completed.
 
 ## Base management

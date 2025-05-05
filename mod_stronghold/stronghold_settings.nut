@@ -4,6 +4,7 @@
 	BaseDifficulty = 100
 	// Extra difficulty for waves two, three, four of the higher upgrade levels
 	WaveDifficulty = 75
+	ControlAlliesDuringBaseAttacks = true
 }
 
 ::Stronghold.Misc <- {

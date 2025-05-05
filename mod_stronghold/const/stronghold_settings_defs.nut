@@ -267,6 +267,10 @@
 	        SettingsName = "Difficulty per wave"
 	        SettingsDescription = "The added difficulty per wave. For example, when upgrading to a Fort, the first fight will have Base Difficulty + 1x Wave Difficulty, the second fight will have Base Difficulty + 2x Wave Difficulty."
 	    }
+	    ControlAlliesDuringBaseAttacks = {
+	    	SettingsName = "Control allies during base fights"
+	    	SettingsDescription = "If this is enabled, you can control the allied mercenaries during base fights (build, upgrade, attacks). This must be chosen before battle!"
+	    }
 	}
 	Locations = {
 	    SettingsName = "Locations"
