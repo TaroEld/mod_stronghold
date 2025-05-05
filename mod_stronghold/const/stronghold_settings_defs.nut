@@ -8,7 +8,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Taxidermist = {
@@ -16,7 +16,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Weaponsmith = {
@@ -24,7 +24,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Kennel = {
@@ -32,7 +32,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Tavern = {
@@ -40,7 +40,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Crowd = {
@@ -48,7 +48,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Arena = {
@@ -56,7 +56,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Port = {
@@ -64,7 +64,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Fletcher = {
@@ -72,7 +72,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Training_Hall = {
@@ -80,7 +80,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Barber = {
@@ -88,7 +88,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Armorsmith = {
@@ -96,7 +96,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Temple = {
@@ -104,7 +104,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	}
@@ -116,7 +116,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        BattleCount = {
 	            SettingsName = "Amount of battles"
@@ -152,7 +152,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        BattleCount = {
 	            SettingsName = "Amount of battles"
@@ -188,7 +188,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        BattleCount = {
 	            SettingsName = "Amount of battles"
@@ -224,7 +224,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        BattleCount = {
 	            SettingsName = "Amount of battles"
@@ -276,7 +276,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        EffectTime = {
 	            SettingsName = "Effect time in days"
@@ -288,7 +288,7 @@
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Blast_Furnace = {
@@ -296,11 +296,11 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        RepairMultiplier = {
 	            SettingsName = "Repair Price Multiplier"
@@ -320,7 +320,7 @@
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        MoodStatePerLevel = {
 	            SettingsName = "Mood state per level"
@@ -328,7 +328,7 @@
 	        }
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        WageCost = {
 	            SettingsName = "Wage Cost Multiplier"
@@ -352,11 +352,11 @@
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        VisionIncrease = {
 	            SettingsName = "Vision Increase"
@@ -368,11 +368,11 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        MaxItemSlots = {
 	            SettingsName = "Maximum amount of items"
@@ -384,11 +384,11 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        DailyIncome = {
 	            SettingsName = "Crowns per day"
@@ -404,11 +404,11 @@
 	        }
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Collector = {
@@ -420,11 +420,11 @@
 	        }
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	    Militia_Trainingcamp = {
@@ -436,11 +436,11 @@
 	        }
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        RecruitIncrease = {
 	            SettingsName = "Added recruits"
@@ -464,7 +464,7 @@
 	        SettingsDescription = ""
 	        Price = {
 	            SettingsName = "Price"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	        DailyIncome = {
 	            SettingsName = "Tools per day"
@@ -476,7 +476,7 @@
 	        }
 	        UpgradePrice = {
 	            SettingsName = "Price to upgrade"
-	            SettingsDescription = ""
+	            SettingsDescription = "Price in thousands of crowns (multiply by Global price multiplier to get the full value)"
 	        }
 	    }
 	}
