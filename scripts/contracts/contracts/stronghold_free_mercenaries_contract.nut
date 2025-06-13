@@ -565,7 +565,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Attack).setEnabled(false)
 		c.getBehavior(this.Const.World.AI.Behavior.ID.Flee).setEnabled(false)
 		local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
-		follow.setDuration(::Stronghold.Misc.MercenaryFollowDays * 2);
+		follow.setDuration(::Stronghold.Misc.MercenaryFollowDays);
 		c.addOrder(follow);
 	}
 
