@@ -107,6 +107,20 @@ this.stronghold_destroy_order <- this.inherit("scripts/ai/world/orders/destroy_o
 						_entity.setAIAgent(this.new("scripts/ai/tactical/player_agent"));
 						_entity.m.AIAgent.setActor(_entity);
 						_entity.isGuest <- @() true;
+						local local_assignRandomEquipment = _entity.assignRandomEquipment;
+						_entity.assignRandomEquipment = function()
+						{
+							local_assignRandomEquipment();
+							local items = this.getItems().getAllItems();
+							foreach (item in items)
+							{
+								item.setCondition(item.getConditionMax());
+								if ("Ammo" in item.m && "AmmoMax" in item.m)
+								{
+									item.m.Ammo = item.m.AmmoMax;
+								}
+							}
+						}
 					}
 				}
 			}
