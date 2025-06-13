@@ -260,9 +260,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 				}
 				::Stronghold.getHostileFaction().copyLooks(params.Faction);
 				local party = ::Stronghold.getHostileFaction().spawnEntity(params.Origin.getTile(), "Noble Army", false, this.Const.World.Spawn.Noble, 800);
-				this.Const.World.Common.addTroop(party, {
-						Type = this.Const.World.Spawn.Troops.Executioner
-					}, true, 100);
 				party.setDescription("An army of noble soldiers, escorting prisoners.");
 				party.setFootprintType(this.Const.World.FootprintsType.Nobles);
 				party.setAttackableByAI(false);
