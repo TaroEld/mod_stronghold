@@ -101,7 +101,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 				}
 				else if (this.Contract.isPlayerAt(this.Contract.m.Target))
 				{
-					this.onTargetAttacked(this.Contract.m.Target, false);
+					this.onTargetAttacked(this.Contract.m.Target, true);
 				}
 			}
 			
