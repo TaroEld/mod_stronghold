@@ -7,7 +7,7 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 		_ret.MaxSize <- this.getTown().getSize() == 4;
 		if (_ret.MaxSize) return _ret;
 		local tier = ::Stronghold.BaseTiers[this.getTown().getSize() + 1];
-		local price = ::Stronghold.Misc.PriceMult * tier.Price;
+		local price = ::Stronghold.GeneralSettings.PriceMult * tier.Price;
 		local warehouse = this.getTown().getWarehouse();
 		_ret.CurrentRenown <- ::World.Assets.getBusinessReputation();
 		_ret.RenownRequired <- ::Stronghold.getNextRenownCost();
@@ -19,7 +19,7 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 			Renown = _ret.CurrentRenown > _ret.RenownRequired,
 		}
 
-		_ret.Price <- ::Stronghold.Misc.PriceMult * tier.Price;
+		_ret.Price <- ::Stronghold.GeneralSettings.PriceMult * tier.Price;
 		return _ret
 	}
 
@@ -29,7 +29,7 @@ this.stronghold_screen_upgrade_module <-  this.inherit("scripts/ui/screens/stron
 		this.getTown().startUpgrading();
 
 		local targetLevel = this.getTown().getSize();
-		local price = ::Stronghold.Misc.PriceMult * ::Stronghold.BaseTiers[targetLevel].Price;
+		local price = ::Stronghold.GeneralSettings.PriceMult * ::Stronghold.BaseTiers[targetLevel].Price;
 		::Stronghold.addRoundedMoney(-price);
 
 		local playerFaction = this.Stronghold.getPlayerFaction();

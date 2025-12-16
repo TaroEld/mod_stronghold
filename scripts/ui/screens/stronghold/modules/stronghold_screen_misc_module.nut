@@ -46,7 +46,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			local roadmult = results[1]
 			if (segments && segments != 0)
 			{
-				local cost = segments * ::Stronghold.Misc.RoadCost * ::Stronghold.Misc.PriceMult;
+				local cost = segments * ::Stronghold.Misc.RoadCost * ::Stronghold.GeneralSettings.PriceMult;
 				option = {
 					Score = dist,
 					Name = settlement.getName(),
@@ -98,7 +98,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		// SendGifts = main key
 		local ret =
 		{
-			Price = ::Stronghold.Misc.GiftFlatCost * ::Stronghold.Misc.PriceMult,
+			Price = ::Stronghold.Misc.GiftFlatCost * ::Stronghold.GeneralSettings.PriceMult,
 			Gifts = [],
 			ReputationGain = 0,
 			Factions = [],
@@ -258,9 +258,9 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local ret = {
 			Requirements = {
 				FoundTrainer = this.Stronghold.getPlayerFaction().m.Flags.get("Teacher"),
-				Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult
+				Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.GeneralSettings.PriceMult
 			}
-			Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult,
+			Price = ::Stronghold.Misc.TrainerPrice * ::Stronghold.GeneralSettings.PriceMult,
 			Duration = ::Stronghold.Misc.TrainerBuffDurationInDays,
 			XPGainMult = ::Stronghold.Misc.TrainerBuffDurationExpMult,
 			ValidBrothers = []
@@ -365,7 +365,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		bro.setDirty(true);
 
 		bro.getFlags().set("stronghold_trained", true);
-		::Stronghold.addRoundedMoney(-(::Stronghold.Misc.TrainerPrice * ::Stronghold.Misc.PriceMult));
+		::Stronghold.addRoundedMoney(-(::Stronghold.Misc.TrainerPrice * ::Stronghold.GeneralSettings.PriceMult));
 		this.updateData(["Assets"]);
 		return {
 			Talent = newTalent,
@@ -379,10 +379,10 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			Requirements =
 			{
 				Unlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Waterskin"),
-				Price = ::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult,
+				Price = ::Stronghold.Misc.WaterPrice * ::Stronghold.GeneralSettings.PriceMult,
 				EmptySlot = ::Stash.hasEmptySlot()
 			},
-			Price = ::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult
+			Price = ::Stronghold.Misc.WaterPrice * ::Stronghold.GeneralSettings.PriceMult
 		};
 		return ret;
 	}
@@ -391,7 +391,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 	{
 		local item = this.new("scripts/items/special/fountain_of_youth_item");
 		this.World.Assets.getStash().add(item);
-		::Stronghold.addRoundedMoney(-(::Stronghold.Misc.WaterPrice * ::Stronghold.Misc.PriceMult));
+		::Stronghold.addRoundedMoney(-(::Stronghold.Misc.WaterPrice * ::Stronghold.GeneralSettings.PriceMult));
 		this.updateData(["Assets", "MiscModule", "StashModule"]);
 	}
 
@@ -405,9 +405,9 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 			{
 				Unlocked = this.Stronghold.getPlayerFaction().m.Flags.get("Mercenaries"),
 				NoMercenaries = true,
-				Price = ::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult,
+				Price = ::Stronghold.Misc.MercenaryPrice * ::Stronghold.GeneralSettings.PriceMult,
 			},
-			Price = ::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult,
+			Price = ::Stronghold.Misc.MercenaryPrice * ::Stronghold.GeneralSettings.PriceMult,
 			Duration = ::Stronghold.Misc.MercenaryFollowDays,
 		};
 		foreach ( unit in this.Stronghold.getPlayerFaction().m.Units){
@@ -443,7 +443,7 @@ this.stronghold_screen_misc_module <- this.inherit("scripts/ui/screens/stronghol
 		local follow = this.new("scripts/ai/world/orders/stronghold_follow_order");
 		follow.setDuration(::Stronghold.Misc.MercenaryFollowDays);
 		c.addOrder(follow);
-		::Stronghold.addRoundedMoney(-(::Stronghold.Misc.MercenaryPrice * ::Stronghold.Misc.PriceMult));
+		::Stronghold.addRoundedMoney(-(::Stronghold.Misc.MercenaryPrice * ::Stronghold.GeneralSettings.PriceMult));
 		this.updateData(["Assets", "MiscModule"]);
 	}
 

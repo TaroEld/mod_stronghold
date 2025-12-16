@@ -1,5 +1,12 @@
 ::Stronghold.SettingsDefs <-
 {
+	GeneralSettings = {
+		SettingsName = "General"
+		PriceMult = {
+	        SettingsName = "Global price multiplier"
+	        SettingsDescription = "Every other price in Stronghold will be multiplied with this value."
+	    }
+	}
 	Buildings = {
 	    SettingsName = "Buildings"
 	    SettingsDescription = ""
@@ -269,7 +276,7 @@
 	    }
 	    ControlAlliesDuringBaseAttacks = {
 	    	SettingsName = "Control allies during base fights"
-	    	SettingsDescription = "If this is enabled, you can control the allied mercenaries during base fights (build, upgrade, attacks). This must be chosen before battle!"
+	    	SettingsDescription = "If this is enabled, you can control the allied mercenaries during base fights (build, upgrade, attacks). This must be chosen before battle! WARNING: This can lead to issues when using other mods, such as Reforged or Legends."
 	    }
 	}
 	Locations = {
@@ -487,13 +494,17 @@
 	Misc = {
 	    SettingsName = "Miscellaneous"
 	    SettingsDescription = "Various settings"
-	    BaseAttacksEnabled = {
-	        SettingsName = "Enable base attacks"
-	        SettingsDescription = "If this is disabled, enemy camps won't attack your base."
+	    BaseRaidsEnabled = {
+	        SettingsName = "Enable base raids"
+	        SettingsDescription = "If this is enabled, enemy camps in a radius around your base will periodically try to raid your base."
+	    }
+	   	BaseRaidStrengthMultiplier = {
+	        SettingsName = "Base attack strength multiplier"
+	        SettingsDescription = "A multiplier for the total strength of the periodic base attacks that happen when your base is within range of an enemy camp."
 	    }
 	    RaidedCostPerDay = {
 	        SettingsName = "Cost per day to remove the Raided status"
-	        SettingsDescription = ""
+	        SettingsDescription = "The Raided debuff is applied after you fail to defend against a base raid."
 	    }
 	    MercenaryPrice = {
 	        SettingsName = "Hire Mercenaries price"
@@ -523,10 +534,6 @@
 	        SettingsName = "Mercenary Services Duration"
 	        SettingsDescription = ""
 	    }
-	    PriceMult = {
-	        SettingsName = "Global price multiplier"
-	        SettingsDescription = "Every other price will be multiplied with this value."
-	    }
 	    WaterPrice = {
 	        SettingsName = "Water of life price"
 	        SettingsDescription = "The price to buy water of life after the quest."
@@ -546,10 +553,6 @@
 	    CaravanStrength = {
 	        SettingsName = "Default caravan strength"
 	        SettingsDescription = "The default 'strength' of the mercenary caravan guards. This number is multiplied by the base tier, increased by the training hall location effect (if it is built) and finally multiplied by a scaling multiplier."
-	    }
-	    BaseAttackStrengthMultiplier = {
-	        SettingsName = "Base attack strength multiplier"
-	        SettingsDescription = "A multiplier for the total strength of the periodic base attacks that happen when your base is within range of an enemy camp."
 	    }
 	}
 }

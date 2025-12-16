@@ -1,19 +1,24 @@
 
+::Stronghold.GeneralSettings <- {
+	// Global price multiplier
+	PriceMult = 1000,
+}
+
 ::Stronghold.BaseFight <- {
 	// Base difficulty of the base defence fight
 	BaseDifficulty = 100
 	// Extra difficulty for waves two, three, four of the higher upgrade levels
 	WaveDifficulty = 75
-	ControlAlliesDuringBaseAttacks = true
+	ControlAlliesDuringBaseAttacks = false
 }
 
 ::Stronghold.Misc <- {
-	BaseAttacksEnabled = true,
-	PriceMult = 1000,
-	// Cost of each road segment
-	RoadCost = 0.5,
+	BaseRaidsEnabled = true
+	BaseRaidStrengthMultiplier = 1.0,
 	// Cost to make the raided debuff go away; multiplied with the price mult
 	RaidedCostPerDay = 0.5,
+	// Cost of each road segment
+	RoadCost = 0.5,
 	TrainerPrice = 20,
 	TrainerBuffDurationInDays = 10,
 	TrainerBuffDurationExpMult = 1.5,
@@ -28,7 +33,6 @@
 	GuardStrength = 50,
 	PatrolStrength = 100,
 	CaravanStrength = 75,
-	BaseAttackStrengthMultiplier = 1.0,
 }
 
 ::Stronghold.Hamlet <- {
@@ -207,26 +211,22 @@
 
 local settingsPage = ::Stronghold.Mod.ModSettings.addPage("Settings");
 
-local keyInc = 0;
-local function initDefs()
-{
-	foreach(locationID, location in ::Stronghold.LocationDefs)
-	{
-		location.ConstID <- locationID;
-		location.ImagePath <- location.Path + ".png";
-		location.Requirements <- [];
-		::MSU.Table.merge(::Stronghold.Locations[locationID], location, true);
-	}
-
-	foreach(buildingID, building in ::Stronghold.BuildingDefs)
-	{
-		building.ConstID <- buildingID;
-		::MSU.Table.merge(::Stronghold.Buildings[buildingID], building, true);
-	}
-}
 ::include(::Stronghold.ID + "/const/stronghold_building_defs.nut");
 ::include(::Stronghold.ID + "/const/stronghold_location_defs.nut");
-initDefs();
+foreach(locationID, location in ::Stronghold.LocationDefs)
+{
+	location.ConstID <- locationID;
+	location.ImagePath <- location.Path + ".png";
+	location.Requirements <- [];
+	::MSU.Table.merge(::Stronghold.Locations[locationID], location, true);
+}
+
+foreach(buildingID, building in ::Stronghold.BuildingDefs)
+{
+	building.ConstID <- buildingID;
+	::MSU.Table.merge(::Stronghold.Buildings[buildingID], building, true);
+}
+
 ::include(::Stronghold.ID + "/const/stronghold_settings_defs.nut");
 local ref = ::Stronghold.SettingsDefs;
 local refStack = [];
@@ -242,13 +242,32 @@ local function reduce(_arr, _key)
 	return ret.slice(0, ret.len() - 1) + "." + _key;
 }
 local createSettings;
-createSettings = function(_container)
+createSettings = function(_container, _keyOrder = null)
 {
-	foreach(key, value in _container)
+	// Determine iteration order
+	local keysToProcess = [];
+	if (_keyOrder != null)
 	{
+		keysToProcess = _keyOrder;
+	}
+	else
+	{
+		// If no order specified, iterate normally
+		foreach(key, value in _container)
+		{
+			keysToProcess.append(key);
+		}
+	}
+
+	foreach(key in keysToProcess)
+	{
+		if (!(key in _container))
+			continue;
+
+		local value = _container[key];
 		if (!(key.tostring() in ref))
 			continue;
-		local keyID =  reduce(refStack, key);
+		local keyID = reduce(refStack, key);
 		local keyClosure = key;
 		local inner = ref[key.tostring()];
 		local valref = value;
@@ -309,6 +328,17 @@ createSettings = function(_container)
 		}
 	}
 }
-createSettings(::Stronghold);
+
+// Define the order using KEY NAMES (strings), not the table references
+local settingOrder = [
+	"GeneralSettings",
+	"BaseFight",
+	"BaseTiers",
+	"Buildings",
+	"Locations",
+	"Misc",
+];
+
+createSettings(::Stronghold, settingOrder);
 delete ::Stronghold.SettingsDefs;
 refStack = null;

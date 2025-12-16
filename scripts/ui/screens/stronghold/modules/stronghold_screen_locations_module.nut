@@ -22,8 +22,8 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 			if (locationInTown != null)
 				_ret[locationID].Level = locationInTown.m.Level
 			::MSU.Table.merge(_ret[locationID], location, true);
-			_ret[locationID].Price *= ::Stronghold.Misc.PriceMult;
-			_ret[locationID].UpgradePrice *= ::Stronghold.Misc.PriceMult;
+			_ret[locationID].Price *= ::Stronghold.GeneralSettings.PriceMult;
+			_ret[locationID].UpgradePrice *= ::Stronghold.GeneralSettings.PriceMult;
 		}
 		return _ret
 	}
@@ -32,7 +32,7 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 	{
 		local home = this.getTown();
 		local locationDef = ::Stronghold.Locations[_data];
-		::Stronghold.addRoundedMoney(-locationDef.Price * ::Stronghold.Misc.PriceMult);
+		::Stronghold.addRoundedMoney(-locationDef.Price * ::Stronghold.GeneralSettings.PriceMult);
 		local script = "scripts/entity/world/attached_location/" + locationDef.Path
 		local validTerrain =
 		[
@@ -63,7 +63,7 @@ this.stronghold_screen_locations_module <-  this.inherit("scripts/ui/screens/str
 		local locationDef = ::Stronghold.Locations[_data];
 		local location = this.getTown().getLocation(locationDef.ID);
 		location.upgrade();
-		::Stronghold.addRoundedMoney(-locationDef.UpgradePrice * ::Stronghold.Misc.PriceMult);
+		::Stronghold.addRoundedMoney(-locationDef.UpgradePrice * ::Stronghold.GeneralSettings.PriceMult);
 		this.getTown().removeLocation(_data);
 		this.updateData(["TownAssets", "Assets", "LocationsModule"]);
 	}

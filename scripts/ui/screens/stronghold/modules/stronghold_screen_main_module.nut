@@ -4,7 +4,7 @@ this.stronghold_screen_main_module <-  this.inherit("scripts/ui/screens/strongho
 	function getUIData(_ret)
 	{
 		_ret.LastEnterLog <- this.getTown().m.LastEnterLog;
-		_ret.RaidedCostPerDay <- ::Stronghold.Misc.RaidedCostPerDay * ::Stronghold.Misc.PriceMult;
+		_ret.RaidedCostPerDay <- ::Stronghold.Misc.RaidedCostPerDay * ::Stronghold.GeneralSettings.PriceMult;
 	}
 
 	function changeBaseName(_data)
@@ -28,7 +28,7 @@ this.stronghold_screen_main_module <-  this.inherit("scripts/ui/screens/strongho
 	function onPayForRaided(_days)
 	{
 		local situation = this.getTown().getSituationByID("situation.raided");
-		local price = (::Stronghold.Misc.RaidedCostPerDay * ::Stronghold.Misc.PriceMult) * _days;
+		local price = (::Stronghold.Misc.RaidedCostPerDay * ::Stronghold.GeneralSettings.PriceMult) * _days;
 		::Stronghold.addRoundedMoney(-price);
 		this.getTown().removeSituationByID("situation.raided");
 		this.updateData(["TownAssets", "MainModule"]);

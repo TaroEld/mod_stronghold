@@ -155,7 +155,7 @@
 
 ::Stronghold.buildMainBase <- function()
 {
-	local buildPrice = ::Stronghold.BaseTiers[1].Price * ::Stronghold.Misc.PriceMult
+	local buildPrice = ::Stronghold.BaseTiers[1].Price * ::Stronghold.GeneralSettings.PriceMult
 	//called from retinue menu
 	::Stronghold.addRoundedMoney(-buildPrice);
 	local tile = this.World.State.getPlayer().getTile(); 

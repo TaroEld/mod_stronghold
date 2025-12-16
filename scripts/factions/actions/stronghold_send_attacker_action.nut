@@ -13,7 +13,7 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 
 	function onUpdate( _faction )
 	{
-		if (!::Stronghold.Misc.BaseAttacksEnabled)
+		if (!::Stronghold.Misc.BaseRaidsEnabled)
 			return;
 		local playerFaction = ::Stronghold.getPlayerFaction();
 		if (playerFaction == null)
@@ -77,7 +77,7 @@ this.stronghold_send_attacker_action <- this.inherit("scripts/factions/faction_a
 		local playerBase = this.m.TargetBase;
 		::Stronghold.Mod.Debug.printLog("SENDING base attack for player base " + playerBase.getName() + " from : " + this.m.EnemyBase.getName());
 
-		local partyDifficulty = (this.m.EnemyBase.m.Resources  +  (30 * playerBase.getSize())) * this.getScaledDifficultyMult() * ::Stronghold.Misc.BaseAttackStrengthMultiplier;
+		local partyDifficulty = (this.m.EnemyBase.m.Resources  +  (30 * playerBase.getSize())) * this.getScaledDifficultyMult() * ::Stronghold.Misc.BaseRaidStrengthMultiplier;
 
 		local tile = playerBase.getTile();
 

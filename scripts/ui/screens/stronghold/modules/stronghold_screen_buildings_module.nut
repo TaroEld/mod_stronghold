@@ -24,7 +24,7 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 			}
 			::MSU.Table.merge(_ret[buildingID], building, true);
 			_ret[buildingID].Requirements = requirements;
-			_ret[buildingID].Price *= ::Stronghold.Misc.PriceMult;
+			_ret[buildingID].Price *= ::Stronghold.GeneralSettings.PriceMult;
 		}
 		return _ret
 	}
@@ -32,7 +32,7 @@ this.stronghold_screen_buildings_module <-  this.inherit("scripts/ui/screens/str
 	function addBuilding(_data)
 	{
 		local buildingDef = ::Stronghold.Buildings[_data];
-		::Stronghold.addRoundedMoney(-buildingDef.Price * ::Stronghold.Misc.PriceMult);
+		::Stronghold.addRoundedMoney(-buildingDef.Price * ::Stronghold.GeneralSettings.PriceMult);
 		local building = this.new("scripts/entity/world/settlements/buildings/" + buildingDef.Path);
 		this.getTown().addBuilding(building);
 		building.onUpdateShopList();
