@@ -387,7 +387,7 @@
 	        }
 	        MaxItemSlots = {
 	            SettingsName = "Maximum amount of items"
-	            SettingsDescription = ""
+	            SettingsDescription = "Maximum slots in the warehouse per level of the base. Reload the savefile to apply."
 	        }
 	    }
 	    Gold_Mine = {

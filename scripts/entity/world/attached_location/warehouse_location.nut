@@ -98,6 +98,7 @@ this.warehouse_location <- this.inherit("scripts/entity/world/attached_location"
 	{
 		this.attached_location.onDeserialize(_in);
 		this.m.Stash.onDeserialize(_in);
+		this.resize();
 		this.getStash().m.Capacity = this.getStash().m.Items.len();
 
 		this.m.ConsumableItems = ::Stronghold.Mod.Serialization.flagDeserialize(this.getID().tostring(),  this.m.ConsumableItems, null, this.getFlags());
