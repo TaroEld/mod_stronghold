@@ -67,7 +67,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 				{
 					this.Contract.m.Target.getSprite("selection").Visible = true;
 					this.Contract.m.Target.setVisibleInFogOfWar(true);
-					this.Contract.m.Target.setOnCombatWithPlayerCallback(this.onTargetAttacked.bindenv(this));
 					local originTown = null;
 					local originID = this.Contract.m.Flags.get("OriginID");
 					foreach(settlement in ::World.EntityManager.getSettlements())
@@ -98,19 +97,6 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 				{
 					this.Contract.setScreen("Failure1");
 					this.World.Contracts.showActiveContract();
-				}
-				else if (this.Contract.isPlayerAt(this.Contract.m.Target))
-				{
-					this.onTargetAttacked(this.Contract.m.Target, true);
-				}
-			}
-			
-			function onTargetAttacked( _dest, _isPlayerAttacking )
-			{
-				if (this.Time.getVirtualTimeF() >= this.Contract.m.LastCombatTime + 5.0)
-				{
-					this.Contract.m.LastCombatTime = this.Time.getVirtualTimeF();
-					this.World.Contracts.showCombatDialog(_isPlayerAttacking);
 				}
 			}
 			
