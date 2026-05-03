@@ -146,7 +146,7 @@ this.stronghold_free_mercenaries_contract <- this.inherit("scripts/contracts/con
 		this.m.Screens.push({
 			ID = "Task",
 			Title = this.m.Title,
-			Text = "Word has reached us that a band of mercenaries is being transported to a fortress, awaiting execution for a crime they almost certainly weren't being spotted committing. The mercenary community is in uproar about yet another unfair treatment of entirely honest brothers in arms.\n%randombrother% suggests that we could score some points if we went and helped those poor souls out of their predicatment. We probably shouldn't be seen doing it, though.\n \n WARNING: Some players experience crashing when starting a combat related to this fight. Make a save before you accept this contract!",
+			Text = "Word has reached us that a band of mercenaries is being transported to a fortress, awaiting execution for a crime they almost certainly weren't being spotted committing. The mercenary community is in uproar about yet another unfair treatment of entirely honest brothers in arms.\n%randombrother% suggests that we could score some points if we went and helped those poor souls out of their predicatment. We probably shouldn't be seen doing it, though.\n\n The prisoner transport will start moving in [b]three days[/b]. \n\n [b]WARNING: Some players experience crashing when starting a combat related to this fight. Make a save before you accept this contract![/b]",
 			Image = "",
 			List = [],
 			ShowEmployer = true,
