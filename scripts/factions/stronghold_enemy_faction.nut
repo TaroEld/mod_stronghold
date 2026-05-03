@@ -70,7 +70,7 @@ this.stronghold_enemy_faction <- this.inherit("scripts/factions/faction", {
 	{
 	}
 
-	function spawnEntity( _tile, _name, _uniqueName, _template, _resources )
+	function spawnEntity( _tile, _name, _uniqueName, _template, _resources, _minibossify = 0 )
 	{
 		//same as vanilla
 		local party = this.World.spawnEntity("scripts/entity/world/party", _tile.Coords);
